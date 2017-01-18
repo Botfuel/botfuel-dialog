@@ -1,5 +1,11 @@
+'use strict';
+
 class Nlu {
-    static analyze(sentence) {
+    constructor(locale) {
+        this.locale = locale;
+    }
+
+    analyze(sentence) {
         return new Promise((resolve, reject) => {
             resolve({
                 entities: [
