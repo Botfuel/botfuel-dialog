@@ -4,6 +4,7 @@
         "clean": "echo \"flushall\n quit\n\" | redis-cli"
     },
     "dependencies": {
+        "@botfuel/bot-common": "latest",
         "hubot": "^2.19.0",
         "hubot-redis-brain": "0.0.3"
     },
