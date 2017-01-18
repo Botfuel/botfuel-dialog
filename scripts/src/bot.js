@@ -7,10 +7,15 @@ class Bot {
     }
 
     respond(res) {
-        Nlu.analyze(Message.getSentence(res)).then((val) => {
-            let response = "OK";
-            res.send(response);
-        });
+        let sentence = Message.getSentence(res);
+        Nlu
+            .analyze(sentence)
+            .then(({entities, features}) => {
+                res.send(`${ entities } ${ features }`);
+            })
+            .catch((err) => {
+                console.log("rejected", err);
+            });
     }
 }
 

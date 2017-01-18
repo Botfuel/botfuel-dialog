@@ -2,8 +2,12 @@ class Nlu {
     static analyze(sentence) {
         return new Promise((resolve, reject) => {
             resolve({
-                entities: null,
-                features: null
+                entities: [
+                    "entity"
+                ],
+                features: [
+                    "feature"
+                ]
             });
         });
     }
