@@ -1,0 +1,15 @@
+{
+    "scripts": {
+        "test": "mocha --timeout 30000 tests/**/*.js",
+        "clean": "echo \"flushall\n quit\n\" | redis-cli"
+    },
+    "dependencies": {
+        "hubot": "^2.19.0",
+        "hubot-redis-brain": "0.0.3"
+    },
+    "devDependencies": {
+    },
+    "engines": {
+        "node": "6.1.0"
+    }
+}
