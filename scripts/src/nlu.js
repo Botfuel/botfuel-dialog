@@ -1,8 +1,10 @@
 class Nlu {
-    static analyze(sentence, cb) {
-        cb(null, {
-            entities: null,
-            features: null
+    static analyze(sentence) {
+        return new Promise((resolve, reject) => {
+            resolve({
+                entities: null,
+                features: null
+            });
         });
     }
 }

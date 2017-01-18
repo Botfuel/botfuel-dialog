@@ -7,9 +7,9 @@ class Bot {
     }
 
     respond(res) {
-        Nlu.analyze(Message.getSentence(res), (e, r) => {
+        Nlu.analyze(Message.getSentence(res)).then((val) => {
             let response = "OK";
-            return res.send(response);
+            res.send(response);
         });
     }
 }
