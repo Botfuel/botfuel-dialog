@@ -1,16 +1,19 @@
 {
-    "scripts": {
-        "test": "mocha --timeout 30000 tests/**/*.js",
-        "clean": "echo \"flushall\n quit\n\" | redis-cli"
-    },
-    "dependencies": {
-        "@botfuel/bot-common": "latest",
-        "hubot": "^2.19.0",
-        "hubot-redis-brain": "0.0.3"
-    },
-    "devDependencies": {
-    },
-    "engines": {
-        "node": "7.4.0"
-    }
+  "scripts": {
+      "bot": "./bin/hubot",
+      "doc": "./node_modules/documentation/bin/documentation.js build scripts/** -f html -o docs",
+      "test": "mocha --timeout 30000 tests/**/*.js",
+      "clean": "echo \"flushall\n quit\n\" | redis-cli"
+  },
+  "dependencies": {
+    "@botfuel/bot-common": "latest",
+    "hubot": "^2.19.0",
+    "hubot-redis-brain": "0.0.3"
+  },
+  "devDependencies": {
+    "documentation": "^4.0.0-beta.18"
+  },
+  "engines": {
+    "node": "7.4.0"
+  }
 }
