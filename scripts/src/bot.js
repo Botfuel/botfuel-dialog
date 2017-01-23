@@ -1,6 +1,6 @@
 'use strict';
 
-var Message = require('@botfuel/bot-common').Message
+var Message = require('@botfuel/bot-common').Message;
 var DialogManager = require('./dialog_manager');
 var Classifier = require('./classifier');
 var { locale } = require('./config');
@@ -49,4 +49,4 @@ class Bot {
     }
 }
 
-module.exports = Bot
+module.exports = Bot;

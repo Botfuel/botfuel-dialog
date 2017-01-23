@@ -1,6 +1,6 @@
 'use strict';
 
-var Nlu = require('./nlu')
+var Nlu = require('./nlu');
 
 /**
  * A classifier (could be replaced by an external one).
@@ -35,4 +35,4 @@ class Classifier {
     }
 }
 
-module.exports = Classifier
+module.exports = Classifier;

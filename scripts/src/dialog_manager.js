@@ -44,4 +44,4 @@ class DialogManager {
     }
 }
 
-module.exports = DialogManager
+module.exports = DialogManager;

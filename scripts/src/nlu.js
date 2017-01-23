@@ -26,4 +26,4 @@ class Nlu {
     }
 }
 
-module.exports = Nlu
+module.exports = Nlu;

@@ -1,9 +1,10 @@
 'use strict';
 
-class Step {
+class SyncStep {
     run(entities, responses) {
+        this.syncRun(entities, responses);
         return Promise.resolve();
     }
 }
 
-module.exports = Step
+module.exports = SyncStep;

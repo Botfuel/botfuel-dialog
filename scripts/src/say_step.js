@@ -1,14 +1,16 @@
 'use strict';
 
-class SayStep {
+var SyncStep = require('./sync_step');
+
+class SayStep extends SyncStep {
     constructor(sentence) {
+        super();
         this.sentence = sentence
     }
 
-    run(entities, responses) {
+    syncRun(entities, responses) {
         responses.push(this.sentence);
-        return Promise.resolve();
     }
 }
 
-module.exports = SayStep
+module.exports = SayStep;
