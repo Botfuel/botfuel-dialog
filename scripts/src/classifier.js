@@ -12,6 +12,13 @@ class Classifier {
      */
     constructor(locale) {
         this.nlu = new Nlu(locale);
+        // TODO: load model from file
+    }
+
+    classifyFromFeatures(features) {
+        return [
+            { intent: 'greetings', confidence: 1.0} // TODO: fix this
+        ];
     }
 
     /**
@@ -28,9 +35,7 @@ class Classifier {
                 console.log(`nlu resolved ${entities} ${features}`);
                 return Promise.resolve({
                     entities: entities,
-                    intents: [
-                        { intent: 'greetings', confidence: 1.0} // TODO: fix this
-                    ]
+                    intents: this.classifyFromFeatures(features)
                 });
             })
             .catch((err) => {
