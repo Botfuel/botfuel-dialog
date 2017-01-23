@@ -5,8 +5,9 @@ class SayStep {
         this.sentence = sentence
     }
 
-    run(res) {
-        res.send(this.sentence);
+    run(entities, responses) {
+        responses.push(this.sentence);
+        return Promise.resolve();
     }
 }
 

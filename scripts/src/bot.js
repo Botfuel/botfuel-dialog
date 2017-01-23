@@ -7,6 +7,7 @@ var { locale } = require('./config');
 
 /**
   * Bot main class.
+  * This class only is aware of Hubot.
   */
 class Bot {
     /**
@@ -30,9 +31,17 @@ class Bot {
             .classify(sentence)
             .then(({entities, intents}) => {
                 console.log(`classification resolved ${entities} ${intents}`);
-                // TODO: update brain with entities
                 this.dm
-                    .execute(res, intents);
+                    .executeIntents(entities, intents)
+                    .then((responses) => {
+                        console.log("intents execution resolved");
+                        responses.forEach((response) => {
+                            res.send(response);
+                        }); // TODO: do we need to wait here?
+                    })
+                    .catch((err) => {
+                        console.log("intents execution rejected", err);
+                    });
             })
             .catch((err) => {
                 console.log("classification rejected", err);

@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Manages the dialog stack.
+ * Manages the dialog/step stack.
  */
 class DialogManager {
     constructor() {
@@ -9,20 +9,37 @@ class DialogManager {
     }
 
     /**
-     * Updates the stack with the intents.
+     * Updates the stack with the steps.
+     * @param {Object[]} an array of intent-probability pairs
      */
-    update(intents) {
-        this.stack
-            .push(intents[0][0]); // updating stack with intents
+    updateStack(intents) {
+        console.log("DialogManager.updateStack");
+        intents.forEach(([intent, probability]) => {
+            let dialog = intent;
+            let steps = require(`./dialogs/${dialog}`)
+                .reverse();
+            this.stack
+                .push(...steps);
+        });
     }
 
-    execute(res, intents) {
-        console.log("DialogManager.execute");
-        this.update(intents);
+    executeIntents(entities, intents) {
+        console.log("DialogManager.executeIntents");
+        this.updateStack(intents);
+        return this.executeStack(entities, []);
+    }
+
+    executeStack(entities, responses) {
+        console.log(`DialogManager.executeStack ${ this.stack }`);
         if (this.stack.length > 0) {
-            let dialog = this.stack[0];
-            let steps = require(`./dialogs/${dialog}`);
-            steps[0].run(res); // TODO: execute all the steps and when completed pop
+            let step = this.stack.pop();
+            return step
+                .run(entities, responses)
+                .then(() => {
+                    return this.executeStack(entities, responses);
+                });
+        } else {
+            return Promise.resolve(responses);
         }
     }
 }

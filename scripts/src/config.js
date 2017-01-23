@@ -1,3 +1,5 @@
 'use strict';
 
-module.exports = { locale: 'fr' }
+module.exports = {
+    locale: 'fr'
+}

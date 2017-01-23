@@ -1,7 +1,8 @@
 'use strict';
 
 class Step {
-    run(res) {
+    run(entities, responses) {
+        return Promise.resolve();
     }
 }
 
