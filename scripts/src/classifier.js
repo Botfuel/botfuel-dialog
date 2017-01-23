@@ -6,13 +6,17 @@ var Nlu = require('./nlu');
  * A classifier (could be replaced by an external one).
  */
 class Classifier {
+    /**
+     * Constructor.
+     * @param {string} locale the locale
+     */
     constructor(locale) {
         this.nlu = new Nlu(locale);
     }
 
     /**
      * Classifies a sentence.
-     * @param {string} the sentence
+     * @param {string} sentence the sentence
      * @return {Promise} a promise with entities and intents
      */
     classify(sentence) {
@@ -25,7 +29,7 @@ class Classifier {
                 return Promise.resolve({
                     entities: entities,
                     intents: [
-                        ['greetings', 1.0] // TODO: fix this
+                        { intent: 'greetings', confidence: 1.0} // TODO: fix this
                     ]
                 });
             })

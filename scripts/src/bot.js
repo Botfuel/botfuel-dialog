@@ -7,11 +7,11 @@ var { locale } = require('./config');
 
 /**
   * Bot main class.
-  * This class only is aware of Hubot.
+  * Only this class knows about Hubot.
   */
 class Bot {
     /**
-     * @param {Object} an hubot robot
+     * @param {Object} hubot an hubot robot
      */
     constructor(hubot) {
         this.hubot = hubot;
@@ -22,7 +22,7 @@ class Bot {
 
     /**
      * Responds.
-     * @param {Response} Hubot's response object
+     * @param {Response} res Hubot's response object
      */
     respond(res) {
         console.log("Bot.respond");
