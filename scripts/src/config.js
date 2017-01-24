@@ -1,5 +1,6 @@
 'use strict';
 
 module.exports = {
-    locale: 'fr'
+    locale: 'fr',
+    modelName: "model.json"
 };

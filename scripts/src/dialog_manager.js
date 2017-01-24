@@ -17,13 +17,16 @@ class DialogManager {
      */
     updateStack(intents) {
         console.log("DialogManager.updateStack");
-        intents.forEach(({intent, probability}) => {
-            let dialog = intent;
-            let steps = require(`./dialogs/${dialog}`)
-                .reverse();
-            this.stack
-                .push(...steps);
-        });
+        intents
+            .reverse()
+            .forEach(({label, value}) => {
+                if (value > 0.7) { // TODO: fix this
+                    let steps = require(`./dialogs/${ label }`)
+                        .reverse();
+                    this.stack
+                        .push(...steps);
+                }
+            });
     }
 
     /**
@@ -43,7 +46,7 @@ class DialogManager {
      * @param {responses[]} responses the responses
      */
     executeStack(entities, responses) {
-        console.log(`DialogManager.executeStack ${ this.stack }`);
+        console.log("DialogManager.executeStack", this.stack);
         if (this.stack.length > 0) {
             let step = this.stack.pop();
             return step

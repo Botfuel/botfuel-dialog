@@ -1,5 +1,7 @@
 'use strict';
 
+const Natural = require('natural');
+
 /**
  * NLU wrapper.
  */
@@ -10,6 +12,13 @@ class Nlu {
      */
     constructor(locale) {
         this.locale = locale;
+    }
+
+    static computeFeatures(sentence) {
+        Natural
+            .PorterStemmerFr
+            .attach();
+        return sentence.tokenizeAndStem();
     }
 
     /**
@@ -24,9 +33,7 @@ class Nlu {
             entities: [
                 "entity1", "entity2"
             ],
-            features: [
-                "feature1", "feature2"
-            ]
+            features: Nlu.computeFeatures(sentence)
         });
     }
 }

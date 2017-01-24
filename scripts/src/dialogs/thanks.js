@@ -3,6 +3,6 @@
 const SayStep = require('../say_step');
 
 module.exports = [
-    new SayStep('Hello!'),
-    new SayStep('How are you?')
+    new SayStep('You are welcome!'),
+    new SayStep('It\'s my pleasure!')
 ];

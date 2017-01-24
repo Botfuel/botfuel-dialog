@@ -1,9 +1,9 @@
 'use strict';
 
-var Message = require('@botfuel/bot-common').Message;
-var DialogManager = require('./dialog_manager');
-var Classifier = require('./classifier');
-var { locale } = require('./config');
+const Message = require('@botfuel/bot-common').Message;
+const DialogManager = require('./dialog_manager');
+const Nlp = require('./nlp');
+const { locale } = require('./config');
 
 /**
   * Bot main class.
@@ -16,7 +16,7 @@ class Bot {
     constructor(hubot) {
         this.hubot = hubot;
         this.brain = hubot.brain;
-        this.classifier = new Classifier(locale);
+        this.nlp = new Nlp(locale);
         this.dm = new DialogManager();
     }
 
@@ -27,10 +27,10 @@ class Bot {
     respond(res) {
         console.log("Bot.respond");
         let sentence = Message.getSentence(res);
-        this.classifier
+        this.nlp
             .classify(sentence)
             .then(({entities, intents}) => {
-                console.log(`classification resolved ${entities} ${intents}`);
+                console.log("classification resolved", entities, intents);
                 this.dm
                     .executeIntents(entities, intents)
                     .then((responses) => {

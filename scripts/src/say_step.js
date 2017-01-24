@@ -1,6 +1,6 @@
 'use strict';
 
-var SyncStep = require('./sync_step');
+const SyncStep = require('./sync_step');
 
 /**
  * A step that says something.
