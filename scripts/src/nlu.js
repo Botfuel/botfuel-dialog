@@ -12,12 +12,12 @@ class Nlu {
      */
     constructor(locale) {
         this.locale = locale;
-    }
-
-    static computeFeatures(sentence) {
         Natural
             .PorterStemmerFr
             .attach();
+    }
+
+    computeFeatures(sentence) {
         return sentence.tokenizeAndStem();
     }
 
@@ -27,13 +27,13 @@ class Nlu {
      * @return {Promise} a promise with entities and features
      */
     analyze(sentence) {
-        console.log("Nlu.analyze");
+        console.log("analyze");
         // TODO: fix this
         return Promise.resolve({
             entities: [
                 "entity1", "entity2"
             ],
-            features: Nlu.computeFeatures(sentence)
+            features: this.computeFeatures(sentence)
         });
     }
 }

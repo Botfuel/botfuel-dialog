@@ -18,11 +18,9 @@ class DialogManager {
     updateStack(intents) {
         console.log("DialogManager.updateStack");
         intents
-            .reverse()
             .forEach(({label, value}) => {
                 if (value > 0.7) { // TODO: fix this
-                    let steps = require(`./dialogs/${ label }`)
-                        .reverse();
+                    let steps = require(`./dialogs/${ label }`);
                     this.stack
                         .push(...steps);
                 }
@@ -48,11 +46,19 @@ class DialogManager {
     executeStack(entities, responses) {
         console.log("DialogManager.executeStack", this.stack);
         if (this.stack.length > 0) {
-            let step = this.stack.pop();
+            let step = this
+                .stack
+                .shift();
             return step
                 .run(entities, responses)
-                .then(() => {
-                    return this.executeStack(entities, responses);
+                .then((cont) => {
+                    if (cont) {
+                        // execute more steps
+                        return this.executeStack(entities, responses);
+                    } else {
+                        // let the user respond
+                        return Promise.resolve(responses);
+                    }
                 });
         } else {
             return Promise.resolve(responses);

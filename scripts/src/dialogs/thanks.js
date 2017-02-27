@@ -1,8 +1,7 @@
 'use strict';
 
-const SayStep = require('../say_step');
+const Steps = require('../steps');
 
 module.exports = [
-    new SayStep('You are welcome!'),
-    new SayStep('It\'s my pleasure!')
+    Steps.say('thanks')
 ];

@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * Synchronous step.
+ * Asynchronous step.
  */
-class SyncStep {
+class AsyncStep {
     /**
      * Asynchronous run method.
      * @param {Object[]} entities the transient entities
@@ -11,9 +11,8 @@ class SyncStep {
      * @return {Promise} a promise
      */
     run(entities, responses) {
-        this.syncRun(entities, responses);
-        return Promise.resolve();
+        return Promise.resolve(true);
     }
 }
 
-module.exports = SyncStep;
+module.exports = AsyncStep;
