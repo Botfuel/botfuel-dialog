@@ -32,10 +32,10 @@ class DialogManager {
      * @param {Object[]} entities the transient entities
      * @param {string[]} intents the intents
      */
-    executeIntents(entities, intents) {
+    executeIntents(context, entities, intents) {
         console.log("DialogManager.executeIntents");
         this.updateStack(intents);
-        return this.executeStack(entities, []);
+        return this.executeStack(context, entities, []);
     }
 
     /**
@@ -43,7 +43,7 @@ class DialogManager {
      * @param {Object[]} entities the transient entities
      * @param {responses[]} responses the responses
      */
-    executeStack(entities, responses) {
+    executeStack(context, entities, responses) {
         console.log("DialogManager.executeStack", this.stack);
         if (this.stack.length > 0) {
             let step = this
@@ -54,7 +54,7 @@ class DialogManager {
                 .then((cont) => {
                     if (cont) {
                         // execute more steps
-                        return this.executeStack(entities, responses);
+                        return this.executeStack(context, entities, responses);
                     } else {
                         // let the user respond
                         return Promise.resolve(responses);

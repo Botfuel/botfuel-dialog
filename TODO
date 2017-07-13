@@ -1,0 +1,4 @@
+get rid of steps
+be able to attach a config file to each intent (should empty stack)
+dm should load all templates once for all
+structure brain

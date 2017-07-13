@@ -12,6 +12,7 @@ class Nlu {
      */
     constructor(locale) {
         this.locale = locale;
+        // TODO: fix this
         Natural
             .PorterStemmerFr
             .attach();

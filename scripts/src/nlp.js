@@ -42,7 +42,7 @@ class Nlp {
      * @param {string} sentence the sentence
      * @return {Promise} a promise with entities and intents
      */
-    classify(sentence) {
+    classify(sentence, context) {
         console.log("Nlp.classify");
         return this
             .initClassifierIfNecessary()

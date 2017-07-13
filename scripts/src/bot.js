@@ -28,11 +28,11 @@ class Bot {
         console.log("Bot.respond");
         let sentence = Message.getSentence(res);
         this.nlp
-            .classify(sentence)
+            .classify(sentence, this.brain) // TODO: user part of the brain instead
             .then(({entities, intents}) => {
                 console.log("classification resolved", entities, intents);
                 this.dm
-                    .executeIntents(entities, intents)
+                    .executeIntents(this.brain, entities, intents)
                     .then((responses) => {
                         console.log("intents execution resolved");
                         responses.forEach((response) => {
