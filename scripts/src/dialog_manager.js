@@ -34,12 +34,13 @@ class DialogManager {
     intents
       .forEach(({label, value}) => {
         if (value > 0.7) { // TODO: fix this
-          this.call(label);
+          this.next(label);
         }
       });
   }
 
-  call(label, parameters) {
+  next(label, parameters) {
+    console.log("DialogManager.next", label, parameters);
     let Dialog = require(`./dialogs/${ label }`);
     this
       .dialogs
@@ -62,9 +63,9 @@ class DialogManager {
         .dialogs
         .pop()
         .execute(this)
-        .then((cont) => {
-          if (cont) {
-            executeDialogs()
+        .then((run) => {
+          if (run) {
+            this.executeDialogs()
           }
         });
     }

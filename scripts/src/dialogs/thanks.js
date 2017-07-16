@@ -5,7 +5,7 @@ const Dialog = require('./dialog');
 class Thanks extends Dialog {
   execute(dm) {
     dm.respond("Thanks!");
-    return Promise.resolve();
+    return Promise.resolve(true);
   }
 }
 
