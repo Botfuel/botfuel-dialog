@@ -50,12 +50,15 @@ class Nlu {
     return this
       .initClassifierIfNecessary()
       .then(() => {
-        console.log("classifier initialisation resolved");
+        console.log("Nlu.classify: initialisation resolved");
         return this
           .entityExtraction
           .analyze(sentence)
-          .then(({entities, features}) => {
-            console.log("nlu resolved", entities, features);
+          .then(({
+            entities: entities,
+            features: features
+          }) => {
+            console.log("Nlu.classified: resolved", entities, features);
             let intents = this
               .classifier
               .getClassifications(features);
@@ -66,11 +69,13 @@ class Nlu {
             });
           })
           .catch((err) => {
-            console.log("nlu rejected", err);
+            console.log("Nlu.classified: rejected", err);
+            return Promise.reject(err);
           });
       })
       .catch((err) => {
-        console.log("classifier initialisation rejected", err);
+        console.log("Nlu.classified: initialisation rejected", err);
+        return Promise.reject(err);
       });
   }
 }

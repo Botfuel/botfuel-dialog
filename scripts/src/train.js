@@ -19,13 +19,18 @@ Fs
     return fileName.substr(-intentSuffix.length) === intentSuffix;
   })
   .map((fileName) => {
+    console.log("train:", fileName);
     let intent = fileName.substring(0, fileName.length - intentSuffix.length);
+    console.log("train:", intent);
     Fs
       .readFileSync(`${ intentDirname }/${ fileName }`, "utf8")
       .toString()
       .split("\n")
       .map((line) => {
-        classifier.addDocument(entityExtraction.computeFeatures(line), intent);
+        console.log("train:", line);
+        let features = entityExtraction.computeFeaturesSync(line);
+        console.log("train:", features, intent);
+        classifier.addDocument(features, intent);
       });
   });
 classifier.train();

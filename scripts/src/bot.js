@@ -28,7 +28,7 @@ class Bot {
     this
       .nlu
       .classify(sentence)
-      .then(({entities, intents}) => {
+      .then(({entities: entities, intents: intents}) => {
         console.log("classification resolved", entities, intents);
         this
           .dm
