@@ -4,66 +4,72 @@
  * Manages the dialog/step stack.
  */
 class DialogManager {
-    /**
-     * Constructor.
-     */
-    constructor() {
-        this.stack = [];
-    }
+  /**
+   * Constructor.
+   */
+  constructor(context) {
+    this.dialogs = [];
+    this.context = context;
+  }
 
-    /**
-     * Updates the stack with the steps.
-     * @param {Object[]} intents an array of intents with their probabilities
-     */
-    updateStack(intents) {
-        console.log("DialogManager.updateStack");
-        intents
-            .forEach(({label, value}) => {
-                if (value > 0.7) { // TODO: fix this
-                    let steps = require(`./dialogs/${ label }`);
-                    this.stack
-                        .push(...steps);
-                }
-            });
-    }
+  /**
+   * Populates and executes the stack.
+   * @param {Object[]} entities the transient entities
+   * @param {string[]} intents the intents
+   */
+  executeIntents(intents, entities) {
+    console.log("DialogManager.executeIntents");
+    this.updateDialogs(intents);
+    this.responses = [];
+    this.entities = entities;
+    return this.executeDialogs();
+  }
 
-    /**
-     * Populates and executes the stack.
-     * @param {Object[]} entities the transient entities
-     * @param {string[]} intents the intents
-     */
-    executeIntents(context, entities, intents) {
-        console.log("DialogManager.executeIntents");
-        this.updateStack(intents);
-        return this.executeStack(context, entities, []);
-    }
-
-    /**
-     * Executes the stack.
-     * @param {Object[]} entities the transient entities
-     * @param {responses[]} responses the responses
-     */
-    executeStack(context, entities, responses) {
-        console.log("DialogManager.executeStack", this.stack);
-        if (this.stack.length > 0) {
-            let step = this
-                .stack
-                .shift();
-            return step
-                .run(entities, responses)
-                .then((cont) => {
-                    if (cont) {
-                        // execute more steps
-                        return this.executeStack(context, entities, responses);
-                    } else {
-                        // let the user respond
-                        return Promise.resolve(responses);
-                    }
-                });
-        } else {
-            return Promise.resolve(responses);
+  /**
+   * Updates the stack with the steps.
+   * @param {Object[]} intents an array of intents with their probabilities
+   */
+  updateDialogs(intents) {
+    console.log("DialogManager.updateDialogs");
+    intents
+      .forEach(({label, value}) => {
+        if (value > 0.7) { // TODO: fix this
+          this.call(label);
         }
+      });
+  }
+
+  call(label, parameters) {
+    let Dialog = require(`./dialogs/${ label }`);
+    this
+      .dialogs
+      .push(new Dialog(parameters));
+  }
+
+  respond(response) {
+    this
+      .responses
+      .push(response);
+  }
+
+  /**
+   * Executes the dialogs.
+   */
+  executeDialogs() {
+    console.log("DialogManager.executeDialogs", this.dialogs);
+    if (this.dialogs.length > 0) {
+      this
+        .dialogs
+        .pop()
+        .execute(this)
+        .then((cont) => {
+          if (cont) {
+            executeDialogs()
+          }
+        });
     }
+    return Promise.resolve(this.responses);
+  }
 }
 
 module.exports = DialogManager;

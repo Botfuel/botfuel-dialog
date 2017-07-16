@@ -1,7 +1,12 @@
 'use strict';
 
-const Steps = require('../steps');
+const Dialog = require('./dialog');
 
-module.exports = [
-    Steps.say('thanks')
-];
+class Thanks extends Dialog {
+  execute(dm) {
+    dm.respond("Thanks!");
+    return Promise.resolve();
+  }
+}
+
+module.exports = Thanks;

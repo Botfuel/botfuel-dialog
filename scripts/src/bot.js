@@ -2,7 +2,7 @@
 
 const Message = require('@botfuel/bot-common').Message;
 const DialogManager = require('./dialog_manager');
-const Nlp = require('./nlp');
+const Nlu = require('./nlu');
 const { locale } = require('./config');
 
 /**
@@ -10,43 +10,43 @@ const { locale } = require('./config');
   * Only this class knows about Hubot.
   */
 class Bot {
-    /**
-     * @param {Object} hubot an hubot robot
-     */
-    constructor(hubot) {
-        this.hubot = hubot;
-        this.brain = hubot.brain;
-        this.nlp = new Nlp(locale);
-        this.dm = new DialogManager();
-    }
+  /**
+   * @param {Object} hubot an hubot robot
+   */
+  constructor(hubot) {
+    this.nlu = new Nlu(hubot.brain, locale);
+    this.dm = new DialogManager(hubot.brain);
+  }
 
-    /**
-     * Responds.
-     * @param {Response} res Hubot's response object
-     */
-    respond(res) {
-        console.log("Bot.respond");
-        let sentence = Message.getSentence(res);
-        this.nlp
-            .classify(sentence, this.brain) // TODO: user part of the brain instead
-            .then(({entities, intents}) => {
-                console.log("classification resolved", entities, intents);
-                this.dm
-                    .executeIntents(this.brain, entities, intents)
-                    .then((responses) => {
-                        console.log("intents execution resolved");
-                        responses.forEach((response) => {
-                            res.send(response);
-                        }); // TODO: do we need to wait here?
-                    })
-                    .catch((err) => {
-                        console.log("intents execution rejected", err);
-                    });
-            })
-            .catch((err) => {
-                console.log("classification rejected", err);
-            });
-    }
+  /**
+   * Responds.
+   * @param {Response} res Hubot's response object
+   */
+  respond(res) {
+    console.log("Bot.respond");
+    let sentence = Message.getSentence(res);
+    this
+      .nlu
+      .classify(sentence)
+      .then(({entities, intents}) => {
+        console.log("classification resolved", entities, intents);
+        this
+          .dm
+          .executeIntents(intents, entities)
+          .then((responses) => {
+            console.log("intents execution resolved");
+            responses.forEach((response) => {
+              res.send(response);
+            }); // TODO: do we need to wait here?
+          })
+          .catch((err) => {
+            console.log("intents execution rejected", err);
+          });
+      })
+      .catch((err) => {
+        console.log("classification rejected", err);
+      });
+  }
 }
 
 module.exports = Bot;

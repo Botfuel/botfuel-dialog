@@ -2,5 +2,5 @@
 
 module.exports = {
     locale: 'fr',
-    modelName: "model.json"
+    modelName: 'model.json'
 };
