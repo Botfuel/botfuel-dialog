@@ -45,8 +45,7 @@ class EntityExtraction {
         { type: 'location', value: 'Nantes'}
       ]);
     } else {
-      return Promise.resolve([
-      ]);
+      return Promise.resolve([]);
     }
   }
 
@@ -65,10 +64,7 @@ class EntityExtraction {
           .computeEntities(sentence)
           .then((entities) => {
             console.log("EntityExtraction.analyze", entities, features);
-            return Promise.resolve({
-              entities: entities,
-              features: features
-            });
+            return Promise.resolve({ entities: entities, features: features });
           })
           .catch((err) => {
             console.log("EntityExtraction.analyze: entities computation rejected", err);

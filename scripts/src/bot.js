@@ -29,22 +29,22 @@ class Bot {
       .nlu
       .classify(sentence)
       .then(({entities: entities, intents: intents}) => {
-        console.log("classification resolved", entities, intents);
+        console.log("Bot.classification resolved", entities, intents);
         this
           .dm
           .executeIntents(intents, entities)
           .then((responses) => {
-            console.log("intents execution resolved");
+            console.log("Bot.intents execution resolved");
             responses.forEach((response) => {
               res.send(response);
             }); // TODO: do we need to wait here?
           })
           .catch((err) => {
-            console.log("intents execution rejected", err);
+            console.log("Bot.intents execution rejected", err);
           });
       })
       .catch((err) => {
-        console.log("classification rejected", err);
+        console.log("Bot.classification rejected", err);
       });
   }
 }

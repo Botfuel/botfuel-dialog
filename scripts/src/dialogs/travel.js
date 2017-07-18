@@ -1,11 +1,10 @@
 'use strict';
 
-const Dialog = require('./dialog');
+const PromptDialog = require('./prompt_dialog');
 
-class Travel extends Dialog {
-  execute(dm) {
-    dm.respond("Vas-y!"); // use template instead
-    return Promise.resolve(true);
+class Travel extends PromptDialog {
+  constructor() {
+    super(['date', 'location']);
   }
 }
 
