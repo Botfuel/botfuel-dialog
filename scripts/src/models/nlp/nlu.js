@@ -1,8 +1,9 @@
 'use strict';
 
-const EntityExtraction = require('./entity_extraction');
+const Entities = require('./entities');
+const Features = require('./features');
 const Natural = require('natural');
-const { modelName } = require('./config');
+const { modelName } = require('./../../config');
 
 /**
  * A nlu module (could be replaced by an external one).
@@ -13,8 +14,9 @@ class Nlu {
    * @param {string} locale the locale
    */
   constructor(context, locale) {
-    this.context = context;
-    this.entityExtraction = new EntityExtraction(locale);
+    this.context = context; // useful?
+    this.entities = new Entities(locale);
+    this.features = new Features(locale);
   }
 
   initClassifierIfNecessary() {
@@ -23,7 +25,7 @@ class Nlu {
       console.log("Nlu.initClassifierIfNecessary: already initialized");
       return Promise.resolve();
     } else {
-      let model = `${ __dirname }/../../models/${ modelName }`;
+      let model = `${ __dirname }/../../../../models/${ modelName }`;
       console.log("Nlu.initClassifierIfNecessary: initializing", model);
       return new Promise((resolve, reject) => {
         Natural
@@ -45,36 +47,38 @@ class Nlu {
    * @param {string} sentence the sentence
    * @return {Promise} a promise with entities and intents
    */
-  classify(sentence) {
-    console.log("Nlu.classify", sentence);
+  compute(sentence) {
+    console.log("Nlu.compute", sentence);
     return this
       .initClassifierIfNecessary()
       .then(() => {
-        console.log("Nlu.classify: initialisation resolved");
+        console.log("Nlu.classifier: initialized");
         return this
-          .entityExtraction
-          .analyze(sentence)
-          .then(({
-            entities: entities,
-            features: features
-          }) => {
-            console.log("Nlu.classified: resolved", entities, features);
-            let intents = this
-              .classifier
-              .getClassifications(features);
-            console.log("Nlu.classify: intents", intents);
-            return Promise.resolve({
-              entities: entities,
-              intents: intents
-            });
+          .entities
+          .compute(sentence)
+          .then((ents) => {
+            console.log("Nlu.entities: extracted", ents);
+            return this
+              .features
+              .compute(sentence, ents)
+              .then((feats) => {
+                let intents = this
+                  .classifier
+                  .getClassifications(feats);
+                console.log("Nlu.classification: intents", intents);
+                return Promise.resolve({
+                  entities: ents,
+                  intents: intents
+                });
+              })
           })
           .catch((err) => {
-            console.log("Nlu.classified: rejected", err);
+            console.log("Nlu.entities: extraction failed", err);
             return Promise.reject(err);
           });
       })
       .catch((err) => {
-        console.log("Nlu.classified: initialisation rejected", err);
+        console.log("Nlu.classifier: initialization rejected", err);
         return Promise.reject(err);
       });
   }

@@ -1,8 +1,8 @@
 'use strict';
 
 const Message = require('@botfuel/bot-common').Message;
-const DialogManager = require('./dialog_manager');
-const Nlu = require('./nlu');
+const DialogManager = require('./controllers/dialog_manager');
+const Nlu = require('./models/nlp/nlu');
 const { locale } = require('./config');
 
 /**
@@ -27,24 +27,24 @@ class Bot {
     let sentence = Message.getSentence(res);
     this
       .nlu
-      .classify(sentence)
+      .compute(sentence)
       .then(({entities: entities, intents: intents}) => {
-        console.log("Bot.classification resolved", entities, intents);
+        console.log("Nlu.computation resolved", entities, intents);
         this
           .dm
-          .executeIntents(intents, entities)
+          .execute(intents, entities)
           .then((responses) => {
-            console.log("Bot.intents execution resolved");
+            console.log("Dm.execution resolved", responses);
             responses.forEach((response) => {
               res.send(response);
             }); // TODO: do we need to wait here?
           })
           .catch((err) => {
-            console.log("Bot.intents execution rejected", err);
+            console.log("Dm.execution rejected", err);
           });
       })
       .catch((err) => {
-        console.log("Bot.classification rejected", err);
+        console.log("Nlu.computation rejected", err);
       });
   }
 }

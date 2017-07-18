@@ -17,11 +17,11 @@ class DialogManager {
    * @param {Object[]} entities the transient entities
    * @param {string[]} intents the intents
    */
-  executeIntents(intents, entities) {
-    console.log("DialogManager.executeIntents");
-    this.updateDialogs(intents);
+  execute(intents, entities) {
+    console.log("DialogManager.execute");
     this.responses = [];
     this.entities = entities;
+    this.updateDialogs(intents);
     return this.executeDialogs();
   }
 

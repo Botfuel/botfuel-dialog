@@ -1,17 +1,16 @@
 'use strict';
 
-const EntityExtraction = require('./entity_extraction');
 const Fs = require('fs');
 const Natural = require('natural');
-const { modelName } = require('./config');
-const { locale } = require('./config');
+const Features = require('./features');
+const { modelName, locale } = require('./../../config');
 const intentSuffix = '.intent';
 
 // TODO: take into accout locale here
 let classifier = new Natural.LogisticRegressionClassifier(Natural.PorterStemmerFr);
-let intentDirname = `${ __dirname }/intents`;
-let modelFilename = `${ __dirname }/../../models/${ modelName }`;
-let entityExtraction = new EntityExtraction(locale);
+let intentDirname = `${ __dirname }/../data/intents`;
+let modelFilename = `${ __dirname }/../../../../models/${ modelName }`;
+let features = new Features(locale);
 
 Fs
   .readdirSync(intentDirname, "utf8")
@@ -28,9 +27,9 @@ Fs
       .split("\n")
       .map((line) => {
         console.log("train:", line);
-        let features = entityExtraction.computeFeaturesSync(line);
-        console.log("train:", features, intent);
-        classifier.addDocument(features, intent);
+        let feats = features.computeSync(line, null);
+        console.log("train:", feats, intent);
+        classifier.addDocument(feats, intent);
       });
   });
 classifier.train();

@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "train": "node scripts/src/train.js",
+    "train": "node scripts/src/models/nlp/train.js",
     "clean": "echo \"flushall\n quit\n\" | redis-cli",
     "doc": "./node_modules/documentation/bin/documentation.js build scripts/** -f html -o docs",
     "test": "mocha --timeout 30000 tests/**/*.js",
