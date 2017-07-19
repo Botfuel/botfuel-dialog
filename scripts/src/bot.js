@@ -2,7 +2,7 @@
 
 const Message = require('@botfuel/bot-common').Message;
 const DialogManager = require('./controllers/dialog_manager');
-const Nlu = require('./models/nlp/nlu');
+const Nlu = require('./controllers/nlp/nlu');
 const { locale } = require('./config');
 
 /**

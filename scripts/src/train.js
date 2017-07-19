@@ -2,14 +2,14 @@
 
 const Fs = require('fs');
 const Natural = require('natural');
-const Features = require('./features');
-const { modelName, locale } = require('./../../config');
+const Features = require('./controllers/nlp/features');
+const { modelName, locale } = require('./config');
 const intentSuffix = '.intent';
 
 // TODO: take into accout locale here
 let classifier = new Natural.LogisticRegressionClassifier(Natural.PorterStemmerFr);
-let intentDirname = `${ __dirname }/../data/intents`;
-let modelFilename = `${ __dirname }/../../../../models/${ modelName }`;
+let intentDirname = `${ __dirname }/data/intents`;
+let modelFilename = `${ __dirname }/models/${ modelName }`;
 let features = new Features(locale);
 
 Fs
