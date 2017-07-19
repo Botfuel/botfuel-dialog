@@ -1,6 +1,7 @@
 'use strict';
 
 const Dialog = require('./dialog');
+const User = require('@botfuel/bot-common').User;
 
 class PromptDialog extends Dialog {
   constructor(dm, entities, parameters) {
@@ -9,7 +10,10 @@ class PromptDialog extends Dialog {
   }
 
   execute(id, responses) {
-    responses.push(JSON.stringify(this.entities)); // use template instead
+    let entitiesToExtract = this.entities;
+    responses.push(`entities to extract ${ JSON.stringify(entitiesToExtract) }`);
+    let entitiesExtracted = User.get(id, this.dm.context, '_entities');
+    responses.push(`entities extracted ${ JSON.stringify(entitiesExtracted) }`);
     return Promise.resolve(true);
   }
 }

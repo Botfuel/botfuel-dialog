@@ -29,6 +29,19 @@ class DialogManager {
         }
       });
     User.set(id, this.context, '_entities', entities);
+    let dialogs = User.get(id, this.context, '_dialogs');
+    console.log("DialogManager.execute: dialogs", dialogs);
+
+
+    // TODO: fix this ... does not work when lastIntent is not a prompt
+    if (dialogs.length == 0) {
+      if (User.defined(id, this.context, '_lastDialog')) {
+        let lastDialog = User.get(id, this.context, '_lastDialog');
+        User.push(id, this.context, '_dialogs', lastDialog);
+      }
+    }
+
+
     return this.executeDialogs(id, []);
   }
 
@@ -51,6 +64,7 @@ class DialogManager {
     console.log("DialogManager.executeDialogs", dialogs);
     if (dialogs.length > 0) {
       let dialogData = dialogs.pop();
+      User.set(id, this.context, '_lastDialog', dialogData);
       console.log("DialogManager.executeDialogs", dialogData);
       let Dialog = require(`./dialogs/${ dialogData.label }`);
       let dialog = new Dialog(this, dialogData.parameters);
