@@ -1,15 +1,18 @@
 'use strict';
 
-/**
- * Manages the dialog/step stack.
- */
+const User = require('@botfuel/bot-common').User;
+
 class DialogManager {
   /**
    * Constructor.
    */
   constructor(context) {
-    this.dialogs = [];
+    console.log("DialogManager.constructor");
     this.context = context;
+  }
+
+  logContext(id) {
+    console.log("DialogManager.logContext", this.context.data.users[id]);
   }
 
   /**
@@ -17,59 +20,49 @@ class DialogManager {
    * @param {Object[]} entities the transient entities
    * @param {string[]} intents the intents
    */
-  execute(intents, entities) {
-    console.log("DialogManager.execute");
-    this.responses = [];
-    this.entities = entities;
-    this.updateDialogs(intents);
-    return this.executeDialogs();
-  }
-
-  /**
-   * Updates the stack with the steps.
-   * @param {Object[]} intents an array of intents with their probabilities
-   */
-  updateDialogs(intents) {
-    console.log("DialogManager.updateDialogs");
+  execute(id, intents, entities) {
+    console.log("DialogManager.execute", id, intents, entities);
     intents
       .forEach(({label, value}) => {
         if (value > 0.7) { // TODO: fix this
-          this.next(label);
+          this.next(id, label);
         }
       });
+    User.set(id, this.context, '_entities', entities);
+    return this.executeDialogs(id, []);
   }
 
-  next(label, parameters) {
-    console.log("DialogManager.next", label, parameters);
-    let Dialog = require(`./dialogs/${ label }`);
-    this
-      .dialogs
-      .push(new Dialog(parameters));
-  }
-
-  respond(response) {
-    this
-      .responses
-      .push(response);
+  next(id, label, parameters) {
+    console.log("DialogManager.next", id, label, parameters);
+    let dialogData = {
+      label: label,
+      parameters: parameters
+    };
+    User.push(id, this.context, '_dialogs', dialogData);
   }
 
   /**
    * Executes the dialogs.
    */
-  executeDialogs() {
-    console.log("DialogManager.executeDialogs", this.dialogs);
-    if (this.dialogs.length > 0) {
-      this
-        .dialogs
-        .pop()
-        .execute(this)
+  executeDialogs(id, responses) {
+    console.log("DialogManager.executeDialogs", id, responses);
+    this.logContext(id);
+    let dialogs = User.get(id, this.context, '_dialogs');
+    console.log("DialogManager.executeDialogs", dialogs);
+    if (dialogs.length > 0) {
+      let dialogData = dialogs.pop();
+      console.log("DialogManager.executeDialogs", dialogData);
+      let Dialog = require(`./dialogs/${ dialogData.label }`);
+      let dialog = new Dialog(this, dialogData.parameters);
+      dialog
+        .execute(id, responses)
         .then((run) => {
           if (run) {
-            this.executeDialogs()
+            this.executeDialogs(id, responses)
           }
         });
     }
-    return Promise.resolve(this.responses);
+    return Promise.resolve(responses);
   }
 }
 

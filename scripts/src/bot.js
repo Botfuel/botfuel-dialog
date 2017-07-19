@@ -14,6 +14,7 @@ class Bot {
    * @param {Object} hubot an hubot robot
    */
   constructor(hubot) {
+    console.log("Bot.constructor");
     this.nlu = new Nlu(hubot.brain, locale);
     this.dm = new DialogManager(hubot.brain);
   }
@@ -24,7 +25,9 @@ class Bot {
    */
   respond(res) {
     console.log("Bot.respond");
+    let id = Message.getUser(res).id;
     let sentence = Message.getSentence(res);
+    console.log("Bot.respond", id, sentence);
     this
       .nlu
       .compute(sentence)
@@ -32,7 +35,7 @@ class Bot {
         console.log("Nlu.computation resolved", entities, intents);
         this
           .dm
-          .execute(intents, entities)
+          .execute(id, intents, entities)
           .then((responses) => {
             console.log("Dm.execution resolved", responses);
             responses.forEach((response) => {

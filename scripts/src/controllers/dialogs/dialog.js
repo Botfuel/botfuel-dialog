@@ -1,8 +1,9 @@
 'use strict';
 
 class Dialog {
-  constructor(parameters) {
+  constructor(dm, parameters) {
     this.parameters = parameters;
+    this.dm = dm;
   }
 }
 

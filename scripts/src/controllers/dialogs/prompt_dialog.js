@@ -3,13 +3,13 @@
 const Dialog = require('./dialog');
 
 class PromptDialog extends Dialog {
-  constructor(entities) {
-    super(null);
+  constructor(dm, entities, parameters) {
+    super(dm, parameters);
     this.entities = entities;
   }
 
-  execute(dm) {
-    dm.respond(JSON.stringify(dm.entities)); // use template instead
+  execute(id, responses) {
+    responses.push(JSON.stringify(this.entities)); // use template instead
     return Promise.resolve(true);
   }
 }
