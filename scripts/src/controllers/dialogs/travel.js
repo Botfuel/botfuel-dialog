@@ -3,8 +3,9 @@
 const PromptDialog = require('./prompt_dialog');
 
 class Travel extends PromptDialog {
-  constructor(dm) {
-    super(dm, ['date', 'location']);
+  constructor() {
+    console.log("Travel.constructor");
+    super({ entities: ['date', 'location'] });
   }
 }
 

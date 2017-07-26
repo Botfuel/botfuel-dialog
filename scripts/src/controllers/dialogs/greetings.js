@@ -3,9 +3,10 @@
 const Dialog = require('./dialog');
 
 class Greetings extends Dialog {
-  execute(id, responses) {
-    responses.push("Hello!"); // use template instead
-    this.dm.next(id, 'thanks');
+  execute(dm, id) {
+    console.log("Greetings.execute", '<dm>', id);
+    dm.say(id, 'hello');
+    dm.next(id, 'thanks');
     return Promise.resolve(false);
   }
 }

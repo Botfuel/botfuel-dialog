@@ -1,9 +1,9 @@
 'use strict';
 
 class Dialog {
-  constructor(dm, parameters) {
+  constructor(parameters) {
+    console.log("Dialog.constructor", parameters);
     this.parameters = parameters;
-    this.dm = dm;
   }
 }
 

@@ -1,6 +1,10 @@
 'use strict';
 
+const Fs = require('fs');
 const User = require('@botfuel/bot-common').User;
+const { locale } = require('../config');
+const _ = require('underscore')
+_.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
 
 class DialogManager {
   /**
@@ -30,7 +34,7 @@ class DialogManager {
       });
     User.set(id, this.context, '_entities', entities);
     let dialogs = User.get(id, this.context, '_dialogs');
-    console.log("DialogManager.execute: dialogs", dialogs);
+    console.log("DialogManager.execute: '_dialogs", dialogs);
 
 
     // TODO: fix this ... does not work when lastIntent is not a prompt
@@ -41,24 +45,15 @@ class DialogManager {
       }
     }
 
-
-    return this.executeDialogs(id, []);
-  }
-
-  next(id, label, parameters) {
-    console.log("DialogManager.next", id, label, parameters);
-    let dialogData = {
-      label: label,
-      parameters: parameters
-    };
-    User.push(id, this.context, '_dialogs', dialogData);
+    User.set(id, this.context, '_responses', []);
+    return this.executeDialogs(id);
   }
 
   /**
    * Executes the dialogs.
    */
-  executeDialogs(id, responses) {
-    console.log("DialogManager.executeDialogs", id, responses);
+  executeDialogs(id) {
+    console.log("DialogManager.executeDialogs", id);
     this.logContext(id);
     let dialogs = User.get(id, this.context, '_dialogs');
     console.log("DialogManager.executeDialogs", dialogs);
@@ -69,14 +64,43 @@ class DialogManager {
       let Dialog = require(`./dialogs/${ dialogData.label }`);
       let dialog = new Dialog(this, dialogData.parameters);
       dialog
-        .execute(id, responses)
+        .execute(this, id)
         .then((run) => {
           if (run) {
-            this.executeDialogs(id, responses)
+            this.executeDialogs(id)
           }
         });
     }
-    return Promise.resolve(responses);
+    let responses = User.get(id, this.context, '_responses');
+    return Promise.resolve(responses)
+  }
+
+
+  next(id, label, parameters) {
+    console.log("DialogManager.next", id, label, parameters);
+    let dialogData = {
+      label: label,
+      parameters: parameters
+    };
+    User.push(id, this.context, '_dialogs', dialogData);
+  }
+
+  say(id, label, parameters) {
+    console.log("DialogManager.say", label, parameters);
+    let templateName = `${ __dirname }/../views/templates/${label}.${locale}.txt`;
+    console.log("DialogManager.say", templateName);
+    Fs
+      .readFileSync(templateName, "utf8")
+      .toString()
+      .split("\n")
+      .map((line) => {
+        console.log("DialogManager.say", line);
+        let response = _.template(line)(parameters);
+        if (response != '') {
+          console.log("DialogManager.say", response);
+          User.push(id, this.context, '_responses', response);
+        }
+      });
   }
 }
 

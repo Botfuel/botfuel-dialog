@@ -11,6 +11,7 @@ class Entities {
 
   compute(sentence) {
     console.log("Entities.compute", sentence);
+    // TODO: execute entity extractors present in a directory (eg named extractors/)
     if (sentence == 'je pars demain') {
       return Promise.resolve([
         { type: 'date', value: 'demain'}
