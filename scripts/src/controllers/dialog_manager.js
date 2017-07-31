@@ -26,13 +26,13 @@ class DialogManager {
    */
   execute(id, intents, entities) {
     console.log("DialogManager.execute", id, intents, entities);
+    User.set(id, this.context, '_entities', entities);
     intents
       .forEach(({label, value}) => {
         if (value > 0.7) { // TODO: fix this
           this.next(id, label);
         }
       });
-    User.set(id, this.context, '_entities', entities);
     let dialogs = User.get(id, this.context, '_dialogs');
     console.log("DialogManager.execute: '_dialogs", dialogs);
 
@@ -44,6 +44,7 @@ class DialogManager {
         User.push(id, this.context, '_dialogs', lastDialog);
       }
     }
+    // TODO2: a dialog should not indicate if the stack has to be fully computed but instead indicate if it has completed its own work
 
     User.set(id, this.context, '_responses', []);
     return this.executeDialogs(id);

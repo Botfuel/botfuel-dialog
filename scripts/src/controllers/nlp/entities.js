@@ -1,5 +1,7 @@
 'use strict';
 
+const EntityExtraction = require('./extractors/entity_extraction');
+
 class Entities {
   /**
    * Constructor.
@@ -11,23 +13,8 @@ class Entities {
 
   compute(sentence) {
     console.log("Entities.compute", sentence);
-    // TODO: execute entity extractors present in a directory (eg named extractors/)
-    if (sentence == 'je pars demain') {
-      return Promise.resolve([
-        { type: 'date', value: 'demain'}
-      ]);
-    } else if (sentence == 'je pars a Nantes') {
-      return Promise.resolve([
-        { type: 'location', value: 'Nantes'}
-      ]);
-    } else if (sentence == 'je pars demain a Nantes') {
-      return Promise.resolve([
-        { type: 'date', value: 'demain'},
-        { type: 'location', value: 'Nantes'}
-      ]);
-    } else {
-      return Promise.resolve([]);
-    }
+    // TODO: iterate over extractors
+    return new EntityExtraction().parse(sentence);
   }
 }
 
