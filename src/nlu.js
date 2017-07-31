@@ -3,7 +3,6 @@
 const Entities = require('./entities');
 const Features = require('./features');
 const Natural = require('natural');
-const { modelName } = require('./../../config');
 
 /**
  * A nlu module (could be replaced by an external one).
@@ -11,12 +10,14 @@ const { modelName } = require('./../../config');
 class Nlu {
   /**
    * Constructor.
-   * @param {string} locale the locale
    */
-  constructor(context, locale) {
+  constructor(context, config, path) {
+    console.log("Nlu.constructor", "<context>", config, path);
     this.context = context; // useful?
-    this.entities = new Entities(locale);
-    this.features = new Features(locale);
+    this.config = config;
+    this.path = path;
+    this.entities = new Entities(config, path);
+    this.features = new Features(config, path);
   }
 
   initClassifierIfNecessary() {
@@ -25,7 +26,7 @@ class Nlu {
       console.log("Nlu.initClassifierIfNecessary: already initialized");
       return Promise.resolve();
     } else {
-      let model = `${ __dirname }/../../../../models/${ modelName }`;
+      let model = `${ this.path }/models/${ this.config.modelName }`;
       console.log("Nlu.initClassifierIfNecessary: initializing", model);
       return new Promise((resolve, reject) => {
         Natural

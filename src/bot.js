@@ -1,9 +1,8 @@
 'use strict';
 
 const Message = require('@botfuel/bot-common').Message;
-const DialogManager = require('./controllers/dialog_manager');
-const Nlu = require('./controllers/nlp/nlu');
-const { locale } = require('./config');
+const DialogManager = require('./dialog_manager');
+const Nlu = require('./nlu');
 
 /**
   * Bot main class.
@@ -13,10 +12,12 @@ class Bot {
   /**
    * @param {Object} hubot an hubot robot
    */
-  constructor(hubot) {
-    console.log("Bot.constructor");
-    this.nlu = new Nlu(hubot.brain, locale);
-    this.dm = new DialogManager(hubot.brain);
+  constructor(hubot, config, path) {
+    console.log("Bot.constructor", "<hubot>", config, path);
+    this.config = config;
+    this.path = path;
+    this.nlu = new Nlu(hubot.brain, config, path);
+    this.dm = new DialogManager(hubot.brain, config, path);
   }
 
   /**
@@ -31,7 +32,7 @@ class Bot {
     this
       .nlu
       .compute(sentence)
-      .then(({entities: entities, intents: intents}) => {
+      .then(({ entities: entities, intents: intents }) => {
         console.log("Nlu.computation resolved", entities, intents);
         this
           .dm

@@ -1,20 +1,20 @@
 {
+  "name": "@botfuel/bot-sdk2",
+  "version": "0.0.1",
+  "main": "index.js",
   "scripts": {
-    "train": "node scripts/src/train.js",
-    "clean": "echo \"flushall\n quit\n\" | redis-cli",
-    "doc": "./node_modules/documentation/bin/documentation.js build scripts/** -f html -o docs",
-    "test": "mocha --timeout 30000 tests/**/*.js",
-    "bot": "./bin/hubot"
   },
   "dependencies": {
     "@botfuel/bot-common": "latest",
     "botfuel-nlp-sdk": "latest",
+    "fs": "0.0.1-security",
     "fs-promise": "^1.0.0",
-    "hubot": "^2.19.0",
-    "hubot-redis-brain": "0.0.3",
     "natural": "^0.4.0"
   },
   "devDependencies": {
     "documentation": "^4.0.0-beta.18"
+  },
+  "engines": {
+    "node": "8.x"
   }
 }

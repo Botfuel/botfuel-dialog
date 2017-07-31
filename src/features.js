@@ -5,10 +5,10 @@ const Natural = require('natural');
 class Features {
   /**
    * Constructor.
-   * @param {string} locale the locale
    */
-  constructor(locale) {
-    this.locale = locale;
+  constructor(config, path) {
+    this.config = config;
+    this.path = path;
     // TODO: fix this
     Natural
       .PorterStemmerFr

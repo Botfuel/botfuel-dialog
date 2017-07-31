@@ -1,0 +1,13 @@
+{
+  "env": {
+    "node": true
+  },
+  "plugins": ["node"],
+  "extends": ["eslint:recommended", "airbnb"],
+  "parserOptions": { "ecmaVersion": 8 },
+  "parser": "babel-eslint",
+  "rules": {
+    "strict": 0,
+    "import/order": ["error"]
+  }
+}
