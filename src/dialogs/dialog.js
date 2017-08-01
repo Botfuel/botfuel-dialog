@@ -2,7 +2,7 @@
 
 class Dialog {
   constructor(parameters) {
-    console.log("Dialog.constructor", parameters);
+    console.log('Dialog.constructor', parameters);
     this.parameters = parameters;
   }
 }

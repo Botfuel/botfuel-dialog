@@ -16,14 +16,14 @@ class Features {
   }
 
   // because of train.js which needs some fixing!
-  computeSync(sentence, entities) {
-    console.log("Features.computeSync", sentence, entities);
+  static computeSync(sentence, entities) {
+    console.log('Features.computeSync', sentence, entities);
     return sentence.tokenizeAndStem();
   }
 
-  compute(sentence, entities) {
-    console.log("Features.compute", sentence, entities);
-    return Promise.resolve(this.computeSync(sentence, entities));
+  static compute(sentence, entities) {
+    console.log('Features.compute', sentence, entities);
+    return Promise.resolve(Features.computeSync(sentence, entities));
   }
 }
 

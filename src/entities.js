@@ -12,18 +12,18 @@ class Entities {
   }
 
   compute(sentence) {
-    console.log("Entities.compute", sentence);
-    let extractorsPath = `${ this.path }/scripts/src/controllers/extractors`;
-    console.log("Entities.compute: extractorsPath", extractorsPath);
+    console.log('Entities.compute', sentence);
+    const extractorsPath = `${this.path}/scripts/src/controllers/extractors`;
+    console.log('Entities.compute: extractorsPath', extractorsPath);
     return Fs
       .readdir(extractorsPath)
       .then((extractors) => {
         // TODO: fix this
-        const Extractor = require(`${ extractorsPath }/${ extractors[0] }`);
+        const Extractor = require(`${extractorsPath}/${extractors[0]}`);
         return new Extractor()
           .parse(sentence)
           .then((entities) => {
-            console.log("Entities.compute: entities", entities);
+            console.log('Entities.compute: entities', entities);
             return Promise.resolve(entities);
           });
       });
