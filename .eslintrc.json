@@ -2,7 +2,7 @@
   "env": {
     "node": true
   },
-  "plugins": ["node"],
+  "plugins": ["node", "babel"],
   "extends": ["eslint:recommended", "airbnb"],
   "parserOptions": { "ecmaVersion": 8 },
   "parser": "babel-eslint",
