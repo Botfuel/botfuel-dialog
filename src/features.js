@@ -1,5 +1,3 @@
-'use strict';
-
 const Natural = require('natural');
 
 class Features {

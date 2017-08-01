@@ -1,5 +1,3 @@
-'use strict';
-
 const Message = require('@botfuel/bot-common').Message;
 const DialogManager = require('./dialog_manager');
 const Nlu = require('./nlu');
@@ -26,13 +24,13 @@ class Bot {
    */
   respond(res) {
     console.log('Bot.respond');
-    let id = Message.getUser(res).id;
-    let sentence = Message.getSentence(res);
+    const id = Message.getUser(res).id;
+    const sentence = Message.getSentence(res);
     console.log('Bot.respond', id, sentence);
     this
       .nlu
       .compute(sentence)
-      .then(({ entities: entities, intents: intents }) => {
+      .then(({ entities, intents }) => {
         console.log('Nlu.computation resolved', entities, intents);
         this
           .dm

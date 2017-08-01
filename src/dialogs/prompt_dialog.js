@@ -1,14 +1,12 @@
-'use strict';
-
-const Dialog = require('./dialog');
 const User = require('@botfuel/bot-common').User;
+const Dialog = require('./dialog');
 
 class PromptDialog extends Dialog {
   execute(dm, id) {
     console.log('PromptDialog.execute', '<dm>', id);
-    let entitiesLocallyExtracted = User.get(id, dm.context, '_entities');
+    const entitiesLocallyExtracted = User.get(id, dm.context, '_entities');
     console.log('PromptDialog.execute: entitiesLocallyExtracted', entitiesLocallyExtracted);
-    let entitiesGloballyExtracted = User.get(id, dm.context, this.parameters.namespace) || {};
+    const entitiesGloballyExtracted = User.get(id, dm.context, this.parameters.namespace) || {};
     console.log('PromptDialog.execute: entitiesGloballyExtracted', entitiesGloballyExtracted);
     for (const entity of entitiesLocallyExtracted) {
       console.log('PromptDialog.execute: entityLocallyExtracted', entity);

@@ -1,5 +1,3 @@
-'use strict';
-
 const Natural = require('natural');
 const Entities = require('./entities');
 const Features = require('./features');

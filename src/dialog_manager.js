@@ -1,5 +1,3 @@
-'use strict';
-
 const Fs = require('fs');
 const User = require('@botfuel/bot-common').User;
 const _ = require('underscore')
