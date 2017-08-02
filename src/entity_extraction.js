@@ -1,6 +1,6 @@
 const Fs = require('fs-promise');
 
-class Entities {
+class EntityExtraction {
   /**
    * Constructor.
    */
@@ -10,9 +10,9 @@ class Entities {
   }
 
   compute(sentence) {
-    console.log('Entities.compute', sentence);
+    console.log('EntityExtraction.compute', sentence);
     const extractorsPath = `${this.path}/scripts/src/controllers/extractors`;
-    console.log('Entities.compute: extractorsPath', extractorsPath);
+    console.log('EntityExtraction.compute: extractorsPath', extractorsPath);
     return Fs
       .readdir(extractorsPath)
       .then((extractors) => {
@@ -22,11 +22,11 @@ class Entities {
         return new Extractor()
           .parse(sentence)
           .then((entities) => {
-            console.log('Entities.compute: entities', entities);
+            console.log('EntityExtraction.compute: entities', entities);
             return Promise.resolve(entities);
           });
       });
   }
 }
 
-module.exports = Entities;
+module.exports = EntityExtraction;

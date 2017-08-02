@@ -11,7 +11,7 @@ class PromptDialog extends Dialog {
     for (const entity of entitiesLocallyExtracted) {
       console.log('PromptDialog.execute: entityLocallyExtracted', entity);
       if (this.parameters.entities[entity.dim] !== null) {
-        dm.say(id, this.parameters.entities[entity.dim].confirm_template, { entity });
+        this.confirm(dm, id, entity.dim, entity);
         entitiesGloballyExtracted[entity.dim] = entity;
       }
     }
@@ -20,11 +20,19 @@ class PromptDialog extends Dialog {
     let extractionsDone = true;
     for (const entity of Object.keys(this.parameters.entities)) {
       if (entitiesGloballyExtracted[entity] == null) {
+        this.ask(dm, id, entity);
         extractionsDone = false;
-        dm.say(id, this.parameters.entities[entity].ask_template, { entity });
       }
     }
     return Promise.resolve(extractionsDone);
+  }
+
+  confirm(dm, id, entityKey, entity) {
+    dm.say(id, 'entity_confirm', { entity });
+  }
+
+  ask(dm, id, entityKey) {
+    dm.say(id, 'entity_ask', { entityKey });
   }
 }
 

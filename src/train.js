@@ -1,6 +1,6 @@
 const Fs = require('fs');
 const Natural = require('natural');
-const Features = require('./features');
+const FeatureExtraction = require('./feature_extraction');
 
 const intentSuffix = '.intent';
 
@@ -12,7 +12,7 @@ class Train {
     this.classifier = new Natural.LogisticRegressionClassifier(Natural.PorterStemmerFr);
     this.modelFilename = `${path}/models/${config.modelName}`;
     this.intentDirname = `${path}/scripts/src/data/intents`;
-    this.features = new Features(config.locale);
+    this.featureExtraction = new FeatureExtraction(config.locale);
   }
 
   run() {
@@ -30,9 +30,9 @@ class Train {
           .split('\n')
           .map((line) => {
             console.log('train:', line);
-            const feats = this.features.computeSync(line, null);
-            console.log('train:', feats, intent);
-            return this.classifier.addDocument(feats, intent);
+            const features = this.featureExtraction.computeSync(line, null);
+            console.log('train:', features, intent);
+            return this.classifier.addDocument(features, intent);
           });
       });
     this.classifier.train();

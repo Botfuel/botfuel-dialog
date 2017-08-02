@@ -1,6 +1,6 @@
 const Natural = require('natural');
-const Entities = require('./entities');
-const Features = require('./features');
+const EntityExtraction = require('./entity_extraction');
+const FeatureExtraction = require('./feature_extraction');
 
 /**
  * A nlu module (could be replaced by an external one).
@@ -14,8 +14,8 @@ class Nlu {
     this.context = context; // useful?
     this.config = config;
     this.path = path;
-    this.entities = new Entities(config, path);
-    this.features = new Features(config, path);
+    this.entityExtraction = new EntityExtraction(config, path);
+    this.featureExtraction = new FeatureExtraction(config, path);
   }
 
   initClassifierIfNecessary() {
@@ -51,22 +51,19 @@ class Nlu {
       .then(() => {
         console.log('Nlu.classifier: initialized');
         return this
-          .entities
+          .entityExtraction
           .compute(sentence)
-          .then((ents) => {
-            console.log('Nlu.entities: extracted', ents);
+          .then((entities) => {
+            console.log('Nlu.entities: extracted', entities);
             return this
-              .features
-              .compute(sentence, ents)
-              .then((feats) => {
+              .featureExtraction
+              .compute(sentence, entities)
+              .then((features) => {
                 const intents = this
                   .classifier
-                  .getClassifications(feats);
+                  .getClassifications(features);
                 console.log('Nlu.classification: intents', intents);
-                return Promise.resolve({
-                  entities: ents,
-                  intents,
-                });
+                return Promise.resolve({ entities, intents });
               });
           })
           .catch((err) => {
