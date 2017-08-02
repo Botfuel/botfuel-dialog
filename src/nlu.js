@@ -16,8 +16,10 @@ class Nlu {
     this.path = path;
     this.entityExtraction = new EntityExtraction(config, path);
     this.featureExtraction = new FeatureExtraction(config, path);
+    // in the case of QnA with need a special classifier
   }
 
+  // TODO: what is the best way to do inits at startup
   initClassifierIfNecessary() {
     console.log('Nlu.initClassifierIfNecessary');
     if (this.classifier) {
@@ -59,6 +61,9 @@ class Nlu {
               .featureExtraction
               .compute(sentence, entities)
               .then((features) => {
+                // in the case of QnA:
+                // - the classifier returns a QnA intent
+                // - the entityExtraction extracts the QnA id
                 const intents = this
                   .classifier
                   .getClassifications(features);

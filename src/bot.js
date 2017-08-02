@@ -14,7 +14,7 @@ class Bot {
     console.log('Bot.constructor', '<hubot>', config, path);
     this.config = config;
     this.path = path;
-    this.nlu = new Nlu(hubot.brain, config, path);
+    this.nlu = new Nlu(hubot.brain, config, path); // TODO: what is the usual way to pass a specific class here if needed
     this.dm = new DialogManager(hubot.brain, config, path);
   }
 
