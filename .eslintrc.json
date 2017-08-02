@@ -9,6 +9,8 @@
   "rules": {
     "strict": 0,
     "jsx-a11y/href-no-hash": "off",
-    "import/order": ["error"]
+    "import/order": ["error"],
+    "no-console": "off",
+    "no-restricted-syntax": "off"
   }
 }

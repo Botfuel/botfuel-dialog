@@ -17,6 +17,7 @@ class Entities {
       .readdir(extractorsPath)
       .then((extractors) => {
         // TODO: fix this
+        // TODO: move extractors in config
         const Extractor = require(`${extractorsPath}/${extractors[0]}`);
         return new Extractor()
           .parse(sentence)
