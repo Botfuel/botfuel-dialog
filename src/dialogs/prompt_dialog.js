@@ -1,8 +1,10 @@
 const User = require('@botfuel/bot-common').User;
 const Dialog = require('./dialog');
+const Confirm = require('./confirm');
 
 class PromptDialog extends Dialog {
   execute(dm, id) {
+    console.log('HEYHEY');
     console.log('PromptDialog.execute', '<dm>', id);
     const entitiesLocallyExtracted = User.get(id, dm.context, '_entities');
     console.log('PromptDialog.execute: entitiesLocallyExtracted', entitiesLocallyExtracted);
@@ -11,7 +13,7 @@ class PromptDialog extends Dialog {
     for (const entity of entitiesLocallyExtracted) {
       console.log('PromptDialog.execute: entityLocallyExtracted', entity);
       if (this.parameters.entities.includes(entity.dim)) {
-        dm.say(id, 'entity_extracted', { entity: entity });
+        dm.next(id, 'confirm', entity);
         entitiesGloballyExtracted[entity.dim] = entity;
       }
     }
