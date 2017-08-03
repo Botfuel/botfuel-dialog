@@ -4,23 +4,23 @@ const Dialog = require('./dialog');
 class PromptDialog extends Dialog {
   execute(dm, id) {
     console.log('PromptDialog.execute', '<dm>', id);
-    const entitiesLocallyExtracted = User.get(id, dm.context, '_entities');
-    console.log('PromptDialog.execute: entitiesLocallyExtracted', entitiesLocallyExtracted);
-    const entitiesGloballyExtracted = User.get(id, dm.context, this.parameters.namespace) || {};
-    console.log('PromptDialog.execute: entitiesGloballyExtracted', entitiesGloballyExtracted);
-    for (const entity of entitiesLocallyExtracted) {
-      console.log('PromptDialog.execute: entityLocallyExtracted', entity);
-      if (this.parameters.entities[entity.dim] !== null) {
-        this.confirm(dm, id, entity.dim, entity);
-        entitiesGloballyExtracted[entity.dim] = entity;
+    const messageEntities = User.get(id, dm.context, '_entities');
+    console.log('PromptDialog.execute: messageEntities', messageEntities);
+    const dialogEntities = User.get(id, dm.context, this.parameters.namespace) || {};
+    console.log('PromptDialog.execute: dialogEntities', dialogEntities);
+    for (const messageEntity of messageEntities) {
+      console.log('PromptDialog.execute: messageEntity', messageEntity);
+      if (this.parameters.entities[messageEntity.dim] !== null) {
+        this.confirm(dm, id, messageEntity.dim, messageEntity);
+        dialogEntities[messageEntity.dim] = messageEntity;
       }
     }
-    console.log('PromptDialog.execute: entitiesGloballyExtracted', entitiesGloballyExtracted);
-    User.set(id, dm.context, this.parameters.namespace, entitiesGloballyExtracted);
+    console.log('PromptDialog.execute: dialogEntities', dialogEntities);
+    User.set(id, dm.context, this.parameters.namespace, dialogEntities);
     let extractionsDone = true;
-    for (const entity of Object.keys(this.parameters.entities)) {
-      if (entitiesGloballyExtracted[entity] == null) {
-        this.ask(dm, id, entity);
+    for (const entityKey of Object.keys(this.parameters.entities)) {
+      if (dialogEntities[entityKey] == null) {
+        this.ask(dm, id, entityKey);
         extractionsDone = false;
       }
     }
