@@ -86,8 +86,12 @@ class DialogManager {
       .split('\n')
       .forEach((line) => {
         console.log('DialogManager.say', line);
-        const response = _.template(line)(parameters);
-        if (response !== '') {
+        const payload = _.template(line)(parameters);
+        if (payload !== '') {
+          const response = {
+            type: 'text',
+            payload,
+          };
           console.log('DialogManager.say', response);
           User.push(id, this.context, '_responses', response);
         }

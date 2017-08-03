@@ -38,8 +38,8 @@ class Bot {
           .then((responses) => {
             console.log('Dm.execution resolved', responses);
             responses.forEach((response) => {
-              res.send(response);
-            }); // TODO: do we need to wait here?
+              this.send(res, response);
+            });
           })
           .catch((err) => {
             console.log('Dm.execution rejected', err);
@@ -48,6 +48,11 @@ class Bot {
       .catch((err) => {
         console.log('Nlu.computation rejected', err);
       });
+  }
+
+  send(res, response) {
+    // when text
+    res.send(response.payload);
   }
 }
 
