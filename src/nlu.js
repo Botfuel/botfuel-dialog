@@ -9,9 +9,8 @@ class Nlu {
   /**
    * Constructor.
    */
-  constructor(context, config, path) {
-    console.log('Nlu.constructor', '<context>', config, path);
-    this.context = context; // useful?
+  constructor(config, path) {
+    console.log('Nlu.constructor', config, path);
     this.config = config;
     this.path = path;
     this.entityExtraction = new EntityExtraction(config, path);
@@ -34,9 +33,10 @@ class Nlu {
         .load(model, null, (err, classifier) => {
           if (err !== null) {
             return reject(err);
+          } else {
+            this.classifier = classifier;
+            return resolve();
           }
-          this.classifier = classifier;
-          return resolve();
         });
     });
   }

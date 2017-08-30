@@ -1,23 +1,9 @@
 const Message = require('@botfuel/bot-common').Message;
-const DialogManager = require('./dialog_manager');
-const Nlu = require('./nlu');
 
 /**
   * Bot main class.
-  * Only this class knows about Hubot.
   */
 class Bot {
-  /**
-   * @param {Object} hubot an hubot robot
-   */
-  constructor(hubot, config, path) {
-    console.log('Bot.constructor', '<hubot>', config, path);
-    this.config = config;
-    this.path = path;
-    this.nlu = new Nlu(hubot.brain, config, path); // TODO: what is the usual way to pass a specific class here if needed
-    this.dm = new DialogManager(hubot.brain, config, path);
-  }
-
   /**
    * Responds.
    * @param {Response} res Hubot's response object

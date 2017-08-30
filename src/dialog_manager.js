@@ -58,7 +58,7 @@ class DialogManager {
       User.set(id, this.context, '_lastDialog', dialogData);
       console.log('DialogManager.executeDialogs', dialogData);
       const Dialog = require(`${this.path}/scripts/src/controllers/dialogs/${dialogData.label}`);
-      new Dialog(this, dialogData.parameters)
+      new Dialog(dialogData.parameters)
         .execute(this, id)
         .then((run) => {
           if (run) {
