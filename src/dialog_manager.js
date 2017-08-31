@@ -4,6 +4,9 @@ const _ = require('underscore');
 
 _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
 
+/**
+ * Default DialogManager.
+ */
 class DialogManager {
   /**
    * Constructor.
@@ -21,8 +24,9 @@ class DialogManager {
 
   /**
    * Populates and executes the stack.
-   * @param {Object[]} entities the transient entities
+   * @param {string} id the user id
    * @param {string[]} intents the intents
+   * @param {Object[]} entities the transient entities
    */
   execute(id, intents, entities) {
     console.log('DialogManager.execute', id, intents, entities);
@@ -47,6 +51,7 @@ class DialogManager {
 
   /**
    * Executes the dialogs.
+   * @param {string} id the user id
    */
   executeDialogs(id) {
     console.log('DialogManager.executeDialogs', id);
@@ -61,7 +66,7 @@ class DialogManager {
       new Dialog(dialogData.parameters)
         .execute(this, id)
         .then((run) => {
-          if (run) {
+          if (run) { // continue executing the stack
             this.executeDialogs(id);
           }
         });
@@ -70,12 +75,23 @@ class DialogManager {
     return Promise.resolve(responses);
   }
 
-
+  /**
+   * Pushes a dialog on the stack.
+   * @param {string} id the user id
+   * @param {string} label the dialog label
+   * @param {Object} parameters the dialog parameters
+   */
   next(id, label, parameters) {
     console.log('DialogManager.next', id, label, parameters);
     User.push(id, this.context, '_dialogs', { label, parameters });
   }
 
+  /**
+   * Says something.
+   * @param {string} id the user id
+   * @param {string} label the template label
+   * @param {Object} parameters the template parameters
+   */
   say(id, label, parameters) {
     console.log('DialogManager.say', label, parameters);
     const templateName = `${this.path}/scripts/src/views/templates/${label}.${this.config.locale}.txt`;

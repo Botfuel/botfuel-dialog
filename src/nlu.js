@@ -8,6 +8,8 @@ const FeatureExtraction = require('./feature_extraction');
 class Nlu {
   /**
    * Constructor.
+   * @param {Object} config the bot's config
+   * @param {path} path the path of the bot project
    */
   constructor(config, path) {
     console.log('Nlu.constructor', config, path);

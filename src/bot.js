@@ -1,15 +1,14 @@
 const Message = require('@botfuel/bot-common').Message;
 
 /**
-  * Bot main class.
-  */
+ * Bot main class.
+ */
 class Bot {
   /**
    * Responds.
    * @param {Response} res Hubot's response object
    */
   respond(res) {
-    console.log('Bot.respond');
     const id = Message.getUser(res).id;
     const sentence = Message.getSentence(res);
     console.log('Bot.respond', id, sentence);
@@ -37,7 +36,8 @@ class Bot {
   }
 
   send(res, response) {
-    // when text
+    console.log('Bot.send', '<res>', response);
+    // when text (TODO: fix this)
     res.send(response.payload);
   }
 }

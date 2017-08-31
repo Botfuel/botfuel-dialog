@@ -1,7 +1,15 @@
 const User = require('@botfuel/bot-common').User;
 const Dialog = require('./dialog');
 
+/**
+ * PromptDialog class.
+ */
 class PromptDialog extends Dialog {
+  /**
+   * Executes.
+   * @param {Object} dm the dialog manager
+   * @param {string} id the user id
+   */
   execute(dm, id) {
     console.log('PromptDialog.execute', '<dm>', id);
     const messageEntities = User.get(id, dm.context, '_entities');
@@ -11,7 +19,7 @@ class PromptDialog extends Dialog {
     for (const messageEntity of messageEntities) {
       console.log('PromptDialog.execute: messageEntity', messageEntity);
       if (this.parameters.entities[messageEntity.dim] !== null) {
-        this.confirm(dm, id, messageEntity.dim, messageEntity);
+        this.confirm(dm, id, messageEntity);
         dialogEntities[messageEntity.dim] = messageEntity;
       }
     }
@@ -27,12 +35,26 @@ class PromptDialog extends Dialog {
     return Promise.resolve(extractionsDone);
   }
 
-  confirm(dm, id, entityKey, entity) {
+  /**
+   * Confirms the entity.
+   * @param {Object} dm the dialog manager
+   * @param {string} id the user id
+   * @param {Object} entity the entity
+   */
+  confirm(dm, id, entity) {
+    console.log('PromptDialog.confirm', '<dm>', id, entity);
     dm.say(id, 'entity_confirm', { entity });
   }
 
+  /**
+   * Asks the entity.
+   * @param {Object} dm the dialog manager
+   * @param {string} id the user id
+   * @param {string} entityKey the entityKey
+   */
   ask(dm, id, entityKey) {
-    dm.say(id, 'entity_ask', { entityKey });
+    console.log('PromptDialog.ask', '<dm>', id, entityKey);
+    dm.say(id, 'entity_ask', { entity: entityKey });
   }
 }
 
