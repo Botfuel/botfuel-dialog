@@ -18,21 +18,16 @@ class EntityExtraction {
    */
   compute(sentence) {
     console.log('EntityExtraction.compute', sentence);
-    const extractorsPath = `${this.config.path}/scripts/src/controllers/extractors`;
-    console.log('EntityExtraction.compute: extractorsPath', extractorsPath);
-    return Fs
-      .readdir(extractorsPath)
-      .then((extractors) => {
-        // TODO: fix this
-        // TODO: move extractors in config
-        const Extractor = require(`${extractorsPath}/${extractors[0]}`);
-        return new Extractor()
-          .parse(sentence)
-          .then((entities) => {
-            console.log('EntityExtraction.compute: entities', entities);
-            return Promise.resolve(entities);
-          });
-      });
+    console.log('EntityExtraction.compute', this.config.extractors);
+    for (const extractor of this.config.extractors) {
+      // TODO: fix this
+      console.log(extractor);
+      return extractor(sentence)
+        .then((entities) => {
+          console.log('EntityExtraction.compute: entities', entities);
+          return Promise.resolve(entities);
+        });
+    }
   }
 }
 

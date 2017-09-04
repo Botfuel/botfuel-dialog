@@ -60,7 +60,7 @@ class DialogManager {
       const dialogData = dialogs.pop();
       User.set(id, this.context, '_lastDialog', dialogData);
       console.log('DialogManager.executeDialogs', dialogData);
-      const Dialog = require(`${this.config.path}/scripts/src/controllers/dialogs/${dialogData.label}`);
+      const Dialog = require(`${this.config.path}/src/controllers/dialogs/${dialogData.label}`);
       new Dialog(dialogData.parameters)
         .execute(this, id)
         .then((run) => {
@@ -92,7 +92,7 @@ class DialogManager {
    */
   say(id, label, parameters, path) {
     console.log('DialogManager.say', label, parameters, path);
-    const templatePath = path || `${this.config.path}/scripts/src/views/templates/`;
+    const templatePath = path || `${this.config.path}/src/views/templates/`;
     const templateName = `${templatePath}/${label}.${this.config.locale}.txt`;
     console.log('DialogManager.say', templateName);
     Fs

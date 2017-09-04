@@ -18,6 +18,12 @@ class Bot {
     console.log('Bot.run');
   }
 
+  async play(messages) {
+    for (const message of messages) {
+      await this.respond(message);
+    }
+  }
+
   /**
    * Responds.
    */
