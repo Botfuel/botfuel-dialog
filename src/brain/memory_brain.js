@@ -1,20 +1,14 @@
 import _ from 'lodash';
-import * as db from './db';
-import { User, Conversation } from './models';
 
 /**
- * Class to wrap mongodb database with two models
+ * Class to wrap memory brain
  */
-export default class Brain {
+export default class MemoryBrain {
   /**
    * Constructor
    * @param {string} botId - bot id
    */
   constructor(botId) {
-    // connect to mongodb if not connected yet
-    if (!db.isConnected()) {
-      db.connect();
-    }
     this.botId = botId;
   }
 
@@ -82,6 +76,15 @@ export default class Brain {
   }
 
   /**
+   * Get a conversation
+   * @param {ObjectId} conversationId - conversation id
+   * @returns {Query|*} - promise
+   */
+  getConversation(conversationId) {
+    return Conversation.findOne({ _id: conversationId });
+  }
+
+  /**
    * Get user conversations
    * @param {ObjectId} userId - user mongodb id
    * @returns {Query|*} - promise
@@ -97,15 +100,6 @@ export default class Brain {
    */
   getLastConversation(userId) {
     return Conversation.findOne({ user: userId }).sort('-createdAt').exec();
-  }
-
-  /**
-   * Get a conversation
-   * @param {ObjectId} conversationId - conversation id
-   * @returns {Query|*} - promise
-   */
-  getConversation(conversationId) {
-    return Conversation.findOne({ _id: conversationId });
   }
 
   /**
