@@ -10,6 +10,7 @@ export default class MemoryBrain {
    */
   constructor(botId) {
     this.botId = botId;
+    this.users = [];
   }
 
   /**
@@ -18,7 +19,15 @@ export default class MemoryBrain {
    * @returns {Query|*} - promise
    */
   addUser(userId) {
-    return User.create({ botId: this.botId, userId });
+    return new Promise((resolve, reject) => {
+      if (_.findIndex(this.users, { botId: this.botId, userId }) === -1) {
+        const newUser = { botId: this.botId, userId, conversations: [], createdAt: Date.now() };
+        this.users.push(newUser);
+        resolve(newUser);
+      } else {
+        reject('An user with this id for this bot already exist');
+      }
+    });
   }
 
   /**
@@ -27,7 +36,14 @@ export default class MemoryBrain {
    * @returns {Query|*} - promise
    */
   getUser(userId) {
-    return User.findOne({ botId: this.botId, userId });
+    return new Promise((resolve, reject) => {
+      const index = _.findIndex(this.users, { botId: this.botId, userId });
+      if (index !== -1) {
+        resolve(this.users[index]);
+      } else {
+        reject('User not found');
+      }
+    });
   }
 
   /**
@@ -37,7 +53,15 @@ export default class MemoryBrain {
    * @returns {Query|*} - promise
    */
   updateUser(userId, updates) {
-    return User.findOneAndUpdate({ botId: this.botId, userId }, updates);
+    return new Promise((resolve, reject) => {
+      const index = _.findIndex(this.users, { botId: this.botId, userId });
+      if (index !== -1) {
+        this.users[index] = _.extend(this.users[index], updates);
+        resolve(this.users[index]);
+      } else {
+        reject('User not found');
+      }
+    });
   }
 
   /**
@@ -46,104 +70,146 @@ export default class MemoryBrain {
    * @returns {Query|*} - promise
    */
   removeUser(userId) {
-    return User.remove({ botId: this.botId, userId });
+    return new Promise((resolve, reject) => {
+      const index = _.findIndex(this.users, { botId: this.botId, userId });
+      if (index !== -1) {
+        this.users = _.pullAt(this.users, index);
+        resolve(`User ${userId} has been removed`);
+      } else {
+        reject('User not found');
+      }
+    });
   }
 
   /**
    * Add a conversation to an user
    * @param {string} userId - user id
-   * @param {object} metadata - conversation metadata object
+   * @param {object} data - conversation data object
    * @returns {Query|*} - promise
    */
-  addConversation(userId, metadata) {
+  addConversation(userId, data) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId })
-        .then((user) => {
-          const conversation = new Conversation({ user, metadata });
-          conversation.save()
-            .then((savedConversation) => {
-              user.conversations.push(savedConversation);
-              user.save()
-                .then(() => {
-                  resolve(savedConversation);
-                })
-                .catch(err => reject(err));
-            })
-            .catch(err => reject(err));
-        })
-        .catch(err => reject(err));
+      const index = _.findIndex(this.users, { botId: this.botId, userId });
+      if (index !== -1) {
+        const conversation = {
+          id: this.users[index].conversations.length,
+          data,
+          createdAt: Date.now(),
+        };
+        this.users[index].conversations.push(conversation);
+        resolve(conversation);
+      } else {
+        reject('User not found');
+      }
     });
   }
 
   /**
    * Get a conversation
-   * @param {ObjectId} conversationId - conversation id
+   * @param {string} userId - user id
+   * @param {number} conversationId - conversation id
    * @returns {Query|*} - promise
    */
-  getConversation(conversationId) {
-    return Conversation.findOne({ _id: conversationId });
+  getConversation(userId, conversationId) {
+    return new Promise((resolve, reject) => {
+      const index = _.findIndex(this.users, { botId: this.botId, userId });
+      if (index !== -1) {
+        const user = this.users[index];
+        const conversationIndex = _.findIndex(user.conversations, { id: conversationId });
+        if (conversationIndex !== -1) {
+          resolve(user.conversations[conversationIndex]);
+        } else {
+          reject('Conversation not found');
+        }
+      } else {
+        reject('User not found');
+      }
+    });
   }
 
   /**
    * Get user conversations
-   * @param {ObjectId} userId - user mongodb id
+   * @param {string} userId - user id
    * @returns {Query|*} - promise
    */
   getConversations(userId) {
-    return Conversation.find({ user: userId });
+    return new Promise((resolve, reject) => {
+      const index = _.findIndex(this.users, { botId: this.botId, userId });
+      if (index !== -1) {
+        resolve(this.users[index].conversations);
+      } else {
+        reject('User not found');
+      }
+    });
   }
 
   /**
    * Get user last conversation
-   * @param {ObjectId} userId - user id
+   * @param {string} userId - user id
    * @returns {Query|*} - promise
    */
   getLastConversation(userId) {
-    return Conversation.findOne({ user: userId }).sort('-createdAt').exec();
+    return new Promise((resolve, reject) => {
+      const index = _.findIndex(this.users, { botId: this.botId, userId });
+      if (index !== -1) {
+        const lastIndex = this.users[index].conversations.length - 1;
+        resolve(this.users[index].conversations[lastIndex]);
+      } else {
+        reject('User not found');
+      }
+    });
   }
 
   /**
    * Update a conversation
-   * @param {ObjectId} conversationId - conversation id
-   * @param {object} metadata - conversation metadata object
+   * @param {string} userId - user id
+   * @param {number} conversationId - conversation id
+   * @param {object} data - conversation data object
    * @returns {Query|*} - promise
    */
-  updateConversation(conversationId, metadata) {
+  updateConversation(userId, conversationId, data) {
     return new Promise((resolve, reject) => {
-      Conversation.findOne({ _id: conversationId }, 'metadata')
-        .then((conversation) => {
-          const newMetadata = _.extend(conversation.metadata, metadata);
-          Conversation.findOneAndUpdate(
-            { _id: conversationId },
-            { $set: { metadata: newMetadata } },
-            { new: true },
-          )
-            .then(updatedConversation => resolve(updatedConversation))
-            .catch(err => reject(err));
-        })
-        .catch(err => reject(err));
+      const index = _.findIndex(this.users, { botId: this.botId, userId });
+      if (index !== -1) {
+        const user = this.users[index];
+        const conversationIndex = _.findIndex(user.conversations, { id: conversationId });
+        if (conversationIndex !== -1) {
+          const newConversationData = _.extend(user.conversations[conversationIndex].data, data);
+          this.users[index].conversations[conversationIndex].data = newConversationData;
+          resolve(this.users[index].conversations[conversationIndex]);
+        } else {
+          reject('Conversation not found');
+        }
+      } else {
+        reject('User not found');
+      }
     });
   }
 
   /**
    * Remove a conversation
    * @param {string} userId - user id
-   * @param {ObjectId} conversationId - conversation id
+   * @param {number} conversationId - conversation id
    * @returns {Query|*} - promise
    */
   removeConversation(userId, conversationId) {
     return new Promise((resolve, reject) => {
-      Conversation.remove({ _id: conversationId })
-        .then(() => {
-          User.findOneAndUpdate(
-            { botId: this.botId, userId },
-            { $pull: { conversations: conversationId } },
-            { new: true },
-          )
-            .then(user => resolve(user))
-            .catch(err => reject(err));
-        })
-        .catch(err => reject(err));
+      const userIndex = _.findIndex(this.users, { botId: this.botId, userId });
+      if (userIndex !== -1) {
+        const user = this.users[userIndex];
+        const conversationIndex = _.findIndex(user.conversations, { id: conversationId });
+        if (conversationIndex !== -1) {
+          this.users[userIndex].conversations = _.pullAt(
+            this.users[userIndex].conversations,
+            conversationIndex,
+          );
+          resolve(`Conversation ${conversationId} has been removed from user ${userId}`);
+        } else {
+          reject('Conversation not found');
+        }
+      } else {
+        reject('User not found');
+      }
     });
   }
 }

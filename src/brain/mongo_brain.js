@@ -58,14 +58,14 @@ export default class MongoBrain {
   /**
    * Add a conversation to an user
    * @param {string} userId - user id
-   * @param {object} metadata - conversation metadata object
+   * @param {object} data - conversation data object
    * @returns {Query|*} - promise
    */
-  addConversation(userId, metadata) {
+  addConversation(userId, data) {
     return new Promise((resolve, reject) => {
       User.findOne({ botId: this.botId, userId })
         .then((user) => {
-          const conversation = new Conversation({ user, metadata });
+          const conversation = new Conversation({ user, data });
           conversation.save()
             .then((savedConversation) => {
               user.conversations.push(savedConversation);
@@ -111,17 +111,17 @@ export default class MongoBrain {
   /**
    * Update a conversation
    * @param {ObjectId} conversationId - conversation id
-   * @param {object} metadata - conversation metadata object
+   * @param {object} data - conversation data object
    * @returns {Query|*} - promise
    */
-  updateConversation(conversationId, metadata) {
+  updateConversation(conversationId, data) {
     return new Promise((resolve, reject) => {
-      Conversation.findOne({ _id: conversationId }, 'metadata')
+      Conversation.findOne({ _id: conversationId }, 'data')
         .then((conversation) => {
-          const newMetadata = _.extend(conversation.metadata, metadata);
+          const newData = _.extend(conversation.data, data);
           Conversation.findOneAndUpdate(
             { _id: conversationId },
-            { $set: { metadata: newMetadata } },
+            { $set: { data: newData } },
             { new: true },
           )
             .then(updatedConversation => resolve(updatedConversation))

@@ -8,11 +8,11 @@ const conversationSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  metadata: {
+  data: {
     type: Object,
     validate: {
-      validator: metadata => metadata instanceof Object,
-      message: 'Error: conversation metadata is not an Object',
+      validator: data => data instanceof Object,
+      message: 'Error: conversation data is not an Object',
     },
     default: {},
   },
