@@ -1,3 +1,4 @@
+const Adapter = require('./adapters/adapter');
 const Bot = require('./bot');
 const DialogManager = require('./dialog_manager');
 const Dialog = require('./dialogs/dialog');
@@ -8,6 +9,7 @@ const Nlu = require('./nlu');
 const Train = require('./train');
 
 module.exports = {
+  Adapter,
   Bot,
   DialogManager,
   Dialog,

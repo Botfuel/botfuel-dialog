@@ -7,11 +7,9 @@ class FeatureExtraction {
   /**
    * Constructor.
    * @param {Object} config the bot's config
-   * @param {path} path the path of the bot project
    */
-  constructor(config, path) {
+  constructor(config) {
     this.config = config;
-    this.path = path;
     // TODO: fix this
     Natural
       .PorterStemmerFr

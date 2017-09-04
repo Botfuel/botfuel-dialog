@@ -5,13 +5,12 @@ const FeatureExtraction = require('./feature_extraction');
 const intentSuffix = '.intent';
 
 class Train {
-  constructor(config, path) {
-    console.log('Train.constructor', config, path);
-    this.config = config;
-    this.path = path;
+  constructor(config) {
+    console.log('Train.constructor', config);
+    this.path = config.path;
     this.classifier = new Natural.LogisticRegressionClassifier(Natural.PorterStemmerFr);
     this.modelFilename = `${path}/models/${config.modelName}`;
-    this.intentDirname = `${path}/scripts/src/data/intents`;
+    this.intentDirname = `${path}/src/data/intents`;
     this.featureExtraction = new FeatureExtraction(config.locale);
   }
 
@@ -35,8 +34,11 @@ class Train {
             return this.classifier.addDocument(features, intent);
           });
       });
+    console.log('Train.run: training');
     this.classifier.train();
+    console.log('Train.run: saving');
     this.classifier.save(this.modelFilename);
+    console.log('Train.run: saved');
   }
 }
 

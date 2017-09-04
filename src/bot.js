@@ -1,15 +1,35 @@
-const Message = require('@botfuel/bot-common').Message;
+const Adapter = require('./adapters/adapter');
+const Nlu = require('./nlu');
+const DialogManager = require('./dialog_manager');
 
 /**
  * Bot main class.
  */
 class Bot {
+  constructor(config) {
+    console.log('Bot.constructor', config);
+    this.adapter = new Adapter(); // TODO: read from config
+    this.brain = null; // TODO: fix this
+    this.nlu = new Nlu(config);
+    this.dm = new DialogManager(this.brain, config);
+  }
+
+  run() {
+    console.log('Bot.run');
+  }
+
+  async play(messages) {
+    for (const message of messages) {
+      await this.respond(message);
+    }
+  }
+
   /**
    * Responds.
    */
-  respond(res) {
-    const id = Message.getUser(res).id;
-    const sentence = Message.getSentence(res);
+  respond(message) {
+    const id = this.adapter.getId(message);
+    const sentence = this.adapter.getText(message); // TODO: handle the case of non text messages
     console.log('Bot.respond', id, sentence);
     this
       .nlu
@@ -22,7 +42,7 @@ class Bot {
           .then((responses) => {
             console.log('Dm.execution resolved', responses);
             responses.forEach((response) => {
-              this.send(res, response);
+              this.adapter.send(id, response);
             });
           })
           .catch((err) => {
@@ -32,12 +52,6 @@ class Bot {
       .catch((err) => {
         console.log('Nlu.computation rejected', err);
       });
-  }
-
-  send(res, response) {
-    console.log('Bot.send', '<res>', response);
-    // when text (TODO: fix this)
-    res.send(response.payload);
   }
 }
 
