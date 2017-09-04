@@ -35,8 +35,11 @@ class Train {
             return this.classifier.addDocument(features, intent);
           });
       });
+    console.log('Train.run: training');
     this.classifier.train();
+    console.log('Train.run: saving');
     this.classifier.save(this.modelFilename);
+    console.log('Train.run: saved');
   }
 }
 

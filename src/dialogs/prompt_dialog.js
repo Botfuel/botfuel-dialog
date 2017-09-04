@@ -1,4 +1,3 @@
-const User = require('@botfuel/bot-common').User;
 const Dialog = require('./dialog');
 
 /**
