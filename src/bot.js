@@ -1,5 +1,5 @@
-const Adapter = require('./adapters/Adapter');
-const Nlu = require('./Nlu');
+const Adapter = require('./adapters/adapter');
+const Nlu = require('./nlu');
 const DialogManager = require('./dialog_manager');
 
 /**
@@ -7,10 +7,15 @@ const DialogManager = require('./dialog_manager');
  */
 class Bot {
   constructor(config) {
+    console.log('Bot.constructor', config);
     this.adapter = new Adapter(); // TODO: read from config
     this.brain = null; // TODO: fix this
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
+  }
+
+  run() {
+    console.log('Bot.run');
   }
 
   /**

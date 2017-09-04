@@ -11,7 +11,7 @@ class DialogManager {
    * Constructor.
    */
   constructor(context, config) {
-    console.log('DialogManager.constructor', '<context>', config);
+    console.log('DialogManager.constructor');
     this.context = context;
     this.config = config;
   }

@@ -11,7 +11,7 @@ class Nlu {
    * @param {Object} config the bot's config
    */
   constructor(config) {
-    console.log('Nlu.constructor', config);
+    console.log('Nlu.constructor');
     this.config = config;
     this.entityExtraction = new EntityExtraction(config);
     this.featureExtraction = new FeatureExtraction(config);
