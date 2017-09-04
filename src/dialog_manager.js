@@ -1,5 +1,4 @@
 const Fs = require('fs');
-const User = require('@botfuel/bot-common').User;
 const _ = require('underscore');
 
 _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
@@ -30,7 +29,7 @@ class DialogManager {
    */
   execute(id, intents, entities) {
     console.log('DialogManager.execute', id, intents, entities);
-    User.set(id, this.context, '_entities', entities);
+    // User.set(id, this.context, '_entities', entities); TODO fixthis
     intents
       .forEach(({ label, value }) => {
         if (value > 0.7) { // TODO: fix this
@@ -92,9 +91,10 @@ class DialogManager {
    * @param {string} label the template label
    * @param {Object} parameters the template parameters
    */
-  say(id, label, parameters) {
-    console.log('DialogManager.say', label, parameters);
-    const templateName = `${this.path}/scripts/src/views/templates/${label}.${this.config.locale}.txt`;
+  say(id, label, parameters, path) {
+    console.log('DialogManager.say', label, parameters, path);
+    const templatePath = path || `${this.path}/scripts/src/views/templates/`;
+    const templateName = `${templatePath}/${label}.${this.config.locale}.txt`;
     console.log('DialogManager.say', templateName);
     Fs
       .readFileSync(templateName, 'utf8')
@@ -103,13 +103,14 @@ class DialogManager {
       .forEach((line) => {
         console.log('DialogManager.say', line);
         const payload = _.template(line)(parameters);
+        console.log('DialogManager.say', payload);
         if (payload !== '') {
           const response = {
             type: 'text',
             payload,
           };
           console.log('DialogManager.say', response);
-          User.push(id, this.context, '_responses', response);
+          // User.push(id, this.context, '_responses', response); TODO: uncomment this
         }
       });
   }

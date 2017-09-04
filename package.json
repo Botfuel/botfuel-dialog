@@ -1,16 +1,16 @@
 {
   "name": "@botfuel/bot-sdk2",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "index.js",
   "files": [
     "build"
   ],
   "scripts": {
     "compile": "babel src --out-dir build",
-    "style": "eslint src"
+    "test": "jest",
+    "style": "eslint src; eslint tests"
   },
   "dependencies": {
-    "@botfuel/bot-common": "latest",
     "botfuel-nlp-sdk": "latest",
     "babel-polyfill": "^6.6.1",
     "fs": "0.0.1-security",
@@ -31,6 +31,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-react": "^7.1.0",
+    "jest": "^20.0.4",
     "documentation": "^4.0.0-beta.18"
   },
   "engines": {

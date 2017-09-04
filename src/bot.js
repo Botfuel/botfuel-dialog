@@ -6,7 +6,6 @@ const Message = require('@botfuel/bot-common').Message;
 class Bot {
   /**
    * Responds.
-   * @param {Response} res Hubot's response object
    */
   respond(res) {
     const id = Message.getUser(res).id;
