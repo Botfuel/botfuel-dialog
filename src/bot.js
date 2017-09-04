@@ -1,9 +1,16 @@
+const Adapter = require('./adapters/Adapter');
+const Nlu = require('./Nlu');
+const DialogManager = require('./dialog_manager');
+
 /**
  * Bot main class.
  */
 class Bot {
-  constructor(adapter) {
-    this.adapter = adapter;
+  constructor(config) {
+    this.adapter = new Adapter(); // TODO: read from config
+    this.brain = null; // TODO: fix this
+    this.nlu = new Nlu(config);
+    this.dm = new DialogManager(this.brain, config);
   }
 
   /**

@@ -7,11 +7,9 @@ class EntityExtraction {
   /**
    * Constructor.
    * @param {Object} config the bot's config
-   * @param {path} path the path of the bot project
    */
-  constructor(config, path) {
+  constructor(config) {
     this.config = config;
-    this.path = path;
   }
 
   /**
@@ -20,7 +18,7 @@ class EntityExtraction {
    */
   compute(sentence) {
     console.log('EntityExtraction.compute', sentence);
-    const extractorsPath = `${this.path}/scripts/src/controllers/extractors`;
+    const extractorsPath = `${this.config.path}/scripts/src/controllers/extractors`;
     console.log('EntityExtraction.compute: extractorsPath', extractorsPath);
     return Fs
       .readdir(extractorsPath)

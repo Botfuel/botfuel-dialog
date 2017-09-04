@@ -9,14 +9,12 @@ class Nlu {
   /**
    * Constructor.
    * @param {Object} config the bot's config
-   * @param {path} path the path of the bot project
    */
-  constructor(config, path) {
-    console.log('Nlu.constructor', config, path);
+  constructor(config) {
+    console.log('Nlu.constructor', config);
     this.config = config;
-    this.path = path;
-    this.entityExtraction = new EntityExtraction(config, path);
-    this.featureExtraction = new FeatureExtraction(config, path);
+    this.entityExtraction = new EntityExtraction(config);
+    this.featureExtraction = new FeatureExtraction(config);
     // in the case of QnA with need a special classifier
   }
 
@@ -27,7 +25,7 @@ class Nlu {
       console.log('Nlu.initClassifierIfNecessary: already initialized');
       return Promise.resolve();
     }
-    const model = `${this.path}/models/${this.config.modelName}`;
+    const model = `${this.config.path}/models/${this.config.modelName}`;
     console.log('Nlu.initClassifierIfNecessary: initializing', model);
     return new Promise((resolve, reject) => {
       Natural
