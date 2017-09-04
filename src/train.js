@@ -11,7 +11,7 @@ class Train {
     this.path = path;
     this.classifier = new Natural.LogisticRegressionClassifier(Natural.PorterStemmerFr);
     this.modelFilename = `${path}/models/${config.modelName}`;
-    this.intentDirname = `${path}/scripts/src/data/intents`;
+    this.intentDirname = `${path}/src/data/intents`;
     this.featureExtraction = new FeatureExtraction(config.locale);
   }
 

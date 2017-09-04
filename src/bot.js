@@ -1,15 +1,17 @@
-const Message = require('@botfuel/bot-common').Message;
-
 /**
  * Bot main class.
  */
 class Bot {
+  constructor(adapter) {
+    this.adapter = adapter;
+  }
+
   /**
    * Responds.
    */
-  respond(res) {
-    const id = Message.getUser(res).id;
-    const sentence = Message.getSentence(res);
+  respond(message) {
+    const id = this.adapter.getId(message);
+    const sentence = this.adapter.getText(message); // TODO: handle the case of non text messages
     console.log('Bot.respond', id, sentence);
     this
       .nlu
@@ -22,7 +24,7 @@ class Bot {
           .then((responses) => {
             console.log('Dm.execution resolved', responses);
             responses.forEach((response) => {
-              this.send(res, response);
+              this.adapter.send(id, response);
             });
           })
           .catch((err) => {
@@ -32,12 +34,6 @@ class Bot {
       .catch((err) => {
         console.log('Nlu.computation rejected', err);
       });
-  }
-
-  send(res, response) {
-    console.log('Bot.send', '<res>', response);
-    // when text (TODO: fix this)
-    res.send(response.payload);
   }
 }
 
