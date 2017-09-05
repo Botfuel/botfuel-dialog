@@ -30,6 +30,19 @@ class DialogManager {
           this.next(id, label);
         }
       });
+    this.context.get(id, 'dialogs').then((dialogs) => {
+      console.log('DialogManager.execute: _dialogs', dialogs);
+      if (dialogs.length === 0) {
+        this.context.get(id, 'lastDialog').then((lastDialog) => {
+          if (_.size(lastDialog) > 0) {
+            this.context.push(id, 'dialogs', lastDialog);
+          }
+        });
+      }
+      return this.executeDialogs(id, entities, []);
+    });
+    /*
+    BEFORE
     const dialogs = User.get(id, this.context, '_dialogs');
     console.log('DialogManager.execute: _dialogs', dialogs);
     if (dialogs.length === 0) {
@@ -39,14 +52,35 @@ class DialogManager {
       }
     }
     return this.executeDialogs(id, entities, []);
+    */
   }
 
   /**
    * Executes the dialogs.
    * @param {string} id the user id
+   * @param {Object[]} entities - the entities
+   * @param {string[]} responses - responses array
    */
   executeDialogs(id, entities, responses) {
     console.log('DialogManager.executeDialogs', id, responses);
+    this.context.get(id, 'dialogs').then((dialogs) => {
+      console.log('DialogManager.executeDialogs', dialogs);
+      if (dialogs.length > 0) {
+        const dialogData = dialogs.pop();
+        this.context.set(id, 'lastDialog', dialogData);
+        console.log('DialogManager.executeDialogs', dialogData);
+        const Dialog = require(`${this.config.path}/src/controllers/dialogs/${dialogData.label}`);
+        new Dialog(dialogData.parameters)
+          .execute(this, id, entities, responses)
+          .then(({ run, responses }) => {
+            if (run) { // continue executing the stack
+              this.executeDialogs(id, entities, responses);
+            }
+          });
+      }
+    });
+    /*
+    BEFORE
     const dialogs = User.get(id, this.context, '_dialogs');
     console.log('DialogManager.executeDialogs', dialogs);
     if (dialogs.length > 0) {
@@ -63,6 +97,7 @@ class DialogManager {
         });
     }
     return Promise.resolve(responses);
+    */
   }
 
   /**
@@ -73,7 +108,8 @@ class DialogManager {
    */
   next(id, label, parameters) {
     console.log('DialogManager.next', id, label, parameters);
-    User.push(id, this.context, '_dialogs', { label, parameters });
+    this.context.push(id, 'dialogs', { label, parameters });
+    // User.push(id, this.context, '_dialogs', { label, parameters });
   }
 
   /**
@@ -81,6 +117,8 @@ class DialogManager {
    * @param {string} id the user id
    * @param {string} label the template label
    * @param {Object} parameters the template parameters
+   * @param {string[]} responses - responses array
+   * @param {string} path
    */
   say(id, label, parameters, responses, path) {
     console.log('DialogManager.say', label, parameters, responses, path);
