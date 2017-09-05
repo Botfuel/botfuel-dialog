@@ -7,10 +7,9 @@ const intentSuffix = '.intent';
 class Train {
   constructor(config) {
     console.log('Train.constructor', config);
-    this.path = config.path;
     this.classifier = new Natural.LogisticRegressionClassifier(Natural.PorterStemmerFr);
-    this.modelFilename = `${path}/models/${config.modelName}`;
-    this.intentDirname = `${path}/src/data/intents`;
+    this.modelFilename = `${config.path}/models/${config.modelName}`;
+    this.intentDirname = `${config.path}/src/data/intents`;
     this.featureExtraction = new FeatureExtraction(config.locale);
   }
 

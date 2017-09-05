@@ -8,17 +8,18 @@ const DialogManager = require('./dialog_manager');
 class Bot {
   constructor(config) {
     console.log('Bot.constructor', config);
-    this.adapter = new Adapter(); // TODO: read from config
+    this.adapter = new ShellAdapter(this, config); // TODO: read from config
     this.brain = null; // TODO: fix this
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
   }
 
   run() {
-    console.log('Bot.run');
+    adapter.run();
   }
 
   async play(messages) {
+    console.log('Bot.play');
     for (const message of messages) {
       await this.respond(message);
     }

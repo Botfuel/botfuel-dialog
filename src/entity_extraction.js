@@ -18,10 +18,8 @@ class EntityExtraction {
    */
   compute(sentence) {
     console.log('EntityExtraction.compute', sentence);
-    console.log('EntityExtraction.compute', this.config.extractors);
     for (const extractor of this.config.extractors) {
       // TODO: fix this
-      console.log(extractor);
       return extractor(sentence)
         .then((entities) => {
           console.log('EntityExtraction.compute: entities', entities);
