@@ -54,7 +54,7 @@ class Bot {
           .then((botMessages) => {
             console.log('Dm.execution resolved', botMessages);
             botMessages.forEach((botMessage) => {
-              this.adapter.send(id, botMessage);
+              this.adapter.send(id, botMessage); // TODO: adapt to msg type
             });
           })
           .catch((err) => {
