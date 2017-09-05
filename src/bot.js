@@ -1,6 +1,7 @@
-const Adapter = require('./adapters/adapter');
-const Nlu = require('./nlu');
-const DialogManager = require('./dialog_manager');
+import { MemoryBrain } from './brain';
+import Adapter from './adapters/adapter';
+import Nlu from './nlu';
+import DialogManager from './dialog_manager';
 
 /**
  * Bot main class.
@@ -9,7 +10,7 @@ class Bot {
   constructor(config) {
     console.log('Bot.constructor', config);
     this.adapter = new Adapter(); // TODO: read from config
-    this.brain = null; // TODO: fix this
+    this.brain = new MemoryBrain('BOT_ID'); // TODO: fix this
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
   }
