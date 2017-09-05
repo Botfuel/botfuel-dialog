@@ -9,10 +9,8 @@ class PromptDialog extends Dialog {
    * @param {Object} dm the dialog manager
    * @param {string} id the user id
    */
-  execute(dm, id) {
-    console.log('PromptDialog.execute', '<dm>', id);
-    const messageEntities = User.get(id, dm.context, '_entities');
-    console.log('PromptDialog.execute: messageEntities', messageEntities);
+  execute(dm, id, messageEntities) {
+    console.log('PromptDialog.execute', '<dm>', id, messageEntities);
     const dialogEntities = User.get(id, dm.context, this.parameters.namespace) || {};
     console.log('PromptDialog.execute: dialogEntities', dialogEntities);
     for (const messageEntity of messageEntities) {

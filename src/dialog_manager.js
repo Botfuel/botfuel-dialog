@@ -28,7 +28,6 @@ class DialogManager {
    */
   execute(id, intents, entities) {
     console.log('DialogManager.execute', id, intents, entities);
-    // User.set(id, this.context, '_entities', entities); TODO fixthis
     intents
       .forEach(({ label, value }) => {
         if (value > 0.7) { // TODO: fix this
@@ -44,14 +43,14 @@ class DialogManager {
       }
     }
     User.set(id, this.context, '_responses', []);
-    return this.executeDialogs(id);
+    return this.executeDialogs(id, entities);
   }
 
   /**
    * Executes the dialogs.
    * @param {string} id the user id
    */
-  executeDialogs(id) {
+  executeDialogs(id, entities) {
     console.log('DialogManager.executeDialogs', id);
     this.logContext(id);
     const dialogs = User.get(id, this.context, '_dialogs');
@@ -62,10 +61,10 @@ class DialogManager {
       console.log('DialogManager.executeDialogs', dialogData);
       const Dialog = require(`${this.config.path}/src/controllers/dialogs/${dialogData.label}`);
       new Dialog(dialogData.parameters)
-        .execute(this, id)
+        .execute(this, id, entities)
         .then((run) => {
           if (run) { // continue executing the stack
-            this.executeDialogs(id);
+            this.executeDialogs(id, entities);
           }
         });
     }
@@ -109,7 +108,7 @@ class DialogManager {
             payload,
           };
           console.log('DialogManager.say', response);
-          // User.push(id, this.context, '_responses', response); TODO: uncomment this
+          User.push(id, this.context, '_responses', response);
         }
       });
   }
