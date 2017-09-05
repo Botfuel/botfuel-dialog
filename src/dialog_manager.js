@@ -16,10 +16,6 @@ class DialogManager {
     this.config = config;
   }
 
-  logContext(id) {
-    console.log('DialogManager.logContext', this.context.data.users[id]);
-  }
-
   /**
    * Populates and executes the stack.
    * @param {string} id the user id
@@ -30,7 +26,7 @@ class DialogManager {
     console.log('DialogManager.execute', id, intents, entities);
     intents
       .forEach(({ label, value }) => {
-        if (value > 0.7) { // TODO: fix this
+        if (value > this.config.intentThreshold) {
           this.next(id, label);
         }
       });
@@ -42,17 +38,15 @@ class DialogManager {
         User.push(id, this.context, '_dialogs', lastDialog);
       }
     }
-    User.set(id, this.context, '_responses', []);
-    return this.executeDialogs(id, entities);
+    return this.executeDialogs(id, entities, []);
   }
 
   /**
    * Executes the dialogs.
    * @param {string} id the user id
    */
-  executeDialogs(id, entities) {
-    console.log('DialogManager.executeDialogs', id);
-    this.logContext(id);
+  executeDialogs(id, entities, responses) {
+    console.log('DialogManager.executeDialogs', id, responses);
     const dialogs = User.get(id, this.context, '_dialogs');
     console.log('DialogManager.executeDialogs', dialogs);
     if (dialogs.length > 0) {
@@ -61,14 +55,13 @@ class DialogManager {
       console.log('DialogManager.executeDialogs', dialogData);
       const Dialog = require(`${this.config.path}/src/controllers/dialogs/${dialogData.label}`);
       new Dialog(dialogData.parameters)
-        .execute(this, id, entities)
-        .then((run) => {
+        .execute(this, id, entities, responses)
+        .then(({ run, responses }) => {
           if (run) { // continue executing the stack
-            this.executeDialogs(id, entities);
+            this.executeDialogs(id, entities, responses);
           }
         });
     }
-    const responses = User.get(id, this.context, '_responses');
     return Promise.resolve(responses);
   }
 
@@ -89,8 +82,8 @@ class DialogManager {
    * @param {string} label the template label
    * @param {Object} parameters the template parameters
    */
-  say(id, label, parameters, path) {
-    console.log('DialogManager.say', label, parameters, path);
+  say(id, label, parameters, responses, path) {
+    console.log('DialogManager.say', label, parameters, responses, path);
     const templatePath = path || `${this.config.path}/src/views/templates/`;
     const templateName = `${templatePath}/${label}.${this.config.locale}.txt`;
     console.log('DialogManager.say', templateName);
@@ -108,7 +101,7 @@ class DialogManager {
             payload,
           };
           console.log('DialogManager.say', response);
-          User.push(id, this.context, '_responses', response);
+          responses.push(response);
         }
       });
   }
