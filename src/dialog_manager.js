@@ -10,9 +10,9 @@ class DialogManager {
   /**
    * Constructor.
    */
-  constructor(context, config) {
+  constructor(brain, config) {
     console.log('DialogManager.constructor');
-    this.context = context;
+    this.brain = brain;
     this.config = config;
     this.intentThreshold = this.config.intentThreshold || 0.8;
   }
@@ -31,43 +31,56 @@ class DialogManager {
     console.log('DialogManager.execute', id, intents, entities);
     intents
       .forEach(({ label, value }) => {
-        if (acceptIntent(value)) {
+        if (this.acceptIntent(value)) {
           this.next(id, label);
         }
       });
-    const dialogs = User.get(id, this.context, '_dialogs');
-    console.log('DialogManager.execute: _dialogs', dialogs);
-    if (dialogs.length === 0) {
-      if (User.defined(id, this.context, '_lastDialog')) {
-        const lastDialog = User.get(id, this.context, '_lastDialog');
-        User.push(id, this.context, '_dialogs', lastDialog);
-      }
-    }
-    return this.executeDialogs(id, entities, []);
+    this
+      .brain
+      .get(id, 'dialogs')
+      .then((dialogs) => {
+        console.log('DialogManager.execute: _dialogs', dialogs);
+        if (dialogs.length === 0) {
+          this
+            .brain
+            .get(id, 'lastDialog')
+            .then((lastDialog) => {
+              this.brain.push(id, 'dialogs', lastDialog);
+            });
+        }
+        return this.executeDialogs(id, entities, []);
+      });
   }
 
   /**
    * Executes the dialogs.
    * @param {string} id the user id
+   * @param {Object[]} entities - the entities
+   * @param {string[]} responses - responses array
    */
   executeDialogs(id, entities, responses) {
-    console.log('DialogManager.executeDialogs', id, responses);
-    const dialogs = User.get(id, this.context, '_dialogs');
-    console.log('DialogManager.executeDialogs', dialogs);
-    if (dialogs.length > 0) {
-      const dialogData = dialogs.pop();
-      User.set(id, this.context, '_lastDialog', dialogData);
-      console.log('DialogManager.executeDialogs', dialogData);
-      const Dialog = require(`${this.config.path}/src/controllers/dialogs/${dialogData.label}`);
-      new Dialog(dialogData.parameters)
-        .execute(this, id, entities, responses)
-        .then(({ run, responses }) => {
-          if (run) { // continue executing the stack
-            this.executeDialogs(id, entities, responses);
-          }
-        });
-    }
-    return Promise.resolve(responses);
+    console.log('DialogManager.executeDialogs', id, entities, responses);
+    this
+      .brain
+      .get(id, 'dialogs')
+      .then((dialogs) => {
+        console.log('DialogManager.executeDialogs', dialogs);
+        if (dialogs.length > 0) {
+          const dialogData = dialogs.pop();
+          this
+            .brain
+            .set(id, 'lastDialog', dialogData);
+          console.log('DialogManager.executeDialogs', dialogData);
+          const Dialog = require(`${this.config.path}/src/controllers/dialogs/${dialogData.label}`);
+          new Dialog(dialogData.parameters)
+            .execute(this, id, entities, responses)
+            .then(({ run, responses }) => {
+              if (run) { // continue executing the stack
+                this.executeDialogs(id, entities, responses);
+              }
+            });
+        }
+      });
   }
 
   /**
@@ -78,7 +91,7 @@ class DialogManager {
    */
   next(id, label, parameters) {
     console.log('DialogManager.next', id, label, parameters);
-    User.push(id, this.context, '_dialogs', { label, parameters });
+    this.brain.push(id, 'dialogs', { label, parameters });
   }
 
   /**
@@ -86,6 +99,8 @@ class DialogManager {
    * @param {string} id the user id
    * @param {string} label the template label
    * @param {Object} parameters the template parameters
+   * @param {string[]} responses - responses array
+   * @param {string} path
    */
   say(id, label, parameters, responses, path) {
     console.log('DialogManager.say', label, parameters, responses, path);

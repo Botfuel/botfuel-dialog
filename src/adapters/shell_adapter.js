@@ -12,6 +12,8 @@ class ShellAdapter extends Adapter {
     this
       .onboard()
       .then((userMessage) => {
+        userMessage.type = 'text';
+        userMessage.id = USER_ID;
         this.bot.respond(userMessage);
       });;
   }

@@ -1,21 +1,21 @@
-const Adapter = require('./adapters/adapter');
-const Bot = require('./bot');
+const Brain = require('./brains/brain');
 const DialogManager = require('./dialog_manager');
+const Nlu = require('./nlu');
+const MemoryBrain = require('./brains/memory_brain');
+// const MongoBrain = require('./brains/mongo_brain');
+const Bot = require('./bot');
 const Dialog = require('./dialogs/dialog');
 const PromptDialog = require('./dialogs/prompt_dialog');
-const EntityExtraction = require('./entity_extraction');
-const FeatureExtraction = require('./feature_extraction');
-const Nlu = require('./nlu');
 const Train = require('./train');
 
 module.exports = {
-  Adapter,
   Bot,
+  Brain,
+  MemoryBrain,
+  // MongoBrain,
+  Nlu,
   DialogManager,
   Dialog,
   PromptDialog,
-  EntityExtraction,
-  FeatureExtraction,
-  Nlu,
   Train,
 };

@@ -8,8 +8,7 @@ class Train {
   constructor(config) {
     console.log('Train.constructor', config);
     this.classifier = new Natural.LogisticRegressionClassifier(Natural.PorterStemmerFr);
-    const modelName = config.modelName || 'model.json';
-    this.modelFilename = `${config.path}/models/${modelName}`;
+    this.modelFilename = `${config.path}/models/model.json`;
     this.intentDirname = `${config.path}/src/data/intents`;
     this.featureExtraction = new FeatureExtraction(config.locale);
   }

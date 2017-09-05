@@ -1,3 +1,4 @@
+const MemoryBrain = require('./brains/memory_brain');
 const ShellAdapter = require('./adapters/shell_adapter');
 const Nlu = require('./nlu');
 const DialogManager = require('./dialog_manager');
@@ -8,10 +9,10 @@ const DialogManager = require('./dialog_manager');
 class Bot {
   constructor(config) {
     console.log('Bot.constructor', config);
-    if (this.config.adapter === 'shell') {
+    if (config.adapter === 'shell') {
       this.adapter = new ShellAdapter(this, config);
     }
-    this.brain = null; // TODO: fix this
+    this.brain = new MemoryBrain('BOT_ID'); // TODO: fix id
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
   }

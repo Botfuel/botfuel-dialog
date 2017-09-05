@@ -11,10 +11,13 @@
     "style": "eslint src; eslint tests"
   },
   "dependencies": {
-    "babel-runtime": "^6.26.0",
+    "babel-polyfill": "^6.6.1",
     "botfuel-nlp-sdk": "latest",
+    "babel-runtime": "^6.26.0",
     "fs": "0.0.1-security",
     "fs-promise": "^1.0.0",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.11.10",
     "inquirer": "^3.2.3",
     "natural": "^0.4.0",
     "underscore": "^1.8.3"
