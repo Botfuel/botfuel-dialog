@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import * as db from './db';
-import { User, Conversation } from './models/index';
+import { User, Conversation } from './models';
 
 /**
  * Class to wrap mongodb database with two models
