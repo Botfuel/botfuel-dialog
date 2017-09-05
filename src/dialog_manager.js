@@ -14,6 +14,11 @@ class DialogManager {
     console.log('DialogManager.constructor');
     this.context = context;
     this.config = config;
+    this.intentThreshold = this.config.intentThreshold || 0.8;
+  }
+
+  acceptIntent(value) {
+    return (value > this.intentThreshold);
   }
 
   /**
@@ -26,7 +31,7 @@ class DialogManager {
     console.log('DialogManager.execute', id, intents, entities);
     intents
       .forEach(({ label, value }) => {
-        if (value > this.config.intentThreshold) {
+        if (acceptIntent(value)) {
           this.next(id, label);
         }
       });

@@ -33,8 +33,8 @@ class ShellAdapter extends Adapter {
     const onboardingMessage = {
       id: USER_ID,
       type: 'text',
-      payload: this.config.onboarding[0]
-    }; // TODO: fix onboarding payload
+      payload: this.config.onboarding.join(' ')
+    };
     return this.send(onboardingMessage);
   }
 }

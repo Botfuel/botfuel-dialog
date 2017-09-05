@@ -8,7 +8,9 @@ const DialogManager = require('./dialog_manager');
 class Bot {
   constructor(config) {
     console.log('Bot.constructor', config);
-    this.adapter = new ShellAdapter(this, config); // TODO: read from config
+    if (this.config.adapter === 'shell') {
+      this.adapter = new ShellAdapter(this, config);
+    }
     this.brain = null; // TODO: fix this
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
@@ -31,8 +33,16 @@ class Bot {
    */
   respond(userMessage) {
     console.log('Bot.respond', userMessage);
+    const type = userMessage.type;
+    if (type === 'text') {
+      this.respondText(userMessage);
+    }
+  }
+
+  respondText(userMessage) {
+    console.log('Bot.respondText', userMessage);
     const id = userMessage.id;
-    const sentence = userMessage.payload; // TODO: handle the case of non text messages
+    const sentence = userMessage.payload;
     this
       .nlu
       .compute(sentence)
