@@ -83,7 +83,7 @@ class DialogManager {
    * @param {Object} parameters the template parameters
    */
   say(id, label, parameters, responses, path) {
-    console.log('DialogManager.say', label, parameters, path);
+    console.log('DialogManager.say', label, parameters, responses, path);
     const templatePath = path || `${this.config.path}/src/views/templates/`;
     const templateName = `${templatePath}/${label}.${this.config.locale}.txt`;
     console.log('DialogManager.say', templateName);
