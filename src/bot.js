@@ -1,4 +1,4 @@
-const Adapter = require('./adapters/adapter');
+const ShellAdapter = require('./adapters/shell_adapter');
 const Nlu = require('./nlu');
 const DialogManager = require('./dialog_manager');
 
@@ -15,23 +15,24 @@ class Bot {
   }
 
   run() {
-    adapter.run();
+    console.log('Bot.run');
+    this.adapter.run();
   }
 
-  async play(messages) {
-    console.log('Bot.play');
-    for (const message of messages) {
-      await this.respond(message);
+  async play(userMessages) {
+    console.log('Bot.play', userMessages);
+    for (const userMessage of userMessages) {
+      await this.respond(userMessage);
     }
   }
 
   /**
    * Responds.
    */
-  respond(message) {
-    const id = this.adapter.getId(message);
-    const sentence = this.adapter.getText(message); // TODO: handle the case of non text messages
-    console.log('Bot.respond', id, sentence);
+  respond(userMessage) {
+    console.log('Bot.respond', userMessage);
+    const id = userMessage.id;
+    const sentence = userMessage.payload; // TODO: handle the case of non text messages
     this
       .nlu
       .compute(sentence)
@@ -40,10 +41,10 @@ class Bot {
         this
           .dm
           .execute(id, intents, entities)
-          .then((responses) => {
-            console.log('Dm.execution resolved', responses);
-            responses.forEach((response) => {
-              this.adapter.send(id, response);
+          .then((botMessages) => {
+            console.log('Dm.execution resolved', botMessages);
+            botMessages.forEach((botMessage) => {
+              this.adapter.send(id, botMessage);
             });
           })
           .catch((err) => {

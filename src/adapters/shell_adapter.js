@@ -7,43 +7,36 @@ const USER_ID = 1;
  * Shell Adapter.
  */
 class ShellAdapter extends Adapter {
-  getId(message) {
-    return message.id;
-  }
-
-  getText(message) {
-    return message.text;
-  }
-
   run() {
+    console.log('ShellAdapter.run');
+    this
+      .onboard()
+      .then((userMessage) => {
+        this.bot.respond(userMessage);
+      });;
+  }
 
+  send(botMessage) {
+    console.log('ShellAdapter.send', botMessage);
+    // type text
+    return inquirer.prompt([
+      {
+        type: 'input',
+        name: 'payload',
+        message: botMessage.payload
+      }
+    ])
   }
 
   onboard() {
-    // TODO: fix this
-    this.bot({ id: USER_ID, text: this.config.onboarding[0]});
-  }
-
-  send(response) {
-    console.log('Adapter.send', response);
-    // when text (TODO: fix this)
-    console.log(response.payload);
+    console.log('ShellAdapter.onboard');
+    const onboardingMessage = {
+      id: USER_ID,
+      type: 'text',
+      payload: this.config.onboarding[0]
+    }; // TODO: fix onboarding payload
+    return this.send(onboardingMessage);
   }
 }
 
 module.exports = ShellAdapter;
-
-
-
-    const questions = [
-      {
-        type: 'input',
-        name: 'input',
-        message: onboarding
-      }
-    ];
-    inquirer
-      .prompt(questions)
-      .then(function (answers) {
-        console.log(JSON.stringify(answers, null, '  '));
-      });
