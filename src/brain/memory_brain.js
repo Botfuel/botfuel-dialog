@@ -3,7 +3,7 @@ import _ from 'lodash';
 /**
  * Class to wrap memory brain
  */
-export default class MemoryBrain {
+export default class MemoryBrainV2 {
   /**
    * Constructor
    * @param {string} botId - bot id
@@ -13,14 +13,33 @@ export default class MemoryBrain {
     this.users = [];
   }
 
+  /**
+   * Get user index
+   * @private
+   * @param {string} userId - user id
+   * @returns {number|*}
+   */
   getUserIndex(userId) {
     return _.findIndex(this.users, { botId: this.botId, userId });
   }
 
+  /**
+   * Get conversation index
+   * @private
+   * @param {number} userIndex - user index
+   * @param {number} conversationId - conversation id
+   * @returns {number|*}
+   */
   getConversationIndex(userIndex, conversationId) {
     return  _.findIndex(this.users[userIndex].conversations, { id: conversationId });
   }
 
+  /**
+   * Verify if user exist
+   * @private
+   * @param {string} userId - user id
+   * @returns {Promise}
+   */
   verifyUser(userId) {
     return new Promise((resolve, reject) => {
       const userIndex = this.getUserIndex(userId);
@@ -35,7 +54,7 @@ export default class MemoryBrain {
   /**
    * Add an user
    * @param {string} userId - user id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   addUser(userId) {
     return new Promise((resolve, reject) => {
@@ -45,8 +64,10 @@ export default class MemoryBrain {
           botId: this.botId,
           userId,
           conversations: [],
+          dialogs: [],
+          lastDialog: {},
           responses: [],
-          createdAt: Date.now(),
+          createdAt: Date.now()
         };
         this.users.push(newUser);
         resolve(newUser);
@@ -59,12 +80,12 @@ export default class MemoryBrain {
   /**
    * Get an user
    * @param {string} userId - user id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   getUser(userId) {
     return new Promise((resolve, reject) => {
       this.verifyUser(userId)
-        .then(userIndex => resolve(this.users[userIndex]))
+        .then((userIndex) => resolve(this.users[userIndex]))
         .catch(message => reject(message));
     });
   }
@@ -73,7 +94,7 @@ export default class MemoryBrain {
    * Update an user
    * @param {string} userId - user id
    * @param {Object} updates - user updates
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   updateUser(userId, updates) {
     return new Promise((resolve, reject) => {
@@ -89,7 +110,7 @@ export default class MemoryBrain {
   /**
    * Remove an user
    * @param {string} userId - user id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   removeUser(userId) {
     return new Promise((resolve, reject) => {
@@ -106,7 +127,7 @@ export default class MemoryBrain {
    * Add a conversation to an user
    * @param {string} userId - user id
    * @param {object} data - conversation data object
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   addConversation(userId, data) {
     return new Promise((resolve, reject) => {
@@ -128,7 +149,7 @@ export default class MemoryBrain {
    * Get a conversation
    * @param {string} userId - user id
    * @param {number} conversationId - conversation id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   getConversation(userId, conversationId) {
     return new Promise((resolve, reject) => {
@@ -149,12 +170,12 @@ export default class MemoryBrain {
   /**
    * Get user conversations
    * @param {string} userId - user id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   getConversations(userId) {
     return new Promise((resolve, reject) => {
       this.verifyUser(userId)
-        .then(userIndex => resolve(this.users[userIndex].conversations))
+        .then((userIndex) => resolve(this.users[userIndex].conversations))
         .catch(message => reject(message));
     });
   }
@@ -162,7 +183,7 @@ export default class MemoryBrain {
   /**
    * Get user last conversation
    * @param {string} userId - user id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   getLastConversation(userId) {
     return new Promise((resolve, reject) => {
@@ -180,7 +201,7 @@ export default class MemoryBrain {
    * @param {string} userId - user id
    * @param {number} conversationId - conversation id
    * @param {object} data - conversation data object
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   updateConversation(userId, conversationId, data) {
     return new Promise((resolve, reject) => {
@@ -188,10 +209,7 @@ export default class MemoryBrain {
         .then((userIndex) => {
           const conversationIndex = this.getConversationIndex(userIndex, conversationId);
           if (conversationIndex !== -1) {
-            this.users[userIndex].conversations[conversationIndex].data = _.extend(
-              this.users[userIndex].conversations[conversationIndex].data,
-              data,
-            );
+            this.users[userIndex].conversations[conversationIndex].data = _.extend(this.users[userIndex].conversations[conversationIndex].data, data);
             resolve(this.users[userIndex].conversations[conversationIndex]);
           } else {
             reject('Conversation not found');
@@ -205,7 +223,7 @@ export default class MemoryBrain {
    * Remove a conversation
    * @param {string} userId - user id
    * @param {number} conversationId - conversation id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   removeConversation(userId, conversationId) {
     return new Promise((resolve, reject) => {
@@ -217,6 +235,102 @@ export default class MemoryBrain {
             resolve(`Conversation ${conversationId} has been removed from user ${userId}`);
           } else {
             reject('Conversation not found');
+          }
+        })
+        .catch(message => reject(message));
+    });
+  }
+
+  /**
+   * Set a key in user scope
+   * @param {string} userId - user id
+   * @param {string} key - user key
+   * @param {*} value - value to set
+   * @returns {Promise}
+   */
+  set(userId, key, value) {
+    return new Promise((resolve, reject) => {
+      this.verifyUser(userId)
+        .then((userIndex) => {
+          this.users[userIndex][key] = value;
+          resolve();
+        })
+        .catch(message => reject(message));
+    });
+  }
+
+  /**
+   * Get a key in user scope
+   * @param {string} userId - user id
+   * @param {string} key - user key
+   * @returns {Promise}
+   */
+  get(userId, key) {
+    return new Promise((resolve, reject) => {
+      this.verifyUser(userId)
+        .then((userIndex) => {
+          resolve(this.users[userIndex][key]);
+        })
+        .catch(message => reject(message));
+    });
+  }
+
+  /**
+   * Push to an array key in user scope
+   * @param {string} userId - user id
+   * @param {string} key - user key
+   * @param {*} value - value to push
+   * @returns {Promise}
+   */
+  push(userId, key, value) {
+    return new Promise((resolve, reject) => {
+      this.verifyUser(userId)
+        .then((userIndex) => {
+          if (_.isArray(this.users[userIndex][key])) {
+            this.users[userIndex][key].push(value);
+            resolve(this.users[userIndex][key]);
+          } else {
+            reject(`Key ${key} is not an array`);
+          }
+        })
+        .catch(message => reject(message));
+    });
+  }
+
+  /**
+   * Pop from an array key in user scope
+   * @param {string} userId - user id
+   * @param {string} key - user key
+   * @returns {Promise}
+   */
+  pop(userId, key) {
+    return new Promise((resolve, reject) => {
+      this.verifyUser(userId)
+        .then((userIndex) => {
+          if (_.isArray(this.users[userIndex][key])) {
+            resolve(this.users[userIndex][key].pop());
+          } else {
+            reject(`Key ${key} is not an array`);
+          }
+        })
+        .catch(message => reject(message));
+    });
+  }
+
+  /**
+   * Shift from an array key in user scope
+   * @param {string} userId - user id
+   * @param {string} key - user key
+   * @returns {Promise}
+   */
+  shift(userId, key) {
+    return new Promise((resolve, reject) => {
+      this.verifyUser(userId)
+        .then((userIndex) => {
+          if (_.isArray(this.users[userIndex][key])) {
+            resolve(this.users[userIndex][key].shift());
+          } else {
+            reject(`Key ${key} is not an array`);
           }
         })
         .catch(message => reject(message));
