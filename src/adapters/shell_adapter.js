@@ -13,7 +13,7 @@ class ShellAdapter extends Adapter {
       .onboard()
       .then((userMessage) => {
         this.bot.respond(userMessage);
-      });;
+      });
   }
 
   send(botMessage) {
@@ -23,9 +23,9 @@ class ShellAdapter extends Adapter {
       {
         type: 'input',
         name: 'payload',
-        message: botMessage.payload
-      }
-    ])
+        message: botMessage.payload,
+      },
+    ]);
   }
 
   onboard() {
@@ -33,7 +33,7 @@ class ShellAdapter extends Adapter {
     const onboardingMessage = {
       id: USER_ID,
       type: 'text',
-      payload: this.config.onboarding[0]
+      payload: this.config.onboarding[0],
     }; // TODO: fix onboarding payload
     return this.send(onboardingMessage);
   }

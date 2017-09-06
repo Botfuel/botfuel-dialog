@@ -67,7 +67,7 @@ export default class MemoryBrainV2 {
           dialogs: [],
           lastDialog: {},
           responses: [],
-          createdAt: Date.now()
+          createdAt: Date.now(),
         };
         this.users.push(newUser);
         resolve(newUser);
@@ -268,9 +268,7 @@ export default class MemoryBrainV2 {
   get(userId, key) {
     return new Promise((resolve, reject) => {
       this.verifyUser(userId)
-        .then((userIndex) => {
-          resolve(this.users[userIndex][key]);
-        })
+        .then(userIndex => resolve(this.users[userIndex][key]))
         .catch(message => reject(message));
     });
   }
