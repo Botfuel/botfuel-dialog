@@ -286,7 +286,7 @@ export default class MemoryBrainV2 {
         .then((userIndex) => {
           if (_.isArray(this.users[userIndex][key])) {
             this.users[userIndex][key].push(value);
-            resolve(this.users[userIndex][key]);
+            resolve(this.users[userIndex]);
           } else {
             reject(`Key ${key} is not an array`);
           }
