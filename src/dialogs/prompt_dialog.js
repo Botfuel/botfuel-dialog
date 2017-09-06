@@ -24,15 +24,16 @@ class PromptDialog extends Dialog {
         }
       }
       console.log('PromptDialog.execute: dialogEntities', dialogEntities);
-      dm.context.set(id, this.parameters.namespace, dialogEntities);
-      let extractionsDone = true;
-      for (const entityKey of Object.keys(this.parameters.entities)) {
-        if (dialogEntities[entityKey] === null) {
-          this.ask(dm, id, entityKey, responses);
-          extractionsDone = false;
+      dm.context.set(id, this.parameters.namespace, dialogEntities).then(() => {
+        let extractionsDone = true;
+        for (const entityKey of Object.keys(this.parameters.entities)) {
+          if (dialogEntities[entityKey] === null) {
+            this.ask(dm, id, entityKey, responses);
+            extractionsDone = false;
+          }
         }
-      }
-      return Promise.resolve(extractionsDone);
+        return Promise.resolve(extractionsDone);
+      });
     });
     /*
     BEFORE

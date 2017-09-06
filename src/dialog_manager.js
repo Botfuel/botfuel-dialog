@@ -78,6 +78,7 @@ class DialogManager {
             }
           });
       }
+      return Promise.resolve(responses);
     });
     /*
     BEFORE
@@ -108,8 +109,12 @@ class DialogManager {
    */
   next(id, label, parameters) {
     console.log('DialogManager.next', id, label, parameters);
-    this.context.push(id, 'dialogs', { label, parameters });
-    // User.push(id, this.context, '_dialogs', { label, parameters });
+    this.context.push(id, 'dialogs', { label, parameters })
+      .then((dialogs) => {
+        console.log('DialogManager.next dialogs', dialogs);
+        // what should we do here ?
+        return true;
+      });
   }
 
   /**
