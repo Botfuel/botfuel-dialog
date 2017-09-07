@@ -11,6 +11,7 @@
     "jsx-a11y/href-no-hash": "off",
     "import/order": ["error"],
     "no-console": "off",
-    "no-restricted-syntax": "off"
+    "no-restricted-syntax": "off",
+    "no-param-reassign": "off"
   }
 }

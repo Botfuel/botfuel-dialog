@@ -10,45 +10,7 @@ export default class MemoryBrain {
    */
   constructor(botId) {
     this.botId = botId;
-    this.users = [];
-  }
-
-  /**
-   * Get user index
-   * @private
-   * @param {string} userId - user id
-   * @returns {number|*}
-   */
-  getUserIndex(userId) {
-    return _.findIndex(this.users, { botId: this.botId, userId });
-  }
-
-  /**
-   * Get conversation index
-   * @private
-   * @param {number} userIndex - user index
-   * @param {number} conversationId - conversation id
-   * @returns {number|*}
-   */
-  getConversationIndex(userIndex, conversationId) {
-    return _.findIndex(this.users[userIndex].conversations, { id: conversationId });
-  }
-
-  /**
-   * Verify if user exist
-   * @private
-   * @param {string} userId - user id
-   * @returns {Promise}
-   */
-  verifyUser(userId) {
-    return new Promise((resolve, reject) => {
-      const userIndex = this.getUserIndex(userId);
-      if (userIndex !== -1) {
-        resolve(userIndex);
-      } else {
-        reject('User not found');
-      }
-    });
+    this.users = {};
   }
 
   /**
@@ -58,21 +20,19 @@ export default class MemoryBrain {
    */
   addUser(userId) {
     return new Promise((resolve, reject) => {
-      const index = this.getUserIndex(userId);
-      if (index === -1) {
+      if (!this.users[userId]) {
         const newUser = {
           botId: this.botId,
           userId,
           conversations: [],
           dialogs: [],
           lastDialog: {},
-          responses: [],
           createdAt: Date.now(),
         };
-        this.users.push(newUser);
+        this.users[userId] = newUser;
         resolve(newUser);
       } else {
-        reject('An user with this id for this bot already exist');
+        reject(new Error('An user with this id for this bot already exists'));
       }
     });
   }
@@ -84,99 +44,84 @@ export default class MemoryBrain {
    */
   getUser(userId) {
     return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then(userIndex => resolve(this.users[userIndex]))
-        .catch(message => reject(message));
+      if (this.users[userId]) {
+        resolve(this.users[userId]);
+      } else {
+        reject(new Error('User not exists'));
+      }
     });
   }
 
   /**
-   * Update an user
+   * Set user key
    * @param {string} userId - user id
-   * @param {Object} updates - user updates
+   * @param {string} key - user key
+   * @param {*} value - key value
    * @returns {Promise}
    */
-  updateUser(userId, updates) {
+  userSet(userId, key, value) {
     return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then((userIndex) => {
-          this.users[userIndex] = _.extend(this.users[userIndex], updates);
-          resolve(this.users[userIndex]);
-        })
-        .catch(message => reject(message));
+      this.getUser(userId)
+        .then((user) => {
+          user[key] = value;
+          resolve(user);
+        }).catch(reject);
     });
   }
 
   /**
-   * Remove an user
+   * Get user key
    * @param {string} userId - user id
+   * @param {string} key - user key
    * @returns {Promise}
    */
-  removeUser(userId) {
+  userGet(userId, key) {
     return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then((userIndex) => {
-          this.users = _.pullAt(this.users, userIndex);
-          resolve(`User ${userId} has been removed`);
+      this.getUser(userId)
+        .then((user) => {
+          if (user[key]) {
+            resolve(user[key]);
+          } else {
+            reject(new Error('User key is undefined'));
+          }
         })
-        .catch(message => reject(message));
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Push value to user key array
+   * @param {string} userId - user id
+   * @param {string} key - user array key
+   * @param {Object} value - Object value
+   * @returns {Promise}
+   */
+  userPush(userId, key, value) {
+    return new Promise((resolve, reject) => {
+      this.getUser(userId)
+        .then((user) => {
+          if (user[key]) {
+            user[key].push(value);
+            resolve(user);
+          } else {
+            reject(new Error('User key is undefined'));
+          }
+        })
+        .catch(reject);
     });
   }
 
   /**
    * Add a conversation to an user
    * @param {string} userId - user id
-   * @param {object} data - conversation data object
    * @returns {Promise}
    */
-  addConversation(userId, data) {
+  addConversation(userId) {
     return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then((userIndex) => {
-          const conversation = {
-            id: this.users[userIndex].conversations.length,
-            data,
-            createdAt: Date.now(),
-          };
-          this.users[userIndex].conversations.push(conversation);
-          resolve(conversation);
-        })
-        .catch(message => reject(message));
-    });
-  }
-
-  /**
-   * Get a conversation
-   * @param {string} userId - user id
-   * @param {number} conversationId - conversation id
-   * @returns {Promise}
-   */
-  getConversation(userId, conversationId) {
-    return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then((userIndex) => {
-          const user = this.users[userIndex];
-          const conversationIndex = this.getConversationIndex(userIndex, conversationId);
-          if (conversationIndex !== -1) {
-            resolve(user.conversations[conversationIndex]);
-          } else {
-            reject('Conversation not found');
-          }
-        })
-        .catch(message => reject(message));
-    });
-  }
-
-  /**
-   * Get user conversations
-   * @param {string} userId - user id
-   * @returns {Promise}
-   */
-  getConversations(userId) {
-    return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then(userIndex => resolve(this.users[userIndex].conversations))
-        .catch(message => reject(message));
+      const conversation = { createdAt: Date.now() };
+      this.userPush(userId, 'conversations', conversation)
+        .then(() => resolve(conversation))
+        .catch(err => reject(err));
     });
   }
 
@@ -187,154 +132,53 @@ export default class MemoryBrain {
    */
   getLastConversation(userId) {
     return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then((userIndex) => {
-          const lastIndex = this.users[userIndex].conversations.length - 1;
-          resolve(this.users[userIndex].conversations[lastIndex] || null);
-        })
-        .catch(message => reject(message));
+      this.getUser(userId)
+        .then((user) => {
+          const lastConversation = _.last(user.conversations);
+          if (lastConversation) {
+            resolve(lastConversation);
+          } else {
+            reject(new Error('Last conversation is undefined'));
+          }
+        }).catch(reject);
     });
   }
 
   /**
-   * Update a conversation
+   * Set last conversation key with value
    * @param {string} userId - user id
-   * @param {number} conversationId - conversation id
-   * @param {object} data - conversation data object
+   * @param {string} key - conversation key
+   * @param {*} value - key value
    * @returns {Promise}
    */
-  updateConversation(userId, conversationId, data) {
+  conversationSet(userId, key, value) {
     return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then((userIndex) => {
-          const conversationIndex = this.getConversationIndex(userIndex, conversationId);
-          if (conversationIndex !== -1) {
-            this.users[userIndex].conversations[conversationIndex].data = _.extend(
-              this.users[userIndex].conversations[conversationIndex].data,
-              data,
-            );
-            resolve(this.users[userIndex].conversations[conversationIndex]);
+      this.getLastConversation(userId)
+        .then((conversation) => {
+          conversation[key] = value;
+          resolve(conversation);
+        })
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Get last conversation key value
+   * @param {string} userId - user id
+   * @param {string} key - last conversation key
+   * @returns {Promise}
+   */
+  conversationGet(userId, key) {
+    return new Promise((resolve, reject) => {
+      this.getLastConversation(userId)
+        .then((conversation) => {
+          if (conversation[key]) {
+            resolve(conversation[key]);
           } else {
-            reject('Conversation not found');
+            reject(new Error('Conversation key is undefined'));
           }
         })
-        .catch(message => reject(message));
-    });
-  }
-
-  /**
-   * Remove a conversation
-   * @param {string} userId - user id
-   * @param {number} conversationId - conversation id
-   * @returns {Promise}
-   */
-  removeConversation(userId, conversationId) {
-    return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then((userIndex) => {
-          const conversationIndex = this.getConversationIndex(userIndex, conversationId);
-          if (conversationIndex !== -1) {
-            this.users[userIndex].conversations.splice(conversationIndex, 1);
-            resolve(`Conversation ${conversationId} has been removed from user ${userId}`);
-          } else {
-            reject('Conversation not found');
-          }
-        })
-        .catch(message => reject(message));
-    });
-  }
-
-  /**
-   * Set a key in user scope
-   * @param {string} userId - user id
-   * @param {string} key - user key
-   * @param {*} value - value to set
-   * @returns {Promise}
-   */
-  set(userId, key, value) {
-    return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then((userIndex) => {
-          this.users[userIndex][key] = value;
-          resolve();
-        })
-        .catch(message => reject(message));
-    });
-  }
-
-  /**
-   * Get a key in user scope
-   * @param {string} userId - user id
-   * @param {string} key - user key
-   * @returns {Promise}
-   */
-  get(userId, key) {
-    return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then(userIndex => resolve(this.users[userIndex][key]))
-        .catch(message => reject(message));
-    });
-  }
-
-  /**
-   * Push to an array key in user scope
-   * @param {string} userId - user id
-   * @param {string} key - user key
-   * @param {*} value - value to push
-   * @returns {Promise}
-   */
-  push(userId, key, value) {
-    return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then((userIndex) => {
-          if (_.isArray(this.users[userIndex][key])) {
-            this.users[userIndex][key].push(value);
-            resolve(this.users[userIndex]);
-          } else {
-            reject(`Key ${key} is not an array`);
-          }
-        })
-        .catch(message => reject(message));
-    });
-  }
-
-  /**
-   * Pop from an array key in user scope - (last element)
-   * @param {string} userId - user id
-   * @param {string} key - user key
-   * @returns {Promise}
-   */
-  pop(userId, key) {
-    return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then((userIndex) => {
-          if (_.isArray(this.users[userIndex][key])) {
-            resolve(this.users[userIndex][key].pop());
-          } else {
-            reject(`Key ${key} is not an array`);
-          }
-        })
-        .catch(message => reject(message));
-    });
-  }
-
-  /**
-   * Shift from an array key in user scope - (first element)
-   * @param {string} userId - user id
-   * @param {string} key - user key
-   * @returns {Promise}
-   */
-  shift(userId, key) {
-    return new Promise((resolve, reject) => {
-      this.verifyUser(userId)
-        .then((userIndex) => {
-          if (_.isArray(this.users[userIndex][key])) {
-            resolve(this.users[userIndex][key].shift());
-          } else {
-            reject(`Key ${key} is not an array`);
-          }
-        })
-        .catch(message => reject(message));
+        .catch(reject);
     });
   }
 }
