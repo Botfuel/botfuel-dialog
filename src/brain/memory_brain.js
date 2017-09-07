@@ -3,7 +3,7 @@ import _ from 'lodash';
 /**
  * Class to wrap memory brain
  */
-export default class MemoryBrainV2 {
+export default class MemoryBrain {
   /**
    * Constructor
    * @param {string} botId - bot id
@@ -31,7 +31,7 @@ export default class MemoryBrainV2 {
    * @returns {number|*}
    */
   getConversationIndex(userIndex, conversationId) {
-    return  _.findIndex(this.users[userIndex].conversations, { id: conversationId });
+    return _.findIndex(this.users[userIndex].conversations, { id: conversationId });
   }
 
   /**
@@ -85,7 +85,7 @@ export default class MemoryBrainV2 {
   getUser(userId) {
     return new Promise((resolve, reject) => {
       this.verifyUser(userId)
-        .then((userIndex) => resolve(this.users[userIndex]))
+        .then(userIndex => resolve(this.users[userIndex]))
         .catch(message => reject(message));
     });
   }
@@ -175,7 +175,7 @@ export default class MemoryBrainV2 {
   getConversations(userId) {
     return new Promise((resolve, reject) => {
       this.verifyUser(userId)
-        .then((userIndex) => resolve(this.users[userIndex].conversations))
+        .then(userIndex => resolve(this.users[userIndex].conversations))
         .catch(message => reject(message));
     });
   }
@@ -209,7 +209,10 @@ export default class MemoryBrainV2 {
         .then((userIndex) => {
           const conversationIndex = this.getConversationIndex(userIndex, conversationId);
           if (conversationIndex !== -1) {
-            this.users[userIndex].conversations[conversationIndex].data = _.extend(this.users[userIndex].conversations[conversationIndex].data, data);
+            this.users[userIndex].conversations[conversationIndex].data = _.extend(
+              this.users[userIndex].conversations[conversationIndex].data,
+              data,
+            );
             resolve(this.users[userIndex].conversations[conversationIndex]);
           } else {
             reject('Conversation not found');
@@ -296,7 +299,7 @@ export default class MemoryBrainV2 {
   }
 
   /**
-   * Pop from an array key in user scope
+   * Pop from an array key in user scope - (last element)
    * @param {string} userId - user id
    * @param {string} key - user key
    * @returns {Promise}
@@ -316,7 +319,7 @@ export default class MemoryBrainV2 {
   }
 
   /**
-   * Shift from an array key in user scope
+   * Shift from an array key in user scope - (first element)
    * @param {string} userId - user id
    * @param {string} key - user key
    * @returns {Promise}
