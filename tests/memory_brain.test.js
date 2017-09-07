@@ -2,14 +2,14 @@ import { MemoryBrain } from '../src/brain';
 
 const BOT_ID = '1';
 
-test('add an user', async () => {
+test('that a user has been added', async () => {
   expect.assertions(1);
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser('1');
-  expect(Object.keys(brain.users)).toHaveLength(1);
+  expect(brain.hasUser('1')).resolves.toBe(true);
 });
 
-test('get an user', async () => {
+test('gets a user', async () => {
   expect.assertions(1);
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser('1');
@@ -17,7 +17,7 @@ test('get an user', async () => {
   expect(user.userId).toBe('1');
 });
 
-test('set user key', async () => {
+test('sets user key', async () => {
   expect.assertions(1);
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser('1');
@@ -25,7 +25,7 @@ test('set user key', async () => {
   expect(user.name).toBe('test');
 });
 
-test('get user key', async () => {
+test('gets user value', async () => {
   expect.assertions(1);
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser('1');

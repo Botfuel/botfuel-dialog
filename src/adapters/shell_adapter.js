@@ -1,32 +1,43 @@
 const inquirer = require('inquirer');
 const Adapter = require('./adapter');
 
-const USER_ID = 1;
+const USER_ID = '1';
 
 /**
  * Shell Adapter.
  */
 class ShellAdapter extends Adapter {
-  run() {
-    console.log('ShellAdapter.run');
-    this
-      .bot
-      .onboard(USER_ID)
-      .then((userMessage) => {
-        userMessage.type = 'text';
-        userMessage.id = USER_ID;
-        this.bot.respond(userMessage);
-      });
+  async initUserIfNecessary() {
+    console.log('ShellAdapter.initUserIfNecessary');
+    const userExists = await this.bot.brain.hasUser(USER_ID);
+    if (!userExists) {
+      await this.bot.brain.addUser(USER_ID);
+    }
   }
 
-  send(botMessage) {
-    console.log('ShellAdapter.send', botMessage);
+  async run() {
+    console.log('ShellAdapter.run');
+    await this.initUserIfNecessary();
+    console.log('ShellAdapter.run: brain', this.bot.brain);
+    let userMessage = await this.bot.onboard(USER_ID);
+    while (true) {
+      userMessage.type = 'text';
+      userMessage.id = USER_ID;
+      userMessage = await this.bot.respond(userMessage);
+    }
+}
+
+  async send(id, botMessages) {
+    console.log('ShellAdapter.send', id, botMessages);
+    await this.initUserIfNecessary();
+    const message = Array.join(botMessages.map((botMessage) => botMessage.payload), " ");
+    console.log('ShellAdapter.send: message', message);
     // type text
     return inquirer.prompt([
       {
         type: 'input',
         name: 'payload',
-        message: botMessage.payload,
+        message
       },
     ]);
   }
