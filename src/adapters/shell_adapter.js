@@ -10,6 +10,7 @@ class ShellAdapter extends Adapter {
   run() {
     console.log('ShellAdapter.run');
     this
+      .bot
       .onboard()
       .then((userMessage) => {
         userMessage.type = 'text';
@@ -28,16 +29,6 @@ class ShellAdapter extends Adapter {
         message: botMessage.payload
       }
     ])
-  }
-
-  onboard() {
-    console.log('ShellAdapter.onboard');
-    const onboardingMessage = {
-      id: USER_ID,
-      type: 'text',
-      payload: this.config.onboarding.join(' ')
-    };
-    return this.send(onboardingMessage);
   }
 }
 

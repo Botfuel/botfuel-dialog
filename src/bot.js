@@ -12,7 +12,7 @@ class Bot {
     if (config.adapter === 'shell') {
       this.adapter = new ShellAdapter(this, config);
     }
-    this.brain = new MemoryBrain('BOT_ID'); // TODO: fix id
+    this.brain = new MemoryBrain(config.id);
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
   }
@@ -29,14 +29,20 @@ class Bot {
     }
   }
 
+
+  async onboard(id) {
+    console.log('Bot.onboard');
+    await this.dm.say(id, 'onboarding');
+  }
+
   /**
    * Responds.
    */
-  respond(userMessage) {
+  async respond(userMessage) {
     console.log('Bot.respond', userMessage);
     const type = userMessage.type;
     if (type === 'text') {
-      this.respondText(userMessage);
+      await this.respondText(userMessage);
     }
   }
 
@@ -54,7 +60,7 @@ class Bot {
           .execute(id, intents, entities)
           .then((botMessages) => {
             console.log('Dm.execution resolved', botMessages);
-            botMessages.forEach((botMessage) => {
+            this.dm.responses.forEach((botMessage) => {
               this.adapter.send(id, botMessage); // TODO: adapt to msg type
             });
           })

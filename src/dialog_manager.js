@@ -35,7 +35,7 @@ class DialogManager {
           this.next(id, label);
         }
       });
-    this
+    return this
       .brain
       .get(id, 'dialogs')
       .then((dialogs) => {
@@ -44,11 +44,11 @@ class DialogManager {
           this
             .brain
             .get(id, 'lastDialog')
-            .then((lastDialog) => {
-              this.brain.push(id, 'dialogs', lastDialog);
-            });
+            .then(lastDialog => this.brain.push(id, 'dialogs', lastDialog););
         }
-        return this.executeDialogs(id, entities, []);
+        this.responses = []
+        this.executeDialogs(id, entities);
+        return Promise.resolve(this.responses);
       });
   }
 
@@ -56,10 +56,9 @@ class DialogManager {
    * Executes the dialogs.
    * @param {string} id the user id
    * @param {Object[]} entities - the entities
-   * @param {string[]} responses - responses array
    */
-  executeDialogs(id, entities, responses) {
-    console.log('DialogManager.executeDialogs', id, entities, responses);
+  executeDialogs(id, entities) {
+    console.log('DialogManager.executeDialogs', id, entities);
     this
       .brain
       .get(id, 'dialogs')
@@ -73,10 +72,10 @@ class DialogManager {
           console.log('DialogManager.executeDialogs', dialogData);
           const Dialog = require(`${this.config.path}/src/controllers/dialogs/${dialogData.label}`);
           new Dialog(dialogData.parameters)
-            .execute(this, id, entities, responses)
-            .then(({ run, responses }) => {
+            .execute(this, id, entities)
+            .then((run) => {
               if (run) { // continue executing the stack
-                this.executeDialogs(id, entities, responses);
+                this.executeDialogs(id, entities);
               }
             });
         }
@@ -99,12 +98,10 @@ class DialogManager {
    * @param {string} id the user id
    * @param {string} label the template label
    * @param {Object} parameters the template parameters
-   * @param {string[]} responses - responses array
-   * @param {string} path
    */
-  say(id, label, parameters, responses, path) {
-    console.log('DialogManager.say', label, parameters, responses, path);
-    const templatePath = path || `${this.config.path}/src/views/templates/`;
+  say(id, label, parameters) {
+    console.log('DialogManager.say', label, parameters);
+    const templatePath = `${this.config.path}/src/views/templates/`;
     const templateName = `${templatePath}/${label}.${this.config.locale}.txt`;
     console.log('DialogManager.say', templateName);
     Fs
@@ -116,12 +113,9 @@ class DialogManager {
         const payload = _.template(line)(parameters);
         console.log('DialogManager.say', payload);
         if (payload !== '') {
-          const response = {
-            type: 'text',
-            payload,
-          };
+          const response = { type: 'text', payload };
           console.log('DialogManager.say', response);
-          responses.push(response);
+          this.responses.push(response);
         }
       });
   }
