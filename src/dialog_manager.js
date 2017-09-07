@@ -59,7 +59,7 @@ class DialogManager {
    * Executes the dialogs.
    * @param {string} id the user id
    * @param {Object[]} entities - the entities
-   * @param {string[]} responses - responses array
+   * @param {Object[]} responses - responses array
    */
   executeDialogs(id, entities, responses) {
     console.log('DialogManager.executeDialogs', id, responses);
@@ -72,9 +72,9 @@ class DialogManager {
         const Dialog = require(`${this.config.path}/src/controllers/dialogs/${dialogData.label}`);
         new Dialog(dialogData.parameters)
           .execute(this, id, entities, responses)
-          .then(({ run, responses }) => {
+          .then(({ run, dialogResponses }) => {
             if (run) { // continue executing the stack
-              this.executeDialogs(id, entities, responses);
+              this.executeDialogs(id, entities, dialogResponses);
             }
           });
       }
@@ -122,7 +122,7 @@ class DialogManager {
    * @param {string} id the user id
    * @param {string} label the template label
    * @param {Object} parameters the template parameters
-   * @param {string[]} responses - responses array
+   * @param {Object[]} responses - responses array
    * @param {string} path
    */
   say(id, label, parameters, responses, path) {
