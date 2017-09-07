@@ -17,17 +17,13 @@ const userSchema = new mongoose.Schema({
     ref: 'Conversation',
   }],
   dialogs: [{
-    type: Object,
-    default: [],
+    label: String,
+    entities: Object,
   }],
   lastDialog: {
-    type: Object,
-    default: {},
+    label: String,
+    entities: Object,
   },
-  responses: [{
-    type: String,
-    default: [],
-  }],
   createdAt: {
     type: Date,
     default: Date.now(),
