@@ -44,7 +44,7 @@ class DialogManager {
           this
             .brain
             .get(id, 'lastDialog')
-            .then(lastDialog => this.brain.push(id, 'dialogs', lastDialog););
+            .then(lastDialog => this.brain.push(id, 'dialogs', lastDialog));
         }
         this.responses = []
         this.executeDialogs(id, entities);

@@ -11,12 +11,12 @@ class ShellAdapter extends Adapter {
     console.log('ShellAdapter.run');
     this
       .bot
-      .onboard()
+      .onboard(USER_ID)
       .then((userMessage) => {
         userMessage.type = 'text';
         userMessage.id = USER_ID;
         this.bot.respond(userMessage);
-      });;
+      });
   }
 
   send(botMessage) {
@@ -26,9 +26,9 @@ class ShellAdapter extends Adapter {
       {
         type: 'input',
         name: 'payload',
-        message: botMessage.payload
-      }
-    ])
+        message: botMessage.payload,
+      },
+    ]);
   }
 }
 

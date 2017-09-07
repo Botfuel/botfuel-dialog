@@ -1,28 +1,27 @@
 import _ from 'lodash';
-import * as db from './mongo/db';
-import { User, Conversation } from './mongo';
-const Brain = require('./brain');
+import * as db from './db';
+import { User, Conversation } from './models/index';
 
 /**
  * Class to wrap mongodb database with two models
  */
-export default class MongoBrain extends Brain {
+export default class MongoBrain {
   /**
    * Constructor
    * @param {string} botId - bot id
    */
   constructor(botId) {
-    super(botId);
     // connect to mongodb if not connected yet
     if (!db.isConnected()) {
       db.connect();
     }
+    this.botId = botId;
   }
 
   /**
    * Add an user
    * @param {string} userId - user id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   addUser(userId) {
     return User.create({ botId: this.botId, userId });
@@ -31,7 +30,7 @@ export default class MongoBrain extends Brain {
   /**
    * Get an user
    * @param {string} userId - user id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   getUser(userId) {
     return User.findOne({ botId: this.botId, userId });
@@ -41,7 +40,7 @@ export default class MongoBrain extends Brain {
    * Update an user
    * @param {string} userId - user id
    * @param {Object} updates - user updates
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   updateUser(userId, updates) {
     return User.findOneAndUpdate({ botId: this.botId, userId }, updates);
@@ -50,7 +49,7 @@ export default class MongoBrain extends Brain {
   /**
    * Remove an user
    * @param {string} userId - user id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   removeUser(userId) {
     return User.remove({ botId: this.botId, userId });
@@ -60,7 +59,7 @@ export default class MongoBrain extends Brain {
    * Add a conversation to an user
    * @param {string} userId - user id
    * @param {object} data - conversation data object
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   addConversation(userId, data) {
     return new Promise((resolve, reject) => {
@@ -85,7 +84,7 @@ export default class MongoBrain extends Brain {
   /**
    * Get a conversation
    * @param {ObjectId} conversationId - conversation id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   getConversation(conversationId) {
     return Conversation.findOne({ _id: conversationId });
@@ -94,7 +93,7 @@ export default class MongoBrain extends Brain {
   /**
    * Get user conversations
    * @param {ObjectId} userId - user mongodb id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   getConversations(userId) {
     return Conversation.find({ user: userId });
@@ -103,7 +102,7 @@ export default class MongoBrain extends Brain {
   /**
    * Get user last conversation
    * @param {ObjectId} userId - user id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   getLastConversation(userId) {
     return Conversation.findOne({ user: userId }).sort('-createdAt').exec();
@@ -113,7 +112,7 @@ export default class MongoBrain extends Brain {
    * Update a conversation
    * @param {ObjectId} conversationId - conversation id
    * @param {object} data - conversation data object
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   updateConversation(conversationId, data) {
     return new Promise((resolve, reject) => {
@@ -136,7 +135,7 @@ export default class MongoBrain extends Brain {
    * Remove a conversation
    * @param {string} userId - user id
    * @param {ObjectId} conversationId - conversation id
-   * @returns {Query|*} - promise
+   * @returns {Promise}
    */
   removeConversation(userId, conversationId) {
     return new Promise((resolve, reject) => {
@@ -152,5 +151,75 @@ export default class MongoBrain extends Brain {
         })
         .catch(err => reject(err));
     });
+  }
+
+  /**
+   * Set a key in user scope
+   * @param {string} userId - user id
+   * @param {string} key - user key
+   * @param {*} value - value to set
+   * @returns {Promise}
+   */
+  set(userId, key, value) {
+    const set = {};
+    set[key] = value;
+    return User.findOneAndUpdate({ botId: this.botId, userId }, { $set: set }, { new: true });
+  }
+
+  /**
+   * Get a key in user scope
+   * @param {string} userId - user id
+   * @param {string} key - user key
+   * @returns {Promise}
+   */
+  get(userId, key) {
+    return new Promise((resolve, reject) => {
+      User.findOne({ botId: this.botId, userId }, key)
+        .then((user) => {
+          if (user[key]) {
+            resolve(user[key]);
+          } else {
+            reject(new Error(`Key not found in user ${userId}`));
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+   * Push to an array key in user scope
+   * @param {string} userId - user id
+   * @param {string} key - user key
+   * @param {*} value - value to push
+   * @returns {Promise}
+   */
+  push(userId, key, value) {
+    const push = {};
+    push[key] = value;
+    return User.findOneAndUpdate({ botId: this.botId, userId }, { $push: push }, { new: true });
+  }
+
+  /**
+   * Pop from an array key in user scope - (last element)
+   * @param {string} userId - user id
+   * @param {string} key - user key
+   * @returns {Promise}
+   */
+  pop(userId, key) {
+    const pop = {};
+    pop[key] = 1; // mongo $pop { array: 1 } pop the last element of an array
+    return User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop }, { new: true });
+  }
+
+  /**
+   * Shift from an array key in user scope - (first element)
+   * @param {string} userId - user id
+   * @param {string} key - user key
+   * @returns {Promise}
+   */
+  shift(userId, key) {
+    const pop = {};
+    pop[key] = -1; // mongo $pop { array: -1 } pop the first element of an array
+    return User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop }, { new: true });
   }
 }

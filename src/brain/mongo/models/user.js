@@ -16,6 +16,18 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Conversation',
   }],
+  dialogs: [{
+    type: Object,
+    default: [],
+  }],
+  lastDialog: {
+    type: Object,
+    default: {},
+  },
+  responses: [{
+    type: String,
+    default: [],
+  }],
   createdAt: {
     type: Date,
     default: Date.now(),
