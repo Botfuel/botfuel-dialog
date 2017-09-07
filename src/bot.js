@@ -17,9 +17,9 @@ class Bot {
     this.dm = new DialogManager(this.brain, config);
   }
 
-  async run() {
+  run() {
     console.log('Bot.run');
-    await this.adapter.run();
+    this.adapter.run();
   }
 
   async play(userMessages) {
@@ -27,16 +27,6 @@ class Bot {
     for (const userMessage of userMessages) {
       await this.respond(userMessage);
     }
-  }
-
-
-  async onboard(id) {
-    // console.log('Bot.onboard');
-    // await this.brain.userPush(id, 'dialogs', lastDialog, 'onboarding');
-    // this.responses = [];
-    // this.executeDialogs(id, entities);
-    // return this.responses);
-    return this.adapter.send(id, [{ payload: "onboarding" }]);
   }
 
   /**
@@ -49,6 +39,16 @@ class Bot {
       return await this.respondText(userMessage);
     }
   }
+
+  async onboard(id) {
+    // console.log('Bot.onboard');
+    // await this.brain.userPush(id, 'dialogs', lastDialog, 'onboarding');
+    // this.responses = [];
+    // this.executeDialogs(id, entities);
+    // return this.responses);
+    return this.adapter.send(id, [{ payload: "onboarding" }]);
+  }
+
 
   respondText(userMessage) {
     console.log('Bot.respondText', userMessage);
