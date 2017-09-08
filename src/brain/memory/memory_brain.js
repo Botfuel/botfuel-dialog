@@ -65,7 +65,8 @@ export default class MemoryBrain {
         .then((user) => {
           user[key] = value;
           resolve(user);
-        }).catch(reject);
+        })
+        .catch(reject);
     });
   }
 
@@ -101,8 +102,12 @@ export default class MemoryBrain {
       this.getUser(userId)
         .then((user) => {
           if (user[key]) {
-            user[key].push(value);
-            resolve(user);
+            if (_.isArray(user[key])) {
+              user[key].push(value);
+              resolve(user);
+            } else {
+              reject(new Error('User key is not an array'));
+            }
           } else {
             reject(new Error('User key is undefined'));
           }
@@ -140,7 +145,8 @@ export default class MemoryBrain {
           } else {
             reject(new Error('Last conversation is undefined'));
           }
-        }).catch(reject);
+        })
+        .catch(reject);
     });
   }
 
