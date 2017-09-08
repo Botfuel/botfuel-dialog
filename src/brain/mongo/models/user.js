@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 /**
  * User model
@@ -37,4 +37,4 @@ const userSchema = new mongoose.Schema({
 // ensure uniqueness with both botId and userId by creating an index
 userSchema.index({ botId: 1, userId: 1 }, { unique: true });
 
-export default mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

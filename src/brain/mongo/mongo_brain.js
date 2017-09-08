@@ -1,11 +1,12 @@
-import _ from 'lodash';
-import * as db from './db';
-import { User, Conversation } from './models/index';
+const _ = require('lodash');
+const db = require('./db');
+const User = require('./models/user');
+const Conversation = require('./models/conversation');
 
 /**
  * Class to wrap mongodb database with two models
  */
-export default class MongoBrain {
+class MongoBrain {
   /**
    * Constructor
    * @param {string} botId - bot id
@@ -223,3 +224,5 @@ export default class MongoBrain {
     return User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop }, { new: true });
   }
 }
+
+module.exports = MongoBrain;
