@@ -22,11 +22,9 @@ class Bot {
     this.adapter.run();
   }
 
-  async play(userMessages) {
+  play(userMessages) {
     console.log('Bot.play', userMessages);
-    for (const userMessage of userMessages) {
-      await this.respond(userMessage);
-    }
+    this.adapter.play(userMessages);
   }
 
   /**
