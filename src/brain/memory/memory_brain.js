@@ -13,6 +13,10 @@ export default class MemoryBrain {
     this.users = {};
   }
 
+  hasUser(userId) {
+    return Promise.resolve(this.users[userId] !== undefined);
+  }
+
   /**
    * Add an user
    * @param {string} userId - user id

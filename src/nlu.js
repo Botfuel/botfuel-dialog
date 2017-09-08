@@ -25,7 +25,7 @@ class Nlu {
       console.log('Nlu.initClassifierIfNecessary: already initialized');
       return Promise.resolve();
     }
-    const model = `${this.config.path}/models/${this.config.modelName}`;
+    const model = `${this.config.path}/models/model.json`;
     console.log('Nlu.initClassifierIfNecessary: initializing', model);
     return new Promise((resolve, reject) => {
       Natural

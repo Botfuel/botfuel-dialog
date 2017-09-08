@@ -1,41 +1,35 @@
 const inquirer = require('inquirer');
 const Adapter = require('./adapter');
 
-const USER_ID = 1;
+const USER_ID = '1';
 
 /**
  * Shell Adapter.
  */
 class ShellAdapter extends Adapter {
-  run() {
+  async run() {
     console.log('ShellAdapter.run');
-    this
-      .onboard()
-      .then((userMessage) => {
-        this.bot.respond(userMessage);
-      });
+    let userMessage = await this.bot.onboard(USER_ID);
+    while (true) {
+      userMessage.type = 'text';
+      userMessage.id = USER_ID;
+      userMessage = await this.bot.respond(userMessage);
+    }
   }
 
-  send(botMessage) {
-    console.log('ShellAdapter.send', botMessage);
+  async send(botMessages) {
+    console.log('ShellAdapter.send', botMessages);
+    await this.initUserIfNecessary(USER_ID);
+    const message = Array.join(botMessages.map((botMessage) => botMessage.payload), " ");
+    console.log('ShellAdapter.send: message', message);
     // type text
     return inquirer.prompt([
       {
         type: 'input',
         name: 'payload',
-        message: botMessage.payload,
+        message
       },
     ]);
-  }
-
-  onboard() {
-    console.log('ShellAdapter.onboard');
-    const onboardingMessage = {
-      id: USER_ID,
-      type: 'text',
-      payload: this.config.onboarding[0],
-    }; // TODO: fix onboarding payload
-    return this.send(onboardingMessage);
   }
 }
 

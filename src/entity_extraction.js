@@ -22,7 +22,6 @@ class EntityExtraction {
       // TODO: fix this
       return extractor(sentence)
         .then((entities) => {
-          console.log('EntityExtraction.compute: entities', entities);
           return Promise.resolve(entities);
         });
     }

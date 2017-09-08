@@ -1,7 +1,7 @@
-import { MemoryBrain } from './brain';
-import ShellAdapter from './adapters/shell_adapter';
-import Nlu from './nlu';
-import DialogManager from './dialog_manager';
+import {MemoryBrain} from './brain';
+const ShellAdapter = require('./adapters/shell_adapter');
+const Nlu = require('./nlu');
+const DialogManager = require('./dialog_manager');
 
 /**
  * Bot main class.
@@ -9,8 +9,10 @@ import DialogManager from './dialog_manager';
 class Bot {
   constructor(config) {
     console.log('Bot.constructor', config);
-    this.adapter = new ShellAdapter(this, config); // TODO: read from config
-    this.brain = new MemoryBrain('BOT_ID'); // TODO: fix this
+    if (config.adapter === 'shell') {
+      this.adapter = new ShellAdapter(this, config);
+    }
+    this.brain = new MemoryBrain(config.id);
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
   }
@@ -20,11 +22,9 @@ class Bot {
     this.adapter.run();
   }
 
-  async play(userMessages) {
+  play(userMessages) {
     console.log('Bot.play', userMessages);
-    for (const userMessage of userMessages) {
-      await this.respond(userMessage);
-    }
+    this.adapter.play(userMessages);
   }
 
   /**
@@ -32,21 +32,26 @@ class Bot {
    */
   respond(userMessage) {
     console.log('Bot.respond', userMessage);
+    const type = userMessage.type;
+    if (type === 'text') {
+      return this.respondText(userMessage);
+    }
+  }
+
+  respondText(userMessage) {
+    console.log('Bot.respondText', userMessage);
     const id = userMessage.id;
-    const sentence = userMessage.payload; // TODO: handle the case of non text messages
-    this
+    const sentence = userMessage.payload;
+    return this
       .nlu
       .compute(sentence)
       .then(({ entities, intents }) => {
-        console.log('Nlu.computation resolved', entities, intents);
-        this
+        return this
           .dm
           .execute(id, intents, entities)
           .then((botMessages) => {
             console.log('Dm.execution resolved', botMessages);
-            botMessages.forEach((botMessage) => {
-              this.adapter.send(id, botMessage);
-            });
+            return this.adapter.send(botMessages); // TODO: adapt to msg type
           })
           .catch((err) => {
             console.log('Dm.execution rejected', err);
@@ -55,6 +60,19 @@ class Bot {
       .catch((err) => {
         console.log('Nlu.computation rejected', err);
       });
+  }
+
+  async onboard(id) {
+    // console.log('Bot.onboard');
+    // await this.brain.userPush(id, 'dialogs', lastDialog, 'onboarding');
+    // this.responses = [];
+    // this.executeDialogs(id, entities);
+    // return this.responses);
+    return this.adapter.send([{
+      id,
+      type: 'text',
+      payload: "onboarding"
+    }]);
   }
 }
 
