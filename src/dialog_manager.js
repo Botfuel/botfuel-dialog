@@ -60,7 +60,7 @@ class DialogManager {
       const Dialog = require(`${this.config.path}/src/controllers/dialogs/${dialogData.label}`);
       const run = await new Dialog(dialogData.parameters).execute(this, id, entities);
       if (run) { // continue executing the stack
-        this.executeDialogs(id, entities);
+        return this.executeDialogs(id, entities);
       }
     }
   }

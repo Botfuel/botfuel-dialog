@@ -48,7 +48,6 @@ class Bot {
       .nlu
       .compute(sentence)
       .then(({ entities, intents }) => {
-        console.log('Nlu.computation resolved', entities, intents);
         return this
           .dm
           .execute(id, intents, entities)
