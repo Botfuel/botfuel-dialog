@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const mongoUri = process.env.MONGO_URI || 'mongodb://localhost/sdk-brain';
 
 // Initialize Mongoose
-export const connect = () => {
+const connect = () => {
   mongoose.Promise = Promise;
 
   mongoose.connect(mongoUri, { useMongoClient: true }, (err) => {
@@ -15,4 +15,6 @@ export const connect = () => {
   });
 };
 
-export const isConnected = () => mongoose.connection.readyState === 1;
+const isConnected = () => mongoose.connection.readyState === 1;
+
+module.exports = { connect, isConnected };

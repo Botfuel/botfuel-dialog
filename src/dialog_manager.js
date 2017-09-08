@@ -52,13 +52,16 @@ class DialogManager {
   async executeDialogs(id, entities) {
     console.log('DialogManager.executeDialogs', id, entities);
     const dialogs = await this.brain.userGet(id, 'dialogs');
-    console.log('DialogManager.executeDialogs', dialogs);
+    console.log('DialogManager.executeDialogs: dialogs', dialogs);
     if (dialogs.length > 0) {
       const dialogData = dialogs.pop();
       await this.brain.userSet(id, 'lastDialog', dialogData);
-      console.log('DialogManager.executeDialogs', dialogData);
-      const Dialog = require(`${this.config.path}/src/controllers/dialogs/${dialogData.label}`);
-      const run = await new Dialog(dialogData.parameters).execute(this, id, entities);
+      console.log('DialogManager.executeDialogs: dialogData', dialogData);
+      const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialogData.label}`;
+      console.log('DialogManager.executeDialogs: dialogPath', dialogPath);
+      const dialogConstructor = require(dialogPath)
+      const dialog = new dialogConstructor(dialogData.parameters);
+      const run = await dialog.execute(this, id, entities);
       if (run) { // continue executing the stack
         return this.executeDialogs(id, entities);
       }

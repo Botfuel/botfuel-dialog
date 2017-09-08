@@ -20,7 +20,7 @@ class ShellAdapter extends Adapter {
   async send(botMessages) {
     console.log('ShellAdapter.send', botMessages);
     await this.initUserIfNecessary(USER_ID);
-    const message = Array.join(botMessages.map((botMessage) => botMessage.payload), " ");
+    const message = botMessages.map((botMessage) => botMessage.payload).join(" ");
     console.log('ShellAdapter.send: message', message);
     // type text
     return inquirer.prompt([

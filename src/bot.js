@@ -1,5 +1,6 @@
-import {MemoryBrain} from './brain';
+const MemoryBrain = require('./brain/memory/memory_brain');
 const ShellAdapter = require('./adapters/shell_adapter');
+const TestAdapter = require('./adapters/test_adapter');
 const Nlu = require('./nlu');
 const DialogManager = require('./dialog_manager');
 
@@ -11,6 +12,8 @@ class Bot {
     console.log('Bot.constructor', config);
     if (config.adapter === 'shell') {
       this.adapter = new ShellAdapter(this, config);
+    } else if (config.adapter === 'test') {
+      this.adapter = new TestAdapter(this, config);
     }
     this.brain = new MemoryBrain(config.id);
     this.nlu = new Nlu(config);

@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import _ from 'lodash';
+const mongoose = require('mongoose');
+const _ = require('lodash');
 
 /**
  * User model
@@ -86,4 +86,4 @@ userSchema.methods.lastConversationGet = function lastConversationGet(key) {
 // ensure uniqueness with both botId and userId by creating an index
 userSchema.index({ botId: 1, userId: 1 }, { unique: true });
 
-export default mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

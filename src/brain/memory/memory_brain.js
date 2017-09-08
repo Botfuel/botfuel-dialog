@@ -1,9 +1,9 @@
-import _ from 'lodash';
+const _ = require('lodash');
 
 /**
  * Class to wrap memory brain
  */
-export default class MemoryBrain {
+class MemoryBrain {
   /**
    * Constructor
    * @param {string} botId - bot id
@@ -192,3 +192,5 @@ export default class MemoryBrain {
     });
   }
 }
+
+module.exports = MemoryBrain;

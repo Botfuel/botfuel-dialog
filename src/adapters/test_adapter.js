@@ -23,4 +23,4 @@ class TestAdapter extends Adapter {
   }
 }
 
-module.exports = ShellAdapter;
+module.exports = TestAdapter;
