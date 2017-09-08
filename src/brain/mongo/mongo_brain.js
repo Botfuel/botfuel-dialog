@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import * as db from './db';
-import { User, Conversation } from './models/index';
+import { User } from './models/index';
 
 /**
  * Class to wrap mongodb database with two models
@@ -16,6 +16,7 @@ export default class MongoBrain {
       db.connect();
     }
     this.botId = botId;
+    this.userGlobalProperties = ['conversations', 'dialogs', 'lastDialog'];
   }
 
   /**
@@ -33,151 +34,53 @@ export default class MongoBrain {
    * @returns {Promise}
    */
   getUser(userId) {
-    return User.findOne({ botId: this.botId, userId });
+    return new Promise((resolve, reject) => {
+      User.findOne({ botId: this.botId, userId })
+        .then(user => resolve(user.flatten()))
+        .catch(reject);
+    });
   }
 
   /**
-   * Update an user
+   * Set user key
    * @param {string} userId - user id
-   * @param {Object} updates - user updates
+   * @param {string} key - user key
+   * @param {*} value - key value
    * @returns {Promise}
    */
-  updateUser(userId, updates) {
-    return User.findOneAndUpdate({ botId: this.botId, userId }, updates);
-  }
-
-  /**
-   * Remove an user
-   * @param {string} userId - user id
-   * @returns {Promise}
-   */
-  removeUser(userId) {
-    return User.remove({ botId: this.botId, userId });
-  }
-
-  /**
-   * Add a conversation to an user
-   * @param {string} userId - user id
-   * @param {object} data - conversation data object
-   * @returns {Promise}
-   */
-  addConversation(userId, data) {
+  userSet(userId, key, value) {
     return new Promise((resolve, reject) => {
       User.findOne({ botId: this.botId, userId })
         .then((user) => {
-          const conversation = new Conversation({ user, data });
-          conversation.save()
-            .then((savedConversation) => {
-              user.conversations.push(savedConversation);
-              user.save()
-                .then(() => {
-                  resolve(savedConversation);
-                })
-                .catch(err => reject(err));
-            })
-            .catch(err => reject(err));
+          if (_.includes(this.userGlobalProperties, key)) {
+            user.set(key, value);
+          } else {
+            user.set(`data.${key}`, value);
+          }
+          user.save()
+            .then(savedUser => resolve(savedUser.flatten()))
+            .catch(reject);
         })
-        .catch(err => reject(err));
+        .catch(reject);
     });
   }
 
   /**
-   * Get a conversation
-   * @param {ObjectId} conversationId - conversation id
-   * @returns {Promise}
-   */
-  getConversation(conversationId) {
-    return Conversation.findOne({ _id: conversationId });
-  }
-
-  /**
-   * Get user conversations
-   * @param {ObjectId} userId - user mongodb id
-   * @returns {Promise}
-   */
-  getConversations(userId) {
-    return Conversation.find({ user: userId });
-  }
-
-  /**
-   * Get user last conversation
-   * @param {ObjectId} userId - user id
-   * @returns {Promise}
-   */
-  getLastConversation(userId) {
-    return Conversation.findOne({ user: userId }).sort('-createdAt').exec();
-  }
-
-  /**
-   * Update a conversation
-   * @param {ObjectId} conversationId - conversation id
-   * @param {object} data - conversation data object
-   * @returns {Promise}
-   */
-  updateConversation(conversationId, data) {
-    return new Promise((resolve, reject) => {
-      Conversation.findOne({ _id: conversationId }, 'data')
-        .then((conversation) => {
-          const newData = _.extend(conversation.data, data);
-          Conversation.findOneAndUpdate(
-            { _id: conversationId },
-            { $set: { data: newData } },
-            { new: true },
-          )
-            .then(updatedConversation => resolve(updatedConversation))
-            .catch(err => reject(err));
-        })
-        .catch(err => reject(err));
-    });
-  }
-
-  /**
-   * Remove a conversation
-   * @param {string} userId - user id
-   * @param {ObjectId} conversationId - conversation id
-   * @returns {Promise}
-   */
-  removeConversation(userId, conversationId) {
-    return new Promise((resolve, reject) => {
-      Conversation.remove({ _id: conversationId })
-        .then(() => {
-          User.findOneAndUpdate(
-            { botId: this.botId, userId },
-            { $pull: { conversations: conversationId } },
-            { new: true },
-          )
-            .then(user => resolve(user))
-            .catch(err => reject(err));
-        })
-        .catch(err => reject(err));
-    });
-  }
-
-  /**
-   * Set a key in user scope
-   * @param {string} userId - user id
-   * @param {string} key - user key
-   * @param {*} value - value to set
-   * @returns {Promise}
-   */
-  set(userId, key, value) {
-    const set = {};
-    set[key] = value;
-    return User.findOneAndUpdate({ botId: this.botId, userId }, { $set: set }, { new: true });
-  }
-
-  /**
-   * Get a key in user scope
+   * Get user key
    * @param {string} userId - user id
    * @param {string} key - user key
    * @returns {Promise}
    */
-  get(userId, key) {
+  userGet(userId, key) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId }, key)
+      const isGlobalProperty = _.includes(this.userGlobalProperties, key);
+      const select = isGlobalProperty ? key : `data.${key}`;
+      User.findOne({ botId: this.botId, userId }, select)
         .then((user) => {
-          if (user[key]) {
+          if (isGlobalProperty && user[key]) {
             resolve(user[key]);
+          } else if (!isGlobalProperty && user.data[key]) {
+            resolve(user.data[key]);
           } else {
             reject(new Error(`Key not found in user ${userId}`));
           }
@@ -187,39 +90,84 @@ export default class MongoBrain {
   }
 
   /**
-   * Push to an array key in user scope
+   * Push value to user key array
    * @param {string} userId - user id
-   * @param {string} key - user key
-   * @param {*} value - value to push
+   * @param {string} key - user array key
+   * @param {Object} value - Object value
    * @returns {Promise}
    */
-  push(userId, key, value) {
+  userPush(userId, key, value) {
+    const isGlobalProperty = _.includes(this.userGlobalProperties, key);
+    const pushKey = isGlobalProperty ? key : `data.${key}`;
     const push = {};
-    push[key] = value;
+    push[pushKey] = value;
     return User.findOneAndUpdate({ botId: this.botId, userId }, { $push: push }, { new: true });
   }
 
   /**
-   * Pop from an array key in user scope - (last element)
+   * Add a conversation to an user
    * @param {string} userId - user id
-   * @param {string} key - user key
    * @returns {Promise}
    */
-  pop(userId, key) {
-    const pop = {};
-    pop[key] = 1; // mongo $pop { array: 1 } pop the last element of an array
-    return User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop }, { new: true });
+  addConversation(userId) {
+    return new Promise((resolve, reject) => {
+      const push = { conversations: {} };
+      User.findOneAndUpdate({ botId: this.botId, userId }, { $push: push }, { new: true })
+        .then(user => resolve(user.getLastConversation()))
+        .catch(reject);
+    });
   }
 
   /**
-   * Shift from an array key in user scope - (first element)
+   * Get user last conversation
    * @param {string} userId - user id
-   * @param {string} key - user key
    * @returns {Promise}
    */
-  shift(userId, key) {
-    const pop = {};
-    pop[key] = -1; // mongo $pop { array: -1 } pop the first element of an array
-    return User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop }, { new: true });
+  getLastConversation(userId) {
+    return new Promise((resolve, reject) => {
+      User.findOne({ botId: this.botId, userId })
+        .then(user => resolve(user.getLastConversation()))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Set last conversation key with value
+   * @param {string} userId - user id
+   * @param {string} key - conversation key
+   * @param {*} value - key value
+   * @returns {Promise}
+   */
+  conversationSet(userId, key, value) {
+    return new Promise((resolve, reject) => {
+      User.findOne({ botId: this.botId, userId })
+        .then((user) => {
+          user.lastConversationSet(`data.${key}`, value);
+          user.save()
+            .then((savedUser) => resolve(savedUser.getLastConversation()))
+            .catch(reject);
+        })
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Get last conversation key value
+   * @param {string} userId - user id
+   * @param {string} key - last conversation key
+   * @returns {Promise}
+   */
+  conversationGet(userId, key) {
+    return new Promise((resolve, reject) => {
+      this.getLastConversation(userId)
+        .then((conversation) => {
+          if (conversation[key]) {
+            resolve(conversation[key]);
+          } else {
+            reject(new Error('Conversation key is undefined'));
+          }
+        })
+        .catch(reject);
+    });
   }
 }
