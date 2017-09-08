@@ -32,23 +32,13 @@ class Bot {
   /**
    * Responds.
    */
-  async respond(userMessage) {
+  respond(userMessage) {
     console.log('Bot.respond', userMessage);
     const type = userMessage.type;
     if (type === 'text') {
-      return await this.respondText(userMessage);
+      return this.respondText(userMessage);
     }
   }
-
-  async onboard(id) {
-    // console.log('Bot.onboard');
-    // await this.brain.userPush(id, 'dialogs', lastDialog, 'onboarding');
-    // this.responses = [];
-    // this.executeDialogs(id, entities);
-    // return this.responses);
-    return this.adapter.send(id, [{ payload: "onboarding" }]);
-  }
-
 
   respondText(userMessage) {
     console.log('Bot.respondText', userMessage);
@@ -64,7 +54,7 @@ class Bot {
           .execute(id, intents, entities)
           .then((botMessages) => {
             console.log('Dm.execution resolved', botMessages);
-            return this.adapter.send(id, botMessages); // TODO: adapt to msg type
+            return this.adapter.send(botMessages); // TODO: adapt to msg type
           })
           .catch((err) => {
             console.log('Dm.execution rejected', err);
@@ -73,6 +63,19 @@ class Bot {
       .catch((err) => {
         console.log('Nlu.computation rejected', err);
       });
+  }
+
+  async onboard(id) {
+    // console.log('Bot.onboard');
+    // await this.brain.userPush(id, 'dialogs', lastDialog, 'onboarding');
+    // this.responses = [];
+    // this.executeDialogs(id, entities);
+    // return this.responses);
+    return this.adapter.send([{
+      id,
+      type: 'text',
+      payload: "onboarding"
+    }]);
   }
 }
 

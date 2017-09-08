@@ -17,8 +17,6 @@ class ShellAdapter extends Adapter {
 
   async run() {
     console.log('ShellAdapter.run');
-    await this.initUserIfNecessary();
-    console.log('ShellAdapter.run: brain', this.bot.brain);
     let userMessage = await this.bot.onboard(USER_ID);
     while (true) {
       userMessage.type = 'text';
@@ -27,8 +25,8 @@ class ShellAdapter extends Adapter {
     }
 }
 
-  async send(id, botMessages) {
-    console.log('ShellAdapter.send', id, botMessages);
+  async send(botMessages) {
+    console.log('ShellAdapter.send', botMessages);
     await this.initUserIfNecessary();
     const message = Array.join(botMessages.map((botMessage) => botMessage.payload), " ");
     console.log('ShellAdapter.send: message', message);

@@ -96,7 +96,7 @@ class DialogManager {
         const payload = _.template(line)(parameters);
         console.log('DialogManager.say: payload', payload);
         if (payload !== '') {
-          const response = { type: 'text', payload };
+          const response = { type: 'text', id, payload };
           console.log('DialogManager.say: response', response);
           this.responses.push(response);
         }
