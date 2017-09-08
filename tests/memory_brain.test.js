@@ -1,4 +1,4 @@
-import { MemoryBrain } from '../src/brain';
+const MemoryBrain = require('../src/brain/memory/memory_brain');
 
 const BOT_ID = '1';
 const USER1_ID = '1';

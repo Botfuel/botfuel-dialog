@@ -1,4 +1,4 @@
-import { MongoBrain } from '../src/brain';
+const MongoBrain = require('../src/brain/mongo/mongo_brain');
 
 const BOT_ID = '1';
 

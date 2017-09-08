@@ -1,4 +1,3 @@
-const inquirer = require('inquirer');
 const Adapter = require('./adapter');
 
 const USER_ID = '1';
