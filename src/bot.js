@@ -27,7 +27,7 @@ class Bot {
 
   play(userMessages) {
     console.log('Bot.play', userMessages);
-    this.adapter.play(userMessages);
+    return this.adapter.play(userMessages);
   }
 
   /**
