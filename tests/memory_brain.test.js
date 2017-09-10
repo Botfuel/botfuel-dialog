@@ -1,83 +1,76 @@
 const MemoryBrain = require('../src/brain/memory/memory_brain');
+var expect = require('expect.js');
 
 const BOT_ID = '1';
 const USER1_ID = '1';
 
-test('that a user has been added', async () => {
-  expect.assertions(1);
+it('that a user has been added', async function() {
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser(USER1_ID);
-  expect(brain.hasUser(USER1_ID)).resolves.toBe(true);
+  const brainHasUser = await brain.hasUser(USER1_ID);
+  expect(brainHasUser).to.be(true);
 });
 
-test('gets a user', async () => {
-  expect.assertions(1);
+it('gets a user', async function() {
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser(USER1_ID);
   const user = await brain.getUser(USER1_ID);
-  expect(user.userId).toBe(USER1_ID);
+  expect(user.userId).to.be(USER1_ID);
 });
 
-test('sets user key', async () => {
-  expect.assertions(1);
+it('sets user key', async function() {
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser(USER1_ID);
   const user = await brain.userSet(USER1_ID, 'name', 'test');
-  expect(user.name).toBe('test');
+  expect(user.name).to.be('test');
 });
 
-test('gets user value', async () => {
-  expect.assertions(1);
+it('gets user value', async function() {
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser(USER1_ID);
   await brain.userSet(USER1_ID, 'name', 'test');
   const name = await brain.userGet(USER1_ID, 'name');
-  expect(name).toBe('test');
+  expect(name).to.be('test');
 });
 
-test('push to user key array', async () => {
-  expect.assertions(2);
+it('push to user key array', async function() {
   const brain = new MemoryBrain(BOT_ID);
   const dialog = { label: 'travel', entities: { city: 'Paris' } };
   await brain.addUser(USER1_ID);
   const user = await brain.userPush(USER1_ID, 'dialogs', dialog);
-  expect(user.dialogs).toHaveLength(1);
-  expect(user.dialogs[0]).toEqual(dialog);
+  expect(user.dialogs).to.have.length(1);
+  expect(user.dialogs[0]).to.be(dialog);
 });
 
-test('add conversation to user', async () => {
-  expect.assertions(1);
+it('add conversation to user', async function() {
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser(USER1_ID);
   await brain.addConversation(USER1_ID);
   const user = await brain.getUser(USER1_ID);
-  expect(user.conversations).toHaveLength(1);
+  expect(user.conversations).to.have.length(1);
 });
 
-test('get last user conversation', async () => {
-  expect.assertions(1);
+it('get last user conversation', async function() {
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser(USER1_ID);
   await brain.addConversation(USER1_ID);
   const conversation = await brain.getLastConversation(USER1_ID);
-  expect(conversation).toBeDefined();
+  expect(conversation).not.to.be(null);
 });
 
-test('set user last conversation key', async () => {
-  expect.assertions(1);
+it('set user last conversation key', async function() {
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser(USER1_ID);
   await brain.addConversation(USER1_ID);
   const conversation = await brain.conversationSet(USER1_ID, 'city', 'Paris');
-  expect(conversation).toHaveProperty('city', 'Paris');
+  expect(conversation).to.have.property('city', 'Paris');
 });
 
-test('get user last conversation key', async () => {
-  expect.assertions(1);
+it('get user last conversation key', async function() {
   const brain = new MemoryBrain(BOT_ID);
   await brain.addUser(USER1_ID);
   await brain.addConversation(USER1_ID);
   await brain.conversationSet(USER1_ID, 'city', 'Paris');
   const city = await brain.conversationGet(USER1_ID, 'city');
-  expect(city).toBe('Paris');
+  expect(city).to.be('Paris');
 });

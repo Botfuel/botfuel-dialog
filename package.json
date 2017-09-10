@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "compile": "babel src --out-dir build",
-    "test": "jest",
+    "test": "mocha tests/*.js",
     "style": "eslint src; eslint tests"
   },
   "dependencies": {
@@ -34,7 +34,8 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-react": "^7.1.0",
-    "jest": "^20.0.4"
+    "expect.js": "^0.3.1",
+    "mocha": "^3.5.1"
   },
   "engines": {
     "node": "8.x"
