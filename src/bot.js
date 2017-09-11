@@ -18,6 +18,7 @@ class Bot {
     this.brain = new MemoryBrain(config.id);
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
+    this.botId = config.id;
   }
 
   run() {
@@ -43,7 +44,7 @@ class Bot {
 
   respondText(userMessage) {
     console.log('Bot.respondText', userMessage);
-    const id = userMessage.id;
+    const userId = userMessage.userId;
     const sentence = userMessage.payload;
     return this
       .nlu
@@ -51,7 +52,7 @@ class Bot {
       .then(({ entities, intents }) => {
         return this
           .dm
-          .execute(id, intents, entities)
+          .execute(userId, intents, entities)
           .then((botMessages) => {
             console.log('Dm.execution resolved', botMessages);
             return this.adapter.send(botMessages); // TODO: adapt to msg type
@@ -65,14 +66,15 @@ class Bot {
       });
   }
 
-  async onboard(id) {
+  async onboard(userId) {
     // console.log('Bot.onboard');
     // await this.brain.userPush(id, 'dialogs', lastDialog, 'onboarding');
     // this.responses = [];
     // this.executeDialogs(id, entities);
     // return this.responses);
     return this.adapter.send([{
-      id,
+      userId: userId,
+      botId: this.botId,
       type: 'text',
       payload: "onboarding"
     }]);

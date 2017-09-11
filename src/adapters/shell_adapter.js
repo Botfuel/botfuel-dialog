@@ -12,7 +12,9 @@ class ShellAdapter extends Adapter {
     let userMessage = await this.bot.onboard(USER_ID);
     while (true) {
       userMessage.type = 'text';
-      userMessage.id = USER_ID;
+      userMessage.userId = USER_ID;
+      userMessage.botId = this.bot.id;
+      userMessage.origin = 'user';
       userMessage = await this.bot.respond(userMessage);
     }
   }

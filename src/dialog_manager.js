@@ -23,70 +23,70 @@ class DialogManager {
 
   /**
    * Populates and executes the stack.
-   * @param {string} id the user id
+   * @param {string} userId the user id
    * @param {string[]} intents the intents
    * @param {Object[]} entities the transient entities
    */
-  async execute(id, intents, entities) {
-    console.log('DialogManager.execute', id, intents, entities);
+  async execute(userId, intents, entities) {
+    console.log('DialogManager.execute', userId, intents, entities);
     for(const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        await this.next(id, intent.label);
+        await this.next(userId, intent.label);
       }
     }
-    const dialogs = await this.brain.userGet(id, 'dialogs');
+    const dialogs = await this.brain.userGet(userId, 'dialogs');
     if (dialogs.length === 0) {
-      const lastDialog = await this.brain.userGet(id, 'lastDialog');
-      await this.brain.userPush(id, 'dialogs', lastDialog);
+      const lastDialog = await this.brain.userGet(userId, 'lastDialog');
+      await this.brain.userPush(userId, 'dialogs', lastDialog);
     }
     this.responses = [];
-    await this.executeDialogs(id, entities);
+    await this.executeDialogs(userId, entities);
     return this.responses;
   }
 
   /**
    * Executes the dialogs.
-   * @param {string} id the user id
+   * @param {string} userId the user id
    * @param {Object[]} entities - the entities
    */
-  async executeDialogs(id, entities) {
-    console.log('DialogManager.executeDialogs', id, entities);
-    const dialogs = await this.brain.userGet(id, 'dialogs');
+  async executeDialogs(userId, entities) {
+    console.log('DialogManager.executeDialogs', userId, entities);
+    const dialogs = await this.brain.userGet(userId, 'dialogs');
     console.log('DialogManager.executeDialogs: dialogs', dialogs);
     if (dialogs.length > 0) {
       const dialogData = dialogs.pop();
-      await this.brain.userSet(id, 'lastDialog', dialogData);
+      await this.brain.userSet(userId, 'lastDialog', dialogData);
       console.log('DialogManager.executeDialogs: dialogData', dialogData);
       const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialogData.label}`;
       console.log('DialogManager.executeDialogs: dialogPath', dialogPath);
       const dialogConstructor = require(dialogPath)
       const dialog = new dialogConstructor(dialogData.parameters);
-      const run = await dialog.execute(this, id, entities);
+      const run = await dialog.execute(this, userId, entities);
       if (run) { // continue executing the stack
-        return this.executeDialogs(id, entities);
+        return this.executeDialogs(userId, entities);
       }
     }
   }
 
   /**
    * Pushes a dialog on the stack.
-   * @param {string} id the user id
+   * @param {string} userId the user id
    * @param {string} label the dialog label
    * @param {Object} parameters the dialog parameters
    */
-  async next(id, label, parameters) {
-    console.log('DialogManager.next', id, label, parameters);
-    await this.brain.userPush(id, 'dialogs', { label, parameters });
+  async next(userId, label, parameters) {
+    console.log('DialogManager.next', userId, label, parameters);
+    await this.brain.userPush(userId, 'dialogs', { label, parameters });
   }
 
   /**
    * Says something.
-   * @param {string} id the user id
+   * @param {string} userId the user id
    * @param {string} label the template label
    * @param {Object} parameters the template parameters
    */
-  say(id, label, parameters) {
-    console.log('DialogManager.say', label, parameters);
+  say(userId, label, parameters) {
+    console.log('DialogManager.say', userId, label, parameters);
     const templatePath = `${this.config.path}/src/views/templates/`;
     const templateName = `${templatePath}/${label}.${this.config.locale}.txt`;
     console.log('DialogManager.say: templateName', templateName);
@@ -99,7 +99,13 @@ class DialogManager {
         const payload = _.template(line)(parameters);
         console.log('DialogManager.say: payload', payload);
         if (payload !== '') {
-          const response = { type: 'text', id, payload };
+          const response = {
+            type: 'text',
+            userId,
+            botId: this.config.id,
+            origin: 'bot',
+            payload
+          };
           console.log('DialogManager.say: response', response);
           this.responses.push(response);
         }
