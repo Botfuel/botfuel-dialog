@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost/sdk-brains';
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brains';
 
 // Initialize Mongoose
 const connect = () => {
