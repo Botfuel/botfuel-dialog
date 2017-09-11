@@ -7,13 +7,12 @@
   ],
   "scripts": {
     "compile": "babel src --out-dir build",
-    "test": "jest",
+    "test": "mocha tests/*.js",
     "style": "eslint src; eslint tests",
     "clean": "node src/brains/mongo/clean"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
     "botfuel-nlp-sdk": "latest",
     "fs": "0.0.1-security",
     "fs-promise": "^1.0.0",
@@ -26,6 +25,8 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^7.2.3",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "documentation": "^4.0.0-beta.18",
     "eslint": "3.19.0",
     "eslint-config-airbnb": "^15.0.1",
@@ -34,7 +35,8 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-react": "^7.1.0",
-    "jest": "^20.0.4"
+    "expect.js": "^0.3.1",
+    "mocha": "^3.5.1"
   },
   "engines": {
     "node": "8.x"
