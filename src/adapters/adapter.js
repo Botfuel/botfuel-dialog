@@ -9,7 +9,7 @@ class Adapter {
   }
 
   async initUserIfNecessary(id) {
-    console.log('TestAdapter.initUserIfNecessary');
+    console.log('Adapter.initUserIfNecessary', id);
     const userExists = await this.bot.brain.hasUser(id);
     if (!userExists) {
       await this.bot.brain.addUser(id);
@@ -22,7 +22,7 @@ class Adapter {
   }
 
   async run() {
-    console.log('TestAdapter.run');
+    console.log('Adapter.run');
     throw new Error('Not implemented!');
   }
 }

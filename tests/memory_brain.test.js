@@ -1,5 +1,5 @@
 const MemoryBrain = require('../src/brain/memory/memory_brain');
-var expect = require('expect.js');
+const expect = require('expect.js');
 
 const BOT_ID = '1';
 const USER1_ID = '1';
