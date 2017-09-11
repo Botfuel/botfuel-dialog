@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 /**
- * Class to wrap memory brain
+ * Class to wrap memory brains
  */
 class MemoryBrain {
   /**
@@ -13,6 +13,19 @@ class MemoryBrain {
     this.users = {};
   }
 
+  /**
+   * Clean the brain
+   * @returns {Promise}
+   */
+  clean() {
+    this.users = {};
+    return Promise.resolve();
+  }
+
+  /**
+   * Check if brain has user for a given userId
+   * @param {string} userId - user id
+   */
   hasUser(userId) {
     return Promise.resolve(this.users[userId] !== undefined);
   }
@@ -69,7 +82,8 @@ class MemoryBrain {
         .then((user) => {
           user[key] = value;
           resolve(user);
-        }).catch(reject);
+        })
+        .catch(reject);
     });
   }
 
@@ -105,8 +119,12 @@ class MemoryBrain {
       this.getUser(userId)
         .then((user) => {
           if (user[key]) {
-            user[key].push(value);
-            resolve(user);
+            if (_.isArray(user[key])) {
+              user[key].push(value);
+              resolve(user);
+            } else {
+              reject(new Error('User key is not an array'));
+            }
           } else {
             reject(new Error('User key is undefined'));
           }
@@ -144,7 +162,8 @@ class MemoryBrain {
           } else {
             reject(new Error('Last conversation is undefined'));
           }
-        }).catch(reject);
+        })
+        .catch(reject);
     });
   }
 

@@ -1,5 +1,3 @@
-const Fs = require('fs-promise');
-
 /**
  * Class for extracting entities.
  */

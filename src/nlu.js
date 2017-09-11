@@ -33,10 +33,10 @@ class Nlu {
         .load(model, null, (err, classifier) => {
           if (err !== null) {
             return reject(err);
-          } else {
-            this.classifier = classifier;
-            return resolve();
           }
+
+          this.classifier = classifier;
+          return resolve();
         });
     });
   }
