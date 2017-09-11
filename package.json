@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "compile": "babel src --out-dir build",
-    "test": "mocha tests/*.js",
+    "test": "mocha tests/**/*.test.js",
     "style": "eslint src; eslint tests"
   },
   "dependencies": {

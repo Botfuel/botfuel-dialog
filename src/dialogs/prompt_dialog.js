@@ -40,6 +40,7 @@ class PromptDialog extends Dialog {
    * @param {Object} dm the dialog manager
    * @param {string} id the user id
    * @param {Object} entity the entity
+   * @param {Array} responses responses array
    */
   async confirm(dm, id, entity, responses) {
     console.log('PromptDialog.confirm', '<dm>', id, entity);
@@ -51,6 +52,7 @@ class PromptDialog extends Dialog {
    * @param {Object} dm the dialog manager
    * @param {string} id the user id
    * @param {string} entityKey the entityKey
+   * @param {Array} responses responses array
    */
   async ask(dm, id, entityKey, responses) {
     console.log('PromptDialog.ask', '<dm>', id, entityKey);
