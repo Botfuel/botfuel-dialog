@@ -14,6 +14,15 @@ class MemoryBrain {
   }
 
   /**
+   * Clean the brain
+   * @returns {Promise}
+   */
+  clean() {
+    this.users = {};
+    return Promise.resolve();
+  }
+
+  /**
    * Check if brain has user for a given userId
    * @param {string} userId - user id
    */

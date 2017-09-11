@@ -21,6 +21,14 @@ class MongoBrain {
   }
 
   /**
+   * Clean the brain
+   * @returns {Promise}
+   */
+  clean() {
+    return User.remove({ botId: this.botId });
+  }
+
+  /**
    * Check if brain has user for a given userId
    * @param {string} userId - user id
    */
