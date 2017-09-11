@@ -2,7 +2,6 @@ const expect = require('expect.js');
 const MemoryBrain = require('../../src/brains/memory/memory_brain');
 const MongoBrain = require('../../src/brains/mongo/mongo_brain');
 const db = require('../../src/brains/mongo/db');
-const User = require('../../src/brains/mongo/models/user');
 
 // db label
 const MEMORY_BRAIN_LABEL = 'memory';
@@ -30,11 +29,7 @@ const brainTest = (brainLabel) => {
   });
 
   afterEach((done) => {
-    if (brainLabel === MONGO_BRAIN_LABEL) {
-      User.remove({ userId: USER_TEST_ID }).then(() => done());
-    } else {
-      done();
-    }
+    brain.clean().then(() => done());
   });
 
   after('Drop database if MongoBrain', (done) => {
@@ -105,6 +100,13 @@ const brainTest = (brainLabel) => {
     await brain.conversationSet(USER_TEST_ID, 'city', 'Paris');
     const city = await brain.conversationGet(USER_TEST_ID, 'city');
     expect(city).to.be('Paris');
+  });
+
+  it('clean the brain', async () => {
+    await brain.addUser(USER_TEST_ID);
+    await brain.clean();
+    const brainHasUser = await brain.hasUser(USER_TEST_ID);
+    expect(brainHasUser).to.be(false);
   });
 };
 
