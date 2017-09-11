@@ -20,6 +20,23 @@ class MongoBrain {
   }
 
   /**
+   * Check if brain has user for a given userId
+   * @param {string} userId - user id
+   */
+  hasUser(userId) {
+    return new Promise((resolve, reject) => {
+      User.findOne({ botId: this.botId, userId })
+        .then((user) => {
+          if (user) {
+            resolve(true);
+          }
+          resolve(false);
+        })
+        .catch(reject);
+    });
+  }
+
+  /**
    * Add an user
    * @param {string} userId - user id
    * @returns {Promise}

@@ -13,6 +13,10 @@ class MemoryBrain {
     this.users = {};
   }
 
+  /**
+   * Check if brain has user for a given userId
+   * @param {string} userId - user id
+   */
   hasUser(userId) {
     return Promise.resolve(this.users[userId] !== undefined);
   }
