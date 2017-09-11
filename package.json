@@ -2,10 +2,13 @@
   "name": "@botfuel/bot-sdk2",
   "version": "0.1.2",
   "main": "index.js",
+  "author": "sysadmin@botfuel.io",
+  "description": "Botfuel SDK2",
   "files": [
     "build"
   ],
   "scripts": {
+    "prepublish": "npm run compile",
     "compile": "babel src --out-dir build",
     "test": "mocha tests/**/*.test.js",
     "style": "eslint src; eslint tests"
@@ -23,6 +26,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
