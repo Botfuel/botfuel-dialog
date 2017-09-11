@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 /**
- * Class to wrap memory brain
+ * Class to wrap memory brains
  */
 class MemoryBrain {
   /**

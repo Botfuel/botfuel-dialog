@@ -1,4 +1,4 @@
-const MongoBrain = require('../src/brain/mongo/mongo_brain');
+const MongoBrain = require('../src/brains/mongo/mongo_brain');
 
 const BOT_ID = '1';
 

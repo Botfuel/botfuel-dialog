@@ -8,7 +8,8 @@
   "scripts": {
     "compile": "babel src --out-dir build",
     "test": "jest",
-    "style": "eslint src; eslint tests"
+    "style": "eslint src; eslint tests",
+    "clean": "node src/brains/mongo/clean"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
