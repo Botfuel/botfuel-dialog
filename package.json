@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "compile": "babel src --out-dir build",
-    "test": "mocha tests/*.js",
+    "test": "mocha --timeout 15000 tests/**/*.test.js",
     "style": "eslint src; eslint tests",
     "clean": "node src/brains/mongo/clean"
   },

@@ -9,11 +9,12 @@ class MongoBrain {
   /**
    * Constructor
    * @param {string} botId - bot id
+   * @param {string} mongoUri - mongo uri
    */
-  constructor(botId) {
+  constructor(botId, mongoUri = '') {
     // connect to mongodb if not connected yet
     if (!db.isConnected()) {
-      db.connect();
+      db.connect(mongoUri);
     }
     this.botId = botId;
     this.userGlobalProperties = ['conversations', 'dialogs', 'lastDialog'];
