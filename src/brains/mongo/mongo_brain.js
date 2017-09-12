@@ -103,12 +103,10 @@ class MongoBrain {
       const select = isGlobalProperty ? key : `data.${key}`;
       User.findOne({ botId: this.botId, userId }, select)
         .then((user) => {
-          if (isGlobalProperty && user[key]) {
+          if (isGlobalProperty) {
             resolve(user[key]);
-          } else if (!isGlobalProperty && user.data[key]) {
-            resolve(user.data[key]);
           } else {
-            reject(new Error(`Key not found in user ${userId}`));
+            resolve(user.data[key]);
           }
         })
         .catch(err => reject(err));
@@ -170,7 +168,7 @@ class MongoBrain {
         .then((user) => {
           user.lastConversationSet(`data.${key}`, value);
           user.save()
-            .then((savedUser) => resolve(savedUser.getLastConversation()))
+            .then(savedUser => resolve(savedUser.getLastConversation()))
             .catch(reject);
         })
         .catch(reject);
@@ -186,13 +184,7 @@ class MongoBrain {
   conversationGet(userId, key) {
     return new Promise((resolve, reject) => {
       this.getLastConversation(userId)
-        .then((conversation) => {
-          if (conversation[key]) {
-            resolve(conversation[key]);
-          } else {
-            reject(new Error('Conversation key is undefined'));
-          }
-        })
+        .then(conversation => resolve(conversation[key]))
         .catch(reject);
     });
   }

@@ -96,13 +96,7 @@ class MemoryBrain {
   userGet(userId, key) {
     return new Promise((resolve, reject) => {
       this.getUser(userId)
-        .then((user) => {
-          if (user[key]) {
-            resolve(user[key]);
-          } else {
-            reject(new Error('User key is undefined'));
-          }
-        })
+        .then(user => resolve(user[key]))
         .catch(reject);
     });
   }
@@ -126,7 +120,8 @@ class MemoryBrain {
               reject(new Error('User key is not an array'));
             }
           } else {
-            reject(new Error('User key is undefined'));
+            user[key] = [value];
+            resolve(user);
           }
         })
         .catch(reject);
@@ -155,14 +150,7 @@ class MemoryBrain {
   getLastConversation(userId) {
     return new Promise((resolve, reject) => {
       this.getUser(userId)
-        .then((user) => {
-          const lastConversation = _.last(user.conversations);
-          if (lastConversation) {
-            resolve(lastConversation);
-          } else {
-            reject(new Error('Last conversation is undefined'));
-          }
-        })
+        .then(user => resolve(_.last(user.conversations)))
         .catch(reject);
     });
   }
@@ -194,13 +182,7 @@ class MemoryBrain {
   conversationGet(userId, key) {
     return new Promise((resolve, reject) => {
       this.getLastConversation(userId)
-        .then((conversation) => {
-          if (conversation[key]) {
-            resolve(conversation[key]);
-          } else {
-            reject(new Error('Conversation key is undefined'));
-          }
-        })
+        .then(conversation => resolve(conversation[key]))
         .catch(reject);
     });
   }
