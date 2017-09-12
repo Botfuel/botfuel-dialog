@@ -18,7 +18,6 @@ class Bot {
     this.brain = new MemoryBrain(config.id);
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
-    this.botId = config.id;
   }
 
   run() {
@@ -66,15 +65,6 @@ class Bot {
       .catch((err) => {
         console.log('Nlu.computation rejected', err);
       });
-  }
-
-  async sendOnboardingMessage(userId) {
-    return this.adapter.send([{
-      userId,
-      botId: this.botId,
-      type: 'text',
-      payload: 'onboarding',
-    }]);
   }
 }
 

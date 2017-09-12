@@ -13,7 +13,13 @@ class ShellAdapter extends Adapter {
   async run() {
     console.log('ShellAdapter.run');
     await this.initUserIfNecessary(this.userId);
-    this.loop(await this.bot.sendOnboardingMessage(this.userId));
+    const userMessage = await this.adapter.send([{
+      userId: this.userId,
+      botId: this.config.id,
+      type: 'text',
+      payload: 'onboarding', // TODO: use a dialog instead?
+    }]);
+    this.loop(userMessage);
   }
 
   async loop(userMessage) {
