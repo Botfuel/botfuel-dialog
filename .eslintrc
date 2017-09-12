@@ -1,17 +1,22 @@
 {
   "env": {
-    "node": true
+    "node": true,
+    "mocha": true
   },
-  "plugins": ["node", "babel"],
+  "plugins": ["node", "mocha", "babel"],
   "extends": ["eslint:recommended", "airbnb"],
   "parserOptions": { "ecmaVersion": 8 },
   "parser": "babel-eslint",
   "rules": {
-    "strict": 0,
-    "jsx-a11y/href-no-hash": "off",
+    "class-methods-use-this": "off",
+    "global-require": "off",
+    "import/no-dynamic-require": "off",
     "import/order": ["error"],
+    "jsx-a11y/href-no-hash": "off",
+    "mocha/no-exclusive-tests": "error",
     "no-console": "off",
+    "no-param-reassign": "off",
     "no-restricted-syntax": "off",
-    "no-param-reassign": "off"
+    "strict": 0
   }
 }

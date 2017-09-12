@@ -29,7 +29,7 @@ class DialogManager {
    */
   async execute(userId, intents, entities) {
     console.log('DialogManager.execute', userId, intents, entities);
-    for(const intent of intents) {
+    for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
         await this.next(userId, intent.label, entities);
       }
@@ -104,7 +104,7 @@ class DialogManager {
             userId,
             botId: this.config.id,
             origin: 'bot',
-            payload
+            payload,
           };
           console.log('DialogManager.say: response', response);
           this.responses.push(response);

@@ -1,19 +1,16 @@
 class Extractor2 {
-  constructor() {
-  }
-
   compute(sentence) {
     return [
       {
-        "dim": "dim2",
-        "body": sentence,
-        "values": [
+        dim: 'dim2',
+        body: sentence,
+        values: [
           {
-            "value": sentence,
-            "type": "string"
-          }
-        ]
-      }
+            value: sentence,
+            type: 'string',
+          },
+        ],
+      },
     ];
   }
 

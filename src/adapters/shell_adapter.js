@@ -11,7 +11,7 @@ class ShellAdapter extends Adapter {
     console.log('ShellAdapter.run');
     await this.initUserIfNecessary(USER_ID);
     let userMessage = await this.bot.onboard(USER_ID);
-    while (true) {
+    for (;;) {
       userMessage.type = 'text';
       userMessage.userId = USER_ID;
       userMessage.botId = this.bot.id;
