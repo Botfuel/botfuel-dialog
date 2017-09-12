@@ -1,6 +1,6 @@
 const Adapter = require('./adapter');
 
-const USER_ID = 'TEST_USER';
+const USER_ID = 'USER_TEST';
 
 /**
  * Test Adapter.
