@@ -37,8 +37,10 @@ class Bot {
   respond(userMessage) {
     console.log('Bot.respond', userMessage);
     const type = userMessage.type;
-    if (type === 'text') {
-      return this.respondText(userMessage);
+    switch (type) {
+      case 'text':
+      default:
+        return this.respondText(userMessage);
     }
   }
 
