@@ -3,7 +3,7 @@
  */
 class Adapter {
   constructor(bot, config) {
-    console.log('Adapter.constructor');
+    // console.log('Adapter.constructor');
     this.config = config;
     this.bot = bot;
     this.dayInMs = 86400000; // One day in milliseconds

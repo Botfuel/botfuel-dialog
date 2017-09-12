@@ -9,17 +9,16 @@ class PromptDialog extends Dialog {
    * @param {Object} dm the dialog manager
    * @param {string} id the user id
    * @param {Object[]} messageEntities - entities array from user message
-   * @param {string[]} responses - responses array
    */
-  async execute(dm, id, messageEntities, responses) {
+  async execute(dm, id, messageEntities) {
     console.log('PromptDialog.execute', '<dm>', id, messageEntities);
     const dialogEntitiesData = await dm.brain.conversationGet(id, this.parameters.namespace);
-    console.log('PromptDialog.execute: dialogEntities', dialogEntitiesData);
+    console.log('PromptDialog.execute: dialogEntitiesData', dialogEntitiesData);
     const dialogEntities = dialogEntitiesData || {};
     for (const messageEntity of messageEntities) {
       console.log('PromptDialog.execute: messageEntity', messageEntity);
       if (this.parameters.entities[messageEntity.dim] !== null) {
-        await this.confirm(dm, id, messageEntity, responses);
+        await this.confirm(dm, id, messageEntity);
         dialogEntities[messageEntity.dim] = messageEntity;
       }
     }
@@ -27,8 +26,10 @@ class PromptDialog extends Dialog {
     await dm.brain.conversationSet(id, this.parameters.namespace, dialogEntities);
     let extractionsDone = true;
     for (const entityKey of Object.keys(this.parameters.entities)) {
-      if (dialogEntities[entityKey] === null) {
-        await this.ask(dm, id, entityKey, responses);
+      console.log('PromptDialog.execute: entityKey', entityKey);
+      console.log('PromptDialog.execute: entityKey', dialogEntities[entityKey]);
+      if (dialogEntities[entityKey] === undefined) {
+        await this.ask(dm, id, entityKey);
         extractionsDone = false;
       }
     }
@@ -40,11 +41,10 @@ class PromptDialog extends Dialog {
    * @param {Object} dm the dialog manager
    * @param {string} id the user id
    * @param {Object} entity the entity
-   * @param {Array} responses responses array
    */
-  async confirm(dm, id, entity, responses) {
+  async confirm(dm, id, entity) {
     console.log('PromptDialog.confirm', '<dm>', id, entity);
-    return dm.say(id, 'entity_confirm', { entity }, responses);
+    await dm.say(id, 'entity_confirm', { entity });
   }
 
   /**
@@ -52,11 +52,10 @@ class PromptDialog extends Dialog {
    * @param {Object} dm the dialog manager
    * @param {string} id the user id
    * @param {string} entityKey the entityKey
-   * @param {Array} responses responses array
    */
-  async ask(dm, id, entityKey, responses) {
+  async ask(dm, id, entityKey) {
     console.log('PromptDialog.ask', '<dm>', id, entityKey);
-    return dm.say(id, 'entity_ask', { entity: entityKey }, responses);
+    await dm.say(id, 'entity_ask', { entity: entityKey });
   }
 }
 

@@ -11,7 +11,7 @@ class DialogManager {
    * Constructor.
    */
   constructor(brain, config) {
-    console.log('DialogManager.constructor');
+    // console.log('DialogManager.constructor');
     this.brain = brain;
     this.config = config;
     this.intentThreshold = this.config.intentThreshold || 0.8;
