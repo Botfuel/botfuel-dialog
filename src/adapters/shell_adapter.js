@@ -1,19 +1,22 @@
 const inquirer = require('inquirer');
 const Adapter = require('./adapter');
 
-const USER_ID = 'USER_1';
-
 /**
  * Shell Adapter.
  */
 class ShellAdapter extends Adapter {
+  constructor(bot, config) {
+    super(bot, config);
+    this.userId = 'USER_1';
+  }
+
   async run() {
     console.log('ShellAdapter.run');
-    await this.initUserIfNecessary(USER_ID);
-    let userMessage = await this.bot.onboard(USER_ID);
+    await this.initUserIfNecessary(this.userId);
+    let userMessage = await this.bot.onboard(this.userId);
     for (;;) {
       userMessage.type = 'text';
-      userMessage.userId = USER_ID;
+      userMessage.userId = this.userId;
       userMessage.botId = this.bot.id;
       userMessage.origin = 'user';
       userMessage = await this.bot.respond(userMessage);

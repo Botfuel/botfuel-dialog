@@ -1,7 +1,5 @@
 const Adapter = require('./adapter');
 
-const USER_ID = 'USER_TEST';
-
 /**
  * Test Adapter.
  */
@@ -10,13 +8,14 @@ class TestAdapter extends Adapter {
     console.log('TestAdapter.constructor');
     super(bot, config);
     this.log = [];
+    this.userId = 'USER_TEST';
   }
 
   async play(userMessages) {
     console.log('TestAdapter.play', userMessages);
-    await this.initUserIfNecessary(USER_ID);
+    await this.initUserIfNecessary(this.userId);
     for (const userMessage of userMessages) {
-      userMessage.userId = USER_ID;
+      userMessage.userId = this.userId;
       userMessage.botId = this.config.id;
       userMessage.origin = 'user';
       this.log.push(userMessage);
