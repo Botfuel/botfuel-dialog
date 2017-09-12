@@ -19,7 +19,7 @@ class TestAdapter extends Adapter {
       userMessage.botId = this.config.id;
       userMessage.origin = 'user';
       this.log.push(userMessage);
-      await this.bot.respond(userMessage);
+      await this.bot.sendResponse(userMessage);
     }
   }
 
