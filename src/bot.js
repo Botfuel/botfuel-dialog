@@ -10,10 +10,10 @@ const DialogManager = require('./dialog_manager');
 class Bot {
   constructor(config) {
     console.log('Bot.constructor', config);
-    if (config.adapter === 'shell') {
-      this.adapter = new ShellAdapter(this, config);
-    } else if (config.adapter === 'test') {
+    if (config.adapter === 'test') {
       this.adapter = new TestAdapter(this, config);
+    } else {
+      this.adapter = new ShellAdapter(this, config);
     }
     this.brain = new MemoryBrain(config.id);
     this.nlu = new Nlu(config);
