@@ -34,17 +34,17 @@ class Bot {
   /**
    * Responds.
    */
-  respond(userMessage) {
+  sendResponse(userMessage) {
     console.log('Bot.respond', userMessage);
     const type = userMessage.type;
     switch (type) {
       case 'text':
       default:
-        return this.respondText(userMessage);
+        return this.sendTextResponse(userMessage);
     }
   }
 
-  respondText(userMessage) {
+  sendTextResponse(userMessage) {
     console.log('Bot.respondText', userMessage);
     const userId = userMessage.userId;
     const sentence = userMessage.payload;
@@ -68,12 +68,7 @@ class Bot {
       });
   }
 
-  async onboard(userId) {
-    // console.log('Bot.onboard');
-    // await this.brain.userPush(id, 'dialogs', lastDialog, 'onboarding');
-    // this.responses = [];
-    // this.executeDialogs(id, entities);
-    // return this.responses);
+  async sendOnboardingMessage(userId) {
     return this.adapter.send([{
       userId,
       botId: this.botId,

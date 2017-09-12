@@ -13,14 +13,16 @@ class ShellAdapter extends Adapter {
   async run() {
     console.log('ShellAdapter.run');
     await this.initUserIfNecessary(this.userId);
-    let userMessage = await this.bot.onboard(this.userId);
-    for (;;) {
-      userMessage.type = 'text';
-      userMessage.userId = this.userId;
-      userMessage.botId = this.bot.id;
-      userMessage.origin = 'user';
-      userMessage = await this.bot.respond(userMessage);
-    }
+    this.loop(await this.bot.sendOnboardingMessage(this.userId));
+  }
+
+  async loop(userMessage) {
+    console.log('ShellAdapter.respond', userMessage);
+    userMessage.type = 'text';
+    userMessage.userId = this.userId;
+    userMessage.botId = this.bot.id;
+    userMessage.origin = 'user';
+    this.loop(await this.bot.sendResponse(userMessage));
   }
 
   async send(botMessages) {
