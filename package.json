@@ -21,8 +21,9 @@
     "inquirer": "^3.2.3",
     "lodash": "^4.17.4",
     "mongoose": "^4.11.10",
-    "underscore": "^1.8.3",
-    "natural": "^0.5.4"
+    "natural": "^0.5.4",
+    "node-dir": "^0.1.17",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

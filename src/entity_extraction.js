@@ -1,3 +1,5 @@
+const dir = require('node-dir');
+
 /**
  * Class for extracting entities.
  */
@@ -14,15 +16,17 @@ class EntityExtraction {
    * Extracts the entities by applying extractors defined at the bot level.
    * @param {string} sentence the sentence
    */
-  compute(sentence) {
+  async compute(sentence) {
     console.log('EntityExtraction.compute', sentence);
-    for (const extractor of this.config.extractors) {
-      // TODO: fix this
-      return extractor(sentence)
-        .then((entities) => {
-          return Promise.resolve(entities);
-        });
+    const path = `${this.config.path}`/src/extractors;
+    const extractorFiles = await dir.promiseFiles(path);
+    let entities = [];
+    for (const extractorFile of extractorFiles) {
+      const Extractor = require(extractorFile);
+      const extractor = new Extractor();
+      entities = entities.concat(await extractor.compute(sentence));
     }
+    return entities;
   }
 }
 
