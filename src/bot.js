@@ -10,7 +10,7 @@ const DialogManager = require('./dialog_manager');
 class Bot {
   constructor(config) {
     console.log('Bot.constructor', config);
-    if (config.adapter === 'shell') {
+    if (config.adapter === 'test') {
       this.adapter = new TestAdapter(this, config);
     } else {
       this.adapter = new ShellAdapter(this, config);
