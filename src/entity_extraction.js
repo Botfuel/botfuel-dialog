@@ -13,9 +13,9 @@ class EntityExtraction {
     this.config = config;
     const path = `${config.path}/src/extractors`;
     console.log('EntityExtraction.constructor: path', path);
-    this.files = dir.files(path, {
-      sync: true
-    });
+    this.files = dir
+      .files(path, { sync: true })
+      .filter((file) => file.match(/^.*.js$/))
     console.log('EntityExtraction.constructor: files', this.files);
   }
 
@@ -29,7 +29,7 @@ class EntityExtraction {
     for (const file of this.files) {
       const Extractor = require(file);
       const extractorEntities = await new Extractor().compute(sentence)
-      console.log('EntityExtraction.compute: extractorEntities', extractorEntities);
+      console.log('EntityExtraction.compute: extractorEntities', file, extractorEntities);
       entities = entities.concat(extractorEntities);
     }
     return entities;
