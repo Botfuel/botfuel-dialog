@@ -13,7 +13,7 @@ class PromptDialog extends Dialog {
    */
   async execute(dm, id, messageEntities, responses) {
     console.log('PromptDialog.execute', '<dm>', id, messageEntities);
-    const dialogEntitiesData = await dm.brain.get(id, this.parameters.namespace);
+    const dialogEntitiesData = await dm.brain.conversationGet(id, this.parameters.namespace);
     console.log('PromptDialog.execute: dialogEntities', dialogEntitiesData);
     const dialogEntities = dialogEntitiesData || {};
     for (const messageEntity of messageEntities) {
@@ -24,7 +24,7 @@ class PromptDialog extends Dialog {
       }
     }
     console.log('PromptDialog.execute: dialogEntities', dialogEntities);
-    await dm.brain.set(id, this.parameters.namespace, dialogEntities);
+    await dm.brain.conversationSet(id, this.parameters.namespace, dialogEntities);
     let extractionsDone = true;
     for (const entityKey of Object.keys(this.parameters.entities)) {
       if (dialogEntities[entityKey] === null) {

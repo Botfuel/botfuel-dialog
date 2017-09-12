@@ -31,7 +31,7 @@ class DialogManager {
     console.log('DialogManager.execute', userId, intents, entities);
     for(const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        await this.next(userId, intent.label);
+        await this.next(userId, intent.label, entities);
       }
     }
     const dialogs = await this.brain.userGet(userId, 'dialogs');
@@ -59,8 +59,8 @@ class DialogManager {
       console.log('DialogManager.executeDialogs: dialogData', dialogData);
       const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialogData.label}`;
       console.log('DialogManager.executeDialogs: dialogPath', dialogPath);
-      const dialogConstructor = require(dialogPath)
-      const dialog = new dialogConstructor(dialogData.parameters);
+      const DialogConstructor = require(dialogPath);
+      const dialog = new DialogConstructor(dialogData.parameters);
       const run = await dialog.execute(this, userId, entities);
       if (run) { // continue executing the stack
         return this.executeDialogs(userId, entities);

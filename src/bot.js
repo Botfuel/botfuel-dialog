@@ -23,7 +23,7 @@ class Bot {
 
   run() {
     console.log('Bot.run');
-    this.adapter.run();
+    return this.adapter.run();
   }
 
   play(userMessages) {
@@ -37,8 +37,10 @@ class Bot {
   respond(userMessage) {
     console.log('Bot.respond', userMessage);
     const type = userMessage.type;
-    if (type === 'text') {
-      return this.respondText(userMessage);
+    switch (type) {
+      case 'text':
+      default:
+        return this.respondText(userMessage);
     }
   }
 
@@ -73,10 +75,10 @@ class Bot {
     // this.executeDialogs(id, entities);
     // return this.responses);
     return this.adapter.send([{
-      userId: userId,
+      userId,
       botId: this.botId,
       type: 'text',
-      payload: "onboarding"
+      payload: 'onboarding',
     }]);
   }
 }
