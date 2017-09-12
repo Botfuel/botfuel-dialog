@@ -13,7 +13,7 @@ class ShellAdapter extends Adapter {
   async run() {
     console.log('ShellAdapter.run');
     await this.initUserIfNecessary(this.userId);
-    const userMessage = await this.adapter.send([{
+    const userMessage = await this.send([{
       userId: this.userId,
       botId: this.config.id,
       type: 'text',
@@ -23,7 +23,7 @@ class ShellAdapter extends Adapter {
   }
 
   async loop(userMessage) {
-    console.log('ShellAdapter.respond', userMessage);
+    console.log('ShellAdapter.loop', userMessage);
     userMessage.type = 'text';
     userMessage.userId = this.userId;
     userMessage.botId = this.bot.id;
