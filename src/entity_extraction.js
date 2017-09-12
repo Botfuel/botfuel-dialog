@@ -9,7 +9,11 @@ class EntityExtraction {
    * @param {Object} config the bot's config
    */
   constructor(config) {
+    console.log('EntityExtraction.constructor', config);
     this.config = config;
+    const path = `${config.path}/src/extractors`;
+    this.files = dir.files(path, { sync: true });
+    console.log('EntityExtraction.constructor: files', this.files);
   }
 
   /**
@@ -18,11 +22,9 @@ class EntityExtraction {
    */
   async compute(sentence) {
     console.log('EntityExtraction.compute', sentence);
-    const path = `${this.config.path}`/src/extractors;
-    const extractorFiles = await dir.promiseFiles(path);
     let entities = [];
-    for (const extractorFile of extractorFiles) {
-      const Extractor = require(extractorFile);
+    for (const file of this.files) {
+      const Extractor = require(file);
       const extractor = new Extractor();
       entities = entities.concat(await extractor.compute(sentence));
     }
