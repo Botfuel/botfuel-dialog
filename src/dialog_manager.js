@@ -29,15 +29,20 @@ class DialogManager {
    */
   async execute(userId, intents, entities) {
     console.log('DialogManager.execute', userId, intents, entities);
+    const nextPromises = [];
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        await this.next(userId, intent.label, entities);
+        nextPromises.push(this.next(userId, intent.label, entities));
       }
     }
+    await Promise.all(nextPromises);
     const dialogs = await this.brain.userGet(userId, 'dialogs');
-    if (dialogs.length === 0) {
+    if (dialogs.length > 0) {
       const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-      await this.brain.userPush(userId, 'dialogs', lastDialog);
+      if (Object.hasOwnProperty.call(lastDialog, 'label')) {
+        console.log('DialogManager push last dialog to dialogs', lastDialog);
+        await this.brain.userPush(userId, 'dialogs', lastDialog);
+      }
     }
     this.responses = [];
     await this.executeDialogs(userId, entities);
@@ -53,8 +58,11 @@ class DialogManager {
     console.log('DialogManager.executeDialogs', userId, entities);
     const dialogs = await this.brain.userGet(userId, 'dialogs');
     console.log('DialogManager.executeDialogs: dialogs', dialogs);
+    const lastDialog = await this.brain.userGet(userId, 'lastDialog');
+    console.log('DialogManager.executeDialogs: lastDialog', lastDialog);
     if (dialogs.length > 0) {
-      const dialogData = dialogs.pop();
+      const dialogData = await this.brain.userShift(userId, 'dialogs');
+      console.log('DM.executeDialogs set new last dialog', dialogData);
       await this.brain.userSet(userId, 'lastDialog', dialogData);
       console.log('DialogManager.executeDialogs: dialogData', dialogData);
       const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialogData.label}`;
