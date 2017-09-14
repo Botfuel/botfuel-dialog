@@ -29,26 +29,19 @@ class DialogManager {
    */
   async execute(userId, intents, entities) {
     console.log('DialogManager.execute', userId, intents, entities);
+
     const dialogsBefore = await this.brain.userGet(userId, 'dialogs');
     console.log('DialogManager.execute: dialogsBefore', dialogsBefore);
-    const lastDialogBefore = await this.brain.userGet(userId, 'lastDialog');
-    console.log('DialogManager.execute: lastDialogBefore', lastDialogBefore);
+
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
         await this.next(userId, intent.label, entities);
       }
     }
-    const dialogs = await this.brain.userGet(userId, 'dialogs');
-    console.log('DialogManager.execute: dialogs', dialogs);
-    const lastDialogAfter = await this.brain.userGet(userId, 'lastDialog');
-    console.log('DialogManager.execute: lastDialogAfter', lastDialogAfter);
-    if (dialogs.length > 0) {
-      const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-      if (Object.hasOwnProperty.call(lastDialog, 'label')) {
-        console.log('DialogManager push last dialog to dialogs', lastDialog);
-        await this.brain.userPush(userId, 'dialogs', lastDialog);
-      }
-    }
+
+    const dialogsAfter = await this.brain.userGet(userId, 'dialogs');
+    console.log('DialogManager.execute: dialogsAfter', dialogsAfter);
+
     this.responses = [];
     await this.executeDialogs(userId, entities);
     return this.responses;
@@ -63,12 +56,9 @@ class DialogManager {
     console.log('DialogManager.executeDialogs', userId, entities);
     const dialogs = await this.brain.userGet(userId, 'dialogs');
     console.log('DialogManager.executeDialogs: dialogs', dialogs);
-    const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-    console.log('DialogManager.executeDialogs: lastDialog', lastDialog);
+
     if (dialogs.length > 0) {
       const dialogData = await this.brain.userShift(userId, 'dialogs');
-      console.log('DM.executeDialogs set new last dialog', dialogData);
-      await this.brain.userSet(userId, 'lastDialog', dialogData);
       console.log('DialogManager.executeDialogs: dialogData', dialogData);
       const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialogData.label}`;
       console.log('DialogManager.executeDialogs: dialogPath', dialogPath);
