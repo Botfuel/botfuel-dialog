@@ -129,6 +129,46 @@ class MemoryBrain {
   }
 
   /**
+   * Shift value from user key array (first element)
+   * @param {string} userId - user id
+   * @param {string} key - user array key
+   * @returns {Promise}
+   */
+  userShift(userId, key) {
+    return new Promise((resolve, reject) => {
+      this.getUser(userId)
+        .then((user) => {
+          if (user[key] && _.isArray(user[key])) {
+            resolve(user[key].shift());
+          } else {
+            reject(new Error('User key is not an array'));
+          }
+        })
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Pop value from user key array (last element)
+   * @param {string} userId - user id
+   * @param {string} key - user array key
+   * @returns {Promise}
+   */
+  userPop(userId, key) {
+    return new Promise((resolve, reject) => {
+      this.getUser(userId)
+        .then((user) => {
+          if (user[key] && _.isArray(user[key])) {
+            resolve(user[key].pop());
+          } else {
+            reject(new Error('User key is not an array'));
+          }
+        })
+        .catch(reject);
+    });
+  }
+
+  /**
    * Add a conversation to an user
    * @param {string} userId - user id
    * @returns {Promise}

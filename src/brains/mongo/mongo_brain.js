@@ -129,6 +129,52 @@ class MongoBrain {
   }
 
   /**
+   * Shift value from user key array (first element)
+   * @param {string} userId - user id
+   * @param {string} key - user array key
+   * @returns {Promise}
+   */
+  userShift(userId, key) {
+    return new Promise((resolve, reject) => {
+      const isGlobalProperty = _.includes(this.userGlobalProperties, key);
+      const pop = {};
+      pop[isGlobalProperty ? key : `data.${key}`] = -1;
+      User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop })
+        .then((user) => {
+          if (isGlobalProperty) {
+            resolve(user[key].shift());
+          } else {
+            resolve(user.data[key].shift());
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+   * Pop value from user key array (last element)
+   * @param {string} userId - user id
+   * @param {string} key - user array key
+   * @returns {Promise}
+   */
+  userPop(userId, key) {
+    return new Promise((resolve, reject) => {
+      const isGlobalProperty = _.includes(this.userGlobalProperties, key);
+      const pop = {};
+      pop[isGlobalProperty ? key : `data.${key}`] = 1;
+      User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop })
+        .then((user) => {
+          if (isGlobalProperty) {
+            resolve(user[key].pop());
+          } else {
+            resolve(user.data[key].pop());
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
    * Add a conversation to an user
    * @param {string} userId - user id
    * @returns {Promise}
