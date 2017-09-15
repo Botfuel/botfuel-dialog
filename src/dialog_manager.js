@@ -66,6 +66,7 @@ class DialogManager {
         return this.executeDialogs(userId, entities);
       }
     }
+    return true;
   }
 
   /**
@@ -101,10 +102,10 @@ class DialogManager {
         if (payload !== '') {
           const response = {
             type: 'text',
+            payload,
             userId,
             botId: this.config.id,
             origin: 'bot',
-            payload,
           };
           console.log('DM.say: response', response);
           this.responses.push(response);
