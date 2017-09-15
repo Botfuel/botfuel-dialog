@@ -29,26 +29,18 @@ class DialogManager {
    */
   async execute(userId, intents, entities) {
     console.log('DM.execute', userId, intents, entities);
-    const dialogsBefore = await this.brain.userGet(userId, 'dialogs');
-    console.log('DM.execute: dialogsBefore', dialogsBefore);
-    const lastDialogBefore = await this.brain.userGet(userId, 'lastDialog');
-    console.log('DM.execute: lastDialogBefore', lastDialogBefore);
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        await this.addDialog(userId, intent.label, entities);
+        await this.next(userId, intent.label, entities);
       }
     }
     const dialogs = await this.brain.userGet(userId, 'dialogs');
-    if (dialogs.length > 0) {
+    if (dialogs.length === 0) {
       const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-      if (Object.hasOwnProperty.call(lastDialog, 'label')) {
-        console.log('DM.execute -> push last dialog to dialogs', lastDialog);
-        await this.brain.userPush(userId, 'dialogs', lastDialog);
-      }
+      await this.brain.userPush(userId, 'dialogs', lastDialog);
     }
     this.responses = [];
     await this.executeDialogs(userId, entities);
-    console.log('DM.execute: responses', this.responses);
     return this.responses;
   }
 
@@ -60,9 +52,9 @@ class DialogManager {
   async executeDialogs(userId, entities) {
     console.log('DM.executeDialogs', userId, entities);
     const dialogs = await this.brain.userGet(userId, 'dialogs');
+    console.log('DM.executeDialogs: dialogs', dialogs);
     if (dialogs.length > 0) {
-      const dialogData = await this.brain.userShift(userId, 'dialogs');
-      console.log('DM.executeDialogs -> set new last dialog', dialogData);
+      const dialogData = dialogs.pop();
       await this.brain.userSet(userId, 'lastDialog', dialogData);
       console.log('DM.executeDialogs: dialogData', dialogData);
       const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialogData.label}`;
@@ -74,7 +66,6 @@ class DialogManager {
         return this.executeDialogs(userId, entities);
       }
     }
-    return true;
   }
 
   /**
@@ -83,8 +74,8 @@ class DialogManager {
    * @param {string} label the dialog label
    * @param {Object} parameters the dialog parameters
    */
-  async addDialog(userId, label, parameters) {
-    console.log('DM.addDialog', userId, label, parameters);
+  async next(userId, label, parameters) {
+    console.log('DM.next', userId, label, parameters);
     await this.brain.userPush(userId, 'dialogs', { label, parameters });
   }
 
@@ -104,20 +95,19 @@ class DialogManager {
       .toString()
       .split('\n')
       .forEach((line) => {
-        if (line.length > 0) {
-          console.log('DM.say: line', line);
-          const payload = _.template(line)(parameters);
-          console.log('DM.say: payload', payload);
-          if (payload !== '') {
-            const response = {
-              type: 'text',
-              userId,
-              botId: this.config.id,
-              origin: 'bot',
-              payload,
-            };
-            this.responses.push(response);
-          }
+        console.log('DM.say: line', line);
+        const payload = _.template(line)(parameters);
+        console.log('DM.say: payload', payload);
+        if (payload !== '') {
+          const response = {
+            type: 'text',
+            userId,
+            botId: this.config.id,
+            origin: 'bot',
+            payload,
+          };
+          console.log('DM.say: response', response);
+          this.responses.push(response);
         }
       });
   }
