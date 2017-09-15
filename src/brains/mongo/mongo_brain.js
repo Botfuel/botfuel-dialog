@@ -1,22 +1,23 @@
 const _ = require('lodash');
 const db = require('./db');
 const User = require('./models/user');
+const Brain = require('../brain');
 
 /**
  * Class to wrap mongodb database with two models
  */
-class MongoBrain {
+class MongoBrain extends Brain {
   /**
    * Constructor
    * @param {string} botId - bot id
    * @param {string} mongoUri - mongo uri
    */
   constructor(botId, mongoUri = '') {
+    super(botId);
     // connect to mongodb if not connected yet
     if (!db.isConnected()) {
       db.connect(mongoUri);
     }
-    this.botId = botId;
     this.userGlobalProperties = ['conversations', 'dialogs', 'lastDialog'];
   }
 

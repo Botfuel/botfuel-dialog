@@ -1,15 +1,16 @@
 const _ = require('lodash');
+const Brain = require('../brain');
 
 /**
  * Class to wrap memory brains
  */
-class MemoryBrain {
+class MemoryBrain extends Brain {
   /**
    * Constructor
    * @param {string} botId - bot id
    */
   constructor(botId) {
-    this.botId = botId;
+    super(botId);
     this.users = {};
   }
 
@@ -181,7 +182,8 @@ class MemoryBrain {
    */
   conversationGet(userId, key) {
     return new Promise((resolve, reject) => {
-      this.getLastConversation(userId)
+      this
+        .getLastConversation(userId)
         .then(conversation => resolve(conversation[key]))
         .catch(reject);
     });
