@@ -24,21 +24,21 @@ class DialogManager {
    */
   async execute(userId, intents, entities) {
     console.log('DialogManager.execute', userId, intents, entities);
+    const dialogs = [];
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        await this.brain.userPush(userId, 'dialogs', {
+        dialogs.push({
           label: intent.label,
           parameters: entities
         });
       }
     }
-    const dialogs = await this.brain.userGet(userId, 'dialogs');
     if (dialogs.length === 0) {
       const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-      await this.brain.userPush(userId, 'dialogs', lastDialog);
+      dialogs.push(lastDialog);
     }
     const responses = [];
-    await this.executeDialogs(userId, entities, responses);
+    await this.executeDialogs(userId, dialogs, entities, responses);
     return responses;
   }
 
@@ -47,21 +47,19 @@ class DialogManager {
    * @param {string} userId the user id
    * @param {Object[]} entities - the entities
    */
-  async executeDialogs(userId, entities, responses) {
-    console.log('DialogManager.executeDialogs', userId, entities, responses);
-    const dialogs = await this.brain.userGet(userId, 'dialogs');
-    console.log('DialogManager.executeDialogs: dialogs', dialogs);
-    if (dialogs.length > 0) {
-      const dialogData = dialogs.pop();
-      await this.brain.userSet(userId, 'lastDialog', dialogData);
-      console.log('DialogManager.executeDialogs: dialogData', dialogData);
-      const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialogData.label}`;
+  async executeDialogs(userId, dialogs, entities, responses) {
+    console.log('DialogManager.executeDialogs', userId, dialogs, entities, responses);
+    while (dialogs.length > 0) {
+      const dialog = dialogs[dialogs.length - 1];
+      await this.brain.userSet(userId, 'lastDialog', dialog);
+      console.log('DialogManager.executeDialogs: dialog', dialog);
+      const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialog.label}`;
       console.log('DialogManager.executeDialogs: dialogPath', dialogPath);
       const DialogConstructor = require(dialogPath);
-      const dialog = new DialogConstructor(this.config, this.brain, dialogData.parameters);
-      const run = await dialog.execute(userId, responses, entities);
-      if (run) { // continue executing the stack
-        return this.executeDialogs(userId, entities, responses);
+      const dialogObject = new DialogConstructor(this.config, this.brain, dialog.parameters);
+      const done = await dialogObject.execute(userId, responses, entities);
+      if (!done) {
+        return;
       }
     }
   }

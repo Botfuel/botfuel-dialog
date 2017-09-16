@@ -79,7 +79,8 @@ class MemoryBrain extends Brain {
    */
   userSet(userId, key, value) {
     return new Promise((resolve, reject) => {
-      this.getUser(userId)
+      this
+        .getUser(userId)
         .then((user) => {
           user[key] = value;
           resolve(user);
@@ -96,7 +97,8 @@ class MemoryBrain extends Brain {
    */
   userGet(userId, key) {
     return new Promise((resolve, reject) => {
-      this.getUser(userId)
+      this
+        .getUser(userId)
         .then(user => resolve(user[key]))
         .catch(reject);
     });
@@ -111,7 +113,8 @@ class MemoryBrain extends Brain {
    */
   userPush(userId, key, value) {
     return new Promise((resolve, reject) => {
-      this.getUser(userId)
+      this
+        .getUser(userId)
         .then((user) => {
           if (user[key]) {
             if (_.isArray(user[key])) {
@@ -137,7 +140,8 @@ class MemoryBrain extends Brain {
   addConversation(userId) {
     return new Promise((resolve, reject) => {
       const conversation = { createdAt: Date.now() };
-      this.userPush(userId, 'conversations', conversation)
+      this
+        .userPush(userId, 'conversations', conversation)
         .then(() => resolve(conversation))
         .catch(err => reject(err));
     });
@@ -150,7 +154,8 @@ class MemoryBrain extends Brain {
    */
   getLastConversation(userId) {
     return new Promise((resolve, reject) => {
-      this.getUser(userId)
+      this
+        .getUser(userId)
         .then(user => resolve(_.last(user.conversations)))
         .catch(reject);
     });
@@ -165,7 +170,8 @@ class MemoryBrain extends Brain {
    */
   conversationSet(userId, key, value) {
     return new Promise((resolve, reject) => {
-      this.getLastConversation(userId)
+      this
+        .getLastConversation(userId)
         .then((conversation) => {
           conversation[key] = value;
           resolve(conversation);
