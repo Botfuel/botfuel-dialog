@@ -19,17 +19,6 @@ class Dialog {
     this.parameters = parameters;
   }
 
-    /**
-   * Pushes a dialog on the stack.
-   * @param {string} userId the user id
-   * @param {string} label the dialog label
-   * @param {Object} parameters the dialog parameters
-   */
-  async next(userId, label, parameters) {
-    console.log('Dialog.next', userId, label, parameters);
-    await this.brain.userPush(userId, 'dialogs', { label, parameters });
-  }
-
   /**
    * Says something.
    * @param {string} userId the user id

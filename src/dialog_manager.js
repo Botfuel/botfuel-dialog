@@ -26,7 +26,10 @@ class DialogManager {
     console.log('DialogManager.execute', userId, intents, entities);
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        await this.next(userId, intent.label, entities);
+        await this.brain.userPush(userId, 'dialogs', {
+          label: intent.label,
+          parameters: entities
+        });
       }
     }
     const dialogs = await this.brain.userGet(userId, 'dialogs');
