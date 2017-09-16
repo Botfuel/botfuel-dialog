@@ -14,14 +14,21 @@ class TestPromptDialog extends PromptDialog {
   }
 }
 
+
 describe('PromptDialog', function() {
-  it('when given no entity, should ask for both', async function() {
-    const brain = new MemoryBrain();
-    await brain.initUserIfNecessary(TEST_USER);
-    const prompt = new TestPromptDialog(brain, {
+  const brain = new MemoryBrain();
+  const prompt = new TestPromptDialog(brain, {
       namespace: 'testdialog',
       entities: { dim1: {}, dim2: {} },
     });
+
+  beforeEach(async function() {
+    await brain.clean();
+    await brain.initUserIfNecessary(TEST_USER);
+  });
+
+
+  it('when given no entity, should ask for both', async function() {
     const responses = [];
     await prompt.execute(TEST_USER, responses, []);
     expect(responses).to.eql([
@@ -43,12 +50,6 @@ describe('PromptDialog', function() {
   });
 
   it('when given a first entity, should ask for the second one', async function() {
-    const brain = new MemoryBrain();
-    await brain.initUserIfNecessary(TEST_USER);
-    const prompt = new TestPromptDialog(brain, {
-      namespace: 'testdialog',
-      entities: { dim1: {}, dim2: {} },
-    });
     const responses = [];
     await prompt.execute(TEST_USER, responses, [ { dim: 'dim1' } ]);
     expect(responses).to.eql([
@@ -70,12 +71,6 @@ describe('PromptDialog', function() {
   });
 
   it('when given both entity, should ask none', async function() {
-    const brain = new MemoryBrain();
-    await brain.initUserIfNecessary(TEST_USER);
-    const prompt = new TestPromptDialog(brain, {
-      namespace: 'testdialog',
-      entities: { dim1: {}, dim2: {} },
-    });
     const responses = [];
     await prompt.execute(TEST_USER, responses, [ { dim: 'dim1' },  { dim: 'dim2' } ]);
     expect(responses).to.eql([

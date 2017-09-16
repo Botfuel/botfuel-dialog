@@ -35,7 +35,9 @@ class DialogManager {
     }
     if (dialogs.length === 0) {
       const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-      dialogs.push(lastDialog);
+      if (lastDialog !== undefined) {
+        dialogs.push(lastDialog);
+      }
     }
     const responses = [];
     await this.executeDialogs(userId, dialogs, entities, responses);
@@ -51,14 +53,16 @@ class DialogManager {
     console.log('DialogManager.executeDialogs', userId, dialogs, entities, responses);
     while (dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
-      await this.brain.userSet(userId, 'lastDialog', dialog);
       console.log('DialogManager.executeDialogs: dialog', dialog);
+      await this.brain.userSet(userId, 'lastDialog', dialog);
       const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialog.label}`;
       console.log('DialogManager.executeDialogs: dialogPath', dialogPath);
       const DialogConstructor = require(dialogPath);
       const dialogObject = new DialogConstructor(this.config, this.brain, dialog.parameters);
       const done = await dialogObject.execute(userId, responses, entities);
-      if (!done) {
+      if (done) {
+        await this.brain.userSet(userId, 'dialogs', dialogs.slice(0, -1));
+      } else {
         return;
       }
     }
