@@ -11,11 +11,10 @@ class Dialog {
    * Constructor.
    * @param {Object} parameters the dialog parameters
    */
-  constructor(config, brain, responses, parameters) {
+  constructor(config, brain, parameters) {
     console.log('Dialog.constructor', parameters);
     this.config = config;
     this.brain = brain;
-    this.responses = responses;
     this.parameters = parameters;
   }
 
@@ -25,7 +24,7 @@ class Dialog {
    * @param {string} label the template label
    * @param {Object} parameters the template parameters
    */
-  text(userId, label, parameters) {
+  text(userId, responses, label, parameters) {
     console.log('Dialog.say', userId, label, parameters);
     const templatePath = `${this.config.path}/src/views/templates/`;
     const templateName = `${templatePath}/${label}.${this.config.locale}.txt`;
@@ -45,7 +44,7 @@ class Dialog {
             payload,
           };
           console.log('Dialog.say: response', response);
-          this.responses.push(response);
+          responses.push(response);
         }
       });
   }

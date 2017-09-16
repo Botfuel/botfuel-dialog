@@ -58,8 +58,8 @@ class DialogManager {
       const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialogData.label}`;
       console.log('DialogManager.executeDialogs: dialogPath', dialogPath);
       const DialogConstructor = require(dialogPath);
-      const dialog = new DialogConstructor(this.config, this.brain, responses, dialogData.parameters);
-      const run = await dialog.execute(userId, entities);
+      const dialog = new DialogConstructor(this.config, this.brain, dialogData.parameters);
+      const run = await dialog.execute(userId, responses, entities);
       if (run) { // continue executing the stack
         return this.executeDialogs(userId, entities, responses);
       }

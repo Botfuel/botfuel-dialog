@@ -5,12 +5,12 @@ const MemoryBrain = require('../../src/brains/memory/memory_brain');
 const TEST_USER = 1;
 
 class TestPromptDialog extends PromptDialog {
-  constructor(brain, responses, parameters) {
-    super({}, brain, responses, parameters);
+  constructor(brain, parameters) {
+    super({}, brain, parameters);
   }
 
-  text(id, label, parameters) {
-    this.responses.push({id, label, parameters});
+  text(id, responses, label, parameters) {
+    responses.push({id, label, parameters});
   }
 }
 
@@ -18,12 +18,13 @@ describe('PromptDialog', function() {
   it('when given no entity, should ask for both', async function() {
     const brain = new MemoryBrain();
     await brain.initUserIfNecessary(TEST_USER);
-    const prompt = new TestPromptDialog(brain, [], {
+    const prompt = new TestPromptDialog(brain, {
       namespace: 'testdialog',
       entities: { dim1: {}, dim2: {} },
     });
-    await prompt.execute(TEST_USER, []);
-    expect(prompt.responses).to.eql([
+    const responses = [];
+    await prompt.execute(TEST_USER, responses, []);
+    expect(responses).to.eql([
       {
         id: TEST_USER,
         label: 'entity_ask',
@@ -44,12 +45,13 @@ describe('PromptDialog', function() {
   it('when given a first entity, should ask for the second one', async function() {
     const brain = new MemoryBrain();
     await brain.initUserIfNecessary(TEST_USER);
-    const prompt = new TestPromptDialog(brain, [], {
+    const prompt = new TestPromptDialog(brain, {
       namespace: 'testdialog',
       entities: { dim1: {}, dim2: {} },
     });
-    await prompt.execute(TEST_USER, [ { dim: 'dim1' } ]);
-    expect(prompt.responses).to.eql([
+    const responses = [];
+    await prompt.execute(TEST_USER, responses, [ { dim: 'dim1' } ]);
+    expect(responses).to.eql([
       {
         id: TEST_USER,
         label: 'entity_confirm',
@@ -70,12 +72,13 @@ describe('PromptDialog', function() {
   it('when given both entity, should ask none', async function() {
     const brain = new MemoryBrain();
     await brain.initUserIfNecessary(TEST_USER);
-    const prompt = new TestPromptDialog(brain, [], {
+    const prompt = new TestPromptDialog(brain, {
       namespace: 'testdialog',
       entities: { dim1: {}, dim2: {} },
     });
-    await prompt.execute(TEST_USER, [ { dim: 'dim1' },  { dim: 'dim2' } ]);
-    expect(prompt.responses).to.eql([
+    const responses = [];
+    await prompt.execute(TEST_USER, responses, [ { dim: 'dim1' },  { dim: 'dim2' } ]);
+    expect(responses).to.eql([
       {
         id: TEST_USER,
         label: 'entity_confirm',
