@@ -39,7 +39,7 @@ class DialogManager {
     const dialogs = [];
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        const path = getPath(intent.label);
+        const path = this.getPath(intent.label);
         dialogs.push({ path, parameters: entities });
       }
     }
