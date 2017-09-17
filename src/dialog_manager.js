@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 /**
  * Default DialogManager.
  */
@@ -16,6 +18,16 @@ class DialogManager {
     return (value > this.intentThreshold);
   }
 
+  getPath(label) {
+    console.log('DialogManager.getPath', label);
+    const path = `${this.config.path}/src/controllers/dialogs/${label}`;
+    if (fs.existsSync(`${path}.js`)) {
+      return path;
+    } else {
+      return `./dialogs/${label}`;
+    }
+  }
+
   /**
    * Populates and executes the stack.
    * @param {string} userId the user id
@@ -27,16 +39,17 @@ class DialogManager {
     const dialogs = [];
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        dialogs.push({
-          label: intent.label,
-          parameters: entities
-        });
+        const path = getPath(intent.label);
+        dialogs.push({ path, parameters: entities });
       }
     }
     if (dialogs.length === 0) {
       const lastDialog = await this.brain.userGet(userId, 'lastDialog');
       if (lastDialog !== undefined) {
         dialogs.push(lastDialog);
+      } else {
+        // no intent detected
+        // TODO: handle this
       }
     }
     const responses = [];
@@ -55,11 +68,10 @@ class DialogManager {
       const dialog = dialogs[dialogs.length - 1];
       console.log('DialogManager.executeDialogs: dialog', dialog);
       await this.brain.userSet(userId, 'lastDialog', dialog);
-      const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialog.label}`;
-      console.log('DialogManager.executeDialogs: dialogPath', dialogPath);
-      const DialogConstructor = require(dialogPath);
+      const DialogConstructor = require(dialog.path);
       const dialogObject = new DialogConstructor(this.config, this.brain, dialog.parameters);
       const done = await dialogObject.execute(userId, responses, entities);
+      console.log('DialogManager.executeDialogs: done', done);
       if (done) {
         await this.brain.userSet(userId, 'dialogs', dialogs.slice(0, -1));
       } else {

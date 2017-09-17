@@ -10,6 +10,7 @@ class MemoryBrain extends Brain {
    * @param {string} botId - bot id
    */
   constructor(botId) {
+    console.log('MemoryBrain.constructor', botId);
     super(botId);
     this.users = {};
   }
@@ -19,6 +20,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   clean() {
+    console.log('MemoryBrain.clean');
     this.users = {};
     return Promise.resolve();
   }
@@ -28,6 +30,7 @@ class MemoryBrain extends Brain {
    * @param {string} userId - user id
    */
   hasUser(userId) {
+    console.log('MemoryBrain.hasUser', userId);
     return Promise.resolve(this.users[userId] !== undefined);
   }
 
@@ -37,6 +40,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   addUser(userId) {
+    console.log('MemoryBrain.addUser', userId);
     return new Promise((resolve, reject) => {
       if (!this.users[userId]) {
         const newUser = {
@@ -44,7 +48,6 @@ class MemoryBrain extends Brain {
           userId,
           conversations: [],
           dialogs: [],
-          lastDialog: {},
           createdAt: Date.now(),
         };
         this.users[userId] = newUser;
@@ -61,6 +64,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   getUser(userId) {
+    console.log('MemoryBrain.getUser', userId);
     return new Promise((resolve, reject) => {
       if (this.users[userId]) {
         resolve(this.users[userId]);
@@ -78,6 +82,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   userSet(userId, key, value) {
+    console.log('MemoryBrain.userSet', userId, key, value);
     return new Promise((resolve, reject) => {
       this
         .getUser(userId)
@@ -96,10 +101,13 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   userGet(userId, key) {
+    console.log('MemoryBrain.userGet', userId, key);
     return new Promise((resolve, reject) => {
       this
         .getUser(userId)
-        .then(user => resolve(user[key]))
+        .then(user => {
+          resolve(user[key]);
+        })
         .catch(reject);
     });
   }
@@ -112,6 +120,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   userPush(userId, key, value) {
+    console.log('MemoryBrain.userPush', userId, key, value);
     return new Promise((resolve, reject) => {
       this
         .getUser(userId)
@@ -138,6 +147,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   addConversation(userId) {
+    console.log('MemoryBrain.addConversation', userId);
     return new Promise((resolve, reject) => {
       const conversation = { createdAt: Date.now() };
       this
@@ -153,6 +163,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   getLastConversation(userId) {
+    console.log('MemoryBrain.getLastConversation', userId);
     return new Promise((resolve, reject) => {
       this
         .getUser(userId)
@@ -169,6 +180,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   conversationSet(userId, key, value) {
+    console.log('MemoryBrain.conversationSet', userId, key, value);
     return new Promise((resolve, reject) => {
       this
         .getLastConversation(userId)
@@ -176,21 +188,6 @@ class MemoryBrain extends Brain {
           conversation[key] = value;
           resolve(conversation);
         })
-        .catch(reject);
-    });
-  }
-
-  /**
-   * Get last conversation key value
-   * @param {string} userId - user id
-   * @param {string} key - last conversation key
-   * @returns {Promise}
-   */
-  conversationGet(userId, key) {
-    return new Promise((resolve, reject) => {
-      this
-        .getLastConversation(userId)
-        .then(conversation => resolve(conversation[key]))
         .catch(reject);
     });
   }

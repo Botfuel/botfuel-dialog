@@ -34,6 +34,22 @@ class Brain {
     // return true if last conversation time diff with now is less than one day
     return (Date.now() - conversation.createdAt) < this.dayInMs;
   }
+
+  /**
+   * Get last conversation key value
+   * @param {string} userId - user id
+   * @param {string} key - last conversation key
+   * @returns {Promise}
+   */
+  conversationGet(userId, key) {
+    console.log('Brain.conversationGet', userId, key);
+    return new Promise((resolve, reject) => {
+      this
+        .getLastConversation(userId)
+        .then(conversation => resolve(conversation[key]))
+        .catch(reject);
+    });
+  }
 }
 
 module.exports = Brain;

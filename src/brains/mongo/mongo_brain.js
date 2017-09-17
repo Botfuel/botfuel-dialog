@@ -35,7 +35,8 @@ class MongoBrain extends Brain {
    */
   hasUser(userId) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId })
+      User
+        .findOne({ botId: this.botId, userId })
         .then((user) => {
           if (user) {
             resolve(true);
@@ -62,7 +63,8 @@ class MongoBrain extends Brain {
    */
   getUser(userId) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId })
+      User
+        .findOne({ botId: this.botId, userId })
         .then(user => resolve(user.flatten()))
         .catch(reject);
     });
@@ -77,7 +79,8 @@ class MongoBrain extends Brain {
    */
   userSet(userId, key, value) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId })
+      User
+        .findOne({ botId: this.botId, userId })
         .then((user) => {
           if (_.includes(this.userGlobalProperties, key)) {
             user.set(key, value);
@@ -102,7 +105,8 @@ class MongoBrain extends Brain {
     return new Promise((resolve, reject) => {
       const isGlobalProperty = _.includes(this.userGlobalProperties, key);
       const select = isGlobalProperty ? key : `data.${key}`;
-      User.findOne({ botId: this.botId, userId }, select)
+      User
+        .findOne({ botId: this.botId, userId }, select)
         .then((user) => {
           if (isGlobalProperty) {
             resolve(user[key]);
@@ -150,7 +154,8 @@ class MongoBrain extends Brain {
    */
   getLastConversation(userId) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId })
+      User
+        .findOne({ botId: this.botId, userId })
         .then(user => resolve(user.getLastConversation()))
         .catch(reject);
     });
@@ -165,27 +170,16 @@ class MongoBrain extends Brain {
    */
   conversationSet(userId, key, value) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId })
+      User
+        .findOne({ botId: this.botId, userId })
         .then((user) => {
-          user.lastConversationSet(`data.${key}`, value);
-          user.save()
+          user
+            .lastConversationSet(`data.${key}`, value);
+          user
+            .save()
             .then(savedUser => resolve(savedUser.getLastConversation()))
             .catch(reject);
         })
-        .catch(reject);
-    });
-  }
-
-  /**
-   * Get last conversation key value
-   * @param {string} userId - user id
-   * @param {string} key - last conversation key
-   * @returns {Promise}
-   */
-  conversationGet(userId, key) {
-    return new Promise((resolve, reject) => {
-      this.getLastConversation(userId)
-        .then(conversation => resolve(conversation[key]))
         .catch(reject);
     });
   }
