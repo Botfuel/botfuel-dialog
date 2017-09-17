@@ -73,7 +73,8 @@ class DialogManager {
       const done = await dialogObject.execute(userId, responses, entities);
       console.log('DialogManager.executeDialogs: done', done);
       if (done) {
-        await this.brain.userSet(userId, 'dialogs', dialogs.slice(0, -1));
+        dialogs = dialogs.slice(0, -1);
+        await this.brain.userSet(userId, 'dialogs', dialogs);
       } else {
         return;
       }
