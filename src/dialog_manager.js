@@ -44,7 +44,7 @@ class DialogManager {
    */
   async execute(userId, intents, entities) {
     console.log('DialogManager.execute', userId, intents, entities);
-    const dialogs = [];
+    const dialogs = await this.brain.userGet(userId, 'dialogs');
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
         dialogs.push({ label: intent.label, parameters: entities });
