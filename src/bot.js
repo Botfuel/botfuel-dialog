@@ -2,7 +2,7 @@ const MemoryBrain = require('./brains/memory/memory_brain');
 const ShellAdapter = require('./adapters/shell_adapter');
 const TestAdapter = require('./adapters/test_adapter');
 const Nlu = require('./nlu');
-const DialogManager = require('./dialog_manager_no_lastd');
+const DialogManager = require('./dialog_manager');
 
 /**
  * Bot main class.
