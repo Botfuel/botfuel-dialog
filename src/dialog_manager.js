@@ -47,7 +47,7 @@ class DialogManager {
     const dialogs = await this.brain.userGet(userId, 'dialogs');
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        if (dialogs.length == 0 || dialogs[dialogs.length - 1].label !== intent.label) {
+        if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label) {
           dialogs.push({ label: intent.label, parameters: entities });
         }
       }
