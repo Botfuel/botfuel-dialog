@@ -4,7 +4,7 @@ const _ = require('underscore');
 _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
 
 /**
- * Dialog main class.
+ * Generates messages.
  */
 class Dialog {
   /**
@@ -16,6 +16,7 @@ class Dialog {
     this.config = config;
     this.brain = brain;
     this.parameters = parameters;
+    this.templatePath = `${this.config.path}/src/views/templates`;
   }
 
   /**
@@ -24,10 +25,9 @@ class Dialog {
    * @param {string} label the template label
    * @param {Object} parameters the template parameters
    */
-  text(userId, responses, label, parameters) {
+  textMessage(userId, responses, label, parameters) {
     console.log('Dialog.say', userId, label, parameters);
-    const templatePath = `${this.config.path}/src/views/templates/`;
-    const templateName = `${templatePath}/${label}.${this.config.locale}.txt`;
+    const templateName = `${this.templatePath}/${label}.${this.config.locale}.txt`;
     console.log('Dialog.say: templateName', templateName);
     Fs
       .readFileSync(templateName, 'utf8')

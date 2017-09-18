@@ -9,7 +9,7 @@ class TestPromptDialog extends PromptDialog {
     super({}, brain, parameters);
   }
 
-  text(id, responses, label, parameters) {
+  textMessage(id, responses, label, parameters) {
     responses.push({id, label, parameters});
   }
 }

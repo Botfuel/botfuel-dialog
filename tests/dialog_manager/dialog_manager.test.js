@@ -7,7 +7,7 @@ const TEST_USER = 1;
 
 describe('DialogManager', function() {
   const brain = new MemoryBrain(TEST_BOT);
-  const dm = new DialogManager(brain, { path: __dirname });
+  const dm = new DialogManager(brain, { path: __dirname, locale: 'fr', id: TEST_BOT });
 
   beforeEach(async function() {
     console.log('beforeEach');
@@ -29,6 +29,14 @@ describe('DialogManager', function() {
 
   it('should not crash when no intent', async function() {
     const responses = await dm.execute(TEST_USER, [], []);
-    expect(responses).to.eql([]);
+    expect(responses).to.eql([
+      {
+        botId: TEST_BOT,
+        origin: 'bot',
+        payload: 'Not understood.',
+        type: 'text',
+        userId: TEST_USER,
+      },
+    ]);
   });
 });

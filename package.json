@@ -1,6 +1,6 @@
 {
   "name": "@botfuel/bot-sdk2",
-  "version": "0.9.2",
+  "version": "0.9.6",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel SDK2",
@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "prepublish": "npm run compile",
-    "compile": "babel src --out-dir build",
+    "compile": "babel src --out-dir build; cp -r src/templates build/templates",
     "test": "mocha tests/**/*.test.js",
     "style": "eslint src; eslint tests"
   },

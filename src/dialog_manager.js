@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 /**
- * Default DialogManager.
+ * Turns NLU output into a dialog stack.
  */
 class DialogManager {
   /**
@@ -18,11 +18,19 @@ class DialogManager {
     return (value > this.intentThreshold);
   }
 
+  isUser(label) {
+    console.log('DialogManager.isUser', label);
+    const path = this.getUserPath(label);
+    return fs.existsSync(`${path}.js`);
+  }
+
+  getUserPath(label) {
+    return `${this.config.path}/src/controllers/dialogs/${label}`;
+  }
+
   getPath(label) {
-    console.log('DialogManager.getPath', label);
-    const path = `${this.config.path}/src/controllers/dialogs/${label}`;
-    if (fs.existsSync(`${path}.js`)) {
-      return path;
+    if (this.isUser(label)) {
+      return this.getUserPath(label);
     } else {
       return `./dialogs/${label}`;
     }
@@ -39,8 +47,7 @@ class DialogManager {
     const dialogs = await this.brain.userGet(userId, 'dialogs');
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        const path = this.getPath(intent.label);
-        dialogs.push({ path, parameters: entities });
+        dialogs.push({ label: intent.label, parameters: entities });
       }
     }
     if (dialogs.length === 0) {
@@ -49,7 +56,7 @@ class DialogManager {
         dialogs.push(lastDialog);
       } else {
         // no intent detected
-        // TODO: handle this
+        dialogs.push({ label: 'default_dialog' });
       }
     }
     const responses = [];
@@ -66,21 +73,21 @@ class DialogManager {
    */
   async executeDialogs(userId, dialogs, entities, responses) {
     console.log('DialogManager.executeDialogs', userId, dialogs, entities, responses);
-    while (dialogs.length > 0) {
+    let done = false;
+    while (!done && dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
       console.log('DialogManager.executeDialogs: dialog', dialog);
       await this.brain.userSet(userId, 'lastDialog', dialog);
-      const DialogConstructor = require(dialog.path);
+      const path = this.getPath(dialog.label);
+      const DialogConstructor = require(path);
       const dialogObject = new DialogConstructor(this.config, this.brain, dialog.parameters);
-      const done = await dialogObject.execute(userId, responses, entities);
+      done = await dialogObject.execute(userId, responses, entities);
       console.log('DialogManager.executeDialogs: done', done);
       if (done) {
         dialogs = dialogs.slice(0, -1);
-        await this.brain.userSet(userId, 'dialogs', dialogs);
-      } else {
-        return;
       }
     }
+    await this.brain.userSet(userId, 'dialogs', dialogs);
   }
 }
 
