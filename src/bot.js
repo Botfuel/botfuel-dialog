@@ -34,17 +34,17 @@ class Bot {
    * Responds.
    */
   sendResponse(userMessage) {
-    console.log('Bot.respond', userMessage);
+    console.log('Bot.sendResponse', userMessage);
     const type = userMessage.type;
     switch (type) {
       case 'text':
       default:
-        return this.sendTextResponse(userMessage);
+        return this.sendResponseWhenText(userMessage);
     }
   }
 
-  sendTextResponse(userMessage) {
-    console.log('Bot.respondText', userMessage);
+  sendResponseWhenText(userMessage) {
+    console.log('Bot.sendResponseWhenText', userMessage);
     const userId = userMessage.userId;
     const sentence = userMessage.payload;
     return this
@@ -55,7 +55,6 @@ class Bot {
           .dm
           .execute(userId, intents, entities)
           .then((botMessages) => {
-            console.log('Dm.execution resolved', botMessages);
             return this.adapter.send(botMessages); // TODO: adapt to msg type
           })
           .catch((err) => {

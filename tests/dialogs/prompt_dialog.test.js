@@ -1,35 +1,93 @@
 const expect = require('expect.js');
 const PromptDialog = require('../../src/dialogs/prompt_dialog');
+const MemoryBrain = require('../../src/brains/memory/memory_brain');
 
-describe('PromptDialog', () => {
-  it('should work', async () => {
-    // const prompt = new PromptDialog({
-    //   namespace: 'namespace',
-    //   entities: {
-    //     dim1: {},
-    //     dim2: {},
-    //   },
-    // });
-    // const id = 1;
-    // const brain = {
-    //   conversationGet: function (id, namespace) {
-    //     console.log('dm.brain.conversationGet', id, namespace);
-    //   },
-    //   conversationSet: function (id, namespace, obj) {
-    //     console.log('dm.brain.conversationSet', id, namespace, obj);
-    //   }
-    // };
-    // const dm = {
-    //   say: function (id, label, obj) {
-    //     console.log('dm.say', id, label, obj);
-    //   },
-    //   brain
-    // };
+const TEST_USER = 1;
 
-    // const done = prompt.execute(dm, id, [
-    //   {
-    //     dim: 'dim1'
-    //   },
-    // ]);
+class TestPromptDialog extends PromptDialog {
+  constructor(brain, parameters) {
+    super({}, brain, parameters);
+  }
+
+  text(id, responses, label, parameters) {
+    responses.push({id, label, parameters});
+  }
+}
+
+
+describe('PromptDialog', function() {
+  const brain = new MemoryBrain();
+  const prompt = new TestPromptDialog(brain, {
+      namespace: 'testdialog',
+      entities: { dim1: {}, dim2: {} },
+    });
+
+  beforeEach(async function() {
+    await brain.clean();
+    await brain.initUserIfNecessary(TEST_USER);
+  });
+
+
+  it('when given no entity, should ask for both', async function() {
+    const responses = [];
+    await prompt.execute(TEST_USER, responses, []);
+    expect(responses).to.eql([
+      {
+        id: TEST_USER,
+        label: 'entity_ask',
+        parameters: { entity: 'dim1' },
+      },
+      {
+        id: TEST_USER,
+        label: 'entity_ask',
+        parameters: { entity: 'dim2' },
+      },
+    ]);
+    const user = await brain.getUser(TEST_USER);
+    expect(user.conversations.length).to.be(1);
+    expect(user.conversations[0].testdialog.dim1).to.be(undefined);
+    expect(user.conversations[0].testdialog.dim2).to.be(undefined);
+  });
+
+  it('when given a first entity, should ask for the second one', async function() {
+    const responses = [];
+    await prompt.execute(TEST_USER, responses, [ { dim: 'dim1' } ]);
+    expect(responses).to.eql([
+      {
+        id: TEST_USER,
+        label: 'entity_confirm',
+        parameters: { entity: { dim: 'dim1' } },
+      },
+      {
+        id: TEST_USER,
+        label: 'entity_ask',
+        parameters: { entity: 'dim2' },
+      },
+    ]);
+    const user = await brain.getUser(TEST_USER);
+    expect(user.conversations.length).to.be(1);
+    expect(user.conversations[0].testdialog.dim1.dim).to.be('dim1');
+    expect(user.conversations[0].testdialog.dim2).to.be(undefined);
+  });
+
+  it('when given both entity, should ask none', async function() {
+    const responses = [];
+    await prompt.execute(TEST_USER, responses, [ { dim: 'dim1' },  { dim: 'dim2' } ]);
+    expect(responses).to.eql([
+      {
+        id: TEST_USER,
+        label: 'entity_confirm',
+        parameters: { entity: { dim: 'dim1' } },
+      },
+      {
+        id: TEST_USER,
+        label: 'entity_confirm',
+        parameters: { entity: { dim: 'dim2' } },
+      },
+    ]);
+    const user = await brain.getUser(TEST_USER);
+    expect(user.conversations.length).to.be(1);
+    expect(user.conversations[0].testdialog.dim1.dim).to.be('dim1');
+    expect(user.conversations[0].testdialog.dim2.dim).to.be('dim2');
   });
 });

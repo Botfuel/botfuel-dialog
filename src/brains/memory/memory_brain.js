@@ -1,15 +1,17 @@
 const _ = require('lodash');
+const Brain = require('../brain');
 
 /**
  * Class to wrap memory brains
  */
-class MemoryBrain {
+class MemoryBrain extends Brain {
   /**
    * Constructor
    * @param {string} botId - bot id
    */
   constructor(botId) {
-    this.botId = botId;
+    console.log('MemoryBrain.constructor', botId);
+    super(botId);
     this.users = {};
   }
 
@@ -18,6 +20,7 @@ class MemoryBrain {
    * @returns {Promise}
    */
   clean() {
+    console.log('MemoryBrain.clean');
     this.users = {};
     return Promise.resolve();
   }
@@ -27,6 +30,7 @@ class MemoryBrain {
    * @param {string} userId - user id
    */
   hasUser(userId) {
+    console.log('MemoryBrain.hasUser', userId);
     return Promise.resolve(this.users[userId] !== undefined);
   }
 
@@ -36,6 +40,7 @@ class MemoryBrain {
    * @returns {Promise}
    */
   addUser(userId) {
+    console.log('MemoryBrain.addUser', userId);
     return new Promise((resolve, reject) => {
       if (!this.users[userId]) {
         const newUser = {
@@ -43,7 +48,6 @@ class MemoryBrain {
           userId,
           conversations: [],
           dialogs: [],
-          lastDialog: {},
           createdAt: Date.now(),
         };
         this.users[userId] = newUser;
@@ -60,6 +64,7 @@ class MemoryBrain {
    * @returns {Promise}
    */
   getUser(userId) {
+    console.log('MemoryBrain.getUser', userId);
     return new Promise((resolve, reject) => {
       if (this.users[userId]) {
         resolve(this.users[userId]);
@@ -77,8 +82,10 @@ class MemoryBrain {
    * @returns {Promise}
    */
   userSet(userId, key, value) {
+    console.log('MemoryBrain.userSet', userId, key, value);
     return new Promise((resolve, reject) => {
-      this.getUser(userId)
+      this
+        .getUser(userId)
         .then((user) => {
           user[key] = value;
           resolve(user);
@@ -94,9 +101,13 @@ class MemoryBrain {
    * @returns {Promise}
    */
   userGet(userId, key) {
+    console.log('MemoryBrain.userGet', userId, key);
     return new Promise((resolve, reject) => {
-      this.getUser(userId)
-        .then(user => resolve(user[key]))
+      this
+        .getUser(userId)
+        .then(user => {
+          resolve(user[key]);
+        })
         .catch(reject);
     });
   }
@@ -109,8 +120,10 @@ class MemoryBrain {
    * @returns {Promise}
    */
   userPush(userId, key, value) {
+    console.log('MemoryBrain.userPush', userId, key, value);
     return new Promise((resolve, reject) => {
-      this.getUser(userId)
+      this
+        .getUser(userId)
         .then((user) => {
           if (user[key]) {
             if (_.isArray(user[key])) {
@@ -174,9 +187,11 @@ class MemoryBrain {
    * @returns {Promise}
    */
   addConversation(userId) {
+    console.log('MemoryBrain.addConversation', userId);
     return new Promise((resolve, reject) => {
       const conversation = { createdAt: Date.now() };
-      this.userPush(userId, 'conversations', conversation)
+      this
+        .userPush(userId, 'conversations', conversation)
         .then(() => resolve(conversation))
         .catch(err => reject(err));
     });
@@ -188,8 +203,10 @@ class MemoryBrain {
    * @returns {Promise}
    */
   getLastConversation(userId) {
+    console.log('MemoryBrain.getLastConversation', userId);
     return new Promise((resolve, reject) => {
-      this.getUser(userId)
+      this
+        .getUser(userId)
         .then(user => resolve(_.last(user.conversations)))
         .catch(reject);
     });
@@ -203,26 +220,14 @@ class MemoryBrain {
    * @returns {Promise}
    */
   conversationSet(userId, key, value) {
+    console.log('MemoryBrain.conversationSet', userId, key, value);
     return new Promise((resolve, reject) => {
-      this.getLastConversation(userId)
+      this
+        .getLastConversation(userId)
         .then((conversation) => {
           conversation[key] = value;
           resolve(conversation);
         })
-        .catch(reject);
-    });
-  }
-
-  /**
-   * Get last conversation key value
-   * @param {string} userId - user id
-   * @param {string} key - last conversation key
-   * @returns {Promise}
-   */
-  conversationGet(userId, key) {
-    return new Promise((resolve, reject) => {
-      this.getLastConversation(userId)
-        .then(conversation => resolve(conversation[key]))
         .catch(reject);
     });
   }
