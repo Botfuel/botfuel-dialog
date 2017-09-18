@@ -74,7 +74,6 @@ const brainTest = (brainLabel) => {
     const dialog = { label: 'travel', parameters: { city: 'Paris' } };
     await brain.addUser(USER_ID);
     const user = await brain.userPush(USER_ID, 'dialogs', dialog);
-    console.log(user.dialogs[0]);
     expect(user.dialogs).to.have.length(1);
     expect(user.dialogs[0].label).to.be(dialog.label);
     expect(user.dialogs[0].parameters.city).to.be(dialog.parameters.city);
