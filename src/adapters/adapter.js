@@ -8,8 +8,8 @@ class Adapter {
     this.bot = bot;
   }
 
-  async play(userMessages) {
-    console.log('Adapter.play', userMessages);
+  async play(userMsgs) {
+    console.log('Adapter.play', userMsgs);
     throw new Error('Not implemented!');
   }
 

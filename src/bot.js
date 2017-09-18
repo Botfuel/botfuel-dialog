@@ -55,7 +55,7 @@ class Bot {
           .dm
           .execute(userId, intents, entities)
           .then((botMessages) => {
-            return this.adapter.send(botMessages); // TODO: adapt to msg type
+            return this.adapter.send(botMessages);
           })
           .catch((err) => {
             console.log('Dm.execution rejected', err);

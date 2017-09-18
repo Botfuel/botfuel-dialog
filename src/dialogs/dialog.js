@@ -1,4 +1,5 @@
 const Fs = require('fs');
+const Messages = require('../messages');
 const _ = require('underscore');
 
 _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
@@ -36,15 +37,7 @@ class Dialog {
       .forEach((line) => {
         const payload = _.template(line)(parameters);
         if (payload !== '') {
-          const response = {
-            type: 'text',
-            userId,
-            botId: this.config.id,
-            origin: 'bot',
-            payload,
-          };
-          console.log('Dialog.say: response', response);
-          responses.push(response);
+          responses.push(Messages.getBotTextMessage(this.config.id, userId, payload));
         }
       });
   }

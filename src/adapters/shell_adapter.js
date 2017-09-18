@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const Adapter = require('./adapter');
+const Messages = require('../messages');
 
 /**
  * Shell Adapter.
@@ -13,26 +14,20 @@ class ShellAdapter extends Adapter {
   async run() {
     console.log('ShellAdapter.run');
     await this.bot.brain.initUserIfNecessary(this.userId);
-    const userMessage = await this.send([{
-      userId: this.userId,
-      botId: this.config.id,
-      type: 'text',
-      payload: 'onboarding', // TODO: use a dialog instead?
-    }]);
+    const botMessage = Messages.getBotTextMessage(this.config.id, this.userId, 'onboarding')
+    const userMessage = await this.send([ botMessage ]);
     this.loop(userMessage);
   }
 
-  async loop(userMessage) {
-    console.log('ShellAdapter.loop', userMessage);
-    userMessage.type = 'text';
-    userMessage.userId = this.userId;
-    userMessage.botId = this.bot.id;
-    userMessage.origin = 'user';
+  async loop(userMsg) {
+    console.log('ShellAdapter.loop', userMsg);
+    const userMessage = Messages.getUserTextMessage(this.config.id, this.userId, userMsg.payload)
     this.loop(await this.bot.sendResponse(userMessage));
   }
 
   async send(botMessages) {
     console.log('ShellAdapter.send', botMessages);
+    // TODO: adapt to msg type
     const message = botMessages.map(botMessage => botMessage.payload).join(' ');
     // type text
     return inquirer.prompt([
