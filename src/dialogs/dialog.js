@@ -27,9 +27,9 @@ class Dialog {
    * @param {Object} parameters the template parameters
    */
   textMessage(userId, responses, label, parameters) {
-    console.log('Dialog.say', userId, label, parameters);
+    console.log('Dialog.textMessage', userId, label, parameters);
     const templateName = `${this.templatePath}/${label}.${this.config.locale}.txt`;
-    console.log('Dialog.say: templateName', templateName);
+    console.log('Dialog.textMessage: templateName', templateName);
     Fs
       .readFileSync(templateName, 'utf8')
       .toString()
@@ -37,9 +37,21 @@ class Dialog {
       .forEach((line) => {
         const payload = _.template(line)(parameters);
         if (payload !== '') {
-          responses.push(Messages.getBotTextMessage(this.config.id, userId, payload));
+          this.pushMessage(responses, Messages.getBotTextMessage(this.config.id, userId, payload));
         }
       });
+  }
+
+  message(userId, responses, message) {
+    console.log('Dialog.message', userId, responses, message);
+    message.botId = this.config.id;
+    message.userId = userId;
+    this.pushMessage(responses, message);
+  }
+
+  pushMessage(responses, message) {
+    console.log('Dialog.pushMessage', responses, message);
+    responses.push(message);
   }
 }
 
