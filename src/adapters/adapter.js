@@ -1,5 +1,5 @@
 /**
- * Adapter main class.
+ * Adapts messages.
  */
 class Adapter {
   constructor(bot, config) {

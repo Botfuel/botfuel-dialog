@@ -42,7 +42,7 @@ class PromptDialog extends Dialog {
    */
   async confirm(id, responses, entity) {
     console.log('PromptDialog.confirm', id, responses, entity);
-    await this.text(id, responses, 'entity_confirm', { entity });
+    await this.textMessage(id, responses, 'entity_confirm', { entity });
   }
 
   /**
@@ -52,7 +52,7 @@ class PromptDialog extends Dialog {
    */
   async ask(id, responses, entityKey) {
     console.log('PromptDialog.ask', id, responses, entityKey);
-    await this.text(id, responses, 'entity_ask', { entity: entityKey });
+    await this.textMessage(id, responses, 'entity_ask', { entity: entityKey });
   }
 }
 
