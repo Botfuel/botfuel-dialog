@@ -1,6 +1,7 @@
 const MemoryBrain = require('./brains/memory/memory_brain');
 const ShellAdapter = require('./adapters/shell_adapter');
 const TestAdapter = require('./adapters/test_adapter');
+const FacebookAdapter = require('./adapters/facebook_adapter');
 const Nlu = require('./nlu');
 const DialogManager = require('./dialog_manager');
 
@@ -10,10 +11,16 @@ const DialogManager = require('./dialog_manager');
 class Bot {
   constructor(config) {
     console.log('Bot.constructor', config);
-    if (config.adapter === 'test') {
-      this.adapter = new TestAdapter(this, config);
-    } else {
-      this.adapter = new ShellAdapter(this, config);
+    switch (config.adapter) {
+      case 'facebook':
+        this.adapter = new FacebookAdapter(this, config);
+        break;
+      case 'test':
+        this.adapter = new TestAdapter(this, config);
+        break;
+      case 'shell':
+      default:
+        this.adapter = new ShellAdapter(this, config);
     }
     this.brain = new MemoryBrain(config.id);
     this.nlu = new Nlu(config);
