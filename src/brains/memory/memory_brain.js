@@ -105,9 +105,7 @@ class MemoryBrain extends Brain {
     return new Promise((resolve, reject) => {
       this
         .getUser(userId)
-        .then(user => {
-          resolve(user[key]);
-        })
+        .then(user => resolve(user[key]))
         .catch(reject);
     });
   }
