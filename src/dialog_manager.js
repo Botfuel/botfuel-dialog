@@ -47,7 +47,9 @@ class DialogManager {
     const dialogs = await this.brain.userGet(userId, 'dialogs');
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        dialogs.push({ label: intent.label, parameters: entities });
+        if (dialogs.length == 0 || dialogs[dialogs.length - 1].label !== intent.label) {
+          dialogs.push({ label: intent.label, parameters: entities });
+        }
       }
     }
     if (dialogs.length === 0) {
@@ -73,8 +75,8 @@ class DialogManager {
    */
   async executeDialogs(userId, dialogs, entities, responses) {
     console.log('DialogManager.executeDialogs', userId, dialogs, entities, responses);
-    let done = false;
-    while (!done && dialogs.length > 0) {
+    let done = true;
+    while (done && dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
       console.log('DialogManager.executeDialogs: dialog', dialog);
       await this.brain.userSet(userId, 'lastDialog', dialog);
