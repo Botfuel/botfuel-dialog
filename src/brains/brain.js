@@ -9,6 +9,11 @@ class Brain {
     this.dayInMs = 86400000; // One day in milliseconds
   }
 
+  /**
+   * Add user if not exists
+   * @param id
+   * @returns {Promise.<void>}
+   */
   async initUserIfNecessary(id) {
     console.log('Brain.initUserIfNecessary', id);
     const userExists = await this.hasUser(id);
@@ -18,6 +23,11 @@ class Brain {
     await this.initLastConversationIfNecessary(id);
   }
 
+  /**
+   * Add conversation to user if necessary
+   * @param id
+   * @returns {Promise.<void>}
+   */
   async initLastConversationIfNecessary(id) {
     const lastConversation = await this.getLastConversation(id);
     console.log('Brain.initLastConversationIfNecessary', id, lastConversation);
@@ -27,6 +37,11 @@ class Brain {
     }
   }
 
+  /**
+   * Validate user last conversation
+   * @param conversation
+   * @returns {boolean}
+   */
   isLastConversationValid(conversation) {
     if (!conversation) {
       return false;

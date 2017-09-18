@@ -105,9 +105,7 @@ class MemoryBrain extends Brain {
     return new Promise((resolve, reject) => {
       this
         .getUser(userId)
-        .then(user => {
-          resolve(user[key]);
-        })
+        .then(user => resolve(user[key]))
         .catch(reject);
     });
   }
@@ -135,6 +133,46 @@ class MemoryBrain extends Brain {
           } else {
             user[key] = [value];
             resolve(user);
+          }
+        })
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Shift value from user key array (first element)
+   * @param {string} userId - user id
+   * @param {string} key - user array key
+   * @returns {Promise}
+   */
+  userShift(userId, key) {
+    return new Promise((resolve, reject) => {
+      this.getUser(userId)
+        .then((user) => {
+          if (user[key] && _.isArray(user[key])) {
+            resolve(user[key].shift());
+          } else {
+            reject(new Error('User key is not an array'));
+          }
+        })
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Pop value from user key array (last element)
+   * @param {string} userId - user id
+   * @param {string} key - user array key
+   * @returns {Promise}
+   */
+  userPop(userId, key) {
+    return new Promise((resolve, reject) => {
+      this.getUser(userId)
+        .then((user) => {
+          if (user[key] && _.isArray(user[key])) {
+            resolve(user[key].pop());
+          } else {
+            reject(new Error('User key is not an array'));
           }
         })
         .catch(reject);

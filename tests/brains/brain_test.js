@@ -74,10 +74,29 @@ const brainTest = (brainLabel) => {
     const dialog = { label: 'travel', parameters: { city: 'Paris' } };
     await brain.addUser(USER_ID);
     const user = await brain.userPush(USER_ID, 'dialogs', dialog);
-    console.log(user.dialogs[0]);
     expect(user.dialogs).to.have.length(1);
     expect(user.dialogs[0].label).to.be(dialog.label);
     expect(user.dialogs[0].parameters.city).to.be(dialog.parameters.city);
+  });
+
+  it('shift from user key array', async function () {
+    const dialogOne = { label: 'travel', entities: { city: 'Paris' } };
+    const dialogTwo = { label: 'greetings' };
+    await brain.addUser(USER_ID);
+    await brain.userPush(USER_ID, 'dialogs', dialogOne);
+    await brain.userPush(USER_ID, 'dialogs', dialogTwo);
+    const dialog = await brain.userShift(USER_ID, 'dialogs');
+    expect(dialog.label).to.be('travel');
+  });
+
+  it('pop from user key array', async function () {
+    const dialogOne = { label: 'travel', entities: { city: 'Paris' } };
+    const dialogTwo = { label: 'greetings' };
+    await brain.addUser(USER_ID);
+    await brain.userPush(USER_ID, 'dialogs', dialogOne);
+    await brain.userPush(USER_ID, 'dialogs', dialogTwo);
+    const dialog = await brain.userPop(USER_ID, 'dialogs');
+    expect(dialog.label).to.be('greetings');
   });
 
   it('add conversation to user', async function () {
