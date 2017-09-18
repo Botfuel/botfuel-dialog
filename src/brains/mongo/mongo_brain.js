@@ -1,7 +1,7 @@
 const _ = require('lodash');
+const Brain = require('../brain');
 const db = require('./db');
 const User = require('./models/user');
-const Brain = require('../brain');
 
 /**
  * Class to wrap mongodb database with two models
@@ -18,7 +18,7 @@ class MongoBrain extends Brain {
     if (!db.isConnected()) {
       db.connect(mongoUri);
     }
-    this.userGlobalProperties = ['conversations', 'dialogs', 'lastDialog'];
+    this.userGlobalProperties = ['conversations', 'dialogs'];
   }
 
   /**
@@ -141,7 +141,8 @@ class MongoBrain extends Brain {
   addConversation(userId) {
     return new Promise((resolve, reject) => {
       const push = { conversations: {} };
-      User.findOneAndUpdate({ botId: this.botId, userId }, { $push: push }, { new: true })
+      User
+        .findOneAndUpdate({ botId: this.botId, userId }, { $push: push }, { new: true })
         .then(user => resolve(user.getLastConversation()))
         .catch(reject);
     });
