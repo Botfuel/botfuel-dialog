@@ -36,7 +36,7 @@ class DialogManager {
    */
   async execute(userId, intents, entities) {
     console.log('DialogManager.execute', userId, intents, entities);
-    const dialogs = [];
+    const dialogs = await this.brain.userGet(userId, 'dialogs');
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
         const path = this.getPath(intent.label);
@@ -60,7 +60,9 @@ class DialogManager {
   /**
    * Executes the dialogs.
    * @param {string} userId the user id
+   * @param {Object[]} dialogs - the dialogs
    * @param {Object[]} entities - the entities
+   * @param {Object[]} responses - the responses
    */
   async executeDialogs(userId, dialogs, entities, responses) {
     console.log('DialogManager.executeDialogs', userId, dialogs, entities, responses);
