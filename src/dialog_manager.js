@@ -79,7 +79,7 @@ class DialogManager {
       const path = this.getPath(dialog.label);
       const DialogConstructor = require(path);
       const dialogObject = new DialogConstructor(this.config, this.brain, dialog.parameters);
-      const done = await dialogObject.execute(userId, responses, entities);
+      done = await dialogObject.execute(userId, responses, entities);
       console.log('DialogManager.executeDialogs: done', done);
       if (done) {
         dialogs = dialogs.slice(0, -1);
