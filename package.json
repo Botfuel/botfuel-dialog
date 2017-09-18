@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "prepublish": "npm run compile",
-    "compile": "babel src --out-dir build",
+    "compile": "babel src --out-dir build; cp -r src/templates build/templates",
     "test": "mocha tests/**/*.test.js",
     "style": "eslint src; eslint tests"
   },
