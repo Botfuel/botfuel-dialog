@@ -39,10 +39,6 @@ const userSchema = new mongoose.Schema({
     label: String,
     entities: Object,
   }],
-  lastDialog: {
-    label: String,
-    entities: Object,
-  },
   createdAt: {
     type: Date,
     default: Date.now(),
