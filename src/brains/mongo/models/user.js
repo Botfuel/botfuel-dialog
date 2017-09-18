@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
   }],
   dialogs: [{
     label: String,
-    entities: Object,
+    parameters: Object,
   }],
   createdAt: {
     type: Date,
