@@ -12,7 +12,7 @@ class ShellAdapter extends Adapter {
 
   async run() {
     console.log('ShellAdapter.run');
-    await this.initUserIfNecessary(this.userId);
+    await this.bot.brain.initUserIfNecessary(this.userId);
     const userMessage = await this.send([{
       userId: this.userId,
       botId: this.config.id,

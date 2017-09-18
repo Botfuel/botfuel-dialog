@@ -13,7 +13,7 @@ class TestAdapter extends Adapter {
 
   async play(userMessages) {
     console.log('TestAdapter.play', userMessages);
-    await this.initUserIfNecessary(this.userId);
+    await this.bot.brain.initUserIfNecessary(this.userId);
     for (const userMessage of userMessages) {
       userMessage.userId = this.userId;
       userMessage.botId = this.config.id;

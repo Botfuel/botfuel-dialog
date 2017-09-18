@@ -1,10 +1,7 @@
-const Fs = require('fs');
-const _ = require('underscore');
-
-_.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
+const fs = require('fs');
 
 /**
- * Default DialogManager.
+ * Turns NLU output into a dialog stack.
  */
 class DialogManager {
   /**
@@ -21,6 +18,24 @@ class DialogManager {
     return (value > this.intentThreshold);
   }
 
+  isUser(label) {
+    console.log('DialogManager.isUser', label);
+    const path = this.getUserPath(label);
+    return fs.existsSync(`${path}.js`);
+  }
+
+  getUserPath(label) {
+    return `${this.config.path}/src/controllers/dialogs/${label}`;
+  }
+
+  getPath(label) {
+    if (this.isUser(label)) {
+      return this.getUserPath(label);
+    } else {
+      return `./dialogs/${label}`;
+    }
+  }
+
   /**
    * Populates and executes the stack.
    * @param {string} userId the user id
@@ -29,87 +44,52 @@ class DialogManager {
    */
   async execute(userId, intents, entities) {
     console.log('DialogManager.execute', userId, intents, entities);
+    const dialogs = await this.brain.userGet(userId, 'dialogs');
     for (const intent of intents) {
       if (this.acceptIntent(intent.value)) {
-        await this.next(userId, intent.label, entities);
+        if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label) {
+          dialogs.push({ label: intent.label, parameters: entities });
+        }
       }
     }
-    const dialogs = await this.brain.userGet(userId, 'dialogs');
     if (dialogs.length === 0) {
       const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-      await this.brain.userPush(userId, 'dialogs', lastDialog);
+      if (lastDialog !== undefined) {
+        dialogs.push(lastDialog);
+      } else {
+        // no intent detected
+        dialogs.push({ label: 'default_dialog' });
+      }
     }
-    this.responses = [];
-    await this.executeDialogs(userId, entities);
-    return this.responses;
+    const responses = [];
+    await this.executeDialogs(userId, dialogs, entities, responses);
+    return responses;
   }
 
   /**
    * Executes the dialogs.
    * @param {string} userId the user id
+   * @param {Object[]} dialogs - the dialogs
    * @param {Object[]} entities - the entities
+   * @param {Object[]} responses - the responses
    */
-  async executeDialogs(userId, entities) {
-    console.log('DialogManager.executeDialogs', userId, entities);
-    const dialogs = await this.brain.userGet(userId, 'dialogs');
-    console.log('DialogManager.executeDialogs: dialogs', dialogs);
-    if (dialogs.length > 0) {
-      const dialogData = dialogs.pop();
-      await this.brain.userSet(userId, 'lastDialog', dialogData);
-      console.log('DialogManager.executeDialogs: dialogData', dialogData);
-      const dialogPath = `${this.config.path}/src/controllers/dialogs/${dialogData.label}`;
-      console.log('DialogManager.executeDialogs: dialogPath', dialogPath);
-      const DialogConstructor = require(dialogPath);
-      const dialog = new DialogConstructor(dialogData.parameters);
-      const run = await dialog.execute(this, userId, entities);
-      if (run) { // continue executing the stack
-        return this.executeDialogs(userId, entities);
+  async executeDialogs(userId, dialogs, entities, responses) {
+    console.log('DialogManager.executeDialogs', userId, dialogs, entities, responses);
+    let done = true;
+    while (done && dialogs.length > 0) {
+      const dialog = dialogs[dialogs.length - 1];
+      console.log('DialogManager.executeDialogs: dialog', dialog);
+      await this.brain.userSet(userId, 'lastDialog', dialog);
+      const path = this.getPath(dialog.label);
+      const DialogConstructor = require(path);
+      const dialogObject = new DialogConstructor(this.config, this.brain, dialog.parameters);
+      done = await dialogObject.execute(userId, responses, entities);
+      console.log('DialogManager.executeDialogs: done', done);
+      if (done) {
+        dialogs = dialogs.slice(0, -1);
       }
     }
-  }
-
-  /**
-   * Pushes a dialog on the stack.
-   * @param {string} userId the user id
-   * @param {string} label the dialog label
-   * @param {Object} parameters the dialog parameters
-   */
-  async next(userId, label, parameters) {
-    console.log('DialogManager.next', userId, label, parameters);
-    await this.brain.userPush(userId, 'dialogs', { label, parameters });
-  }
-
-  /**
-   * Says something.
-   * @param {string} userId the user id
-   * @param {string} label the template label
-   * @param {Object} parameters the template parameters
-   */
-  say(userId, label, parameters) {
-    console.log('DialogManager.say', userId, label, parameters);
-    const templatePath = `${this.config.path}/src/views/templates/`;
-    const templateName = `${templatePath}/${label}.${this.config.locale}.txt`;
-    console.log('DialogManager.say: templateName', templateName);
-    Fs
-      .readFileSync(templateName, 'utf8')
-      .toString()
-      .split('\n')
-      .forEach((line) => {
-        console.log('DialogManager.say: line', line);
-        const payload = _.template(line)(parameters);
-        console.log('DialogManager.say: payload', payload);
-        if (payload !== '') {
-          const response = {
-            type: 'text',
-            userId,
-            botId: this.config.id,
-            origin: 'bot',
-            payload,
-          };
-          console.log('DialogManager.say: response', response);
-          this.responses.push(response);
-        }
-      });
+    await this.brain.userSet(userId, 'dialogs', dialogs);
   }
 }
 

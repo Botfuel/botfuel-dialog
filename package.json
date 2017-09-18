@@ -1,6 +1,6 @@
 {
   "name": "@botfuel/bot-sdk2",
-  "version": "0.5.5",
+  "version": "0.9.8",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel SDK2",
@@ -9,8 +9,8 @@
   ],
   "scripts": {
     "prepublish": "npm run compile",
-    "compile": "babel src --out-dir build",
-    "test": "mocha tests/**/*.test.js",
+    "compile": "babel src --out-dir build; cp -r src/templates build/templates",
+    "test": "mocha --timeout 30000 tests/**/*.test.js",
     "style": "eslint src; eslint tests"
   },
   "dependencies": {

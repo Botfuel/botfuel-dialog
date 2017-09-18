@@ -1,23 +1,24 @@
 const _ = require('lodash');
+const Brain = require('../brain');
 const db = require('./db');
 const User = require('./models/user');
 
 /**
  * Class to wrap mongodb database with two models
  */
-class MongoBrain {
+class MongoBrain extends Brain {
   /**
    * Constructor
    * @param {string} botId - bot id
    * @param {string} mongoUri - mongo uri
    */
   constructor(botId, mongoUri = '') {
+    super(botId);
     // connect to mongodb if not connected yet
     if (!db.isConnected()) {
       db.connect(mongoUri);
     }
-    this.botId = botId;
-    this.userGlobalProperties = ['conversations', 'dialogs', 'lastDialog'];
+    this.userGlobalProperties = ['conversations', 'dialogs'];
   }
 
   /**
@@ -34,7 +35,8 @@ class MongoBrain {
    */
   hasUser(userId) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId })
+      User
+        .findOne({ botId: this.botId, userId })
         .then((user) => {
           if (user) {
             resolve(true);
@@ -61,7 +63,8 @@ class MongoBrain {
    */
   getUser(userId) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId })
+      User
+        .findOne({ botId: this.botId, userId })
         .then(user => resolve(user.flatten()))
         .catch(reject);
     });
@@ -76,7 +79,8 @@ class MongoBrain {
    */
   userSet(userId, key, value) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId })
+      User
+        .findOne({ botId: this.botId, userId })
         .then((user) => {
           if (_.includes(this.userGlobalProperties, key)) {
             user.set(key, value);
@@ -101,7 +105,8 @@ class MongoBrain {
     return new Promise((resolve, reject) => {
       const isGlobalProperty = _.includes(this.userGlobalProperties, key);
       const select = isGlobalProperty ? key : `data.${key}`;
-      User.findOne({ botId: this.botId, userId }, select)
+      User
+        .findOne({ botId: this.botId, userId }, select)
         .then((user) => {
           if (isGlobalProperty) {
             resolve(user[key]);
@@ -129,6 +134,52 @@ class MongoBrain {
   }
 
   /**
+   * Shift value from user key array (first element)
+   * @param {string} userId - user id
+   * @param {string} key - user array key
+   * @returns {Promise}
+   */
+  userShift(userId, key) {
+    return new Promise((resolve, reject) => {
+      const isGlobalProperty = _.includes(this.userGlobalProperties, key);
+      const pop = {};
+      pop[isGlobalProperty ? key : `data.${key}`] = -1;
+      User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop })
+        .then((user) => {
+          if (isGlobalProperty) {
+            resolve(user[key].shift());
+          } else {
+            resolve(user.data[key].shift());
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+   * Pop value from user key array (last element)
+   * @param {string} userId - user id
+   * @param {string} key - user array key
+   * @returns {Promise}
+   */
+  userPop(userId, key) {
+    return new Promise((resolve, reject) => {
+      const isGlobalProperty = _.includes(this.userGlobalProperties, key);
+      const pop = {};
+      pop[isGlobalProperty ? key : `data.${key}`] = 1;
+      User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop })
+        .then((user) => {
+          if (isGlobalProperty) {
+            resolve(user[key].pop());
+          } else {
+            resolve(user.data[key].pop());
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
    * Add a conversation to an user
    * @param {string} userId - user id
    * @returns {Promise}
@@ -136,7 +187,8 @@ class MongoBrain {
   addConversation(userId) {
     return new Promise((resolve, reject) => {
       const push = { conversations: {} };
-      User.findOneAndUpdate({ botId: this.botId, userId }, { $push: push }, { new: true })
+      User
+        .findOneAndUpdate({ botId: this.botId, userId }, { $push: push }, { new: true })
         .then(user => resolve(user.getLastConversation()))
         .catch(reject);
     });
@@ -149,7 +201,8 @@ class MongoBrain {
    */
   getLastConversation(userId) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId })
+      User
+        .findOne({ botId: this.botId, userId })
         .then(user => resolve(user.getLastConversation()))
         .catch(reject);
     });
@@ -164,27 +217,16 @@ class MongoBrain {
    */
   conversationSet(userId, key, value) {
     return new Promise((resolve, reject) => {
-      User.findOne({ botId: this.botId, userId })
+      User
+        .findOne({ botId: this.botId, userId })
         .then((user) => {
-          user.lastConversationSet(`data.${key}`, value);
-          user.save()
+          user
+            .lastConversationSet(`data.${key}`, value);
+          user
+            .save()
             .then(savedUser => resolve(savedUser.getLastConversation()))
             .catch(reject);
         })
-        .catch(reject);
-    });
-  }
-
-  /**
-   * Get last conversation key value
-   * @param {string} userId - user id
-   * @param {string} key - last conversation key
-   * @returns {Promise}
-   */
-  conversationGet(userId, key) {
-    return new Promise((resolve, reject) => {
-      this.getLastConversation(userId)
-        .then(conversation => resolve(conversation[key]))
         .catch(reject);
     });
   }
