@@ -39,9 +39,7 @@ class BotfuelAdapter extends Adapter {
     const url = `${WEBCHAT_SERVER}/bots/${this.config.id}/users/${botMessage.userId}/conversation/messages`;
     const body = {
       type: 'text',
-      value: {
-        text: botMessage.payload,
-      },
+      text: botMessage.payload,
     };
     console.log('BotfuelAdapter.sendText: posting', url, body);
     rp({ uri: url, method: 'POST', body, json: true })
