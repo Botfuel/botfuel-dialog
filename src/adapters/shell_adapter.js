@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
-const Adapter = require('./adapter');
 const Messages = require('../messages');
+const Adapter = require('./adapter');
 
 /**
  * Shell Adapter.

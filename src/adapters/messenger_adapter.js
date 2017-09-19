@@ -9,9 +9,9 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN || 'EAAEBdpxs1WkBALtbvWq
 const PORT = process.env.PORT || 5000;
 
 /**
- * Shell Adapter.
+ * Messenger Adapter.
  */
-class FacebookAdapter extends Adapter {
+class MessengerAdapter extends Adapter {
   constructor(bot, config) {
     super(bot, config);
     this.server = express();
@@ -29,7 +29,7 @@ class FacebookAdapter extends Adapter {
    * @returns {Promise.<void>}
    */
   async run() {
-    console.log('FacebookAdapter.run');
+    console.log('MessengerAdapter.run');
     await this.serve();
   }
 
@@ -43,10 +43,10 @@ class FacebookAdapter extends Adapter {
     // authentication webhook
     this.server.get('/webhook', (req, res) => {
       if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === VERIFY_TOKEN) {
-        console.log('FacebookAdapter.serve: Validating webhook');
+        console.log('MessengerAdapter.serve: Validating webhook');
         res.status(200).send(req.query['hub.challenge']);
       } else {
-        console.error('FacebookAdapter.serve: Failed validation.');
+        console.error('MessengerAdapter.serve: Failed validation.');
         res.sendStatus(403);
       }
     });
@@ -56,13 +56,13 @@ class FacebookAdapter extends Adapter {
       if (data.object === 'page') {
         // Iterate over each entry
         data.entry.forEach((entry) => {
-          console.log('FacebookAdapter.serve: data entry', entry);
+          console.log('MessengerAdapter.serve: data entry', entry);
           // Iterate over each messaging event
           entry.messaging.forEach((event) => {
             if (event.message) {
               this.listen(event);
             } else {
-              console.log('FacebookAdapter.serve: received unknown event: ', event);
+              console.log('MessengerAdapter.serve: received unknown event: ', event);
             }
           });
         });
@@ -70,7 +70,7 @@ class FacebookAdapter extends Adapter {
       }
     });
     // server listen
-    this.server.listen(PORT, () => console.log('FacebookAdapter.serve: running on port', PORT));
+    this.server.listen(PORT, () => console.log('MessengerAdapter.serve: running on port', PORT));
   }
 
   /**
@@ -79,16 +79,16 @@ class FacebookAdapter extends Adapter {
    * @returns {Promise.<void>}
    */
   async sendResponse(messageData) {
-    console.log('FacebookAdapter.sendResponse: messageData', messageData);
+    console.log('MessengerAdapter.sendResponse: messageData', messageData);
     rp(Object.assign(this.fbOptions, { body: messageData }))
       .then((response, body) => {
         if (response.statusCode === 200) {
           const recipientId = body.recipient_id;
           const messageId = body.message_id;
-          console.log(`FacebookAdapter.sendResponse: message sent with id ${messageId} to recipient ${recipientId}`);
+          console.log(`MessengerAdapter.sendResponse: message sent with id ${messageId} to recipient ${recipientId}`);
         }
       }).catch((error) => {
-        console.error('FacebookAdapter.sendResponse: Unable to send message.');
+        console.error('MessengerAdapter.sendResponse: Unable to send message.');
         console.error(error);
       });
   }
@@ -99,7 +99,7 @@ class FacebookAdapter extends Adapter {
    * @returns {Promise.<void>}
    */
   async send(botMessages) {
-    console.log('FacebookAdapter.send: botMessages', botMessages);
+    console.log('MessengerAdapter.send: botMessages', botMessages);
     const responses = [];
     botMessages.forEach((botMessage) => {
       const messageData = {
@@ -125,7 +125,7 @@ class FacebookAdapter extends Adapter {
     const botId = event.recipient.id;
     const message = event.message;
     const messageText = message.text;
-    console.log('FacebookAdapter.listen', userId, botId, JSON.stringify(message));
+    console.log('MessengerAdapter.listen', userId, botId, JSON.stringify(message));
 
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
@@ -137,4 +137,4 @@ class FacebookAdapter extends Adapter {
   }
 }
 
-module.exports = FacebookAdapter;
+module.exports = MessengerAdapter;
