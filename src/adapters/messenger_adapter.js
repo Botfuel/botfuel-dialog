@@ -4,8 +4,8 @@ const rp = require('request-promise');
 const Messages = require('../messages');
 const Adapter = require('./adapter');
 
-const VERIFY_TOKEN = process.env.VERIFY_TOKEN || 'BotSDK2Sample';
-const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN || 'EAAEBdpxs1WkBALtbvWqCwupvQZCAfRvxZBDtZBvCW96gkMAS110MfoGHCDxV4sRKSN8hl34pkSAG97vMMI0NZBAW8VZAZC5LJAZB5wB7SCBhBm7dGynZC0Jl4DvykWrXqKc7W4KRKv4iTZBvoV7IyeAtpdZCZAGiZAhKcQZB2qHdKBUL6lQZDZD';
+const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN || 'BotSDK2Sample';
+const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || 'EAAEBdpxs1WkBALtbvWqCwupvQZCAfRvxZBDtZBvCW96gkMAS110MfoGHCDxV4sRKSN8hl34pkSAG97vMMI0NZBAW8VZAZC5LJAZB5wB7SCBhBm7dGynZC0Jl4DvykWrXqKc7W4KRKv4iTZBvoV7IyeAtpdZCZAGiZAhKcQZB2qHdKBUL6lQZDZD';
 const PORT = process.env.PORT || 5000;
 
 /**
@@ -17,7 +17,7 @@ class MessengerAdapter extends Adapter {
     this.server = express();
     this.fbOptions = {
       uri: 'https://graph.facebook.com/v2.6/me/messages',
-      qs: { access_token: PAGE_ACCESS_TOKEN },
+      qs: { access_token: FB_PAGE_ACCESS_TOKEN },
       method: 'POST',
       body: null,
       json: true,
@@ -42,7 +42,7 @@ class MessengerAdapter extends Adapter {
     this.server.use(express.static('public'));
     // authentication webhook
     this.server.get('/webhook', (req, res) => {
-      if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === VERIFY_TOKEN) {
+      if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === FB_VERIFY_TOKEN) {
         console.log('MessengerAdapter.serve: Validating webhook');
         res.status(200).send(req.query['hub.challenge']);
       } else {
@@ -121,8 +121,8 @@ class MessengerAdapter extends Adapter {
    * @returns {Promise.<void>}
    */
   async listen(event) {
-    const userId = event.sender.id;
-    const botId = event.recipient.id;
+    const userId = event.sender.id; // messenger user id
+    const botId = event.recipient.id; // page id
     const message = event.message;
     const messageText = message.text;
     console.log('MessengerAdapter.listen', userId, botId, JSON.stringify(message));
