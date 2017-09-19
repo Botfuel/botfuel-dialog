@@ -5,7 +5,8 @@ const express = require('express');
 class BotfuelAdapter extends Adapter {
   async run() {
     console.log('BotfuelAdapter.run');
-    express.post(['/botfuel'], (req, res) => {
+    const app = express();
+    app.post('/botfuel', (req, res) => {
       const payload = req.body;
       const userId = payload.appUser._id;
       const message = payload.messages[0];
@@ -13,7 +14,7 @@ class BotfuelAdapter extends Adapter {
       this.bot.sendResponse(userMessage);
       res.send(200);
     });
-    express.listen(5000, () => console.log('Example app listening on port 5000!'));
+    app.listen(5000, () => console.log('Example app listening on port 5000!'));
   }
 
   async send(botMessages) {
