@@ -12,7 +12,7 @@ class BotfuelAdapter extends Adapter {
     console.log('BotfuelAdapter.run');
     const app = express();
     app.use(bodyParser.json());
-    app.post(WEBHOOK, (req, res) => {
+    app.post(WEBHOOK, async (req, res) => {
       const payload = req.body;
       console.log('BotfuelAdapter.run: payload', payload);
       const userId = payload.appUser._id;
