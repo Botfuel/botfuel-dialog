@@ -4,8 +4,8 @@ const rp = require('request-promise');
 const Messages = require('../messages');
 const Adapter = require('./adapter');
 
-const VERIFY_TOKEN = 'BotSDK2Sample';
-const PAGE_ACCESS_TOKEN = 'EAAEBdpxs1WkBALtbvWqCwupvQZCAfRvxZBDtZBvCW96gkMAS110MfoGHCDxV4sRKSN8hl34pkSAG97vMMI0NZBAW8VZAZC5LJAZB5wB7SCBhBm7dGynZC0Jl4DvykWrXqKc7W4KRKv4iTZBvoV7IyeAtpdZCZAGiZAhKcQZB2qHdKBUL6lQZDZD';
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN || 'BotSDK2Sample';
+const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN || 'EAAEBdpxs1WkBALtbvWqCwupvQZCAfRvxZBDtZBvCW96gkMAS110MfoGHCDxV4sRKSN8hl34pkSAG97vMMI0NZBAW8VZAZC5LJAZB5wB7SCBhBm7dGynZC0Jl4DvykWrXqKc7W4KRKv4iTZBvoV7IyeAtpdZCZAGiZAhKcQZB2qHdKBUL6lQZDZD';
 const PORT = process.env.PORT || 5000;
 
 /**
