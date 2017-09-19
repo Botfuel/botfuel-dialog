@@ -58,9 +58,9 @@ class MessengerAdapter extends Adapter {
         data.entry.forEach((entry) => {
           console.log('MessengerAdapter.serve: data entry', entry);
           // Iterate over each messaging event
-          entry.messaging.forEach((event) => {
+          entry.messaging.forEach(async (event) => {
             if (event.message) {
-              this.listen(event);
+              await this.listen(event);
             } else {
               console.log('MessengerAdapter.serve: received unknown event: ', event);
             }
@@ -75,10 +75,18 @@ class MessengerAdapter extends Adapter {
 
   /**
    * Request messenger to send response
-   * @param messageData
+   * @param botMessage
    * @returns {Promise.<void>}
    */
-  async sendResponse(messageData) {
+  async sendText(botMessage) {
+    const messageData = {
+      recipient: {
+        id: botMessage.userId,
+      },
+      message: {
+        text: botMessage.payload,
+      },
+    };
     console.log('MessengerAdapter.sendResponse: messageData', messageData);
     rp(Object.assign(this.fbOptions, { body: messageData }))
       .then((response, body) => {
@@ -102,15 +110,7 @@ class MessengerAdapter extends Adapter {
     console.log('MessengerAdapter.send: botMessages', botMessages);
     const responses = [];
     botMessages.forEach((botMessage) => {
-      const messageData = {
-        recipient: {
-          id: botMessage.userId,
-        },
-        message: {
-          text: botMessage.payload,
-        },
-      };
-      responses.push(this.sendResponse(messageData));
+      responses.push(this.sendText(botMessage));
     });
     await Promise.all(responses);
   }
