@@ -3,7 +3,6 @@ const WebAdapter = require('./web_adapter');
 
 const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN || 'BotSDK2Sample';
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || 'EAAEBdpxs1WkBALtbvWqCwupvQZCAfRvxZBDtZBvCW96gkMAS110MfoGHCDxV4sRKSN8hl34pkSAG97vMMI0NZBAW8VZAZC5LJAZB5wB7SCBhBm7dGynZC0Jl4DvykWrXqKc7W4KRKv4iTZBvoV7IyeAtpdZCZAGiZAhKcQZB2qHdKBUL6lQZDZD';
-const BOTFUEL_ADAPTER_WEBHOOK = '/webhook';
 
 /**
  * Messenger Adapter.
@@ -16,7 +15,7 @@ class MessengerAdapter extends WebAdapter {
   createRoutes(app) {
     console.log('MessengerAdapter.createRoutes');
     super.createRoutes(app);
-    app.get(BOTFUEL_ADAPTER_WEBHOOK, (req, res) => this.validateWebhook(req, res));
+    app.get('/webhook', (req, res) => this.validateWebhook(req, res));
   }
 
   /**
