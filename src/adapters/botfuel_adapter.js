@@ -5,13 +5,14 @@ const rp = require('request-promise');
 const bodyParser = require('body-parser');
 
 const WEBCHAT_SERVER = 'https://botfuel-webchat-server.herokuapp.com';
+const WEBHOOK = '/botfuel';
 
 class BotfuelAdapter extends Adapter {
   async run() {
     console.log('BotfuelAdapter.run');
     const app = express();
     app.use(bodyParser.json());
-    app.post('/botfuel', (req, res) => {
+    app.post(WEBHOOK, (req, res) => {
       const payload = req.body;
       console.log('BotfuelAdapter.run: payload', payload);
       const userId = payload.appUser._id;
