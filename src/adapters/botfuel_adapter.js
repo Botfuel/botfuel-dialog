@@ -6,8 +6,8 @@ const bodyParser = require('body-parser');
 class BotfuelAdapter extends Adapter {
   async run() {
     console.log('BotfuelAdapter.run');
-    express.use(bodyParser.json());
     const app = express();
+    app.use(bodyParser.json());
     app.post('/botfuel', (req, res) => {
       const payload = req.body;
       console.log('BotfuelAdapter.run: payload', payload);
