@@ -9,21 +9,14 @@ const BOTFUEL_ADAPTER_WEBHOOK = '/webhook';
  * Messenger Adapter.
  */
 class MessengerAdapter extends WebAdapter {
-  constructor(bot, config) {
-    super(bot, config);
-    this.requestOptions = {
-      uri: 'https://graph.facebook.com/v2.6/me/messages',
-      qs: { access_token: FB_PAGE_ACCESS_TOKEN },
-    };
-  }
-
   /**
    * Override parent method to add extra route for this adapter
    * @param app
    */
   createRoutes(app) {
+    console.log('MessengerAdapter.createRoutes');
     super.createRoutes(app);
-    app.get(BOTFUEL_ADAPTER_WEBHOOK, this.validateWebhook);
+    app.get(BOTFUEL_ADAPTER_WEBHOOK, (req, res) => this.validateWebhook(req, res));
   }
 
   /**
@@ -33,11 +26,12 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise}
    */
   async validateWebhook(req, res) {
+    console.log('MessengerAdapter.validateWebhook');
     if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === FB_VERIFY_TOKEN) {
-      console.log('MessengerAdapter.serve: Validating webhook');
+      console.log('MessengerAdapter.validateWebhook: OK!');
       res.status(200).send(req.query['hub.challenge']);
     } else {
-      console.error('MessengerAdapter.serve: Failed validation.');
+      console.error('MessengerAdapter.validateWebhook: KO!');
       res.sendStatus(403);
     }
   }
@@ -49,25 +43,15 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise}
    */
   async handleMessage(req, res) {
+    console.log('MessengerAdapter.handleMessage');
     const data = req.body;
     if (data.object === 'page') {
       data.entry.forEach((entry) => {
         entry.messaging.forEach(async (event) => {
           if (event.message) {
-            const { sender, recipient, message } = event;
-            const userId = sender.id; // messenger user id
-            const botId = recipient.id; // page id
-            console.log('MessengerAdapter.handleMessage', userId, botId, JSON.stringify(message));
-
-            // init user if necessary
-            await this.bot.brain.initUserIfNecessary(userId);
-
-            if (message.text) {
-              const userMessage = Messages.getUserTextMessage(botId, userId, message.text);
-              await this.bot.sendResponse(userMessage);
-            }
+            await this.test(event);
           } else {
-            console.log('MessengerAdapter.handleMessage: received unknown event: ', event);
+            console.log('MessengerAdapter.handleMessage: unknown event: ', event);
           }
         });
       });
@@ -91,8 +75,24 @@ class MessengerAdapter extends WebAdapter {
       },
     };
     console.log('MessengerAdapter.sendText: body', body);
-    const requestOptions = Object.assign(this.requestOptions, { body });
-    await this.sendResponse(requestOptions);
+    const uri = 'https://graph.facebook.com/v2.6/me/messages';
+    const qs = { access_token: FB_PAGE_ACCESS_TOKEN };
+    await this.sendResponse({ uri, qs, body });
+  }
+
+  async test(event) {
+    const { sender, recipient, message } = event;
+    const userId = sender.id; // messenger user id
+    const botId = recipient.id; // page id
+    console.log('MessengerAdapter.handleMessage', userId, botId, JSON.stringify(message));
+
+    // init user if necessary
+    await this.bot.brain.initUserIfNecessary(userId);
+
+    if (message.text) {
+      const userMessage = Messages.getUserTextMessage(botId, userId, message.text);
+      await this.bot.sendResponse(userMessage);
+    }
   }
 }
 

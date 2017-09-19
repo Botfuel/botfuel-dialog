@@ -27,7 +27,7 @@ class WebAdapter extends Adapter {
    * @param app
    */
   createRoutes(app) {
-    app.post(BOTFUEL_ADAPTER_WEBHOOK, this.handleMessage);
+    app.post(BOTFUEL_ADAPTER_WEBHOOK, (req, res) => this.handleMessage(req, res));
   }
 
   /**
@@ -37,12 +37,12 @@ class WebAdapter extends Adapter {
    */
   async send(botMessages) {
     console.log('WebAdapter.send', botMessages);
-    const responses = [];
+    const promises = [];
     botMessages.forEach((botMessage) => {
       // TODO: add switch for message type
-      responses.push(this.sendText(botMessage));
+      promises.push(this.sendText(botMessage));
     });
-    await Promise.all(responses);
+    await Promise.all(promises);
   }
 
   /**
