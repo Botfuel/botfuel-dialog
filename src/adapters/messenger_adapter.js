@@ -48,7 +48,7 @@ class MessengerAdapter extends WebAdapter {
       data.entry.forEach((entry) => {
         entry.messaging.forEach(async (event) => {
           if (event.message) {
-            await this.test(event);
+            await this.processMessage(event);
           } else {
             console.log('MessengerAdapter.handleMessage: unknown event: ', event);
           }
@@ -79,11 +79,16 @@ class MessengerAdapter extends WebAdapter {
     await this.sendResponse({ uri, qs, body });
   }
 
-  async test(event) {
+  /**
+   * Process received message
+   * @param {Object} event
+   * @returns {Promise}
+   */
+  async processMessage(event) {
     const { sender, recipient, message } = event;
     const userId = sender.id; // messenger user id
     const botId = recipient.id; // page id
-    console.log('MessengerAdapter.handleMessage', userId, botId, JSON.stringify(message));
+    console.log('MessengerAdapter.processMessage', userId, botId, JSON.stringify(message));
 
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
