@@ -43,6 +43,7 @@ class BotfuelAdapter extends Adapter {
         text: botMessage.payload,
       },
     };
+    console.log('BotfuelAdapter.sendText: posting', url, body);
     rp({ uri: url, method: 'POST', body, json: true })
       .then((response, body) => {
         if (response.statusCode === 200) {
