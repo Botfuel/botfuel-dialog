@@ -3,10 +3,6 @@ const rp = require('request-promise');
 const bodyParser = require('body-parser');
 const Adapter = require('./adapter');
 
-const CHAT_SERVER = process.env.CHAT_SERVER;
-const BOTFUEL_ADAPTER_WEBHOOK = '/webhook';
-const BOTFUEL_ADAPTER_PORT = process.env.BOTFUEL_ADAPTER_PORT || 5000;
-
 class WebAdapter extends Adapter {
   /**
    * Run the adapter
@@ -17,8 +13,9 @@ class WebAdapter extends Adapter {
     const app = express();
     app.use(bodyParser.json());
     this.createRoutes(app);
-    app.listen(BOTFUEL_ADAPTER_PORT, () => {
-      console.log('WebAdapter.run: listening on port', BOTFUEL_ADAPTER_PORT);
+    const port = process.env.BOTFUEL_ADAPTER_PORT || 5000;
+    app.listen(port, () => {
+      console.log('WebAdapter.run: listening on port', port);
     });
   }
 
@@ -27,7 +24,7 @@ class WebAdapter extends Adapter {
    * @param app
    */
   createRoutes(app) {
-    app.post(BOTFUEL_ADAPTER_WEBHOOK, (req, res) => this.handleMessage(req, res));
+    app.post('/webhook', (req, res) => this.handleMessage(req, res));
   }
 
   /**
