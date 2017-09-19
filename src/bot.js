@@ -1,6 +1,6 @@
 const BotfuelAdapter = require('./adapters/botfuel_adapter');
 const DialogManager = require('./dialog_manager');
-const FacebookAdapter = require('./adapters/facebook_adapter');
+const MessengerAdapter = require('./adapters/messenger_adapter');
 const MemoryBrain = require('./brains/memory/memory_brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell_adapter');
@@ -16,8 +16,8 @@ class Bot {
       case 'botfuel':
         this.adapter = new BotfuelAdapter(this, config);
         break;
-      case 'facebook':
-        this.adapter = new FacebookAdapter(this, config);
+      case 'messenger':
+        this.adapter = new MessengerAdapter(this, config);
         break;
       case 'test':
         this.adapter = new TestAdapter(this, config);
