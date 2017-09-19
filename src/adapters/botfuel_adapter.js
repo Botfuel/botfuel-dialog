@@ -1,7 +1,10 @@
 const Adapter = require('./adapter');
 const Messages = require('../messages');
 const express = require('express');
+const rp = require('request-promise');
 const bodyParser = require('body-parser');
+
+const WEBCHAT_SERVER = 'https://botfuel-webchat-server.herokuapp.com';
 
 class BotfuelAdapter extends Adapter {
   async run() {
@@ -12,12 +15,14 @@ class BotfuelAdapter extends Adapter {
       const payload = req.body;
       console.log('BotfuelAdapter.run: payload', payload);
       const userId = payload.appUser._id;
-      const message = payload.messages[0];
+      await this.bot.brain.initUserIfNecessary(userId);
+      // if text message
+      const message = payload.messages[0].text;
       const userMessage = Messages.getUserTextMessage(this.config.id, userId, message);
       this.bot.sendResponse(userMessage);
-      res.send(200);
+      res.sendStatus(200);
     });
-    app.listen(5000, () => console.log('Example app listening on port 5000!'));
+    app.listen(5000, () => console.log('Listening on port 5000!'));
   }
 
   async send(botMessages) {
@@ -30,20 +35,22 @@ class BotfuelAdapter extends Adapter {
 
   async sendText(botMessage) {
     console.log('BotfuelAdapter.sendText', botMessage);
-    // data = JSON.stringify(data)
-    // console.log("_sendPayload(#{userId}, #{data})")
-    // url = @smoochEndpoint + "/#{ userId }/conversation/messages"
-    // console.log("sendPayLoad: #{ url }")
-    // console.log("sendPayLoad: #{ @jwt }")
-    // @robot.http(url)
-    // .header('Content-Type', "application/json")
-    // .header('Authorization', "Bearer #{ @jwt }")
-    // .post(data) (error, response, body) ->
-    //   if error
-    //     LOGGER.error("error sending message: #{error}")
-    //   unless response.statusCode in [200, 201]
-    //     LOGGER.error("send request returned status #{ response.statusCode }")
-    //     LOGGER.error("send request returned body #{ body }")
+    const url = `${WEBCHAT_SERVER}/bots/${this.config.id}/users/${botMessage.userId}/conversation/messages`;
+    const body = {
+      type: 'text',
+      value: {
+        text: botMessage.payload,
+      },
+    };
+    rp({ uri: url, method: 'POST', body, json: true })
+      .then((response, body) => {
+        if (response.statusCode === 200) {
+          console.log('BotfuelAdapter.sendText: OK');
+        }
+      }).catch((error) => {
+        console.error('BotfuelAdapter.sendText: KO');
+        console.error(error);
+      });
   }
 }
 
