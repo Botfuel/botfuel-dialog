@@ -3,9 +3,9 @@ const rp = require('request-promise');
 const bodyParser = require('body-parser');
 const Adapter = require('./adapter');
 
-const CHAT_SERVER = 'https://botfuel-webchat-server.herokuapp.com';
+const CHAT_SERVER = process.env.CHAT_SERVER;
 const BOTFUEL_ADAPTER_WEBHOOK = '/webhook';
-const BOTFUEL_ADAPTER_PORT = process.env.PORT || 5000;
+const BOTFUEL_ADAPTER_PORT = process.env.BOTFUEL_ADAPTER_PORT || 5000;
 
 class WebAdapter extends Adapter {
   /**

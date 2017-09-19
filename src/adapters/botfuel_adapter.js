@@ -1,8 +1,6 @@
 const Messages = require('../messages');
 const WebAdapter = require('./web_adapter');
 
-const WEBCHAT_SERVER = 'https://botfuel-webchat-server.herokuapp.com';
-
 class BotfuelAdapter extends WebAdapter {
   /**
    * Handler for webchat webhook post request
@@ -29,7 +27,7 @@ class BotfuelAdapter extends WebAdapter {
    * @returns {string}
    */
   getUrl(botMessage) {
-    return `${WEBCHAT_SERVER}/bots/${this.config.id}/users/${botMessage.userId}/conversation/messages`;
+    return `${CHAT_SERVER}/bots/${this.config.id}/users/${botMessage.userId}/conversation/messages`;
   }
 
   /**
@@ -39,12 +37,13 @@ class BotfuelAdapter extends WebAdapter {
    */
   async sendText(botMessage) {
     console.log('BotfuelAdapter.sendText', botMessage);
-    const body = {
-      type: 'text',
-      text: botMessage.payload,
-    };
-    const url = this.getUrl(botMessage);
-    await this.sendResponse({ uri: url, body });
+    await this.sendResponse({
+      uri: this.getUrl(botMessage),
+      body: {
+        type: 'text',
+        text: botMessage.payload,
+      }
+    });
   }
 }
 
