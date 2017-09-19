@@ -1,14 +1,16 @@
-const WebAdapter = require('./web_adapter');
 const Messages = require('../messages');
-const express = require('express');
-const rp = require('request-promise');
-const bodyParser = require('body-parser');
+const WebAdapter = require('./web_adapter');
 
 const WEBCHAT_SERVER = 'https://botfuel-webchat-server.herokuapp.com';
-const WEBHOOK = '/botfuel';
 
 class BotfuelAdapter extends WebAdapter {
- async handleMessage(req, res) {
+  /**
+   * Handler for webchat webhook post request
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {Promise}
+   */
+  async handleMessage(req, res) {
     console.log('BotfuelAdapter.handleMessage');
     const payload = req.body;
     console.log('BotfuelAdapter.handleMessage: payload', payload);
@@ -21,18 +23,28 @@ class BotfuelAdapter extends WebAdapter {
     res.sendStatus(200);
   }
 
+  /**
+   * Build request url for a given botMessage
+   * @param {Object} botMessage
+   * @returns {string}
+   */
   getUrl(botMessage) {
-    return `${CHAT_SERVER}/bots/${this.config.id}/users/${botMessage.userId}/conversation/messages`;
+    return `${WEBCHAT_SERVER}/bots/${this.config.id}/users/${botMessage.userId}/conversation/messages`;
   }
 
+  /**
+   * Prepare webchat post request
+   * @param {Object} botMessage
+   * @returns {Promise}
+   */
   async sendText(botMessage) {
     console.log('BotfuelAdapter.sendText', botMessage);
     const body = {
       type: 'text',
       text: botMessage.payload,
     };
-    const url = getUrl(botMessage);
-    postResponse({ uri: url }, body);
+    const url = this.getUrl(botMessage);
+    await this.sendResponse({ uri: url, body });
   }
 }
 
