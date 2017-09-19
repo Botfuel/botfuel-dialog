@@ -39,6 +39,7 @@ class BotfuelAdapter extends WebAdapter {
     console.log('BotfuelAdapter.sendText', botMessage);
     await this.sendResponse({
       uri: this.getUrl(botMessage),
+      // TODO: review this
       body: {
         type: 'text',
         text: botMessage.payload,

@@ -1,9 +1,6 @@
 const Messages = require('../messages');
 const WebAdapter = require('./web_adapter');
 
-const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN || 'BotSDK2Sample';
-const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || 'EAAEBdpxs1WkBALtbvWqCwupvQZCAfRvxZBDtZBvCW96gkMAS110MfoGHCDxV4sRKSN8hl34pkSAG97vMMI0NZBAW8VZAZC5LJAZB5wB7SCBhBm7dGynZC0Jl4DvykWrXqKc7W4KRKv4iTZBvoV7IyeAtpdZCZAGiZAhKcQZB2qHdKBUL6lQZDZD';
-
 /**
  * Messenger Adapter.
  */
@@ -26,7 +23,7 @@ class MessengerAdapter extends WebAdapter {
    */
   async validateWebhook(req, res) {
     console.log('MessengerAdapter.validateWebhook');
-    if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === FB_VERIFY_TOKEN) {
+    if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === process.env.FB_VERIFY_TOKEN) {
       console.log('MessengerAdapter.validateWebhook: OK!');
       res.status(200).send(req.query['hub.challenge']);
     } else {
@@ -75,7 +72,7 @@ class MessengerAdapter extends WebAdapter {
     };
     console.log('MessengerAdapter.sendText: body', body);
     const uri = 'https://graph.facebook.com/v2.6/me/messages';
-    const qs = { access_token: FB_PAGE_ACCESS_TOKEN };
+    const qs = { access_token: process.env.FB_PAGE_ACCESS_TOKEN };
     await this.sendResponse({ uri, qs, body });
   }
 
