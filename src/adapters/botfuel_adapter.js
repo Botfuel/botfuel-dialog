@@ -30,7 +30,7 @@ class BotfuelAdapter extends Adapter {
     console.log('BotfuelAdapter.send', botMessages);
     for (const botMessage of botMessages) {
       // TODO: adapt to message type
-      await sendText(botMessage);
+      await this.sendText(botMessage);
     }
   }
 
