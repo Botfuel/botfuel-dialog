@@ -1,9 +1,10 @@
+const BotfuelAdapter = require('./adapters/botfuel_adapter');
+const DialogManager = require('./dialog_manager');
+const FacebookAdapter = require('./adapters/facebook_adapter');
 const MemoryBrain = require('./brains/memory/memory_brain');
+const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell_adapter');
 const TestAdapter = require('./adapters/test_adapter');
-const FacebookAdapter = require('./adapters/facebook_adapter');
-const Nlu = require('./nlu');
-const DialogManager = require('./dialog_manager');
 
 /**
  * Bot main class.
@@ -12,6 +13,9 @@ class Bot {
   constructor(config) {
     console.log('Bot.constructor', config);
     switch (config.adapter) {
+      case 'botfuel':
+        this.adapter = new BotfuelAdapter(this, config);
+        break;
       case 'facebook':
         this.adapter = new FacebookAdapter(this, config);
         break;

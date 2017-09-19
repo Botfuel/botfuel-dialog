@@ -3,7 +3,7 @@
  */
 class Adapter {
   constructor(bot, config) {
-    // console.log('Adapter.constructor');
+    console.log('Adapter.constructor', '<bot>', config);
     this.config = config;
     this.bot = bot;
   }
@@ -15,6 +15,11 @@ class Adapter {
 
   async run() {
     console.log('Adapter.run');
+    throw new Error('Not implemented!');
+  }
+
+  async send(botMessages) {
+    console.log('Adapter.send', botMessages);
     throw new Error('Not implemented!');
   }
 }
