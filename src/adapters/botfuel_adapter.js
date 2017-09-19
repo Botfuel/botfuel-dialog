@@ -13,7 +13,7 @@ class BotfuelAdapter extends Adapter {
       this.bot.sendResponse(userMessage);
       res.send(200);
     });
-    express.listen(3000, () => console.log('Example app listening on port 3000!'));
+    express.listen(5000, () => console.log('Example app listening on port 5000!'));
   }
 
   async send(botMessages) {

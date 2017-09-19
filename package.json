@@ -17,7 +17,6 @@
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.1",
     "botfuel-nlp-sdk": "latest",
-    "express": "^4.15.4",
     "fs": "0.0.1-security",
     "fs-promise": "^1.0.0",
     "inquirer": "^3.2.3",
@@ -44,6 +43,7 @@
     "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-react": "^7.1.0",
     "expect.js": "^0.3.1",
+    "express": "^4.15.4",
     "mocha": "^3.5.1"
   },
   "engines": {
