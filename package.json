@@ -25,7 +25,7 @@
     "mongoose": "^4.11.10",
     "natural": "^0.5.4",
     "node-dir": "^0.1.17",
-    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
