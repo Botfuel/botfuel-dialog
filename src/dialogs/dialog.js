@@ -42,13 +42,6 @@ class Dialog {
       });
   }
 
-  message(userId, responses, message) {
-    console.log('Dialog.message', userId, responses, message);
-    message.botId = this.config.id;
-    message.userId = userId;
-    this.pushMessage(responses, message);
-  }
-
   pushMessage(responses, message) {
     console.log('Dialog.pushMessage', responses, message);
     responses.push(message);
