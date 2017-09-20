@@ -56,8 +56,8 @@ class Bot {
 
   sendResponseWhenText(userMessage) {
     console.log('Bot.sendResponseWhenText', userMessage);
-    const userId = userMessage.userId;
-    const sentence = userMessage.payload;
+    const userId = userMessage.user;
+    const sentence = userMessage.payload.value;
     return this
       .nlu
       .compute(sentence)
