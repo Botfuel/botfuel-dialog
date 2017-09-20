@@ -17,7 +17,7 @@ class ShellAdapter extends Adapter {
     const botMessage = Messages.botText(this.config.id, this.userId, 'onboarding');
     let userInput = await this.send([botMessage]);
     for (;;) {
-      const userMessage = Messages.userText(this.config.id, this.userId, userInput.payload.value);
+      const userMessage = Messages.userText(this.config.id, this.userId, userInput.payload);
       userInput = await this.bot.sendResponse(userMessage);
     }
   }
