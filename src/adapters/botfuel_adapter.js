@@ -16,7 +16,7 @@ class BotfuelAdapter extends WebAdapter {
     await this.bot.brain.initUserIfNecessary(userId);
     // if text message
     const message = payload.messages[0].text;
-    const userMessage = Messages.getUserTextMessage(this.config.id, userId, message);
+    const userMessage = Messages.userText(this.config.id, userId, message);
     this.bot.sendResponse(userMessage);
     res.sendStatus(200);
   }
@@ -42,7 +42,7 @@ class BotfuelAdapter extends WebAdapter {
       // TODO: review this
       body: {
         type: 'text',
-        text: botMessage.payload,
+        text: botMessage.payload.value,
       }
     });
   }

@@ -1,49 +1,56 @@
+const TYPE_TEXT = 'text';
+const TYPE_TABLE = 'table';
+const TYPE_ACTIONS = 'actions';
+const TYPE_POSTBACK = 'POSTBACK';
+const SENDER_BOT = 'bot';
+const SENDER_USER = 'user';
+
 class Messages {
-  static getBotTextMessage(botId, userId, payload) {
-    console.log('Messages.getBotTextMessage', botId, userId, payload);
+  static botText(bot, user, value, options) {
+    console.log('Messages.botText', bot, user, value, options);
     return {
-      type: 'text',
-      userId,
-      botId,
-      origin: 'bot',
-      payload,
+      type: TYPE_TEXT,
+      sender: SENDER_BOT,
+      user,
+      bot,
+      payload : {
+        value,
+        options,
+      }
     };
   }
 
-  static getBotImageMessage(botId, userId, payload) {
-    console.log('Messages.getBotImageMessage', botId, userId, payload);
+  static botActions(bot, user, value, options) {
+    console.log('Messages.botPostbackButtons', bot, user, value, options);
     throw new Error('Not yet implemented!');
   }
 
-  static getBotPostbackButtonsMessage(botId, userId, payload) {
-    console.log('Messages.getBotPostbackButtonsMessage', botId, userId, payload);
-    throw new Error('Not yet implemented!');
-  }
-
-  static getBotReplyButtonsMessage(botId, userId, payload) {
-    console.log('Messages.getBotReplyButtonsMessage', botId, userId, payload);
-    throw new Error('Not yet implemented!');
-  }
-
-  static getUserTextMessage(botId, userId, payload) {
-    console.log('Messages.getUserTextMessage', botId, userId, payload);
+  static userText(bot, user, value, options) {
+    console.log('Messages.userText', bot, user, value, options);
     return {
-      type: 'text',
-      userId,
-      botId,
-      origin: 'user',
-      payload,
+      type: TYPE_TEXT,
+      sender: SENDER_USER,
+      user,
+      bot,
+      payload : {
+        value,
+        options,
+      }
     };
   }
 
-  static getUserImageMessage(botId, userId, payload) {
-    console.log('Messages.getUserImageMessage', botId, userId, payload);
-    throw new Error('Not yet implemented!');
-  }
-
-  static getUserPostbackMessage(botId, userId, payload) {
-    console.log('Messages.getUserPostbackMessage', botId, userId, payload);
-    throw new Error('Not yet implemented!');
+  static userPostback(bot, user, value) {
+    console.log('Messages.userPostback', bot, user, value);
+    return {
+      type: TYPE_POSTBACK,
+      sender: SENDER_USER,
+      user,
+      bot,
+      payload : {
+        value,
+        options,
+      }
+    };
   }
 }
 

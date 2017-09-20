@@ -37,6 +37,7 @@ class WebAdapter extends Adapter {
     const promises = [];
     botMessages.forEach((botMessage) => {
       // TODO: add switch for message type
+      // TODO: how do we guarantee the order
       promises.push(this.sendText(botMessage));
     });
     await Promise.all(promises);

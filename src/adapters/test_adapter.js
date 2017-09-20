@@ -16,7 +16,7 @@ class TestAdapter extends Adapter {
     console.log('TestAdapter.play', userMsgs);
     await this.bot.brain.initUserIfNecessary(this.userId);
     for (const userMsg of userMsgs) {
-      const userMessage = Messages.getUserTextMessage(this.config.id, this.userId, userMsg.payload);
+      const userMessage = Messages.userText(this.config.id, this.userId, userMsg.payload);
       this.log.push(userMessage);
       await this.bot.sendResponse(userMessage);
     }

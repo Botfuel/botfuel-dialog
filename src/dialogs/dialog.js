@@ -35,9 +35,9 @@ class Dialog {
       .toString()
       .split('\n')
       .forEach((line) => {
-        const payload = _.template(line)(parameters);
-        if (payload !== '') {
-          this.pushMessage(responses, Messages.getBotTextMessage(this.config.id, userId, payload));
+        const text = _.template(line)(parameters);
+        if (text !== '') {
+          this.pushMessage(responses, Messages.botText(this.config.id, userId, text));
         }
       });
   }

@@ -67,7 +67,7 @@ class MessengerAdapter extends WebAdapter {
         id: botMessage.userId,
       },
       message: {
-        text: botMessage.payload,
+        text: botMessage.payload.value,
       },
     };
     console.log('MessengerAdapter.sendText: body', body);
@@ -91,7 +91,7 @@ class MessengerAdapter extends WebAdapter {
     await this.bot.brain.initUserIfNecessary(userId);
 
     if (message.text) {
-      const userMessage = Messages.getUserTextMessage(botId, userId, message.text);
+      const userMessage = Messages.userText(botId, userId, message.text);
       await this.bot.sendResponse(userMessage);
     }
   }

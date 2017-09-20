@@ -31,11 +31,14 @@ describe('DialogManager', function() {
     const responses = await dm.execute(TEST_USER, [], []);
     expect(responses).to.eql([
       {
-        botId: TEST_BOT,
-        origin: 'bot',
-        payload: 'Not understood.',
+        bot: TEST_BOT,
+        sender: 'bot',
+        payload: {
+          value: 'Not understood.',
+          options: undefined,
+        },
         type: 'text',
-        userId: TEST_USER,
+        user: TEST_USER,
       },
     ]);
   });
