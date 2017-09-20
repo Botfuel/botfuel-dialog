@@ -1,16 +1,16 @@
-const TYPE_TEXT = 'text';
-const TYPE_TABLE = 'table';
-const TYPE_ACTIONS = 'actions';
-const TYPE_POSTBACK = 'POSTBACK';
-const SENDER_BOT = 'bot';
-const SENDER_USER = 'user';
-
 class Messages {
+  static TYPE_TEXT = 'text';
+  static TYPE_TABLE = 'table';
+  static TYPE_ACTIONS = 'actions';
+  static TYPE_POSTBACK = 'POSTBACK';
+  static SENDER_BOT = 'bot';
+  static SENDER_USER = 'user';
+
   static botText(bot, user, value, options) {
     console.log('Messages.botText', bot, user, value, options);
     return {
-      type: TYPE_TEXT,
-      sender: SENDER_BOT,
+      type: Messages.TYPE_TEXT,
+      sender: Messages.SENDER_BOT,
       user,
       bot,
       payload : {
@@ -21,15 +21,24 @@ class Messages {
   }
 
   static botActions(bot, user, value, options) {
-    console.log('Messages.botPostbackButtons', bot, user, value, options);
-    throw new Error('Not yet implemented!');
+    console.log('Messages.botActions', bot, user, value, options);
+    return {
+      type: Messages.TYPE_ACTIONS,
+      sender: Messages.SENDER_BOT,
+      user,
+      bot,
+      payload : {
+        value,
+        options,
+      }
+    };
   }
 
   static userText(bot, user, value, options) {
     console.log('Messages.userText', bot, user, value, options);
     return {
-      type: TYPE_TEXT,
-      sender: SENDER_USER,
+      type: Messages.TYPE_TEXT,
+      sender: Messages.SENDER_USER,
       user,
       bot,
       payload : {
@@ -42,8 +51,8 @@ class Messages {
   static userPostback(bot, user, value) {
     console.log('Messages.userPostback', bot, user, value);
     return {
-      type: TYPE_POSTBACK,
-      sender: SENDER_USER,
+      type: Messages.TYPE_POSTBACK,
+      sender: Messages.SENDER_USER,
       user,
       bot,
       payload : {

@@ -5,6 +5,7 @@ const MemoryBrain = require('./brains/memory/memory_brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell_adapter');
 const TestAdapter = require('./adapters/test_adapter');
+const Messages = require('./messages');
 
 /**
  * Bot main class.
@@ -48,7 +49,9 @@ class Bot {
     console.log('Bot.sendResponse', userMessage);
     const type = userMessage.type;
     switch (type) {
-      case 'text':
+      case Messages.TYPE_ACTIONS: // @TODO handle this
+      case Messages.TYPE_POSTBACK: // @TODO handle this
+      case Messages.TYPE_TEXT:
       default:
         return this.sendResponseWhenText(userMessage);
     }
@@ -75,6 +78,16 @@ class Bot {
       .catch((err) => {
         console.log('Nlu.computation rejected', err);
       });
+  }
+
+  sendResponseWhenPostback(userMessage) {
+    console.log('Bot.sendResponseWhenPostback', userMessage);
+    // @TODO handle this
+  }
+
+  sendResponseWhenActions(userMessage) {
+    console.log('Bot.sendResponseWhenActions', userMessage);
+    // @TODO handle this
   }
 }
 
