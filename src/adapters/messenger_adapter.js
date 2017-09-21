@@ -91,7 +91,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Prepare messenger post request
+   * Prepare messenger text message
    * @param {Object} botMessage
    * @returns {Promise}
    */
@@ -110,49 +110,133 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Prepare messenger post request
+   * Prepare messenger actions message
    * @param {Object} botMessage
    * @returns {Promise}
    */
-  async sendPostback(botMessage) {
-    console.log('MessengerAdapter.sendPostback', botMessage);
-    const body = {
-      recipient: {
-        id: botMessage.user,
-      },
-      postback: {
-        title: 'cta',
-        payload: 'payload',
-        referral: {
-          ref: 'user referral param',
-          source: 'shortlink',
-          type: 'OPEN_THREAD',
-        },
-      },
-    };
-    console.log('MessengerAdapter.sendPostback: body', body);
+  async sendActions(botMessage) {
+    console.log('MessengerAdapter.sendActions', botMessage);
+    // define actions type
+    let actionType = null;
+    for (const action in botMessage.payload.value) {
+      if (actionType === null) {
+        actionType = action.type;
+      } else if (actionType !== action.type) {
+        throw new Error('Actions items don\'t have the same type');
+      }
+    }
+    // make body
+    let body;
+    switch (actionType) {
+      case 'link':
+        body = this.makeLinkButtons(botMessage);
+        break;
+      case 'postback':
+        body = this.makePostbackButtons(botMessage);
+        break;
+      case 'text':
+      default:
+        body = this.makeQuickReplies(botMessage);
+    }
+    // send response
+    console.log('MessengerAdapter.sendActions: body', body);
     await this.sendResponse({ uri, qs, body });
   }
 
-  async sendQuickReplies(botMessage) {
-    console.log('MessengerAdapter.sendQuickReplies', botMessage);
-    const body = {
+  /**
+   * Prepare links buttons message body
+   * @param {Object} botMessage
+   * @returns {Object} the body
+   */
+  async makeLinkButtons(botMessage) {
+    console.log('MessengerAdapter.makeLinks', botMessage);
+    // format link buttons for messenger
+    const buttons = [];
+    botMessage.payload.value.forEach((button) => {
+      buttons.push({
+        type: 'web_url',
+        title: button.text,
+        url: button.value,
+      });
+    });
+    // return the body
+    return {
       recipient: {
         id: botMessage.user,
       },
       message: {
-        text: 'quick reply',
-        quick_replies: [
-          {
-            content_type: 'text',
-            title: 'quick reply',
-            payload: 'payload',
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: 'Links buttons',
+            buttons,
           },
-        ],
+        },
       },
     };
-    console.log('MessengerAdapter.sendQuickReplies: body', body);
-    await this.sendResponse({ uri, qs, body });
+  }
+
+  /**
+   * Prepare postback message body
+   * @param {Object} botMessage
+   * @returns {Object} the body
+   */
+  async makePostbackButtons(botMessage) {
+    console.log('MessengerAdapter.sendPostback', botMessage);
+    // format postback buttons for messenger
+    const buttons = [];
+    botMessage.payload.value.forEach((button) => {
+      buttons.push({
+        type: 'postback',
+        title: button.text,
+        payload: button.value,
+      });
+    });
+    // return the body
+    return {
+      recipient: {
+        id: botMessage.user,
+      },
+      message: {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: 'Postback buttons',
+            buttons,
+          },
+        },
+      },
+    };
+  }
+
+  /**
+   * Prepare quick replies message body
+   * @param botMessage
+   * @returns {Object} the body
+   */
+  async makeQuickReplies(botMessage) {
+    console.log('MessengerAdapter.sendQuickReplies', botMessage);
+    // format quick replies for messenger
+    const quickReplies = [];
+    botMessage.payload.value.forEach((quickReply) => {
+      quickReplies.push({
+        content_type: quickReply.type,
+        title: quickReply.text,
+        payload: quickReply.value,
+      });
+    });
+    // return the body
+    return {
+      recipient: {
+        id: botMessage.user,
+      },
+      message: {
+        text: 'quick replies',
+        quick_replies: quickReplies,
+      },
+    };
   }
 }
 
