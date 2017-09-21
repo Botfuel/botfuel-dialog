@@ -13,6 +13,7 @@ class MongoBrain extends Brain {
    * @param {string} mongoUri - mongo uri
    */
   constructor(botId, mongoUri = '') {
+    console.log('MongoBrain.constructor', botId);
     super(botId);
     // connect to mongodb if not connected yet
     if (!db.isConnected()) {
@@ -25,7 +26,8 @@ class MongoBrain extends Brain {
    * Clean the brain
    * @returns {Promise}
    */
-  clean() {
+  async clean() {
+    console.log('MongoBrain.clean');
     return User.remove({ botId: this.botId });
   }
 
@@ -33,18 +35,10 @@ class MongoBrain extends Brain {
    * Check if brain has user for a given userId
    * @param {string} userId - user id
    */
-  hasUser(userId) {
-    return new Promise((resolve, reject) => {
-      User
-        .findOne({ botId: this.botId, userId })
-        .then((user) => {
-          if (user) {
-            resolve(true);
-          }
-          resolve(false);
-        })
-        .catch(reject);
-    });
+  async hasUser(userId) {
+    console.log('MongoBrain.hasUser', userId);
+    const user = await User.findOne({ botId: this.botId, userId });
+    return user !== null;
   }
 
   /**
@@ -52,7 +46,8 @@ class MongoBrain extends Brain {
    * @param {string} userId - user id
    * @returns {Promise}
    */
-  addUser(userId) {
+  async addUser(userId) {
+    console.log('MongoBrain.addUser', userId);
     return User.create({ botId: this.botId, userId });
   }
 
@@ -61,13 +56,10 @@ class MongoBrain extends Brain {
    * @param {string} userId - user id
    * @returns {Promise}
    */
-  getUser(userId) {
-    return new Promise((resolve, reject) => {
-      User
-        .findOne({ botId: this.botId, userId })
-        .then(user => resolve(user.flatten()))
-        .catch(reject);
-    });
+  async getUser(userId) {
+    console.log('MongoBrain.getUser', userId);
+    const user = await User.findOne({ botId: this.botId, userId });
+    return user.flatten();
   }
 
   /**
@@ -77,22 +69,16 @@ class MongoBrain extends Brain {
    * @param {*} value - key value
    * @returns {Promise}
    */
-  userSet(userId, key, value) {
-    return new Promise((resolve, reject) => {
-      User
-        .findOne({ botId: this.botId, userId })
-        .then((user) => {
-          if (_.includes(this.userGlobalProperties, key)) {
-            user.set(key, value);
-          } else {
-            user.set(`data.${key}`, value);
-          }
-          user.save()
-            .then(savedUser => resolve(savedUser.flatten()))
-            .catch(reject);
-        })
-        .catch(reject);
-    });
+  async userSet(userId, key, value) {
+    console.log('MongoBrain.userSet', userId, key, value);
+    const user = await User.findOne({ botId: this.botId, userId });
+    if (_.includes(this.userGlobalProperties, key)) {
+      user.set(key, value);
+    } else {
+      user.set(`data.${key}`, value);
+    }
+    const savedUser = await user.save();
+    return savedUser.flatten();
   }
 
   /**
@@ -101,21 +87,12 @@ class MongoBrain extends Brain {
    * @param {string} key - user key
    * @returns {Promise}
    */
-  userGet(userId, key) {
-    return new Promise((resolve, reject) => {
-      const isGlobalProperty = _.includes(this.userGlobalProperties, key);
-      const select = isGlobalProperty ? key : `data.${key}`;
-      User
-        .findOne({ botId: this.botId, userId }, select)
-        .then((user) => {
-          if (isGlobalProperty) {
-            resolve(user[key]);
-          } else {
-            resolve(user.data[key]);
-          }
-        })
-        .catch(err => reject(err));
-    });
+  async userGet(userId, key) {
+    console.log('MongoBrain.userGet', userId, key);
+    const isGlobalProperty = _.includes(this.userGlobalProperties, key);
+    const select = isGlobalProperty ? key : `data.${key}`;
+    const user = await User.findOne({ botId: this.botId, userId }, select);
+    return isGlobalProperty ? user[key] : user.data[key];
   }
 
   /**
@@ -125,7 +102,8 @@ class MongoBrain extends Brain {
    * @param {Object} value - Object value
    * @returns {Promise}
    */
-  userPush(userId, key, value) {
+  async userPush(userId, key, value) {
+    console.log('MongoBrain.userPush', userId, key, value);
     const isGlobalProperty = _.includes(this.userGlobalProperties, key);
     const pushKey = isGlobalProperty ? key : `data.${key}`;
     const push = {};
@@ -139,21 +117,13 @@ class MongoBrain extends Brain {
    * @param {string} key - user array key
    * @returns {Promise}
    */
-  userShift(userId, key) {
-    return new Promise((resolve, reject) => {
-      const isGlobalProperty = _.includes(this.userGlobalProperties, key);
-      const pop = {};
-      pop[isGlobalProperty ? key : `data.${key}`] = -1;
-      User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop })
-        .then((user) => {
-          if (isGlobalProperty) {
-            resolve(user[key].shift());
-          } else {
-            resolve(user.data[key].shift());
-          }
-        })
-        .catch(err => reject(err));
-    });
+  async userShift(userId, key) {
+    console.log('MongoBrain.userShift', userId, key);
+    const isGlobalProperty = _.includes(this.userGlobalProperties, key);
+    const pop = {};
+    pop[isGlobalProperty ? key : `data.${key}`] = -1;
+    const user = await User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop });
+    return isGlobalProperty ? user[key].shift() : user.data[key].shift();
   }
 
   /**
@@ -162,21 +132,13 @@ class MongoBrain extends Brain {
    * @param {string} key - user array key
    * @returns {Promise}
    */
-  userPop(userId, key) {
-    return new Promise((resolve, reject) => {
-      const isGlobalProperty = _.includes(this.userGlobalProperties, key);
-      const pop = {};
-      pop[isGlobalProperty ? key : `data.${key}`] = 1;
-      User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop })
-        .then((user) => {
-          if (isGlobalProperty) {
-            resolve(user[key].pop());
-          } else {
-            resolve(user.data[key].pop());
-          }
-        })
-        .catch(err => reject(err));
-    });
+  async userPop(userId, key) {
+    console.log('MongoBrain.userPop', userId, key);
+    const isGlobalProperty = _.includes(this.userGlobalProperties, key);
+    const pop = {};
+    pop[isGlobalProperty ? key : `data.${key}`] = 1;
+    const user = await User.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop });
+    return isGlobalProperty ? user[key].pop() : user.data[key].pop();
   }
 
   /**
@@ -184,14 +146,15 @@ class MongoBrain extends Brain {
    * @param {string} userId - user id
    * @returns {Promise}
    */
-  addConversation(userId) {
-    return new Promise((resolve, reject) => {
-      const push = { conversations: {} };
-      User
-        .findOneAndUpdate({ botId: this.botId, userId }, { $push: push }, { new: true })
-        .then(user => resolve(user.getLastConversation()))
-        .catch(reject);
-    });
+  async addConversation(userId) {
+    console.log('MongoBrain.addConversation', userId);
+    const push = { conversations: {} };
+    const user = await User.findOneAndUpdate(
+      { botId: this.botId, userId },
+      { $push: push },
+      { new: true },
+    );
+    return user.getLastConversation();
   }
 
   /**
@@ -199,13 +162,10 @@ class MongoBrain extends Brain {
    * @param {string} userId - user id
    * @returns {Promise}
    */
-  getLastConversation(userId) {
-    return new Promise((resolve, reject) => {
-      User
-        .findOne({ botId: this.botId, userId })
-        .then(user => resolve(user.getLastConversation()))
-        .catch(reject);
-    });
+  async getLastConversation(userId) {
+    console.log('MongoBrain.getLastConversation', userId);
+    const user = await User.findOne({ botId: this.botId, userId });
+    return user.getLastConversation();
   }
 
   /**
@@ -215,20 +175,12 @@ class MongoBrain extends Brain {
    * @param {*} value - key value
    * @returns {Promise}
    */
-  conversationSet(userId, key, value) {
-    return new Promise((resolve, reject) => {
-      User
-        .findOne({ botId: this.botId, userId })
-        .then((user) => {
-          user
-            .lastConversationSet(`data.${key}`, value);
-          user
-            .save()
-            .then(savedUser => resolve(savedUser.getLastConversation()))
-            .catch(reject);
-        })
-        .catch(reject);
-    });
+  async conversationSet(userId, key, value) {
+    console.log('MongoBrain.conversationSet', userId, key, value);
+    const user = await User.findOne({ botId: this.botId, userId });
+    user.lastConversationSet(`data.${key}`, value);
+    const savedUser = await user.save();
+    return savedUser.getLastConversation();
   }
 }
 
