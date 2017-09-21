@@ -45,7 +45,7 @@ class Bot {
   /**
    * Responds.
    */
-  async endResponse(userMessage) {
+  async sendResponse(userMessage) {
     console.log('Bot.sendResponse', userMessage);
     const type = userMessage.type;
     switch (type) {
@@ -65,7 +65,7 @@ class Bot {
     const entities = userMessage.payload.value.entities;
     // TODO: instantiate the dialog
     const dialog = null;
-    return this.executeDialogs(userId, [dialog], entities);
+    return this.dm.executeDialogs(userId, [dialog], entities);
   }
 
   async sendResponseWhenText(userMessage) {

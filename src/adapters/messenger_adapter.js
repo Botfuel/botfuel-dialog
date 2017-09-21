@@ -73,10 +73,12 @@ class MessengerAdapter extends WebAdapter {
     let userMessage = null;
     if (event.message) {
       const message = event.message;
-      const value = { text: message.text };
+      const value = message.text;
+      /*
       if (message.quick_replies) {
         value.quick_reply_payload = message.quick_replies.payload;
       }
+      */
       userMessage = Messages.userText(botId, userId, value);
     } else if (event.postback) {
       const postback = event.postback;
@@ -97,7 +99,7 @@ class MessengerAdapter extends WebAdapter {
     console.log('MessengerAdapter.sendText', botMessage);
     const body = {
       recipient: {
-        id: botMessage.userId,
+        id: botMessage.user,
       },
       message: {
         text: botMessage.payload.value,
@@ -116,7 +118,7 @@ class MessengerAdapter extends WebAdapter {
     console.log('MessengerAdapter.sendPostback', botMessage);
     const body = {
       recipient: {
-        id: botMessage.userId,
+        id: botMessage.user,
       },
       postback: {
         title: 'cta',
@@ -135,6 +137,9 @@ class MessengerAdapter extends WebAdapter {
   async sendQuickReplies(botMessage) {
     console.log('MessengerAdapter.sendQuickReplies', botMessage);
     const body = {
+      recipient: {
+        id: botMessage.user,
+      },
       message: {
         text: 'quick reply',
         quick_replies: [

@@ -13,7 +13,7 @@ class WebAdapter extends Adapter {
     const app = express();
     app.use(bodyParser.json());
     this.createRoutes(app);
-    const port = process.env.BOTFUEL_ADAPTER_PORT || 5000;
+    const port = process.env.PORT || process.env.BOTFUEL_ADAPTER_PORT || 5000;
     app.listen(port, () => {
       console.log('WebAdapter.run: listening on port', port);
     });
