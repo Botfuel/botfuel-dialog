@@ -17,10 +17,10 @@ class ShellAdapter extends Adapter {
     const botMessage = Messages.botText(this.config.id, this.userId, 'onboarding');
     let userInput = await this.send([botMessage]);
     for (;;) {
+      console.log('ShellAdapter.run', userInput);
       const userMessage = Messages.userText(this.config.id, this.userId, userInput.payload);
       // eslint-disable-next-line no-await-in-loop
       userInput = await this.bot.sendResponse(userMessage);
-      console.log('ShellAdapter.run', userInput);
     }
   }
 
