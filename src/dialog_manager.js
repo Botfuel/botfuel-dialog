@@ -61,9 +61,7 @@ class DialogManager {
         dialogs.push({ label: 'default_dialog' });
       }
     }
-    const responses = [];
-    await this.executeDialogs(userId, dialogs, entities, responses);
-    return responses;
+    return await this.executeDialogs(userId, dialogs, entities);
   }
 
   /**
@@ -71,10 +69,10 @@ class DialogManager {
    * @param {string} userId the user id
    * @param {Object[]} dialogs - the dialogs
    * @param {Object[]} entities - the entities
-   * @param {Object[]} responses - the responses
    */
-  async executeDialogs(userId, dialogs, entities, responses) {
-    console.log('DialogManager.executeDialogs', userId, dialogs, entities, responses);
+  async executeDialogs(userId, dialogs, entities) {
+    const responses = [];
+    console.log('DialogManager.executeDialogs', userId, dialogs, entities);
     let done = true;
     while (done && dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
@@ -90,6 +88,7 @@ class DialogManager {
       }
     }
     await this.brain.userSet(userId, 'dialogs', dialogs);
+    return responses;
   }
 }
 
