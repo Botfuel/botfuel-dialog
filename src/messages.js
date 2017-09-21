@@ -1,7 +1,7 @@
 const TYPE_TEXT = 'text';
 const TYPE_TABLE = 'table';
 const TYPE_ACTIONS = 'actions';
-const TYPE_POSTBACK = 'POSTBACK';
+const TYPE_POSTBACK = 'postback';
 const SENDER_BOT = 'bot';
 const SENDER_USER = 'user';
 

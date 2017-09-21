@@ -48,10 +48,21 @@ class Bot {
     console.log('Bot.sendResponse', userMessage);
     const type = userMessage.type;
     switch (type) {
-      case 'text':
-      default:
-        return this.sendResponseWhenText(userMessage);
+    case 'postback':
+      return this.sendResponseWhenPostback(userMessage);
+    case 'text':
+    default:
+      return this.sendResponseWhenText(userMessage);
     }
+  }
+
+  sendResponseWhenPostback(userMessage) {
+    const dialogLabel = userMessage.payload.value.dialog.label;
+    const dialogParameters = userMessage.payload.value.dialog.parameters;
+    const entities = userMessage.payload.value.entities;
+    // TODO: instantiate the dialog
+    const dialog = null;
+    return await this.executeDialogs(userId, [dialog], entities);
   }
 
   sendResponseWhenText(userMessage) {
