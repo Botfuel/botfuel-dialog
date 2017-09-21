@@ -35,10 +35,7 @@ describe('DialogManager', function () {
       {
         bot: TEST_BOT,
         sender: 'bot',
-        payload: {
-          value: 'Not understood.',
-          options: undefined,
-        },
+        payload: { value: 'Not understood.' },
         type: 'text',
         user: TEST_USER,
       },
