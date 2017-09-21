@@ -12,8 +12,8 @@ class TestAdapter extends Adapter {
     this.userId = 'USER_TEST';
   }
 
-  async play(userMsgs) {
-    console.log('TestAdapter.play', userMsgs);
+  async play(userMessages) {
+    console.log('TestAdapter.play', userMessages);
     await this.bot.brain.initUserIfNecessary(this.userId);
     for (const userMessage of userMessages) {
       this.log.push(userMessage);
