@@ -23,6 +23,7 @@ class Dialog {
   /**
    * Says something.
    * @param {string} userId the user id
+   * @param {Object[]} responses
    * @param {string} label the template label
    * @param {Object} parameters the template parameters
    */
@@ -42,6 +43,11 @@ class Dialog {
     }
   }
 
+  /**
+   * Push message to responses
+   * @param {Object[]} responses
+   * @param {Object} message
+   */
   pushMessage(responses, message) {
     console.log('Dialog.pushMessage', responses, message);
     responses.push(message);
