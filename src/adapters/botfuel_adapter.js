@@ -41,7 +41,7 @@ class BotfuelAdapter extends WebAdapter {
       uri: this.getUrl(botMessage),
       // TODO: review this
       body: {
-        type: 'text',
+        type: Messages.TYPE_TEXT,
         text: botMessage.payload.value,
       }
     });

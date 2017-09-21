@@ -56,6 +56,28 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
+   * Process received message
+   * @param {Object} event
+   * @returns {Promise}
+   */
+  async processMessage(event) {
+    const { sender, recipient, message } = event;
+    const userId = sender.id; // messenger user id
+    const botId = recipient.id; // page id
+    console.log('MessengerAdapter.processMessage', userId, botId, JSON.stringify(message));
+
+    // init user if necessary
+    await this.bot.brain.initUserIfNecessary(userId);
+
+    if (message.text) {
+      const userMessage = Messages.userText(botId, userId, message.text);
+    } else if (message.attachments) {
+      const userMessage = Messages.userPostback(botId, userId, message.text);
+    }
+    await this.bot.sendResponse(userMessage);
+  }
+
+  /**
    * Prepare messenger post request
    * @param {Object} botMessage
    * @returns {Promise}
@@ -77,23 +99,30 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Process received message
-   * @param {Object} event
+   * Prepare messenger post request
+   * @param {Object} botMessage
    * @returns {Promise}
    */
-  async processMessage(event) {
-    const { sender, recipient, message } = event;
-    const userId = sender.id; // messenger user id
-    const botId = recipient.id; // page id
-    console.log('MessengerAdapter.processMessage', userId, botId, JSON.stringify(message));
-
-    // init user if necessary
-    await this.bot.brain.initUserIfNecessary(userId);
-
-    if (message.text) {
-      const userMessage = Messages.userText(botId, userId, message.text);
-      await this.bot.sendResponse(userMessage);
-    }
+  async sendPostback(botMessage) {
+    console.log('MessengerAdapter.sendText', botMessage);
+    const body = {
+      recipient: {
+        id: botMessage.userId,
+      },
+      postback:{
+        title: 'cta',
+        payload: 'payload',
+        referral: {
+          ref: 'user referral param',
+          source: 'shortlink',
+          type: 'OPEN_THREAD',
+        }
+      }
+    };
+    console.log('MessengerAdapter.sendText: body', body);
+    const uri = 'https://graph.facebook.com/v2.6/me/messages';
+    const qs = { access_token: process.env.FB_PAGE_ACCESS_TOKEN };
+    await this.sendResponse({ uri, qs, body });
   }
 }
 
