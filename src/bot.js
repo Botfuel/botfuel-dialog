@@ -75,20 +75,12 @@ class Bot {
     return this
       .nlu
       .compute(sentence)
-      .then(({ entities, intents }) => {
-        return this
-          .dm
-          .execute(userId, intents, entities)
-          .then((botMessages) => {
-            return this.adapter.send(botMessages);
-          })
-          .catch((err) => {
-            console.log('Dm.execution rejected', err);
-          });
-      })
-      .catch((err) => {
-        console.log('Nlu.computation rejected', err);
-      });
+      .then(({ entities, intents }) => this
+            .dm
+            .execute(userId, intents, entities)
+            .then(botMessages => this.adapter.send(botMessages))
+            .catch(err => console.log('Dm.execution rejected', err)))
+      .catch(err => console.log('Nlu.computation rejected', err));
   }
 
   sendResponseWhenActions(userMessage) {
