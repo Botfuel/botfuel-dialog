@@ -13,6 +13,7 @@ class MongoBrain extends Brain {
    * @param {string} mongoUri - mongo uri
    */
   constructor(botId, mongoUri = '') {
+    console.log('MongoBrain.constructor', botId);
     super(botId);
     // connect to mongodb if not connected yet
     if (!db.isConnected()) {
@@ -26,6 +27,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async clean() {
+    console.log('MongoBrain.clean');
     return User.remove({ botId: this.botId });
   }
 
@@ -34,6 +36,7 @@ class MongoBrain extends Brain {
    * @param {string} userId - user id
    */
   async hasUser(userId) {
+    console.log('MongoBrain.hasUser', userId);
     const user = await User.findOne({ botId: this.botId, userId });
     return user !== null;
   }
@@ -44,6 +47,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async addUser(userId) {
+    console.log('MongoBrain.addUser', userId);
     return User.create({ botId: this.botId, userId });
   }
 
@@ -53,6 +57,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async getUser(userId) {
+    console.log('MongoBrain.getUser', userId);
     const user = await User.findOne({ botId: this.botId, userId });
     return user.flatten();
   }
@@ -65,6 +70,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async userSet(userId, key, value) {
+    console.log('MongoBrain.userSet', userId, key, value);
     const user = await User.findOne({ botId: this.botId, userId });
     if (_.includes(this.userGlobalProperties, key)) {
       user.set(key, value);
@@ -82,6 +88,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async userGet(userId, key) {
+    console.log('MongoBrain.userGet', userId, key);
     const isGlobalProperty = _.includes(this.userGlobalProperties, key);
     const select = isGlobalProperty ? key : `data.${key}`;
     const user = await User.findOne({ botId: this.botId, userId }, select);
@@ -96,6 +103,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async userPush(userId, key, value) {
+    console.log('MongoBrain.userPush', userId, key, value);
     const isGlobalProperty = _.includes(this.userGlobalProperties, key);
     const pushKey = isGlobalProperty ? key : `data.${key}`;
     const push = {};
@@ -110,6 +118,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async userShift(userId, key) {
+    console.log('MongoBrain.userShift', userId, key);
     const isGlobalProperty = _.includes(this.userGlobalProperties, key);
     const pop = {};
     pop[isGlobalProperty ? key : `data.${key}`] = -1;
@@ -124,6 +133,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async userPop(userId, key) {
+    console.log('MongoBrain.userPop', userId, key);
     const isGlobalProperty = _.includes(this.userGlobalProperties, key);
     const pop = {};
     pop[isGlobalProperty ? key : `data.${key}`] = 1;
@@ -137,6 +147,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async addConversation(userId) {
+    console.log('MongoBrain.addConversation', userId);
     const push = { conversations: {} };
     const user = await User.findOneAndUpdate(
       { botId: this.botId, userId },
@@ -152,6 +163,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async getLastConversation(userId) {
+    console.log('MongoBrain.getLastConversation', userId);
     const user = await User.findOne({ botId: this.botId, userId });
     return user.getLastConversation();
   }
@@ -164,6 +176,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async conversationSet(userId, key, value) {
+    console.log('MongoBrain.conversationSet', userId, key, value);
     const user = await User.findOne({ botId: this.botId, userId });
     user.lastConversationSet(`data.${key}`, value);
     const savedUser = await user.save();
