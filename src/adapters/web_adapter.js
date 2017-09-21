@@ -35,12 +35,14 @@ class WebAdapter extends Adapter {
     console.log('WebAdapter.send', botMessages);
     for (const botMessage of botMessages) {
       switch (botMessage.type) {
+        /* eslint-disable no-await-in-loop */
         case Messages.TYPE_ACTIONS:
           await this.sendActions(botMessage);
+          break;
         case Messages.TYPE_TEXT:
         default:
-          // eslint-disable-next-line no-await-in-loop
           await this.sendText(botMessage);
+        /* eslint-enable no-await-in-loop */
       }
     }
   }
