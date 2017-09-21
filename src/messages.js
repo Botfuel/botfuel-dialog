@@ -13,10 +13,10 @@ class Messages {
       sender: Messages.SENDER_BOT,
       user,
       bot,
-      payload : {
+      payload: {
         value,
         options,
-      }
+      },
     };
   }
 
@@ -27,10 +27,24 @@ class Messages {
       sender: Messages.SENDER_BOT,
       user,
       bot,
-      payload : {
+      payload: {
         value,
         options,
-      }
+      },
+    };
+  }
+
+  static botTable(bot, user, value, options) {
+    console.log('Messages.botTable', bot, user, value, options);
+    return {
+      type: Messages.TYPE_TABLE,
+      sender: Messages.SENDER_BOT,
+      user,
+      bot,
+      payload: {
+        value,
+        options,
+      },
     };
   }
 
@@ -41,24 +55,24 @@ class Messages {
       sender: Messages.SENDER_USER,
       user,
       bot,
-      payload : {
+      payload: {
         value,
         options,
-      }
+      },
     };
   }
 
-  static userPostback(bot, user, value) {
-    console.log('Messages.userPostback', bot, user, value);
+  static userPostback(bot, user, value, options) {
+    console.log('Messages.userPostback', bot, user, value, options);
     return {
       type: Messages.TYPE_POSTBACK,
       sender: Messages.SENDER_USER,
       user,
       bot,
-      payload : {
+      payload: {
         value,
         options,
-      }
+      },
     };
   }
 }
