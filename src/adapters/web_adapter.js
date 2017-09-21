@@ -1,6 +1,7 @@
 const express = require('express');
 const rp = require('request-promise');
 const bodyParser = require('body-parser');
+const Messages = require('../messages');
 const Adapter = require('./adapter');
 
 class WebAdapter extends Adapter {
@@ -14,9 +15,7 @@ class WebAdapter extends Adapter {
     app.use(bodyParser.json());
     this.createRoutes(app);
     const port = process.env.PORT || process.env.BOTFUEL_ADAPTER_PORT || 5000;
-    app.listen(port, () => {
-      console.log('WebAdapter.run: listening on port', port);
-    });
+    app.listen(port, () => console.log('WebAdapter.run: listening on port', port));
   }
 
   /**
@@ -34,13 +33,14 @@ class WebAdapter extends Adapter {
    */
   async send(botMessages) {
     console.log('WebAdapter.send', botMessages);
-    const promises = [];
     for (const botMessage of botMessages) {
-      // TODO: add switch for message type
-      // TODO: how do we guarantee the order
-      promises.push(this.sendText(botMessage));
+      switch (botMessage.type) {
+        case Messages.TYPE_TEXT:
+        default:
+          // eslint-disable-next-line no-await-in-loop
+          await this.sendText(botMessage);
+      }
     }
-    await Promise.all(promises);
   }
 
   /**
@@ -53,7 +53,9 @@ class WebAdapter extends Adapter {
     const options = Object.assign({ method: 'POST', json: true }, requestOptions);
     try {
       const response = await rp(options);
-      if (response.statusCode === 200) {
+      if (response.statusCode !== 200) {
+        console.error('WebAdapter.sendText: KO', response);
+      } else {
         console.log('WebAdapter.sendText: OK');
       }
     } catch (error) {
