@@ -51,14 +51,14 @@ class Nlu {
     try {
       await this.initClassifierIfNecessary();
       const entities = await this.entityExtraction.compute(sentence);
-      const features = await this.featureExtraction.compute(sentence, entities)
+      const features = await this.featureExtraction.compute(sentence, entities);
       // in the case of QnA:
       // - the classifier returns a QnA intent
       // - the entityExtraction extracts the QnA id
       const intents = await this.classifier.getClassifications(features);
       console.log('Nlu.compute: intents', intents);
       return { entities, intents };
-    } catch(err) {
+    } catch (err) {
       console.error('Nlu.compute : initialization rejected', err);
       throw err;
     }

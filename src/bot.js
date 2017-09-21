@@ -74,9 +74,9 @@ class Bot {
       const userId = userMessage.user;
       const sentence = userMessage.payload.value;
       const { entities, intents } = await this.nlu.compute(sentence);
-      const botMessages = await this.dm.execute(userId, intents, entities)
+      const botMessages = await this.dm.execute(userId, intents, entities);
       await this.adapter.send(botMessages);
-    } catch(err) {
+    } catch (err) {
       console.error('Bot.sendResponseWhenText', err);
       throw err;
     }

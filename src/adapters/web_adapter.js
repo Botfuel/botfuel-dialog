@@ -39,7 +39,7 @@ class WebAdapter extends Adapter {
       // TODO: add switch for message type
       // TODO: how do we guarantee the order
       promises.push(this.sendText(botMessage));
-    });
+    }
     await Promise.all(promises);
   }
 
@@ -56,7 +56,7 @@ class WebAdapter extends Adapter {
       if (response.statusCode === 200) {
         console.log('WebAdapter.sendText: OK');
       }
-    } catch(error) {
+    } catch (error) {
       console.error('WebAdapter.sendText: KO', error);
     }
   }

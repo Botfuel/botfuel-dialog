@@ -22,7 +22,7 @@ class MemoryBrain extends Brain {
   async clean() {
     console.log('MemoryBrain.clean');
     this.users = {};
-   }
+  }
 
   /**
    * Check if brain has user for a given userId
@@ -104,16 +104,14 @@ class MemoryBrain extends Brain {
     console.log('MemoryBrain.userPush', userId, key, value);
     const user = await this.getUser(userId);
     if (user[key]) {
-      if (_.isArray(user[key])) {
-        user[key].push(value);
-        return user;
-      } else {
+      if (!_.isArray(user[key])) {
         throw new Error('User key is not an array');
       }
+      user[key].push(value);
     } else {
       user[key] = [value];
-      return user;
     }
+    return user;
   }
 
   /**
@@ -125,11 +123,10 @@ class MemoryBrain extends Brain {
   async userShift(userId, key) {
     console.log('MemoryBrain.userShift', userId, key);
     const user = await this.getUser(userId);
-    if (user[key] && _.isArray(user[key])) {
-      return user[key].shift();
-    } else {
+    if (user[key] === undefined || !_.isArray(user[key])) {
       throw new Error('User key is not an array');
     }
+    return user[key].shift();
   }
 
 
@@ -142,11 +139,10 @@ class MemoryBrain extends Brain {
   async userPop(userId, key) {
     console.log('MemoryBrain.userPop', userId, key);
     const user = await this.getUser(userId);
-    if (user[key] && _.isArray(user[key])) {
-      return user[key].pop();
-    } else {
+    if (user[key] === undefined || !_.isArray(user[key])) {
       throw new Error('User key is not an array');
     }
+    return user[key].pop();
   }
 
   /**
@@ -157,7 +153,7 @@ class MemoryBrain extends Brain {
   async addConversation(userId) {
     console.log('MemoryBrain.addConversation', userId);
     const conversation = { createdAt: Date.now() };
-    await this.userPush(userId, 'conversations', conversation)
+    await this.userPush(userId, 'conversations', conversation);
     return conversation;
   }
 
