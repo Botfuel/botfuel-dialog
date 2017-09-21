@@ -99,7 +99,7 @@ class MessengerAdapter extends WebAdapter {
     console.log('MessengerAdapter.sendText', botMessage);
     const body = {
       recipient: {
-        id: botMessage.userId,
+        id: botMessage.user,
       },
       message: {
         text: botMessage.payload.value,
@@ -118,7 +118,7 @@ class MessengerAdapter extends WebAdapter {
     console.log('MessengerAdapter.sendPostback', botMessage);
     const body = {
       recipient: {
-        id: botMessage.userId,
+        id: botMessage.user,
       },
       postback: {
         title: 'cta',
@@ -137,6 +137,9 @@ class MessengerAdapter extends WebAdapter {
   async sendQuickReplies(botMessage) {
     console.log('MessengerAdapter.sendQuickReplies', botMessage);
     const body = {
+      recipient: {
+        id: botMessage.user,
+      },
       message: {
         text: 'quick reply',
         quick_replies: [
