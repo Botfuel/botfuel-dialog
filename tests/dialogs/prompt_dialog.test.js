@@ -1,3 +1,5 @@
+/* eslint-disable prefer-arrow-callback */
+
 const expect = require('expect.js');
 const PromptDialog = require('../../src/dialogs/prompt_dialog');
 const MemoryBrain = require('../../src/brains/memory/memory_brain');
@@ -10,25 +12,27 @@ class TestPromptDialog extends PromptDialog {
   }
 
   textMessage(id, responses, label, parameters) {
-    responses.push({id, label, parameters});
+    responses.push({
+      id,
+      label,
+      parameters,
+    });
   }
 }
 
-
-describe('PromptDialog', function() {
+describe('PromptDialog', function () {
   const brain = new MemoryBrain();
   const prompt = new TestPromptDialog(brain, {
-      namespace: 'testdialog',
-      entities: { dim1: {}, dim2: {} },
-    });
+    namespace: 'testdialog',
+    entities: { dim1: {}, dim2: {} },
+  });
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     await brain.clean();
     await brain.initUserIfNecessary(TEST_USER);
   });
 
-
-  it('when given no entity, should ask for both', async function() {
+  it('when given no entity, should ask for both', async function () {
     const responses = [];
     await prompt.execute(TEST_USER, responses, []);
     expect(responses).to.eql([
@@ -49,9 +53,9 @@ describe('PromptDialog', function() {
     expect(user.conversations[0].testdialog.dim2).to.be(undefined);
   });
 
-  it('when given a first entity, should ask for the second one', async function() {
+  it('when given a first entity, should ask for the second one', async function () {
     const responses = [];
-    await prompt.execute(TEST_USER, responses, [ { dim: 'dim1' } ]);
+    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1' }]);
     expect(responses).to.eql([
       {
         id: TEST_USER,
@@ -70,9 +74,9 @@ describe('PromptDialog', function() {
     expect(user.conversations[0].testdialog.dim2).to.be(undefined);
   });
 
-  it('when given both entity, should ask none', async function() {
+  it('when given both entity, should ask none', async function () {
     const responses = [];
-    await prompt.execute(TEST_USER, responses, [ { dim: 'dim1' },  { dim: 'dim2' } ]);
+    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1' }, { dim: 'dim2' }]);
     expect(responses).to.eql([
       {
         id: TEST_USER,

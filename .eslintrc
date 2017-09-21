@@ -13,6 +13,7 @@
   "parser": "babel-eslint",
   "rules": {
     "class-methods-use-this": "off",
+    "func-names": "off",
     "global-require": "off",
     "import/no-dynamic-require": "off",
     "import/order": ["error"],
