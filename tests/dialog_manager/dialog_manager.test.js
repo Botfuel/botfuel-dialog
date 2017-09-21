@@ -3,6 +3,7 @@
 const expect = require('expect.js');
 const DialogManager = require('../../src/dialog_manager');
 const MemoryBrain = require('../../src/brains/memory/memory_brain');
+const Messages = require('../../src/messages');
 
 const TEST_BOT = 1;
 const TEST_USER = 1;
@@ -32,16 +33,7 @@ describe('DialogManager', function () {
   it('should not crash when no intent', async function () {
     const responses = await dm.execute(TEST_USER, [], []);
     expect(responses).to.eql([
-      {
-        bot: TEST_BOT,
-        sender: 'bot',
-        payload: {
-          value: 'Not understood.',
-          options: undefined,
-        },
-        type: 'text',
-        user: TEST_USER,
-      },
+      Messages.botText(TEST_BOT, TEST_USER, 'Not understood.')
     ]);
   });
 

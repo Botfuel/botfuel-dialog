@@ -20,15 +20,21 @@ class Messages {
   }
 
   static create(type, sender, bot, user, value, options) {
+    if (options !== undefined) {
+      return {
+        type,
+        sender,
+        bot,
+        user,
+        payload: { value, options },
+      };
+    }
     return {
       type,
       sender,
       bot,
       user,
-      payload: {
-        value,
-        options,
-      },
+      payload: { value },
     };
   }
 }
