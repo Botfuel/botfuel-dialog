@@ -49,7 +49,8 @@ class Bot {
     console.log('Bot.sendResponse', userMessage);
     const type = userMessage.type;
     switch (type) {
-      case Messages.TYPE_ACTIONS: // @TODO handle this
+      case Messages.TYPE_ACTIONS:
+        return this.sendResponseWhenActions(userMessage);
       case Messages.TYPE_POSTBACK:
         return this.sendResponseWhenPostback(userMessage);
       case Messages.TYPE_TEXT:
@@ -60,11 +61,8 @@ class Bot {
 
   async sendResponseWhenPostback(userMessage) {
     const userId = userMessage.user;
-    const dialogLabel = userMessage.payload.value.dialog.label;
-    const dialogParameters = userMessage.payload.value.dialog.parameters;
-    const entities = userMessage.payload.value.entities;
+    const { dialog, entities } = userMessage.payload.value;
     // TODO: instantiate the dialog
-    const dialog = null;
     return this.dm.executeDialogs(userId, [dialog], entities);
   }
 
