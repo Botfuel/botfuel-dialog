@@ -1,6 +1,9 @@
 const Messages = require('../messages');
 const WebAdapter = require('./web_adapter');
 
+const uri = 'https://graph.facebook.com/v2.6/me/messages';
+const qs = { access_token: process.env.FB_PAGE_ACCESS_TOKEN || '' };
+
 /**
  * Messenger Adapter.
  */
@@ -44,11 +47,8 @@ class MessengerAdapter extends WebAdapter {
     if (data.object === 'page') {
       data.entry.forEach((entry) => {
         entry.messaging.forEach(async (event) => {
-          if (event.message) {
-            await this.processMessage(event);
-          } else {
-            console.log('MessengerAdapter.handleMessage: unknown event: ', event);
-          }
+          console.log('MessengerAdapter.handleMessage: event', JSON.stringify(event));
+          await this.processEvent(event);
         });
       });
       res.sendStatus(200);
@@ -56,24 +56,35 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Process received message
+   * Process received event (message, postback ...)
    * @param {Object} event
    * @returns {Promise}
    */
-  async processMessage(event) {
-    const { sender, recipient, message } = event;
+  async processEvent(event) {
+    const { sender, recipient } = event;
     const userId = sender.id; // messenger user id
     const botId = recipient.id; // page id
-    console.log('MessengerAdapter.processMessage', userId, botId, JSON.stringify(message));
+    console.log('MessengerAdapter.processEvent', userId, botId, JSON.stringify(event));
 
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
 
-    if (message.text) {
-      const userMessage = Messages.userText(botId, userId, message.text);
-    } else if (message.attachments) {
-      const userMessage = Messages.userPostback(botId, userId, message.text);
+    // set userMessage
+    let userMessage = null;
+    if (event.message) {
+      const message = event.message;
+      const value = { text: message.text };
+      if (message.quick_replies) {
+        value.quick_reply_payload = message.quick_replies.payload;
+      }
+      userMessage = Messages.userText(botId, userId, value);
+    } else if (event.postback) {
+      const postback = event.postback;
+      userMessage = Messages.userPostback(botId, userId, postback);
+    } else {
+      console.log('MessengerAdapter.ProcessEvent: unknown event', JSON.stringify(event));
     }
+
     await this.bot.sendResponse(userMessage);
   }
 
@@ -93,8 +104,6 @@ class MessengerAdapter extends WebAdapter {
       },
     };
     console.log('MessengerAdapter.sendText: body', body);
-    const uri = 'https://graph.facebook.com/v2.6/me/messages';
-    const qs = { access_token: process.env.FB_PAGE_ACCESS_TOKEN };
     await this.sendResponse({ uri, qs, body });
   }
 
@@ -104,24 +113,41 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise}
    */
   async sendPostback(botMessage) {
-    console.log('MessengerAdapter.sendText', botMessage);
+    console.log('MessengerAdapter.sendPostback', botMessage);
     const body = {
       recipient: {
         id: botMessage.userId,
       },
-      postback:{
+      postback: {
         title: 'cta',
         payload: 'payload',
         referral: {
           ref: 'user referral param',
           source: 'shortlink',
           type: 'OPEN_THREAD',
-        }
-      }
+        },
+      },
     };
-    console.log('MessengerAdapter.sendText: body', body);
-    const uri = 'https://graph.facebook.com/v2.6/me/messages';
-    const qs = { access_token: process.env.FB_PAGE_ACCESS_TOKEN };
+    console.log('MessengerAdapter.sendPostback: body', body);
+    await this.sendResponse({ uri, qs, body });
+  }
+
+  async sendQuickReplies(botMessage) {
+    console.log('MessengerAdapter.sendQuickReplies', botMessage);
+    const body = {
+      message: {
+        text: 'quick reply!',
+        quick_replies: [
+          {
+            content_type: 'text',
+            title: 'Search',
+            payload: '<POSTBACK_PAYLOAD>',
+            image_url: 'http://example.com/img/red.png',
+          },
+        ],
+      },
+    };
+    console.log('MessengerAdapter.sendQuickReplies: body', body);
     await this.sendResponse({ uri, qs, body });
   }
 }
