@@ -15,7 +15,8 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.execute: dialogEntities', dialogEntities);
     for (const messageEntity of messageEntities) {
       console.log('PromptDialog.execute: messageEntity', messageEntity);
-      if (this.parameters.entities[messageEntity.dim] !== null) {
+      // if the message entity is of interest for this dialog
+      if (this.parameters.entities[messageEntity.dim] !== undefined) {
         // we want to keep the order to ease the testability
         // eslint-disable-next-line no-await-in-loop
         await this.confirm(id, responses, messageEntity);
