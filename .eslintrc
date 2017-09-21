@@ -3,7 +3,11 @@
     "node": true,
     "mocha": true
   },
-  "plugins": ["node", "mocha", "babel"],
+  "plugins": [
+    "node",
+    "mocha",
+    "babel"
+  ],
   "extends": ["eslint:recommended", "airbnb"],
   "parserOptions": { "ecmaVersion": 8 },
   "parser": "babel-eslint",

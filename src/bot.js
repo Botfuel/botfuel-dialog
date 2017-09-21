@@ -45,12 +45,12 @@ class Bot {
   /**
    * Responds.
    */
-  sendResponse(userMessage) {
+  async endResponse(userMessage) {
     console.log('Bot.sendResponse', userMessage);
     const type = userMessage.type;
     switch (type) {
       case Messages.TYPE_ACTIONS: // @TODO handle this
-      case Messages.TYPE_POSTBACK: // @TODO handle this
+      case Messages.TYPE_POSTBACK:
         return this.sendResponseWhenPostback(userMessage);
       case Messages.TYPE_TEXT:
       default:
@@ -58,13 +58,14 @@ class Bot {
     }
   }
 
-  sendResponseWhenPostback(userMessage) {
+  async sendResponseWhenPostback(userMessage) {
+    const userId = userMessage.user;
     const dialogLabel = userMessage.payload.value.dialog.label;
     const dialogParameters = userMessage.payload.value.dialog.parameters;
     const entities = userMessage.payload.value.entities;
     // TODO: instantiate the dialog
     const dialog = null;
-    return await this.executeDialogs(userId, [dialog], entities);
+    return this.executeDialogs(userId, [dialog], entities);
   }
 
   sendResponseWhenText(userMessage) {
@@ -88,11 +89,6 @@ class Bot {
       .catch((err) => {
         console.log('Nlu.computation rejected', err);
       });
-  }
-
-  sendResponseWhenPostback(userMessage) {
-    console.log('Bot.sendResponseWhenPostback', userMessage);
-    // @TODO handle this
   }
 
   sendResponseWhenActions(userMessage) {

@@ -1,6 +1,6 @@
 const Fs = require('fs');
-const Messages = require('../messages');
 const _ = require('underscore');
+const Messages = require('../messages');
 
 _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
 

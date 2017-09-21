@@ -17,6 +17,8 @@ class PromptDialog extends Dialog {
     for (const messageEntity of messageEntities) {
       console.log('PromptDialog.execute: messageEntity', messageEntity);
       if (this.parameters.entities[messageEntity.dim] !== null) {
+        // we want to keep the order to ease the testability
+        // eslint-disable-next-line no-await-in-loop
         await this.confirm(id, responses, messageEntity);
         dialogEntities[messageEntity.dim] = messageEntity;
       }
@@ -28,6 +30,8 @@ class PromptDialog extends Dialog {
       console.log('PromptDialog.execute: entityKey', entityKey);
       console.log('PromptDialog.execute: entityKey', dialogEntities[entityKey]);
       if (dialogEntities[entityKey] === undefined) {
+        // we want to keep the order to ease the testability
+        // eslint-disable-next-line no-await-in-loop
         await this.ask(id, responses, entityKey);
         extractionsDone = false;
       }

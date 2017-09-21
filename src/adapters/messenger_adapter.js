@@ -136,13 +136,12 @@ class MessengerAdapter extends WebAdapter {
     console.log('MessengerAdapter.sendQuickReplies', botMessage);
     const body = {
       message: {
-        text: 'quick reply!',
+        text: 'quick reply',
         quick_replies: [
           {
             content_type: 'text',
-            title: 'Search',
-            payload: '<POSTBACK_PAYLOAD>',
-            image_url: 'http://example.com/img/red.png',
+            title: 'quick reply',
+            payload: 'payload',
           },
         ],
       },

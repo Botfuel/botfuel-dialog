@@ -1,67 +1,30 @@
 class Messages {
   static botText(bot, user, value, options) {
     console.log('Messages.botText', bot, user, value, options);
-    return {
-      type: Messages.TYPE_TEXT,
-      sender: Messages.SENDER_BOT,
-      user,
-      bot,
-      payload: {
-        value,
-        options,
-      },
-    };
+    return Messages.create(Messages.TYPE_TEXT, Messages.SENDER_BOT, bot, user, value, options);
   }
 
   static botActions(bot, user, value, options) {
     console.log('Messages.botActions', bot, user, value, options);
-    return {
-      type: Messages.TYPE_ACTIONS,
-      sender: Messages.SENDER_BOT,
-      user,
-      bot,
-      payload: {
-        value,
-        options,
-      },
-    };
-  }
-
-  static botTable(bot, user, value, options) {
-    console.log('Messages.botTable', bot, user, value, options);
-    return {
-      type: Messages.TYPE_TABLE,
-      sender: Messages.SENDER_BOT,
-      user,
-      bot,
-      payload: {
-        value,
-        options,
-      },
-    };
+    return Messages.create(Messages.TYPE_ACTIONS, Messages.SENDER_BOT, bot, user, value, options);
   }
 
   static userText(bot, user, value, options) {
     console.log('Messages.userText', bot, user, value, options);
-    return {
-      type: Messages.TYPE_TEXT,
-      sender: Messages.SENDER_USER,
-      user,
-      bot,
-      payload: {
-        value,
-        options,
-      },
-    };
+    return Messages.create(Messages.TYPE_TEXT, Messages.SENDER_USER, bot, user, value, options);
   }
 
-  static userPostback(bot, user, value, options) {
-    console.log('Messages.userPostback', bot, user, value, options);
+  static userPostback(bot, user, value) {
+    console.log('Messages.userPostback', bot, user, value);
+    return Messages.create(Messages.TYPE_POSTBACK, Messages.SENDER_USER, bot, user, value);
+  }
+
+  static create(type, sender, bot, user, value, options) {
     return {
-      type: Messages.TYPE_POSTBACK,
-      sender: Messages.SENDER_USER,
-      user,
+      type,
+      sender,
       bot,
+      user,
       payload: {
         value,
         options,
