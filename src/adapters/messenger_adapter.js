@@ -73,10 +73,12 @@ class MessengerAdapter extends WebAdapter {
     let userMessage = null;
     if (event.message) {
       const message = event.message;
-      const value = { text: message.text };
+      const value = message.text;
+      /*
       if (message.quick_replies) {
         value.quick_reply_payload = message.quick_replies.payload;
       }
+      */
       userMessage = Messages.userText(botId, userId, value);
     } else if (event.postback) {
       const postback = event.postback;

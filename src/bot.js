@@ -65,7 +65,7 @@ class Bot {
     const entities = userMessage.payload.value.entities;
     // TODO: instantiate the dialog
     const dialog = null;
-    return this.executeDialogs(userId, [dialog], entities);
+    return this.dm.executeDialogs(userId, [dialog], entities);
   }
 
   sendResponseWhenText(userMessage) {
