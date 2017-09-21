@@ -56,14 +56,10 @@ class Brain {
    * @param {string} key - last conversation key
    * @returns {Promise}
    */
-  conversationGet(userId, key) {
+  async conversationGet(userId, key) {
     console.log('Brain.conversationGet', userId, key);
-    return new Promise((resolve, reject) => {
-      this
-        .getLastConversation(userId)
-        .then(conversation => resolve(conversation[key]))
-        .catch(reject);
-    });
+    const conversation = await this.getLastConversation(userId);
+    return conversation[key];
   }
 }
 

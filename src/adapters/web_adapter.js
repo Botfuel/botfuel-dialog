@@ -35,10 +35,9 @@ class WebAdapter extends Adapter {
   async send(botMessages) {
     console.log('WebAdapter.send', botMessages);
     const promises = [];
-    botMessages.forEach((botMessage) => {
+    for (const botMessage of botMessages) {
       // TODO: add switch for message type
       // TODO: how do we guarantee the order
-
       promises.push(this.sendText(botMessage));
     });
     await Promise.all(promises);
@@ -52,16 +51,14 @@ class WebAdapter extends Adapter {
   async sendResponse(requestOptions) {
     console.log('WebAdapter.sendResponse', requestOptions);
     const options = Object.assign({ method: 'POST', json: true }, requestOptions);
-    rp(options)
-      .then((response) => {
-        if (response.statusCode === 200) {
-          console.log('WebAdapter.sendText: OK');
-        }
-      })
-      .catch((error) => {
-        console.error('WebAdapter.sendText: KO');
-        console.error(error);
-      });
+    try {
+      const response = await rp(options);
+      if (response.statusCode === 200) {
+        console.log('WebAdapter.sendText: OK');
+      }
+    } catch(error) {
+      console.error('WebAdapter.sendText: KO', error);
+    }
   }
 }
 

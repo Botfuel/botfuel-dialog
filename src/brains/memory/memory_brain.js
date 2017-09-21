@@ -19,19 +19,18 @@ class MemoryBrain extends Brain {
    * Clean the brain
    * @returns {Promise}
    */
-  clean() {
+  async clean() {
     console.log('MemoryBrain.clean');
     this.users = {};
-    return Promise.resolve();
-  }
+   }
 
   /**
    * Check if brain has user for a given userId
    * @param {string} userId - user id
    */
-  hasUser(userId) {
+  async hasUser(userId) {
     console.log('MemoryBrain.hasUser', userId);
-    return Promise.resolve(this.users[userId] !== undefined);
+    return this.users[userId] !== undefined;
   }
 
   /**
@@ -39,23 +38,20 @@ class MemoryBrain extends Brain {
    * @param {string} userId - user id
    * @returns {Promise}
    */
-  addUser(userId) {
+  async addUser(userId) {
     console.log('MemoryBrain.addUser', userId);
-    return new Promise((resolve, reject) => {
-      if (!this.users[userId]) {
-        const newUser = {
-          botId: this.botId,
-          userId,
-          conversations: [],
-          dialogs: [],
-          createdAt: Date.now(),
-        };
-        this.users[userId] = newUser;
-        resolve(newUser);
-      } else {
-        reject(new Error('An user with this id for this bot already exists'));
-      }
-    });
+    if (await this.hasUser(userId)) {
+      throw new Error('An user with this id for this bot already exists');
+    }
+    const newUser = {
+      botId: this.botId,
+      userId,
+      conversations: [],
+      dialogs: [],
+      createdAt: Date.now(),
+    };
+    this.users[userId] = newUser;
+    return newUser;
   }
 
   /**
@@ -63,15 +59,12 @@ class MemoryBrain extends Brain {
    * @param {string} userId - user id
    * @returns {Promise}
    */
-  getUser(userId) {
+  async getUser(userId) {
     console.log('MemoryBrain.getUser', userId);
-    return new Promise((resolve, reject) => {
-      if (this.users[userId]) {
-        resolve(this.users[userId]);
-      } else {
-        reject(new Error('User not exists'));
-      }
-    });
+    if (!await this.hasUser(userId)) {
+      throw new Error('User not exists');
+    }
+    return this.users[userId];
   }
 
   /**
@@ -81,17 +74,11 @@ class MemoryBrain extends Brain {
    * @param {*} value - key value
    * @returns {Promise}
    */
-  userSet(userId, key, value) {
+  async userSet(userId, key, value) {
     console.log('MemoryBrain.userSet', userId, key, value);
-    return new Promise((resolve, reject) => {
-      this
-        .getUser(userId)
-        .then((user) => {
-          user[key] = value;
-          resolve(user);
-        })
-        .catch(reject);
-    });
+    const user = await this.getUser(userId);
+    user[key] = value;
+    return user;
   }
 
   /**
@@ -100,14 +87,10 @@ class MemoryBrain extends Brain {
    * @param {string} key - user key
    * @returns {Promise}
    */
-  userGet(userId, key) {
+  async userGet(userId, key) {
     console.log('MemoryBrain.userGet', userId, key);
-    return new Promise((resolve, reject) => {
-      this
-        .getUser(userId)
-        .then(user => resolve(user[key]))
-        .catch(reject);
-    });
+    const user = await this.getUser(userId);
+    return user[key];
   }
 
   /**
@@ -117,26 +100,20 @@ class MemoryBrain extends Brain {
    * @param {Object} value - Object value
    * @returns {Promise}
    */
-  userPush(userId, key, value) {
+  async userPush(userId, key, value) {
     console.log('MemoryBrain.userPush', userId, key, value);
-    return new Promise((resolve, reject) => {
-      this
-        .getUser(userId)
-        .then((user) => {
-          if (user[key]) {
-            if (_.isArray(user[key])) {
-              user[key].push(value);
-              resolve(user);
-            } else {
-              reject(new Error('User key is not an array'));
-            }
-          } else {
-            user[key] = [value];
-            resolve(user);
-          }
-        })
-        .catch(reject);
-    });
+    const user = await this.getUser(userId);
+    if (user[key]) {
+      if (_.isArray(user[key])) {
+        user[key].push(value);
+        return user;
+      } else {
+        throw new Error('User key is not an array');
+      }
+    } else {
+      user[key] = [value];
+      return user;
+    }
   }
 
   /**
@@ -145,19 +122,16 @@ class MemoryBrain extends Brain {
    * @param {string} key - user array key
    * @returns {Promise}
    */
-  userShift(userId, key) {
-    return new Promise((resolve, reject) => {
-      this.getUser(userId)
-        .then((user) => {
-          if (user[key] && _.isArray(user[key])) {
-            resolve(user[key].shift());
-          } else {
-            reject(new Error('User key is not an array'));
-          }
-        })
-        .catch(reject);
-    });
+  async userShift(userId, key) {
+    console.log('MemoryBrain.userShift', userId, key);
+    const user = await this.getUser(userId);
+    if (user[key] && _.isArray(user[key])) {
+      return user[key].shift();
+    } else {
+      throw new Error('User key is not an array');
+    }
   }
+
 
   /**
    * Pop value from user key array (last element)
@@ -165,18 +139,14 @@ class MemoryBrain extends Brain {
    * @param {string} key - user array key
    * @returns {Promise}
    */
-  userPop(userId, key) {
-    return new Promise((resolve, reject) => {
-      this.getUser(userId)
-        .then((user) => {
-          if (user[key] && _.isArray(user[key])) {
-            resolve(user[key].pop());
-          } else {
-            reject(new Error('User key is not an array'));
-          }
-        })
-        .catch(reject);
-    });
+  async userPop(userId, key) {
+    console.log('MemoryBrain.userPop', userId, key);
+    const user = await this.getUser(userId);
+    if (user[key] && _.isArray(user[key])) {
+      return user[key].pop();
+    } else {
+      throw new Error('User key is not an array');
+    }
   }
 
   /**
@@ -184,15 +154,11 @@ class MemoryBrain extends Brain {
    * @param {string} userId - user id
    * @returns {Promise}
    */
-  addConversation(userId) {
+  async addConversation(userId) {
     console.log('MemoryBrain.addConversation', userId);
-    return new Promise((resolve, reject) => {
-      const conversation = { createdAt: Date.now() };
-      this
-        .userPush(userId, 'conversations', conversation)
-        .then(() => resolve(conversation))
-        .catch(err => reject(err));
-    });
+    const conversation = { createdAt: Date.now() };
+    await this.userPush(userId, 'conversations', conversation)
+    return conversation;
   }
 
   /**
@@ -200,14 +166,10 @@ class MemoryBrain extends Brain {
    * @param {string} userId - user id
    * @returns {Promise}
    */
-  getLastConversation(userId) {
+  async getLastConversation(userId) {
     console.log('MemoryBrain.getLastConversation', userId);
-    return new Promise((resolve, reject) => {
-      this
-        .getUser(userId)
-        .then(user => resolve(_.last(user.conversations)))
-        .catch(reject);
-    });
+    const user = await this.getUser(userId);
+    return _.last(user.conversations);
   }
 
   /**
@@ -217,17 +179,11 @@ class MemoryBrain extends Brain {
    * @param {*} value - key value
    * @returns {Promise}
    */
-  conversationSet(userId, key, value) {
+  async conversationSet(userId, key, value) {
     console.log('MemoryBrain.conversationSet', userId, key, value);
-    return new Promise((resolve, reject) => {
-      this
-        .getLastConversation(userId)
-        .then((conversation) => {
-          conversation[key] = value;
-          resolve(conversation);
-        })
-        .catch(reject);
-    });
+    const conversation = await this.getLastConversation(userId);
+    conversation[key] = value;
+    return conversation;
   }
 }
 

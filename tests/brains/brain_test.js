@@ -30,19 +30,13 @@ const brainTest = (brainLabel) => {
     }
   });
 
-  afterEach(function (done) {
-    brain
-      .clean()
-      .then(() => done());
+  afterEach(async function () {
+    await brain.clean();
   });
 
-  after('Drop database if MongoBrain', function (done) {
+  after('Drop database if MongoBrain', async function () {
     if (brainLabel === MONGO_BRAIN_LABEL) {
-      db
-        .dropDatabase()
-        .then(() => done());
-    } else {
-      done();
+      await db.dropDatabase()
     }
   });
 

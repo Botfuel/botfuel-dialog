@@ -46,40 +46,22 @@ class Nlu {
    * @param {string} sentence the sentence
    * @return {Promise} a promise with entities and intents
    */
-  compute(sentence) {
+  async compute(sentence) {
     console.log('Nlu.compute', sentence);
-    return this
-      .initClassifierIfNecessary()
-      .then(() => {
-        console.log('Nlu.classifier: initialized');
-        return this
-          .entityExtraction
-          .compute(sentence)
-          .then((entities) => {
-            console.log('Nlu.entities: extracted', entities);
-            return this
-              .featureExtraction
-              .compute(sentence, entities)
-              .then((features) => {
-                // in the case of QnA:
-                // - the classifier returns a QnA intent
-                // - the entityExtraction extracts the QnA id
-                const intents = this
-                  .classifier
-                  .getClassifications(features);
-                console.log('Nlu.classification: intents', intents);
-                return Promise.resolve({ entities, intents });
-              });
-          })
-          .catch((err) => {
-            console.log('Nlu.entities: extraction failed', err);
-            return Promise.reject(err);
-          });
-      })
-      .catch((err) => {
-        console.log('Nlu.classifier: initialization rejected', err);
-        return Promise.reject(err);
-      });
+    try {
+      await this.initClassifierIfNecessary();
+      const entities = await this.entityExtraction.compute(sentence);
+      const features = await this.featureExtraction.compute(sentence, entities)
+      // in the case of QnA:
+      // - the classifier returns a QnA intent
+      // - the entityExtraction extracts the QnA id
+      const intents = await this.classifier.getClassifications(features);
+      console.log('Nlu.compute: intents', intents);
+      return { entities, intents };
+    } catch(err) {
+      console.error('Nlu.compute : initialization rejected', err);
+      throw err;
+    }
   }
 }
 

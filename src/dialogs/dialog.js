@@ -30,16 +30,16 @@ class Dialog {
     console.log('Dialog.textMessage', userId, label, parameters);
     const templateName = `${this.templatePath}/${label}.${this.config.locale}.txt`;
     console.log('Dialog.textMessage: templateName', templateName);
-    Fs
+    const lines = Fs
       .readFileSync(templateName, 'utf8')
       .toString()
-      .split('\n')
-      .forEach((line) => {
-        const text = _.template(line)(parameters);
-        if (text !== '') {
-          this.pushMessage(responses, Messages.botText(this.config.id, userId, text));
-        }
-      });
+      .split('\n');
+    for (const line of lines) {
+      const text = _.template(line)(parameters);
+      if (text !== '') {
+        this.pushMessage(responses, Messages.botText(this.config.id, userId, text));
+      }
+    }
   }
 
   pushMessage(responses, message) {

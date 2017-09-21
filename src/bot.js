@@ -68,22 +68,21 @@ class Bot {
     return this.executeDialogs(userId, [dialog], entities);
   }
 
-  sendResponseWhenText(userMessage) {
+  async sendResponseWhenText(userMessage) {
     console.log('Bot.sendResponseWhenText', userMessage);
-    const userId = userMessage.user;
-    const sentence = userMessage.payload.value;
-    return this
-      .nlu
-      .compute(sentence)
-      .then(({ entities, intents }) => this
-            .dm
-            .execute(userId, intents, entities)
-            .then(botMessages => this.adapter.send(botMessages))
-            .catch(err => console.log('Dm.execution rejected', err)))
-      .catch(err => console.log('Nlu.computation rejected', err));
+    try {
+      const userId = userMessage.user;
+      const sentence = userMessage.payload.value;
+      const { entities, intents } = await this.nlu.compute(sentence);
+      const botMessages = await this.dm.execute(userId, intents, entities)
+      await this.adapter.send(botMessages);
+    } catch(err) {
+      console.error('Bot.sendResponseWhenText', err);
+      throw err;
+    }
   }
 
-  sendResponseWhenActions(userMessage) {
+  async sendResponseWhenActions(userMessage) {
     console.log('Bot.sendResponseWhenActions', userMessage);
     // @TODO handle this
   }
