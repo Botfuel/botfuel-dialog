@@ -1,5 +1,5 @@
-const Adapter = require('./adapter');
 const Messages = require('../messages');
+const Adapter = require('./adapter');
 
 /**
  * Test Adapter.
@@ -18,6 +18,7 @@ class TestAdapter extends Adapter {
     for (const userMsg of userMsgs) {
       const userMessage = Messages.userText(this.config.id, this.userId, userMsg.payload);
       this.log.push(userMessage);
+      // eslint-disable-next-line no-await-in-loop
       await this.bot.sendResponse(userMessage);
     }
   }

@@ -28,6 +28,8 @@ class EntityExtraction {
     let entities = [];
     for (const file of this.files) {
       const Extractor = require(file);
+      // we want to keep the order to ease the testability
+      // eslint-disable-next-line no-await-in-loop
       const extractorEntities = await new Extractor().compute(sentence);
       console.log('EntityExtraction.compute: extractorEntities', file, extractorEntities);
       entities = entities.concat(extractorEntities);

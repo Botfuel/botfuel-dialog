@@ -109,15 +109,15 @@ class MessengerAdapter extends WebAdapter {
       recipient: {
         id: botMessage.userId,
       },
-      postback:{
+      postback: {
         title: 'cta',
         payload: 'payload',
         referral: {
           ref: 'user referral param',
           source: 'shortlink',
           type: 'OPEN_THREAD',
-        }
-      }
+        },
+      },
     };
     console.log('MessengerAdapter.sendText: body', body);
     const uri = 'https://graph.facebook.com/v2.6/me/messages';

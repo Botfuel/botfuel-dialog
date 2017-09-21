@@ -29,11 +29,10 @@ class DialogManager {
   }
 
   getPath(label) {
-    if (this.isUser(label)) {
-      return this.getUserPath(label);
-    } else {
+    if (!this.isUser(label)) {
       return `./dialogs/${label}`;
     }
+    return this.getUserPath(label);
   }
 
   /**
@@ -61,7 +60,7 @@ class DialogManager {
         dialogs.push({ label: 'default_dialog' });
       }
     }
-    return await this.executeDialogs(userId, dialogs, entities);
+    return this.executeDialogs(userId, dialogs, entities);
   }
 
   /**
@@ -77,10 +76,12 @@ class DialogManager {
     while (done && dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
       console.log('DialogManager.executeDialogs: dialog', dialog);
+      // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
       const path = this.getPath(dialog.label);
       const DialogConstructor = require(path);
       const dialogObject = new DialogConstructor(this.config, this.brain, dialog.parameters);
+      // eslint-disable-next-line no-await-in-loop
       done = await dialogObject.execute(userId, responses, entities);
       console.log('DialogManager.executeDialogs: done', done);
       if (done) {

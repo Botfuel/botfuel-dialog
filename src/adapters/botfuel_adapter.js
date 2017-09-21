@@ -43,7 +43,7 @@ class BotfuelAdapter extends WebAdapter {
       body: {
         type: Messages.TYPE_TEXT,
         text: botMessage.payload.value,
-      }
+      },
     });
   }
 }
