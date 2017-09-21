@@ -50,7 +50,7 @@ class Bot {
     const type = userMessage.type;
     switch (type) {
       case Messages.TYPE_ACTIONS: // @TODO handle this
-      case Messages.TYPE_POSTBACK: // @TODO handle this
+      case Messages.TYPE_POSTBACK:
         return this.sendResponseWhenPostback(userMessage);
       case Messages.TYPE_TEXT:
       default:
