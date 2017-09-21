@@ -19,7 +19,6 @@ class DialogManager {
   }
 
   isUser(label) {
-    console.log('DialogManager.isUser', label);
     const path = this.getUserPath(label);
     return fs.existsSync(`${path}.js`);
   }
@@ -76,6 +75,8 @@ class DialogManager {
     while (done && dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
       console.log('DialogManager.executeDialogs: dialog', dialog);
+      const user = await this.brain.getUser(userId);
+      console.log('DialogManager.executeDialogs', user);
       // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
       const path = this.getPath(dialog.label);

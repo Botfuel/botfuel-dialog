@@ -15,7 +15,7 @@ class Brain {
    * @returns {Promise.<void>}
    */
   async initUserIfNecessary(id) {
-    console.log('Brain.initUserIfNecessary', id);
+    // console.log('Brain.initUserIfNecessary', id);
     const userExists = await this.hasUser(id);
     if (!userExists) {
       await this.addUser(id);
@@ -30,7 +30,7 @@ class Brain {
    */
   async initLastConversationIfNecessary(id) {
     const lastConversation = await this.getLastConversation(id);
-    console.log('Brain.initLastConversationIfNecessary', id, lastConversation);
+    // console.log('Brain.initLastConversationIfNecessary', id, lastConversation);
     if (!this.isLastConversationValid(lastConversation)) {
       console.log('Brain.initLastConversationIfNecessary: initialize new');
       await this.addConversation(id);
@@ -57,7 +57,7 @@ class Brain {
    * @returns {Promise}
    */
   async conversationGet(userId, key) {
-    console.log('Brain.conversationGet', userId, key);
+    // console.log('Brain.conversationGet', userId, key);
     const conversation = await this.getLastConversation(userId);
     return conversation[key];
   }

@@ -11,9 +11,8 @@ class PromptDialog extends Dialog {
    */
   async execute(id, responses, messageEntities) {
     console.log('PromptDialog.execute', id, messageEntities);
-    const dialogEntitiesData = await this.brain.conversationGet(id, this.parameters.namespace);
-    console.log('PromptDialog.execute: dialogEntitiesData', dialogEntitiesData);
-    const dialogEntities = dialogEntitiesData || {};
+    let dialogEntities = await this.brain.conversationGet(id, this.parameters.namespace) || {};
+    console.log('PromptDialog.execute: dialogEntities', dialogEntities);
     for (const messageEntity of messageEntities) {
       console.log('PromptDialog.execute: messageEntity', messageEntity);
       if (this.parameters.entities[messageEntity.dim] !== null) {
