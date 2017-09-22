@@ -30,7 +30,7 @@ class WebAdapter extends Adapter {
    * @param requestOptions
    * @returns {Promise}
    */
-  async sendResponse(requestOptions) {
+  async postResponse(requestOptions) {
     console.log('WebAdapter.sendResponse', requestOptions);
     const options = Object.assign({ method: 'POST', json: true }, requestOptions);
     try {

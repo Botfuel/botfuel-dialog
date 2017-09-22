@@ -10,13 +10,12 @@ class BotfuelAdapter extends WebAdapter {
    */
   async handleMessage(req, res) {
     console.log('BotfuelAdapter.handleMessage');
-    const body = req.body;
-    console.log('BotfuelAdapter.handleMessage: body', body);
-    const userId = body.user;
-    await this.bot.brain.initUserIfNecessary(userId);
-    // if text message
-    this.bot.sendResponse(Messages.userText(this.config.id, userId, body.payload.value));
     res.sendStatus(200);
+    const userMessage = req.body; // the message is already in the expected format
+    console.log('BotfuelAdapter.handleMessage: userMessage', userMessage);
+    const userId = userMessage.user;
+    await this.bot.brain.initUserIfNecessary(userId);
+    await this.bot.sendResponse(userMessage);
   }
 
   /**
@@ -29,16 +28,21 @@ class BotfuelAdapter extends WebAdapter {
   }
 
   /**
-   * Prepare webchat post request
    * @param {Object} botMessage
    * @returns {Promise}
    */
   async sendText(botMessage) {
     console.log('BotfuelAdapter.sendText', botMessage);
-    await this.sendResponse({
-      uri: this.getUrl(botMessage),
-      body: Messages.userText(botMessage.bot, botMessage.user, botMessage.payload.value),
-    });
+    await this.postResponse({ uri: this.getUrl(botMessage), body: botMessage });
+  }
+
+  /**
+   * @param {Object} botMessage
+   * @returns {Promise}
+   */
+  async sendActions(botMessage) {
+    console.log('BotfuelAdapter.sendActions', botMessage);
+    await this.postResponse({ uri: this.getUrl(botMessage), body: botMessage });
   }
 }
 

@@ -106,7 +106,7 @@ class MessengerAdapter extends WebAdapter {
       },
     };
     console.log('MessengerAdapter.sendText: body', body);
-    await this.sendResponse({ uri, qs, body });
+    await this.postResponse({ uri, qs, body });
   }
 
   /**
@@ -141,7 +141,7 @@ class MessengerAdapter extends WebAdapter {
     }
     // send response
     console.log('MessengerAdapter.sendActions: body', body);
-    await this.sendResponse({ uri, qs, body });
+    await this.postResponse({ uri, qs, body });
   }
 
   /**

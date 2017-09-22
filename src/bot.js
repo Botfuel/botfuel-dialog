@@ -47,42 +47,33 @@ class Bot {
    */
   async sendResponse(userMessage) {
     console.log('Bot.sendResponse', userMessage);
-    const type = userMessage.type;
-    switch (type) {
-      case Messages.TYPE_ACTIONS:
-        return this.sendResponseWhenActions(userMessage);
-      case Messages.TYPE_POSTBACK:
-        return this.sendResponseWhenPostback(userMessage);
-      case Messages.TYPE_TEXT:
-      default:
-        return this.sendResponseWhenText(userMessage);
-    }
-  }
-
-  async sendResponseWhenPostback(userMessage) {
-    const userId = userMessage.user;
-    const { dialog, entities } = userMessage.payload.value;
-    // TODO: instantiate the dialog
-    return this.dm.executeDialogs(userId, [dialog], entities);
-  }
-
-  async sendResponseWhenText(userMessage) {
-    console.log('Bot.sendResponseWhenText', userMessage);
     try {
-      const userId = userMessage.user;
-      const sentence = userMessage.payload.value;
-      const { entities, intents } = await this.nlu.compute(sentence);
-      const botMessages = await this.dm.execute(userId, intents, entities);
-      return this.adapter.send(botMessages);
+      return this.adapter.send(getResponses(userMessage));
     } catch (err) {
-      console.error('Bot.sendResponseWhenText', err);
+      console.error('Bot.sendResponse', err);
       throw err;
     }
   }
 
-  async sendResponseWhenActions(userMessage) {
-    console.log('Bot.sendResponseWhenActions', userMessage);
-    // @TODO handle this
+  async getResponses(userMessage) {
+    switch (userMessage.type) {
+      case Messages.TYPE_POSTBACK:
+        return this.getResponsesWhenPostback(userMessage);
+      case Messages.TYPE_TEXT:
+      default:
+        return this.getResponsesWhenText(userMessage);
+    }
+  }
+
+  async getResponsesWhenPostback(userMessage) {
+    const { dialog, entities } = userMessage.payload.value;
+    return this.dm.executeDialogs(userMessage.user, [dialog], entities);
+  }
+
+  async getResponsesWhenText(userMessage) {
+    console.log('Bot.sendResponseWhenText', userMessage);
+    const { entities, intents } = await this.nlu.compute(userMessage.payload.value);
+    return this.dm.execute(userMessage.user, intents, entities);
   }
 }
 
