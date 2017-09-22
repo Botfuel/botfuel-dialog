@@ -1,4 +1,3 @@
-const Messages = require('../messages');
 const WebAdapter = require('./web_adapter');
 
 class BotfuelAdapter extends WebAdapter {

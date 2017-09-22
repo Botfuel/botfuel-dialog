@@ -48,7 +48,7 @@ class Bot {
   async sendResponse(userMessage) {
     console.log('Bot.sendResponse', userMessage);
     try {
-      return this.adapter.send(getResponses(userMessage));
+      return this.adapter.send(await this.getResponses(userMessage));
     } catch (err) {
       console.error('Bot.sendResponse', err);
       throw err;
