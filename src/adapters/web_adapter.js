@@ -1,7 +1,6 @@
 const express = require('express');
 const rp = require('request-promise');
 const bodyParser = require('body-parser');
-const Messages = require('../messages');
 const Adapter = require('./adapter');
 
 class WebAdapter extends Adapter {
@@ -24,27 +23,6 @@ class WebAdapter extends Adapter {
    */
   createRoutes(app) {
     app.post('/webhook', (req, res) => this.handleMessage(req, res));
-  }
-
-  /**
-   * Send botMessages to web platform adapter
-   * @param botMessages
-   * @returns {Promise}
-   */
-  async send(botMessages) {
-    console.log('WebAdapter.send', botMessages);
-    for (const botMessage of botMessages) {
-      switch (botMessage.type) {
-        /* eslint-disable no-await-in-loop */
-        case Messages.TYPE_ACTIONS:
-          await this.sendActions(botMessage);
-          break;
-        case Messages.TYPE_TEXT:
-        default:
-          await this.sendText(botMessage);
-        /* eslint-enable no-await-in-loop */
-      }
-    }
   }
 
   /**

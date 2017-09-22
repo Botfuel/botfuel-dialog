@@ -10,14 +10,12 @@ class BotfuelAdapter extends WebAdapter {
    */
   async handleMessage(req, res) {
     console.log('BotfuelAdapter.handleMessage');
-    const payload = req.body;
-    console.log('BotfuelAdapter.handleMessage: payload', payload);
-    const userId = payload.appUser._id;
+    const body = req.body;
+    console.log('BotfuelAdapter.handleMessage: body', body);
+    const userId = body.user;
     await this.bot.brain.initUserIfNecessary(userId);
     // if text message
-    const message = payload.messages[0].text;
-    const userMessage = Messages.userText(this.config.id, userId, message);
-    this.bot.sendResponse(userMessage);
+    this.bot.sendResponse(Messages.userText(this.config.id, userId, body.payload.value));
     res.sendStatus(200);
   }
 
@@ -39,11 +37,7 @@ class BotfuelAdapter extends WebAdapter {
     console.log('BotfuelAdapter.sendText', botMessage);
     await this.sendResponse({
       uri: this.getUrl(botMessage),
-      // TODO: review this
-      body: {
-        type: Messages.TYPE_TEXT,
-        text: botMessage.payload.value,
-      },
+      body: Messages.userText(botMessage.bot, botMessage.user, botMessage.payload.value),
     });
   }
 }

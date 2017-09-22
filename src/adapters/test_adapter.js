@@ -1,4 +1,3 @@
-const Messages = require('../messages');
 const Adapter = require('./adapter');
 
 /**

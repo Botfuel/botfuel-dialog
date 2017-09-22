@@ -1,3 +1,5 @@
+const Messages = require('../messages');
+
 /**
  * Adapts messages.
  */
@@ -18,9 +20,24 @@ class Adapter {
     throw new Error('Not implemented!');
   }
 
+  /**
+   * @param botMessages
+   * @returns {Promise}
+   */
   async send(botMessages) {
     console.log('Adapter.send', botMessages);
-    throw new Error('Not implemented!');
+    for (const botMessage of botMessages) {
+      switch (botMessage.type) {
+        /* eslint-disable no-await-in-loop */
+        case Messages.TYPE_ACTIONS:
+          await this.sendActions(botMessage);
+          break;
+        case Messages.TYPE_TEXT:
+        default:
+          await this.sendText(botMessage);
+        /* eslint-enable no-await-in-loop */
+      }
+    }
   }
 }
 

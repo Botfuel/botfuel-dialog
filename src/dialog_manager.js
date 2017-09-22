@@ -71,12 +71,12 @@ class DialogManager {
   async executeDialogs(userId, dialogs, entities) {
     const responses = [];
     console.log('DialogManager.executeDialogs', userId, dialogs, entities);
+    const user = await this.brain.getUser(userId);
+    console.log('DialogManager.executeDialogs', user);
     let done = true;
     while (done && dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
       console.log('DialogManager.executeDialogs: dialog', dialog);
-      const user = await this.brain.getUser(userId);
-      console.log('DialogManager.executeDialogs', user);
       // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
       const path = this.getPath(dialog.label);
