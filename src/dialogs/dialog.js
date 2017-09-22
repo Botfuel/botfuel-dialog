@@ -44,6 +44,18 @@ class Dialog {
   }
 
   /**
+   * Says something.
+   * @param {string} userId the user id
+   * @param {Object[]} responses
+   * @param {string} label the template label
+   * @param {Object} parameters the template parameters
+   */
+  actionsMessage(userId, responses, actions, options) {
+    console.log('Dialog.actionsMessage', userId, actions, options);
+    this.pushMessage(responses, Messages.botActions(this.config.id, userId, actions, options));
+  }
+
+  /**
    * Push message to responses
    * @param {Object[]} responses
    * @param {Object} message

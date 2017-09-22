@@ -68,7 +68,7 @@ class DialogManager {
    * @param {Object[]} dialogs - the dialogs
    * @param {Object[]} entities - the entities
    */
-  async executeDialogs(userId, dialogs, entities) {
+  async executeDialogs(userId, dialogs, entities) { // Entities could be replace by parameters
     const responses = [];
     console.log('DialogManager.executeDialogs', userId, dialogs, entities);
     let done = true;

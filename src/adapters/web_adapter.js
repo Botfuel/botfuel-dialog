@@ -58,12 +58,12 @@ class WebAdapter extends Adapter {
     try {
       const response = await rp(options);
       if (response.statusCode !== 200) {
-        console.error('WebAdapter.sendText: KO', response);
+        console.error('WebAdapter.sendResponse: KO', response, response.statusCode);
       } else {
-        console.log('WebAdapter.sendText: OK');
+        console.log('WebAdapter.sendResponse: OK');
       }
     } catch (error) {
-      console.error('WebAdapter.sendText: KO', error);
+      console.error('WebAdapter.sendResponse: catch KO', error);
     }
   }
 }

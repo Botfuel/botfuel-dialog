@@ -82,7 +82,7 @@ class MessengerAdapter extends WebAdapter {
       userMessage = Messages.userText(botId, userId, value, options);
     } else if (event.postback) {
       const postback = event.postback;
-      userMessage = Messages.userPostback(botId, userId, postback);
+      userMessage = Messages.userPostback(botId, userId, JSON.parse(postback.payload));
     } else {
       console.log('MessengerAdapter.ProcessEvent: unknown event', JSON.stringify(event));
     }
@@ -118,13 +118,14 @@ class MessengerAdapter extends WebAdapter {
     console.log('MessengerAdapter.sendActions', botMessage);
     // define actions type
     let actionType = null;
-    for (const action in botMessage.payload.value) {
+    for (const action of botMessage.payload.value) {
       if (actionType === null) {
         actionType = action.type;
       } else if (actionType !== action.type) {
         throw new Error('Actions items don\'t have the same type');
       }
     }
+    console.log('MessengerAdapter.sendActions: actionType', actionType);
     // make body
     let body;
     switch (actionType) {
@@ -148,7 +149,7 @@ class MessengerAdapter extends WebAdapter {
    * @param {Object} botMessage
    * @returns {Object} the body
    */
-  async makeLinkButtons(botMessage) {
+  makeLinkButtons(botMessage) {
     console.log('MessengerAdapter.makeLinks', botMessage);
     // format link buttons for messenger
     const buttons = [];
@@ -182,15 +183,16 @@ class MessengerAdapter extends WebAdapter {
    * @param {Object} botMessage
    * @returns {Object} the body
    */
-  async makePostbackButtons(botMessage) {
+  makePostbackButtons(botMessage) {
     console.log('MessengerAdapter.sendPostback', botMessage);
     // format postback buttons for messenger
     const buttons = [];
     botMessage.payload.value.forEach((button) => {
+      console.log(button);
       buttons.push({
         type: 'postback',
         title: button.text,
-        payload: button.value,
+        payload: JSON.stringify(button.value),
       });
     });
     // return the body
@@ -216,7 +218,7 @@ class MessengerAdapter extends WebAdapter {
    * @param botMessage
    * @returns {Object} the body
    */
-  async makeQuickReplies(botMessage) {
+  makeQuickReplies(botMessage) {
     console.log('MessengerAdapter.sendQuickReplies', botMessage);
     // format quick replies for messenger
     const quickReplies = [];
@@ -233,7 +235,7 @@ class MessengerAdapter extends WebAdapter {
         id: botMessage.user,
       },
       message: {
-        text: 'quick replies',
+        text: '',
         quick_replies: quickReplies,
       },
     };
