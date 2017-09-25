@@ -29,8 +29,14 @@ class Adapter {
     for (const botMessage of botMessages) {
       switch (botMessage.type) {
         /* eslint-disable no-await-in-loop */
+        case Messages.TYPE_QUICK_REPLIES:
+          await this.sendQuickReplies(botMessage);
+          break;
         case Messages.TYPE_ACTIONS:
           await this.sendActions(botMessage);
+          break;
+        case Messages.TYPE_CARDS:
+          await this.sendCards(botMessage);
           break;
         case Messages.TYPE_TEXT:
         default:
