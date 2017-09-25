@@ -211,7 +211,7 @@ class MessengerAdapter extends WebAdapter {
     // format quick replies for messenger
     const format = quickReply => ({
       content_type: quickReply.type,
-      title: quickReply.text,
+      title: quickReply.text || quickReply.value,
       payload: JSON.stringify(quickReply.value),
     });
     // return the body
