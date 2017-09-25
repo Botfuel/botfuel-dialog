@@ -56,6 +56,36 @@ class Dialog {
   }
 
   /**
+   * Add cards message to responses
+   * @param {string} userId the user id
+   * @param {Object[]} responses
+   * @param {Object[]} cards
+   * @param {Object} options
+   */
+  cardsMessage(userId, responses, cards, options) {
+    console.log('Dialog.cardsMessage', userId, cards, options);
+    this.pushMessage(
+      responses,
+      Messages.botCards(this.config.id, userId, cards, options),
+    );
+  }
+
+  /**
+   * Add quick replies message to responses
+   * @param {string} userId the user id
+   * @param {Object[]} responses
+   * @param {Object[]} quickReplies
+   * @param {Object} options
+   */
+  quickRepliesMessage(userId, responses, quickReplies, options) {
+    console.log('Dialog.quickRepliesMessage', userId, quickReplies, options);
+    this.pushMessage(
+      responses,
+      Messages.botQuickReplies(this.config.id, userId, quickReplies, options),
+    );
+  }
+
+  /**
    * Push message to responses
    * @param {Object[]} responses
    * @param {Object} message
