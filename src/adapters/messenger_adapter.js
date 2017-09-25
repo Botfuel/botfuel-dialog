@@ -73,19 +73,8 @@ class MessengerAdapter extends WebAdapter {
     let userMessage = null;
     if (event.message) {
       const message = event.message;
-      const value = message.text;
-      // handle quick reply payload
-      if (message.quick_reply) {
-        const payload = JSON.parse(message.quick_reply.payload);
-        if (typeof payload === 'object') {
-          // if payload is an object, process message like an user postback message
-          userMessage = Messages.userPostback(botId, userId, payload);
-        } else {
-          userMessage = Messages.userText(botId, userId, payload);
-        }
-      } else {
-        userMessage = Messages.userText(botId, userId, value);
-      }
+      const value = message.quick_reply.payload || message.text; // QR payload or message text
+      userMessage = Messages.userText(botId, userId, value);
     } else if (event.postback) {
       const postback = event.postback;
       userMessage = Messages.userPostback(botId, userId, JSON.parse(postback.payload));
@@ -158,10 +147,10 @@ class MessengerAdapter extends WebAdapter {
   makeLinkButtons(botMessage) {
     console.log('MessengerAdapter.makeLinkButtons', botMessage);
     // format link buttons for messenger
-    const format = button => ({
+    const format = link => ({
       type: 'web_url',
-      title: button.text,
-      url: button.value,
+      title: link.text,
+      url: link.value,
     });
     // return the body
     return {
@@ -220,10 +209,10 @@ class MessengerAdapter extends WebAdapter {
   makeQuickReplies(botMessage) {
     console.log('MessengerAdapter.makeQuickReplies', botMessage);
     // format quick replies for messenger
-    const format = botQr => ({
-      content_type: botQr.type,
-      title: botQr.text,
-      payload: JSON.stringify(botQr.value),
+    const format = quickReply => ({
+      content_type: quickReply.type,
+      title: quickReply.text,
+      payload: JSON.stringify(quickReply.value),
     });
     // return the body
     return {
