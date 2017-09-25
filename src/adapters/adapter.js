@@ -32,6 +32,9 @@ class Adapter {
         case Messages.TYPE_ACTIONS:
           await this.sendActions(botMessage);
           break;
+        case Messages.TYPE_QUICKREPLIES:
+          await this.sendQuickreplies(botMessage);
+          break;
         case Messages.TYPE_TEXT:
         default:
           await this.sendText(botMessage);

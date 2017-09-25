@@ -21,7 +21,6 @@ class Dialog {
   }
 
   /**
-   * Says something.
    * @param {string} userId the user id
    * @param {Object[]} responses
    * @param {string} label the template label
@@ -44,7 +43,6 @@ class Dialog {
   }
 
   /**
-   * Says something.
    * @param {string} userId the user id
    * @param {Object[]} responses
    * @param {Object[]} actions
@@ -53,6 +51,17 @@ class Dialog {
   actionsMessage(userId, responses, actions, options) {
     console.log('Dialog.actionsMessage', userId, actions, options);
     this.pushMessage(responses, Messages.botActions(this.config.id, userId, actions, options));
+  }
+
+  /**
+   * @param {string} userId the user id
+   * @param {Object[]} responses
+   * @param {Object[]} actions
+   * @param {Object} options
+   */
+  quickrepliesMessage(userId, responses, texts, options) {
+    console.log('Dialog.quickrepliesMessage', userId, texts, options);
+    this.pushMessage(responses, Messages.botQuickreplies(this.config.id, userId, texts, options));
   }
 
   /**
