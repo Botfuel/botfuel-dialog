@@ -23,7 +23,6 @@ class TestAdapter extends Adapter {
 
   async send(botMessages) {
     console.log('TestAdapter.send', botMessages);
-    // TODO: adapt to msg type
     for (const botMessage of botMessages) {
       this.log.push(botMessage);
     }
