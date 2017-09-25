@@ -74,12 +74,18 @@ class MessengerAdapter extends WebAdapter {
     if (event.message) {
       const message = event.message;
       const value = message.text;
-      let options = null;
+      // handle quick reply payload
       if (message.quick_reply) {
-        // @TODO move this in value when handling payload as an object in Messages
-        options = message.quick_reply;
+        const payload = JSON.parse(message.quick_reply.payload);
+        if (typeof payload === 'object') {
+          // if payload is an object, process message like an user postback message
+          userMessage = Messages.userPostback(botId, userId, payload);
+        } else {
+          userMessage = Messages.userText(botId, userId, payload);
+        }
+      } else {
+        userMessage = Messages.userText(botId, userId, value);
       }
-      userMessage = Messages.userText(botId, userId, value, options);
     } else if (event.postback) {
       const postback = event.postback;
       userMessage = Messages.userPostback(botId, userId, JSON.parse(postback.payload));
@@ -150,15 +156,12 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Object} the body
    */
   makeLinkButtons(botMessage) {
-    console.log('MessengerAdapter.makeLinks', botMessage);
+    console.log('MessengerAdapter.makeLinkButtons', botMessage);
     // format link buttons for messenger
-    const buttons = [];
-    botMessage.payload.value.forEach((button) => {
-      buttons.push({
-        type: 'web_url',
-        title: button.text,
-        url: button.value,
-      });
+    const format = button => ({
+      type: 'web_url',
+      title: button.text,
+      url: button.value,
     });
     // return the body
     return {
@@ -170,8 +173,8 @@ class MessengerAdapter extends WebAdapter {
           type: 'template',
           payload: {
             template_type: 'button',
-            text: 'Links buttons',
-            buttons,
+            text: botMessage.payload.options.text || 'Links buttons',
+            buttons: botMessage.payload.value.map(format),
           },
         },
       },
@@ -184,16 +187,12 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Object} the body
    */
   makePostbackButtons(botMessage) {
-    console.log('MessengerAdapter.sendPostback', botMessage);
+    console.log('MessengerAdapter.makePostbackButtons', botMessage);
     // format postback buttons for messenger
-    const buttons = [];
-    botMessage.payload.value.forEach((button) => {
-      console.log(button);
-      buttons.push({
-        type: 'postback',
-        title: button.text,
-        payload: JSON.stringify(button.value),
-      });
+    const format = button => ({
+      type: 'postback',
+      title: button.text,
+      payload: JSON.stringify(button.value),
     });
     // return the body
     return {
@@ -205,8 +204,8 @@ class MessengerAdapter extends WebAdapter {
           type: 'template',
           payload: {
             template_type: 'button',
-            text: 'Postback buttons',
-            buttons,
+            text: botMessage.payload.options.text || 'Postback buttons',
+            buttons: botMessage.payload.value.map(format),
           },
         },
       },
@@ -219,15 +218,12 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Object} the body
    */
   makeQuickReplies(botMessage) {
-    console.log('MessengerAdapter.sendQuickReplies', botMessage);
+    console.log('MessengerAdapter.makeQuickReplies', botMessage);
     // format quick replies for messenger
-    const quickReplies = [];
-    botMessage.payload.value.forEach((quickReply) => {
-      quickReplies.push({
-        content_type: quickReply.type,
-        title: quickReply.text,
-        payload: quickReply.value,
-      });
+    const format = botQr => ({
+      content_type: botQr.type,
+      title: botQr.text,
+      payload: JSON.stringify(botQr.value),
     });
     // return the body
     return {
@@ -235,8 +231,8 @@ class MessengerAdapter extends WebAdapter {
         id: botMessage.user,
       },
       message: {
-        text: '',
-        quick_replies: quickReplies,
+        text: botMessage.payload.options.text || 'Quick replies',
+        quick_replies: botMessage.payload.value.map(format),
       },
     };
   }
