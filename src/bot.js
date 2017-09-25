@@ -56,6 +56,7 @@ class Bot {
   }
 
   async getResponses(userMessage) {
+    console.log('Bot.getResponses', userMessage);
     switch (userMessage.type) {
       case Messages.TYPE_POSTBACK:
         return this.getResponsesWhenPostback(userMessage);
@@ -66,12 +67,13 @@ class Bot {
   }
 
   async getResponsesWhenPostback(userMessage) {
+    console.log('Bot.getResponsesWhenPostback', userMessage);
     const { dialog, entities } = userMessage.payload.value;
     return this.dm.executeDialogs(userMessage.user, [dialog], entities);
   }
 
   async getResponsesWhenText(userMessage) {
-    console.log('Bot.sendResponseWhenText', userMessage);
+    console.log('Bot.getResponsesWhenText', userMessage);
     const { entities, intents } = await this.nlu.compute(userMessage.payload.value);
     return this.dm.execute(userMessage.user, intents, entities);
   }
