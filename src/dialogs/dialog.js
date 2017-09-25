@@ -37,7 +37,8 @@ class Dialog {
     for (const line of lines) {
       const text = _.template(line)(parameters);
       if (text !== '') {
-        this.pushMessage(responses, Messages.botText(this.config.id, userId, text));
+        const message = Messages.botText(this.config.id, userId, text);
+        this.pushMessage(responses, message);
       }
     }
   }
@@ -50,18 +51,33 @@ class Dialog {
    */
   actionsMessage(userId, responses, actions, options) {
     console.log('Dialog.actionsMessage', userId, actions, options);
-    this.pushMessage(responses, Messages.botActions(this.config.id, userId, actions, options));
+    const message = Messages.botActions(this.config.id, userId, actions, options);
+    this.pushMessage(responses, message);
   }
 
   /**
    * @param {string} userId the user id
    * @param {Object[]} responses
-   * @param {Object[]} actions
+   * @param {Object[]} quickreplies
    * @param {Object} options
    */
-  quickrepliesMessage(userId, responses, texts, options) {
-    console.log('Dialog.quickrepliesMessage', userId, texts, options);
-    this.pushMessage(responses, Messages.botQuickreplies(this.config.id, userId, texts, options));
+  quickrepliesMessage(userId, responses, quickreplies, options) {
+    console.log('Dialog.quickrepliesMessage', userId, quickreplies, options);
+    const message = Messages.botQuickreplies(this.config.id, userId, quickreplies, options);
+    this.pushMessage(responses, message);
+  }
+
+  /**
+   * Add cards message to responses
+   * @param {string} userId the user id
+   * @param {Object[]} responses
+   * @param {Object[]} cards
+   * @param {Object} options
+   */
+  cardsMessage(userId, responses, cards, options) {
+    console.log('Dialog.cardsMessage', userId, cards, options);
+    const message = Messages.botCards(this.config.id, userId, cards, options);
+    this.pushMessage(responses, message);
   }
 
   /**
