@@ -21,11 +21,10 @@ class Classifier {
     switch (this.locale) {
       case 'fr':
         return Natural.PorterStemmerFr;
-        break;
       case 'en':
-        default:
+      default:
         return Natural.PorterStemmerEn;
-    }   
+    }
   }
 
   load() {
