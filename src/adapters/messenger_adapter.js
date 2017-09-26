@@ -119,7 +119,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Prepare messenger template message
+   * Prepare messenger cards message
    * @param botMessage
    * @returns {Promise}
    */
@@ -129,10 +129,20 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Prepare text message body
-   * @constructor
+   * Prepare messenger image message
    * @param botMessage
-   * @returns Object
+   * @returns {Promise}
+   */
+  async sendImage(botMessage) {
+    console.log('MessengerAdapter.sendImage', botMessage);
+    await this.postResponse({ uri, qs, body: MessengerAdapter.Image(botMessage) });
+  }
+
+  /**
+   * Prepare text message body
+   * @param {Object} botMessage
+   * @returns {Object} the body
+   * @constructor
    */
   static Text(botMessage) {
     console.log('MessengerAdapter.Text', botMessage);
@@ -148,9 +158,9 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Prepare actions message body
+   * @param {Object} botMessage
+   * @returns {Object} the body
    * @constructor
-   * @param botMessage
-   * @returns Object
    */
   static Actions(botMessage) {
     console.log('MessengerAdapter.Actions', botMessage);
@@ -173,9 +183,9 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Prepare action button
+   * @param {Object} action
+   * @returns {Object} the button
    * @constructor
-   * @param action
-   * @returns {Object/null}
    */
   static ActionButton(action) {
     console.log('MessengerAdapter.ActionButton', action);
@@ -200,9 +210,9 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Prepare quick replies message body
-   * @constructor
-   * @param botMessage
+   * @param {Object} botMessage
    * @returns {Object} the body
+   * @constructor
    */
   static Quickreplies(botMessage) {
     console.log('MessengerAdapter.Quickreplies', botMessage);
@@ -225,10 +235,10 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Prepare template message body
-   * @constructor
+   * Prepare cards message body
    * @param {Object} botMessage
    * @returns {Object} the body
+   * @constructor
    */
   static Cards(botMessage) {
     console.log('MessengerAdapter.Cards', botMessage);
@@ -247,6 +257,30 @@ class MessengerAdapter extends WebAdapter {
           payload: {
             template_type: 'generic',
             elements: botMessage.payload.value.map(format),
+          },
+        },
+      },
+    };
+  }
+
+  /**
+   * Prepare image message body
+   * @param {Object} botMessage
+   * @returns {Object} the body
+   * @constructor
+   */
+  static Image(botMessage) {
+    console.log('MessengerAdapter.Image', botMessage);
+    // return the body
+    return {
+      recipient: {
+        id: botMessage.user,
+      },
+      message: {
+        attachment: {
+          type: 'image',
+          payload: {
+            url: botMessage.payload.value,
           },
         },
       },

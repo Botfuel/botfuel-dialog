@@ -38,6 +38,9 @@ class Adapter {
         case Messages.TYPE_CARDS:
           await this.sendCards(botMessage);
           break;
+        case Messages.TYPE_IMAGE:
+          await this.sendImage(botMessage);
+          break;
         case Messages.TYPE_TEXT:
         default:
           await this.sendText(botMessage);
