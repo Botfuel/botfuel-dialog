@@ -47,6 +47,18 @@ class Messages {
     );
   }
 
+  static botImage(bot, user, value, options) {
+    console.log('Messages.botImage', bot, user, value, options);
+    return Messages.create(
+      Messages.TYPE_IMAGE,
+      Messages.SENDER_BOT,
+      bot,
+      user,
+      value,
+      options,
+    );
+  }
+
   static userText(bot, user, value, options) {
     console.log('Messages.userText', bot, user, value, options);
     return Messages.create(
@@ -63,6 +75,17 @@ class Messages {
     console.log('Messages.userPostback', bot, user, value);
     return Messages.create(
       Messages.TYPE_POSTBACK,
+      Messages.SENDER_USER,
+      bot,
+      user,
+      value,
+    );
+  }
+
+  static userImage(bot, user, value) {
+    console.log('Messages.userImage', bot, user, value);
+    return Messages.create(
+      Messages.TYPE_IMAGE,
       Messages.SENDER_USER,
       bot,
       user,
@@ -96,6 +119,7 @@ Messages.TYPE_POSTBACK = 'postback';
 Messages.TYPE_QUICKREPLIES = 'quickreplies';
 Messages.TYPE_TABLE = 'table';
 Messages.TYPE_TEXT = 'text';
+Messages.TYPE_IMAGE = 'image';
 Messages.SENDER_BOT = 'bot';
 Messages.SENDER_USER = 'user';
 
