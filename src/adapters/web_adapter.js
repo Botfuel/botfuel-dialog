@@ -41,7 +41,7 @@ class WebAdapter extends Adapter {
         console.log('WebAdapter.sendResponse: OK');
       }
     } catch (error) {
-      console.error('WebAdapter.sendResponse: catch KO', error);
+      console.error('WebAdapter.sendResponse: catch KO', error.message || error.error || error);
     }
   }
 }
