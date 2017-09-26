@@ -49,7 +49,7 @@ class Dialog {
    * @param {Object[]} actions
    * @param {Object} options
    */
-  actionsMessage(userId, responses, actions, options) {
+  actionsMessage(userId, responses, actions, options = {}) {
     console.log('Dialog.actionsMessage', userId, actions, options);
     const message = Messages.botActions(this.config.id, userId, actions, options);
     this.pushMessage(responses, message);
@@ -61,7 +61,7 @@ class Dialog {
    * @param {Object[]} quickreplies
    * @param {Object} options
    */
-  quickrepliesMessage(userId, responses, quickreplies, options) {
+  quickrepliesMessage(userId, responses, quickreplies, options = {}) {
     console.log('Dialog.quickrepliesMessage', userId, quickreplies, options);
     const message = Messages.botQuickreplies(this.config.id, userId, quickreplies, options);
     this.pushMessage(responses, message);
@@ -74,7 +74,7 @@ class Dialog {
    * @param {Object[]} cards
    * @param {Object} options
    */
-  cardsMessage(userId, responses, cards, options) {
+  cardsMessage(userId, responses, cards, options = {}) {
     console.log('Dialog.cardsMessage', userId, cards, options);
     const message = Messages.botCards(this.config.id, userId, cards, options);
     this.pushMessage(responses, message);
