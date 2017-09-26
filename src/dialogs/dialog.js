@@ -81,6 +81,19 @@ class Dialog {
   }
 
   /**
+   * Add cards message to responses
+   * @param {string} userId the user id
+   * @param {Object[]} responses
+   * @param {Object[]} imageUrl
+   * @param {Object} options
+   */
+  imageMessage(userId, responses, imageUrl, options = {}) {
+    console.log('Dialog.imageMessage', userId, imageUrl, options);
+    const message = Messages.botImage(this.config.id, userId, imageUrl, options);
+    this.pushMessage(responses, message);
+  }
+
+  /**
    * Push message to responses
    * @param {Object[]} responses
    * @param {Object} message
