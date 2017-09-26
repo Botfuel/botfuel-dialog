@@ -92,16 +92,7 @@ class MessengerAdapter extends WebAdapter {
    */
   async sendText(botMessage) {
     console.log('MessengerAdapter.sendText', botMessage);
-    const body = {
-      recipient: {
-        id: botMessage.user,
-      },
-      message: {
-        text: botMessage.payload.value,
-      },
-    };
-    console.log('MessengerAdapter.sendText: body', body);
-    await this.postResponse({ uri, qs, body });
+    await this.postResponse({ uri, qs, body: MessengerAdapter.Text(botMessage) });
   }
 
   /**
@@ -111,48 +102,7 @@ class MessengerAdapter extends WebAdapter {
    */
   async sendActions(botMessage) {
     console.log('MessengerAdapter.sendActions', botMessage);
-    /*
-    // define actions type
-    let actionType = null;
-    for (const action of botMessage.payload.value) {
-      if (actionType === null) {
-        actionType = action.type;
-      } else if (actionType !== action.type) {
-        throw new Error('Actions items don\'t have the same type');
-      }
-    }
-    console.log('MessengerAdapter.sendActions: actionType', actionType);
-    // make body
-    let body;
-    switch (actionType) {
-      case 'link':
-        body = MessengerAdapter.Links(botMessage);
-        break;
-      case 'postback':
-        body = MessengerAdapter.PostbackButtons(botMessage);
-        break;
-      default:
-        body = null;
-    }
-    */
-    const body = {
-      recipient: {
-        id: botMessage.user,
-      },
-      message: {
-        attachment: {
-          type: 'template',
-          payload: {
-            template_type: 'button',
-            text: botMessage.payload.options.text || 'Links buttons',
-            buttons: botMessage.payload.value.map(MessengerAdapter.ActionButton),
-          },
-        },
-      },
-    };
-    // send response
-    console.log('MessengerAdapter.sendActions: body', body);
-    await this.postResponse({ uri, qs, body });
+    await this.postResponse({ uri, qs, body: MessengerAdapter.Actions(botMessage) });
   }
 
   /**
@@ -160,16 +110,12 @@ class MessengerAdapter extends WebAdapter {
    * @param {Object} botMessage
    * @returns {Promise}
    */
-  async sendQuickReplies(botMessage) {
-    console.log('MessengerAdapter.sendQuickReplies', botMessage);
+  async sendQuickreplies(botMessage) {
+    console.log('MessengerAdapter.sendQuickreplies', botMessage);
     if (!botMessage.payload.value.some(String)) {
       throw new Error('Only strings values are allowed for quick replies');
     }
-    // make body
-    const body = MessengerAdapter.QuickReplies(botMessage);
-    // send response
-    console.log('MessengerAdapter.sendQuickReplies: body', body);
-    await this.postResponse({ uri, qs, body });
+    await this.postResponse({ uri, qs, body: MessengerAdapter.Quickreplies(botMessage) });
   }
 
   /**
@@ -178,13 +124,63 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise}
    */
   async sendCards(botMessage) {
-    const body = MessengerAdapter.Cards(botMessage);
-    console.log('MessengerAdapter.sendActions: body', body);
-    await this.postResponse({ uri, qs, body });
+    console.log('MessengerAdapter.sendCards', botMessage);
+    await this.postResponse({ uri, qs, body: MessengerAdapter.Cards(botMessage) });
   }
 
+  /**
+   * Prepare text message body
+   * @constructor
+   * @param botMessage
+   * @returns Object
+   */
+  static Text(botMessage) {
+    console.log('MessengerAdapter.Text', botMessage);
+    return {
+      recipient: {
+        id: botMessage.user,
+      },
+      message: {
+        text: botMessage.payload.value,
+      },
+    };
+  }
+
+  /**
+   * Prepare actions message body
+   * @constructor
+   * @param botMessage
+   * @returns Object
+   */
+  static Actions(botMessage) {
+    console.log('MessengerAdapter.Actions', botMessage);
+    return {
+      recipient: {
+        id: botMessage.user,
+      },
+      message: {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: botMessage.payload.options.text || 'Actions',
+            buttons: botMessage.payload.value.map(MessengerAdapter.ActionButton),
+          },
+        },
+      },
+    };
+  }
+
+  /**
+   * Prepare action button
+   * @constructor
+   * @param action
+   * @returns {Object/null}
+   */
   static ActionButton(action) {
+    console.log('MessengerAdapter.ActionButton', action);
     let button = null;
+    // format button for messenger
     if (action.type === 'postback') {
       button = {
         type: 'postback',
@@ -193,26 +189,28 @@ class MessengerAdapter extends WebAdapter {
       };
     } else if (action.type === 'link') {
       button = {
-        type: 'link',
+        type: 'web_url',
         title: action.text,
         url: action.value,
       };
     }
+    // return the button
     return button;
   }
 
   /**
    * Prepare quick replies message body
+   * @constructor
    * @param botMessage
    * @returns {Object} the body
    */
-  static QuickReplies(botMessage) {
-    console.log('MessengerAdapter.makeQuickReplies', botMessage);
+  static Quickreplies(botMessage) {
+    console.log('MessengerAdapter.Quickreplies', botMessage);
     // format quick replies for messenger
     const format = quickReply => ({
-      content_type: quickReply.type,
-      title: quickReply.text ? quickReply.text : quickReply.value,
-      payload: JSON.stringify(quickReply.value),
+      content_type: 'text',
+      title: quickReply,
+      payload: quickReply,
     });
     // return the body
     return {
@@ -220,7 +218,7 @@ class MessengerAdapter extends WebAdapter {
         id: botMessage.user,
       },
       message: {
-        text: 'Quick replies',
+        text: botMessage.payload.options.text || 'Quick replies',
         quick_replies: botMessage.payload.value.map(format),
       },
     };
@@ -228,11 +226,16 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Prepare template message body
+   * @constructor
    * @param {Object} botMessage
    * @returns {Object} the body
    */
   static Cards(botMessage) {
-    console.log('MessengerAdapter.makeTemplate', botMessage);
+    console.log('MessengerAdapter.Cards', botMessage);
+    // format actions buttons for messenger
+    const format = element => (Object.assign(element, {
+      buttons: element.buttons.map(MessengerAdapter.ActionButton),
+    }));
     // return the body
     return {
       recipient: {
@@ -243,7 +246,7 @@ class MessengerAdapter extends WebAdapter {
           type: 'template',
           payload: {
             template_type: 'generic',
-            elements: botMessage.payload.value,
+            elements: botMessage.payload.value.map(format),
           },
         },
       },
