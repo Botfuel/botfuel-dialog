@@ -10,21 +10,26 @@ class Classifier {
    */
   constructor(config) {
     console.log('Classifier.constructor', config);
+    this.locale = config.locale;
     this.modelFilename = `${config.path}/models/model.json`;
     this.intentDirname = `${config.path}/src/data/intents`;
     this.classifier = null;
-    switch (config.locale) {
-      case 'fr':
-        Natural.PorterStemmerFr.attach();
-        break;
-      case 'en':
-      default:
-        Natural.PorterStemmerEn.attach();
-    }
+    this.getStemmer().attach();
   }
 
-  init() {
-    console.log('Classifier.init');
+  getStemmer() {
+    switch (this.locale) {
+      case 'fr':
+        return Natural.PorterStemmerFr;
+        break;
+      case 'en':
+        default:
+        return Natural.PorterStemmerEn;
+    }   
+  }
+
+  load() {
+    console.log('Classifier.load');
     return new Promise((resolve, reject) => {
       Natural
         .LogisticRegressionClassifier
@@ -40,7 +45,7 @@ class Classifier {
   async initIfNecessary() {
     console.log('Classifier.initIfNecessary');
     if (this.classifier == null) {
-      return this.init();
+      return this.load();
     }
     return this.classifier;
   }
@@ -63,7 +68,7 @@ class Classifier {
 
   async train() {
     console.log('Classifier.train');
-    this.classifier = await this.initIfNecessary();
+    this.classifier = new Natural.LogisticRegressionClassifier(this.getStemmer());
     Fs
       .readdirSync(this.intentDirname, 'utf8')
       .filter(fileName => fileName.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX)
