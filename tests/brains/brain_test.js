@@ -36,7 +36,7 @@ const brainTest = (brainLabel) => {
 
   after('Drop database if MongoBrain', async function () {
     if (brainLabel === MONGO_BRAIN_LABEL) {
-      await db.dropDatabase();
+      await db.drop();
     }
   });
 
