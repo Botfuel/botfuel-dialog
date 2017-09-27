@@ -1,27 +1,13 @@
-const mongoose = require('mongoose');
+const MongoClient = require('mongodb').MongoClient;
 
-// Initialize Mongoose
+// Initialize MongoDB
 const connect = (uri) => {
   const mongoUri = uri || process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';
-
-  mongoose.Promise = Promise;
-
-  mongoose.connect(mongoUri, { useMongoClient: true }, (err) => {
-    // Log if error
-    if (err) {
-      console.error('Could not connect to MongoDB!');
-      console.log(err);
-    }
-  });
+  return MongoClient.connect(mongoUri);
 };
 
-const isConnected = () => mongoose.connection.readyState === 1;
-
-const dropDatabase = () => {
-  if (isConnected()) {
-    return mongoose.connection.db.dropDatabase();
-  }
-  return Promise.resolve();
+const drop = (uri) => {
+  connect(uri).then(db => db.dropDatabase());
 };
 
-module.exports = { connect, isConnected, dropDatabase };
+module.exports = { connect, drop };

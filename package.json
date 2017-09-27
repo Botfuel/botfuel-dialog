@@ -22,6 +22,7 @@
     "fs-promise": "^1.0.0",
     "inquirer": "^3.2.3",
     "lodash": "^4.17.4",
+    "mongodb": "^2.2.31",
     "mongoose": "^4.11.10",
     "natural": "^0.5.4",
     "node-dir": "^0.1.17",
