@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Botfuel/bot-sdk2-sample
+	branch = master
+	commit = 45dd02fb463d11d1e0513d0eacd5b9c3ff7b1bcf
+	parent = d51decca0f4d1e23421ef8c0122690305d6c68c3
+	cmdver = 0.3.1

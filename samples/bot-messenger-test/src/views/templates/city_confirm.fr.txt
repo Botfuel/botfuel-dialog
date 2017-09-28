@@ -1,0 +1,1 @@
+Tu pars de : {{ entity.body }}.
