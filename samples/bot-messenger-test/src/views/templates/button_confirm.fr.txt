@@ -1,1 +1,0 @@
-Tu as cliqué sur le bouton {{ value }}.
