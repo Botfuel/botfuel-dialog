@@ -23,6 +23,11 @@ class Nlu {
     }
   }
 
+  async init() {
+    console.log('Nlu.init');
+    await this.classifier.init();
+  }
+
   /**
    * Classifies a sentence.
    * @param {string} sentence the sentence
