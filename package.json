@@ -10,7 +10,7 @@
   "scripts": {
     "prepublish": "npm run compile",
     "compile": "babel src --out-dir build; cp -r src/templates build/templates",
-    "test": "mocha --timeout 30000 tests/**/*.test.js",
+    "test": "MONGODB_URI=mongodb://localhost/sdk-brain-test mocha --timeout 30000 tests/**/*.test.js",
     "style": "eslint src; eslint tests"
   },
   "dependencies": {

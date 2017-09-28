@@ -1,6 +1,8 @@
 const _ = require('lodash');
-const Brain = require('../brain');
-const db = require('./db');
+const MongoClient = require('mongodb').MongoClient;
+const Brain = require('./brain');
+
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';
 
 /**
  * Class to wrap mongodb database with two models
@@ -9,21 +11,31 @@ class MongoBrain extends Brain {
   /**
    * Constructor
    * @param {string} botId - bot id
-   * @param {string} mongoUri - mongo uri
    */
-  constructor(botId, mongoUri = '') {
+  constructor(botId) {
     console.log('MongoBrain.constructor', botId);
     super(botId);
-    this.mongoUri = mongoUri;
     this.users = null;
   }
 
+  /**
+   * Connect to database if necessary
+   * @returns {Promise}
+   */
   async initIfNecessary() {
-    console.log('MongoBrain.initIfNecessary', this.users);
+    console.log('MongoBrain.initIfNecessary');
     if (this.users === null) {
-      const mongoDb = await db.connect(this.mongoUri);
-      this.users = mongoDb.collection('users');
+      this.db = await MongoClient.connect(mongoUri);
+      this.users = this.db.collection('users');
     }
+  }
+
+  /**
+   * Remove the connected database
+   * @returns {Promise}
+   */
+  async dropDatabase() {
+    await this.db.dropDatabase();
   }
 
   /**
@@ -32,7 +44,6 @@ class MongoBrain extends Brain {
    */
   async clean() {
     console.log('MongoBrain.clean');
-    await this.initIfNecessary();
     return this.users.deleteMany({ botId: this.botId });
   }
 
@@ -42,7 +53,6 @@ class MongoBrain extends Brain {
    */
   async hasUser(userId) {
     console.log('MongoBrain.hasUser', userId);
-    await this.initIfNecessary();
     const user = await this.users.findOne({ botId: this.botId, userId });
     return user !== null;
   }
@@ -54,7 +64,6 @@ class MongoBrain extends Brain {
    */
   async addUser(userId) {
     console.log('MongoBrain.addUser', userId);
-    await this.initIfNecessary();
     const result = await this.users.insertOne({
       botId: this.botId,
       userId,
@@ -72,7 +81,6 @@ class MongoBrain extends Brain {
    */
   async getUser(userId) {
     console.log('MongoBrain.getUser', userId);
-    await this.initIfNecessary();
     return await this.users.findOne({ botId: this.botId, userId });
   }
 
@@ -85,7 +93,6 @@ class MongoBrain extends Brain {
    */
   async userSet(userId, key, value) {
     console.log('MongoBrain.userSet', userId, key, value);
-    await this.initIfNecessary();
     const set = {};
     set[key] = value;
     const result = await this.users.findOneAndUpdate(
@@ -104,7 +111,6 @@ class MongoBrain extends Brain {
    */
   async userGet(userId, key) {
     console.log('MongoBrain.userGet', userId, key);
-    await this.initIfNecessary();
     const select = {};
     select[key] = 1;
     const user = await this.users.findOne({ botId: this.botId, userId }, select);
@@ -120,7 +126,6 @@ class MongoBrain extends Brain {
    */
   async userPush(userId, key, value) {
     console.log('MongoBrain.userPush', userId, key, value);
-    await this.initIfNecessary();
     const push = {};
     push[key] = value;
     const result = await this.users.findOneAndUpdate(
@@ -139,7 +144,6 @@ class MongoBrain extends Brain {
    */
   async userShift(userId, key) {
     console.log('MongoBrain.userShift', userId, key);
-    await this.initIfNecessary();
     const pop = {};
     pop[key] = -1;
     const result = await this.users.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop });
@@ -154,7 +158,6 @@ class MongoBrain extends Brain {
    */
   async userPop(userId, key) {
     console.log('MongoBrain.userPop', userId, key);
-    await this.initIfNecessary();
     const pop = {};
     pop[key] = 1;
     const result = await this.users.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop });
@@ -168,7 +171,6 @@ class MongoBrain extends Brain {
    */
   async addConversation(userId) {
     console.log('MongoBrain.addConversation', userId);
-    await this.initIfNecessary();
     const push = { conversations: { createdAt: Date.now() } };
     const result = await this.users.findOneAndUpdate(
       { botId: this.botId, userId },
@@ -185,7 +187,6 @@ class MongoBrain extends Brain {
    */
   async getLastConversation(userId) {
     console.log('MongoBrain.getLastConversation', userId);
-    await this.initIfNecessary();
     const result = await this.users.findOne({ botId: this.botId, userId }, { conversations: 1 });
     return _.last(result.conversations);
   }
@@ -199,7 +200,6 @@ class MongoBrain extends Brain {
    */
   async conversationSet(userId, key, value) {
     console.log('MongoBrain.conversationSet', userId, key, value);
-    await this.initIfNecessary();
     const lastConversation = await this.getLastConversation(userId);
     const set = {};
     set[`conversations.$.${key}`] = value;
