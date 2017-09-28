@@ -46,6 +46,7 @@ class Bot {
 
   async init() {
     await this.brain.init();
+    await this.nlu.init();
   }
 
   /**
