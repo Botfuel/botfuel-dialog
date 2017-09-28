@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const Brain = require('../brain');
+const Brain = require('./brain');
 
 /**
  * Class to wrap memory brains

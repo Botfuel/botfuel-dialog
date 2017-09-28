@@ -2,7 +2,7 @@
 
 const expect = require('expect.js');
 const PromptDialog = require('../../src/dialogs/prompt_dialog');
-const MemoryBrain = require('../../src/brains/memory/memory_brain');
+const MemoryBrain = require('../../src/brains/memory_brain');
 
 const TEST_USER = 1;
 
