@@ -2,7 +2,7 @@
 
 const expect = require('expect.js');
 const DialogManager = require('../../src/dialog_manager');
-const MemoryBrain = require('../../src/brains/memory/memory_brain');
+const MemoryBrain = require('../../src/brains/memory_brain');
 const Messages = require('../../src/messages');
 
 const TEST_BOT = 1;

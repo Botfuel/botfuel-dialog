@@ -10,7 +10,7 @@
   "scripts": {
     "prepublish": "npm run compile",
     "compile": "rm -rf build; babel src --out-dir build; cp -r src/templates build/templates",
-    "test": "mocha --timeout 30000 tests/**/*.test.js",
+    "test": "MONGODB_URI=mongodb://localhost/sdk-brain-test mocha --timeout 30000 tests/**/*.test.js",
     "style": "eslint src; eslint tests"
   },
   "dependencies": {
@@ -22,7 +22,7 @@
     "fs-promise": "^1.0.0",
     "inquirer": "^3.2.3",
     "lodash": "^4.17.4",
-    "mongoose": "^4.11.10",
+    "mongodb": "^2.2.31",
     "natural": "^0.5.4",
     "node-dir": "^0.1.17",
     "request": "^2.82.0",

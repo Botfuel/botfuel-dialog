@@ -1,16 +1,12 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const MemoryBrain = require('../../src/brains/memory/memory_brain');
-const MongoBrain = require('../../src/brains/mongo/mongo_brain');
-const db = require('../../src/brains/mongo/db');
+const MemoryBrain = require('../../src/brains/memory_brain');
+const MongoBrain = require('../../src/brains/mongo_brain');
 
 // db label
 const MEMORY_BRAIN_LABEL = 'memory';
 const MONGO_BRAIN_LABEL = 'mongo';
-
-// mongo db uri
-const MONGODB_URI = 'mongodb://localhost/sdk-brain-test';
 
 // bot + user ids
 const BOT_ID = 'BOT_TEST';
@@ -19,10 +15,11 @@ const USER_ID = 'USER_TEST';
 const brainTest = (brainLabel) => {
   let brain;
 
-  beforeEach(function () {
+  beforeEach(async function () {
     switch (brainLabel) {
       case MONGO_BRAIN_LABEL:
-        brain = new MongoBrain(BOT_ID, MONGODB_URI);
+        brain = new MongoBrain(BOT_ID);
+        await brain.initIfNecessary();
         break;
       case MEMORY_BRAIN_LABEL:
       default:
@@ -36,7 +33,7 @@ const brainTest = (brainLabel) => {
 
   after('Drop database if MongoBrain', async function () {
     if (brainLabel === MONGO_BRAIN_LABEL) {
-      await db.dropDatabase();
+      await brain.dropDatabase();
     }
   });
 
