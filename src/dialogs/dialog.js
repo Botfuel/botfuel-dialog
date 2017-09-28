@@ -35,6 +35,7 @@ class Dialog {
       .toString()
       .split('\n');
     for (const line of lines) {
+      console.log('Dialog.textMessage: line', line);
       const text = _.template(line)(parameters);
       if (text !== '') {
         const message = Messages.botText(this.config.id, userId, text);

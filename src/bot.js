@@ -69,12 +69,14 @@ class Bot {
   async getResponsesWhenPostback(userMessage) {
     console.log('Bot.getResponsesWhenPostback', userMessage);
     const { dialog, entities } = userMessage.payload.value;
+    console.log('Bot.getResponsesWhenPostback: dialog, entities', dialog, entities);
     return this.dm.executeDialogs(userMessage.user, [dialog], entities);
   }
 
   async getResponsesWhenText(userMessage) {
     console.log('Bot.getResponsesWhenText', userMessage);
-    const { entities, intents } = await this.nlu.compute(userMessage.payload.value);
+    const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
+    console.log('Bot.getResponsesWhenText: intents, entities', intents, entities);
     return this.dm.execute(userMessage.user, intents, entities);
   }
 }
