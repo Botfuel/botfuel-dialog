@@ -73,8 +73,17 @@ class MessengerAdapter extends WebAdapter {
     let userMessage = null;
     if (event.message) {
       const message = event.message;
-      const value = message.quick_reply ? message.quick_reply.payload : message.text;
-      userMessage = Messages.userText(botId, userId, value);
+      // user send attachments
+      if (message.attachments && message.attachments[0].type === 'image') {
+        // send bot success text message back
+        const text = `J'ai bien reçu ton image, tu peux la voir ici : ${message.attachments[0].payload.url}`;
+        const botMessage = Messages.botText(botId, userId, text);
+        await this.sendText(botMessage);
+        return true;
+      } else {
+        const value = message.quick_reply ? message.quick_reply.payload : message.text;
+        userMessage = Messages.userText(botId, userId, value);
+      }
     } else if (event.postback) {
       const postback = event.postback;
       userMessage = Messages.userPostback(botId, userId, JSON.parse(postback.payload));
