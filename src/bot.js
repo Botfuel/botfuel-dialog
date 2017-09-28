@@ -2,7 +2,6 @@ const BotfuelAdapter = require('./adapters/botfuel_adapter');
 const DialogManager = require('./dialog_manager');
 const MessengerAdapter = require('./adapters/messenger_adapter');
 const MemoryBrain = require('./brains/memory_brain');
-const MongoBrain = require('./brains/mongo_brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell_adapter');
 const TestAdapter = require('./adapters/test_adapter');
@@ -46,9 +45,7 @@ class Bot {
   }
 
   async init() {
-    if (this.brain instanceof MongoBrain) {
-      await this.brain.initIfNecessary();
-    }
+    await this.brain.init();
   }
 
   /**

@@ -19,7 +19,7 @@ const brainTest = (brainLabel) => {
     switch (brainLabel) {
       case MONGO_BRAIN_LABEL:
         brain = new MongoBrain(BOT_ID);
-        await brain.initIfNecessary();
+        await brain.init();
         break;
       case MEMORY_BRAIN_LABEL:
       default:

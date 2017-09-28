@@ -22,12 +22,10 @@ class MongoBrain extends Brain {
    * Connect to database if necessary
    * @returns {Promise}
    */
-  async initIfNecessary() {
-    console.log('MongoBrain.initIfNecessary');
-    if (this.users === null) {
-      this.db = await MongoClient.connect(mongoUri);
-      this.users = this.db.collection('users');
-    }
+  async init() {
+    console.log('MongoBrain.init');
+    this.db = await MongoClient.connect(mongoUri);
+    this.users = this.db.collection('users');
   }
 
   /**
@@ -81,7 +79,7 @@ class MongoBrain extends Brain {
    */
   async getUser(userId) {
     console.log('MongoBrain.getUser', userId);
-    return await this.users.findOne({ botId: this.botId, userId });
+    return this.users.findOne({ botId: this.botId, userId });
   }
 
   /**
