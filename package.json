@@ -1,6 +1,6 @@
 {
   "name": "@botfuel/bot-sdk2",
-  "version": "0.19.1",
+  "version": "0.20.0",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel SDK2",
