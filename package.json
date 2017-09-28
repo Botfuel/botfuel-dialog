@@ -16,7 +16,7 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.1",
-    "botfuel-qna-sdk": "^1.0.5",
+    "botfuel-qna-sdk": "^1.1.0",
     "express": "^4.15.4",
     "fs": "0.0.1-security",
     "fs-promise": "^1.0.0",

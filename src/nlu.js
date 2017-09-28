@@ -57,7 +57,7 @@ class Nlu {
 
   async qnaCompute(sentence) {
     console.log('Nlu.qnaCompute', sentence);
-    const qnas = await this.qna.getBotPrediction({ sentence });
+    const qnas = await this.qna.getMatchingQnas({ sentence });
     console.log('Nlu.compute: qnas', qnas);
     const intents = [{ label: 'qnas', value: 1.0 }];
     const entities = [{ dim: 'qnas', value: qnas }];
