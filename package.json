@@ -1,6 +1,6 @@
 {
   "name": "@botfuel/bot-sdk2",
-  "version": "0.18.5",
+  "version": "0.19.0",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel SDK2",
@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "prepublish": "npm run compile",
-    "compile": "babel src --out-dir build; cp -r src/templates build/templates",
+    "compile": "rm -rf build; babel src --out-dir build; cp -r src/templates build/templates",
     "test": "MONGODB_URI=mongodb://localhost/sdk-brain-test mocha --timeout 30000 tests/**/*.test.js",
     "style": "eslint src; eslint tests"
   },
