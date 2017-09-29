@@ -1,7 +1,0 @@
-language: node_js
-node_js:
-- "8"
-env:
-- BOTFUEL_APP_ID=29ce6795 BOTFUEL_APP_KEY=703d9ff1e2cfdf6a2ccc591213e57053
-notifications:
-   slack: botfuel:m19mrLajAVq0CkYHceYCGnL9
