@@ -1,9 +1,9 @@
 {
-  "name": "bot-sdk2-sample",
+  "name": "bot-messenger",
   "version": "0.1.0",
   "private": true,
   "author": "sysadmin@botfuel.io",
-  "description": "Sdk2 sample bot",
+  "description": "Sample bot using messenger features",
   "scripts": {
     "train": "node ./bin/train.js",
     "bot": "node ./bin/run.js",
