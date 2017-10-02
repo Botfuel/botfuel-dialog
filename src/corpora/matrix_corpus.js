@@ -1,5 +1,8 @@
-class MatrixCorpus {
+const Corpus = require('./corpus');
+
+class MatrixCorpus extends Corpus {
   constructor(matrix) {
+    super();
     this.matrix = matrix;
   }
 }
