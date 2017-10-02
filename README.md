@@ -1,16 +1,7 @@
 # Bot SDK 2
 
-## Deploy sample
-
-To deploy sample on heroku you have to link an existing heroku app to your sample by adding a remote to the sample.
-You can do that with the following command:
+## Test samples
 
 ```
-heroku git:remote -a HEROKU_APP_NAME
-```
-
-Then you can deploy your sample to heroku with the following command
-
-```
-npm run deploy-sample SAMPLE_NAME
+BOTFUEL_PROXY_HOST=https://api.botfuel.io/staging BOTFUEL_APP_ID=29ce6795 BOTFUEL_APP_KEY=703d9ff1e2cfdf6a2ccc591213e57053 npm run test-samples
 ```
