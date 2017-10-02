@@ -67,6 +67,8 @@ class Bot {
     switch (userMessage.type) {
       case Messages.TYPE_POSTBACK:
         return this.getResponsesWhenPostback(userMessage);
+      case Messages.TYPE_IMAGE:
+        return this.getResponsesWhenDownload(userMessage);
       case Messages.TYPE_TEXT:
       default:
         return this.getResponsesWhenText(userMessage);
@@ -85,6 +87,13 @@ class Bot {
     const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
     console.log('Bot.getResponsesWhenText: intents, entities', intents, entities);
     return this.dm.execute(userMessage.user, intents, entities);
+  }
+
+  async getResponsesWhenDownload(userMessage) {
+    console.log('Bot.getResponsesWhenDownload', userMessage);
+    const url = userMessage.payload.value.url;
+    console.log('Bot.getResponsesWhenDownload: url', url);
+    return this.dm.executeDialogs(userMessage.user, [{ label: 'image' }], [{ url }]);
   }
 }
 
