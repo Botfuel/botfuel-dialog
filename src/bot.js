@@ -91,9 +91,10 @@ class Bot {
 
   async getResponsesWhenDownload(userMessage) {
     console.log('Bot.getResponsesWhenDownload', userMessage);
-    const url = userMessage.payload.value.url;
-    console.log('Bot.getResponsesWhenDownload: url', url);
-    return this.dm.executeDialogs(userMessage.user, [{ label: 'image' }], [{ url }]);
+    const entities = [{ url: userMessage.payload.value.url }];
+    const dialog = { label: 'image' };
+    console.log('Bot.getResponsesWhenPostback: dialog, entities', dialog, entities);
+    return this.dm.executeDialogs(userMessage.user, [dialog], entities);
   }
 }
 
