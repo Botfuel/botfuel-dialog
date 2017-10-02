@@ -51,6 +51,8 @@ do
     cd ${sample_name}
     # install dependencies
     npm install
+    # train bot model
+    npm run train -- shell_config
     # run tests and log
     log_file_path=../../${LOGS_DIR}/${sample_name}.log
     date > ${log_file_path}
