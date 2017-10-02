@@ -33,7 +33,7 @@ echo "$LOGS_DIR has been cleaned"
 # loop over SAMPLE.txt to extract samples list
 while IFS= read -r repository
 do
-    SAMPLES+=(${repository}) # Append line to the array
+  SAMPLES+=(${repository}) # Append line to the array
 done < ${SAMPLES_LIST_FILE}
 
 # move into samples folder
@@ -44,7 +44,7 @@ for sample in ${SAMPLES[@]}
 do
     echo "Cloning repository $sample"
     # get sample name
-    sample_name=$(echo ${sample} | cut -d'/' -f5)
+    sample_name=$(echo ${sample} | cut -d'/' -f2)
     # clone
     git clone ${sample}
     # move into sample name
