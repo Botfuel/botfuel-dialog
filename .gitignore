@@ -60,4 +60,5 @@ typings/
 # Jetbrains
 .idea
 
-*~
+# Project specific
+samples
