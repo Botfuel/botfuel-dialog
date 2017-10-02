@@ -75,15 +75,16 @@ class MessengerAdapter extends WebAdapter {
       const message = event.message;
       // user send attachments
       if (message.attachments && message.attachments[0].type === 'image') {
+        // @TODO handle user image upload in another way
         // send bot success text message back
-        const text = `J'ai bien reçu ton image, tu peux la voir ici : ${message.attachments[0].payload.url}`;
+        const text = `I received your image, you can see it here : ${message.attachments[0].payload.url}`;
         const botMessage = Messages.botText(botId, userId, text);
         await this.sendText(botMessage);
         return true;
-      } else {
-        const value = message.quick_reply ? message.quick_reply.payload : message.text;
-        userMessage = Messages.userText(botId, userId, value);
       }
+
+      const value = message.quick_reply ? message.quick_reply.payload : message.text;
+      userMessage = Messages.userText(botId, userId, value);
     } else if (event.postback) {
       const postback = event.postback;
       userMessage = Messages.userPostback(botId, userId, JSON.parse(postback.payload));
@@ -92,6 +93,7 @@ class MessengerAdapter extends WebAdapter {
     }
 
     await this.bot.sendResponse(userMessage);
+    return true; // remove this after handling user image upload in another way
   }
 
   /**

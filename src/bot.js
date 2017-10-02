@@ -1,7 +1,7 @@
 const BotfuelAdapter = require('./adapters/botfuel_adapter');
 const DialogManager = require('./dialog_manager');
 const MessengerAdapter = require('./adapters/messenger_adapter');
-const MemoryBrain = require('./brains/memory/memory_brain');
+const MemoryBrain = require('./brains/memory_brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell_adapter');
 const TestAdapter = require('./adapters/test_adapter');
@@ -32,14 +32,21 @@ class Bot {
     this.dm = new DialogManager(this.brain, config);
   }
 
-  run() {
+  async run() {
     console.log('Bot.run');
+    await this.init();
     return this.adapter.run();
   }
 
-  play(userMessages) {
+  async play(userMessages) {
     console.log('Bot.play', userMessages);
+    await this.init();
     return this.adapter.play(userMessages);
+  }
+
+  async init() {
+    await this.brain.init();
+    await this.nlu.init();
   }
 
   /**

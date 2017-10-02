@@ -9,6 +9,10 @@ class Brain {
     this.dayInMs = 86400000; // One day in milliseconds
   }
 
+  async init() {
+    console.log('Brain.init');
+  }
+
   /**
    * Add user if not exists
    * @param id

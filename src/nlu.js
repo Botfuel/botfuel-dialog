@@ -23,6 +23,11 @@ class Nlu {
     }
   }
 
+  async init() {
+    console.log('Nlu.init');
+    await this.classifier.init();
+  }
+
   /**
    * Classifies a sentence.
    * @param {string} sentence the sentence
@@ -57,7 +62,7 @@ class Nlu {
 
   async qnaCompute(sentence) {
     console.log('Nlu.qnaCompute', sentence);
-    const qnas = await this.qna.getBotPrediction({ sentence });
+    const qnas = await this.qna.getMatchingQnas({ sentence });
     console.log('Nlu.compute: qnas', qnas);
     const intents = [{ label: 'qnas', value: 1.0 }];
     const entities = [{ dim: 'qnas', value: qnas }];

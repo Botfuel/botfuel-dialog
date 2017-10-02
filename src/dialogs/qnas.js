@@ -11,7 +11,7 @@ class Qnas extends Dialog {
     console.log('Qnas.questionButton', question, answer);
     return {
       type: 'postback',
-      question,
+      text: question,
       value: {
         dialog: { label: 'qnas' },
         entities: [{ dim: 'qnas', value: [{ answer }] }],

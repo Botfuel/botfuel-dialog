@@ -2,7 +2,7 @@
 
 const expect = require('expect.js');
 const DialogManager = require('../../src/dialog_manager');
-const MemoryBrain = require('../../src/brains/memory/memory_brain');
+const MemoryBrain = require('../../src/brains/memory_brain');
 const Messages = require('../../src/messages');
 
 const TEST_BOT = 1;
@@ -19,15 +19,15 @@ describe('DialogManager', function () {
   });
 
   it('when given a label, it should return the correct path', function () {
-    expect(dm.getPath('test_dialog'))
+    expect(dm.getDialogPath('test_dialog'))
       .to
       .eql(`${__dirname}/src/controllers/dialogs/test_dialog`);
   });
 
-  it('when given an unknown label, it should return the default path', function () {
-    expect(dm.getPath('unknown_dialog'))
+  it('when given an unknown label, it should return null', function () {
+    expect(dm.getDialogPath('unknown_dialog'))
       .to
-      .eql('./dialogs/unknown_dialog');
+      .be(null);
   });
 
   it('should not crash when no intent', async function () {

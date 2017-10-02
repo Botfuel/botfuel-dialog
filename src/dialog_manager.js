@@ -18,20 +18,31 @@ class DialogManager {
     return (value > this.intentThreshold);
   }
 
-  isUser(label) {
-    const path = this.getUserPath(label);
-    return fs.existsSync(`${path}.js`);
-  }
-
-  getUserPath(label) {
-    return `${this.config.path}/src/controllers/dialogs/${label}`;
-  }
-
-  getPath(label) {
-    if (!this.isUser(label)) {
-      return `./dialogs/${label}`;
+  getDialogPath(label) {
+    console.log('DialogManager.getDialogPath', label);
+    const paths = [
+      `${this.config.path}/src/controllers/dialogs/${label}.${this.config.adapter}`,
+      `${this.config.path}/src/controllers/dialogs/${label}`,
+      `${__dirname}/dialogs/${label}.${this.config.adapter}`,
+      `${__dirname}/dialogs/${label}`,
+    ];
+    for (const path of paths) {
+      console.log('DialogManager.getDialogPath: path', path);
+      if (fs.existsSync(`${path}.js`)) {
+        return path;
+      }
     }
-    return this.getUserPath(label);
+    return null;
+  }
+
+  getDialog(dialog) {
+    console.log('DialogManager.getDialog', dialog);
+    const path = this.getDialogPath(dialog.label);
+    if (path === null) {
+      return null;
+    }
+    const DialogConstructor = require(path);
+    return new DialogConstructor(this.config, this.brain, dialog.parameters);
   }
 
   /**
@@ -69,8 +80,8 @@ class DialogManager {
    * @param {Object[]} entities - the entities
    */
   async executeDialogs(userId, dialogs, entities) { // Entities could be replace by parameters
-    const responses = [];
     console.log('DialogManager.executeDialogs', userId, dialogs, entities);
+    const responses = [];
     const user = await this.brain.getUser(userId);
     console.log('DialogManager.executeDialogs', user);
     let done = true;
@@ -79,11 +90,10 @@ class DialogManager {
       console.log('DialogManager.executeDialogs: dialog', dialog);
       // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
-      const path = this.getPath(dialog.label);
-      const DialogConstructor = require(path);
-      const dialogObject = new DialogConstructor(this.config, this.brain, dialog.parameters);
       // eslint-disable-next-line no-await-in-loop
-      done = await dialogObject.execute(userId, responses, entities);
+      done = await this
+        .getDialog(dialog)
+        .execute(userId, responses, entities);
       console.log('DialogManager.executeDialogs: done', done);
       if (done) {
         dialogs = dialogs.slice(0, -1);

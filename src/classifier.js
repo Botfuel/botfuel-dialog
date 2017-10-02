@@ -27,8 +27,8 @@ class Classifier {
     }
   }
 
-  load() {
-    console.log('Classifier.load');
+  async init() {
+    console.log('Classifier.init');
     return new Promise((resolve, reject) => {
       Natural
         .LogisticRegressionClassifier
@@ -36,17 +36,10 @@ class Classifier {
           if (err !== null) {
             return reject(err);
           }
-          return resolve(classifier);
+          this.classifier = classifier;
+          return resolve();
         });
     });
-  }
-
-  async initIfNecessary() {
-    console.log('Classifier.initIfNecessary');
-    if (this.classifier == null) {
-      return this.load();
-    }
-    return this.classifier;
   }
 
   computeFeatures(sentence) {
@@ -60,7 +53,6 @@ class Classifier {
    */
   async compute(sentence, entities) {
     console.log('Classifier.compute', sentence, entities);
-    this.classifier = await this.initIfNecessary();
     const features = this.computeFeatures(sentence, entities);
     return this.classifier.getClassifications(features);
   }
