@@ -51,10 +51,11 @@ do
     cd ${sample_name}
     # install dependencies
     npm install
-    # test and log
+    # run tests and log
     log_file_path=../../${LOGS_DIR}/${sample_name}.log
     date > ${log_file_path}
-    npm run test >> ${log_file_path}
+    echo "Testing $sample_name ..."
+    npm run test >> ${log_file_path} && echo "$sample_name tests : OK" || echo "$sample_name tests : KO"
     # go back to samples dir
     cd ..
 done
