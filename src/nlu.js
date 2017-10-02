@@ -1,5 +1,5 @@
 const QnA = require('botfuel-qna-sdk');
-const EntityExtractor = require('./entity_extractor');
+const DirectoryEntityExtractor = require('./extractors/directory_entity_extractor');
 const Classifier = require('./classifier');
 
 /**
@@ -13,7 +13,7 @@ class Nlu {
   constructor(config) {
     // console.log('Nlu.constructor');
     this.config = config;
-    this.entityExtractor = new EntityExtractor(config);
+    this.entityExtractor = new DirectoryEntityExtractor(`${config.path}/src/extractors`);
     this.classifier = new Classifier(config);
     if (config.qna) {
       this.qna = new QnA({
