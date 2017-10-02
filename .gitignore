@@ -60,5 +60,8 @@ typings/
 # Jetbrains
 .idea
 
+# Emacs
+*~
+
 # Project specific
 samples

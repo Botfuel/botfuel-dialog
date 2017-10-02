@@ -8,7 +8,7 @@ SAMPLES=()
 # check if samples.txt exists
 if ! [ -f ${SAMPLES_LIST_FILE} ]
 then
-  echo "$SAMPLES_LIST_FILE don't exists, exit"
+  echo "$SAMPLES_LIST_FILE doesn't exist, exit"
   exit
 fi
 
