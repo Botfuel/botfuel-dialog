@@ -11,8 +11,8 @@ class DirectoryEntityExtractor extends CompositeEntityExtractor {
    */
   constructor(path) {
     console.log('DirectoryEntityExtractor.constructor', path);
-    super(dir
-          .files(path, { sync: true })
+    const files = dir.files(path, { sync: true }) || [];
+    super(files
           .filter(file => file.match(/^.*.js$/))
           .map(file => new (require(file))()));
   }
