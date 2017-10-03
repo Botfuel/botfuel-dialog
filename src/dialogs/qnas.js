@@ -33,7 +33,7 @@ class Qnas extends Dialog {
       this.textMessage(id, responses, this.label, { answer: qnas[0].answer });
     } else {
       const buttons = qnas.map(qna => this.questionButton(qna.questions[0], qna.answer));
-      await this.textMessage(id, response, 'qnas_header');
+      await this.textMessage(id, responses, 'qnas_header');
       await this.actionsMessage(id, responses, buttons);
     }
     return true;
