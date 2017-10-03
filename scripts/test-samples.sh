@@ -47,12 +47,16 @@ test_sample () {
   echo "Cloning repository $sample"
   git clone ${sample}
   # move into sample name
+  echo "Move into $sample_name"
   cd ${sample_name}
-  # change bot-sdk2 version to file:../../
-  sed -i "" 's/"@botfuel\/bot-sdk2": "latest"/"@botfuel\/bot-sdk2": "file:..\/..\/"/g' package.json
   # install dependencies
+  echo "Install $sample_name dependencies"
   npm install
+  # link sample to local bot-sdk2
+  echo "Link $sample_name to bot-sdk2 local"
+  npm link ../../
   # train bot model
+  echo "Train $sample_name"
   npm run train -- shell_config
   # run tests and log
   log_file_path=../../${LOGS_DIR}/${sample_name}.log
