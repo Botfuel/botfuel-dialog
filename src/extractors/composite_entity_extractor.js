@@ -18,7 +18,7 @@ class CompositeEntityExtractor {
     console.log('CompositeEntityExtractor.compute', sentence);
     let entities = [];
     for (const extractor of this.extractors) {
-      // eslint-disable-next-line no-await-in-loop
+      // TODO: in parallel
       const extractorEntities = await extractor.compute(sentence);
       entities = entities.concat(extractorEntities);
     }

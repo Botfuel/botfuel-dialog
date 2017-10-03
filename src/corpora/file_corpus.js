@@ -6,7 +6,6 @@ class FileCorpus extends Corpus {
     super();
     this.path = path;
     this.separator = separator;
-    this.matrix = null;
   }
 
   async init() {
