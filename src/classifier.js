@@ -23,7 +23,7 @@ class Classifier {
         return Natural.PorterStemmerFr;
       case 'en':
       default:
-        return Natural.PorterStemmerEn;
+        return Natural.PorterStemmer;
     }
   }
 
