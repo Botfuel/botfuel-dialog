@@ -1,1 +1,1 @@
-Entity {{ entity }} has to be extracted.
+Quelle est la valeur de {{ entity }} ?

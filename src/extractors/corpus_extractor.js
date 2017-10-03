@@ -57,7 +57,7 @@ class CorpusExtractor {
               {
                 value: this.corpus.getValue(normalizedWord, this.options),
                 type: 'string',
-            },
+              },
             ],
           });
           return this.computeEntities(remainder, words, entities);

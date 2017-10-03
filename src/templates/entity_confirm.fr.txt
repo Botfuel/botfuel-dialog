@@ -1,1 +1,1 @@
-Entity {{ entity.body }} has been extracted.
+L'entité {{ entity.body }} a été extraite.
