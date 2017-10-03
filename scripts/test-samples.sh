@@ -36,30 +36,36 @@ do
   SAMPLES+=(${repository}) # Append line to the array
 done < ${SAMPLES_LIST_FILE}
 
-# move into samples folder
-cd ${SAMPLES_DIR}
+test_sample () {
+  # go into samples dir
+  cd ${SAMPLES_DIR}
+  # get sample from arguments
+  sample=$1
+  # get sample name
+  sample_name=$(echo ${sample} | cut -d'/' -f2)
+  # clone repository
+  echo "Cloning repository $sample"
+  git clone ${sample}
+  # move into sample name
+  cd ${sample_name}
+  # change bot-sdk2 version to file:../../
+  sed -i "" 's/"@botfuel\/bot-sdk2": "latest"/"@botfuel\/bot-sdk2": "file:..\/..\/"/g' package.json
+  # install dependencies
+  npm install
+  # train bot model
+  npm run train -- shell_config
+  # run tests and log
+  log_file_path=../../${LOGS_DIR}/${sample_name}.log
+  date > ${log_file_path}
+  echo "Testing $sample_name ..."
+  npm run test >> ${log_file_path} && echo "$sample_name tests : OK" || echo "$sample_name tests : KO"
+}
 
 # for each repo
 for sample in ${SAMPLES[@]}
 do
-    echo "Cloning repository $sample"
-    # get sample name
-    sample_name=$(echo ${sample} | cut -d'/' -f2)
-    # clone
-    git clone ${sample}
-    # move into sample name
-    cd ${sample_name}
-    # install dependencies
-    npm install
-    # train bot model
-    npm run train -- shell_config
-    # run tests and log
-    log_file_path=../../${LOGS_DIR}/${sample_name}.log
-    date > ${log_file_path}
-    echo "Testing $sample_name ..."
-    npm run test >> ${log_file_path} && echo "$sample_name tests : OK" || echo "$sample_name tests : KO"
-    # go back to samples dir
-    cd ..
+  # execute method to test sample in a sub shell
+  (test_sample ${sample})
 done
 
 exit
