@@ -30,7 +30,7 @@ describe('MatrixCorpus', function () {
       ['Paris Saint-Germain', 'Paris SG', 'PSG'],
       ['Olympique Lyonnais', 'L\'Olympique Lyonnais', 'OL'],
       ['Football Club de Nantes', 'FCN'],
-      ['Guégan'],
+      ['Montbéliard'],
     ]);
     expect(corpus.getValue('PSG')).to.be('Paris Saint-Germain');
     expect(corpus.getValue('Paris  SG')).to.be('Paris Saint-Germain');
@@ -40,7 +40,7 @@ describe('MatrixCorpus', function () {
     expect(corpus.getValue('Paris Saint Germain', { keepDashes: true })).to.not.be('Paris Saint-Germain');
     expect(corpus.getValue('L Olympique Lyonnais')).to.be('Olympique Lyonnais');
     expect(corpus.getValue('L Olympique Lyonnais', { keepQuotes: true })).to.not.be('Olympique Lyonnais');
-    expect(corpus.getValue('Guegan')).to.be('Guégan');
-    expect(corpus.getValue('Guegan', { keepAccents: true })).to.not.be('Guégan');
+    expect(corpus.getValue('Montbeliard')).to.be('Montbéliard');
+    expect(corpus.getValue('Montbeliard', { keepAccents: true })).to.not.be('Montbéliard');
   });
 });

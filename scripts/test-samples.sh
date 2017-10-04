@@ -19,7 +19,7 @@ then
 fi
 # create samples dir
 mkdir ${SAMPLES_DIR}
-echo "$SAMPLES_DIR has been cleaned"
+echo "Directory $SAMPLES_DIR has been cleaned"
 
 # delete logs dir if exists
 if [ -d ${LOGS_DIR} ]
@@ -28,7 +28,7 @@ then
 fi
 # create logs dir
 mkdir ${LOGS_DIR}
-echo "$LOGS_DIR has been cleaned"
+echo "Directory $LOGS_DIR has been cleaned"
 
 # loop over SAMPLE.txt to extract samples list
 while IFS= read -r repository
@@ -44,25 +44,37 @@ test_sample () {
   # get sample name
   sample_name=$(echo ${sample} | cut -d'/' -f2)
   # clone repository
-  echo "Cloning repository $sample"
-  git clone ${sample}
+  GIT_COMMAND="git clone ${sample} &> /dev/null"
+  exec_command $GIT_COMMAND
   # move into sample name
   echo "Move into $sample_name"
   cd ${sample_name}
   # install dependencies
-  echo "Install $sample_name dependencies"
-  npm install
+  NPM_INSTALL_COMMAND="npm install &> /dev/null"
+  exec_command $NPM_INSTALL_COMMAND
   # link sample to local bot-sdk2
-  echo "Link $sample_name to bot-sdk2 local"
-  npm link ../../
+  NPM_LINK_COMMAND="npm link ../../ &> /dev/null"
+  exec_command $NPM_LINK_COMMAND
   # train bot model
-  echo "Train $sample_name"
-  npm run train -- shell_config
+  NPM_TRAIN_COMMAND="npm run train -- shell_config &> /dev/null"
+  exec_command $NPM_TRAIN_COMMAND
   # run tests and log
   log_file_path=../../${LOGS_DIR}/${sample_name}.log
   date > ${log_file_path}
-  echo "Testing $sample_name ..."
-  npm run test >> ${log_file_path} && echo "$sample_name tests : OK" || echo "$sample_name tests : KO"
+  NPM_TEST_COMMAND="npm run test >> ${log_file_path} && echo 'OK' || echo 'KO'"
+  exec_command $NPM_TEST_COMMAND
+}
+
+exec_command() {
+  echo "Running "$*
+  eval $* & PID=$!
+  printf "["
+  # While process is running...
+  while kill -0 $PID 2> /dev/null; do
+    printf  "."
+    sleep 1
+  done
+  printf "]\n"
 }
 
 # for each repo
