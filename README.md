@@ -3,5 +3,5 @@
 ## Test samples
 
 ```
-BOTFUEL_APP_ID=29ce6795 BOTFUEL_APP_KEY=703d9ff1e2cfdf6a2ccc591213e57053 npm run test-samples
+BOTFUEL_APP_ID=caa4023f BOTFUEL_APP_KEY=ed02761d20c42480255cb4e2f4b532b4 npm run test-samples
 ```
