@@ -10,7 +10,7 @@ const TEST_USER = 1;
 
 describe('DialogManager', function () {
   const brain = new MemoryBrain(TEST_BOT);
-  const dm = new DialogManager(brain, { path: __dirname, locale: 'fr', id: TEST_BOT });
+  const dm = new DialogManager(brain, { path: __dirname, locale: 'en', id: TEST_BOT });
 
   beforeEach(async function () {
     console.log('beforeEach');
