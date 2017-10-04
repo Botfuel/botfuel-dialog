@@ -38,9 +38,19 @@ test_sample () {
   exec_command $NPM_TRAIN_COMMAND
   # run tests and log
   log_file_path=../../${LOGS_DIR}/${SAMPLE_NAME}.log
+  ok_file_path=../../${LOGS_DIR}/${SAMPLE_NAME}.ok
+  ko_file_path=../../${LOGS_DIR}/${SAMPLE_NAME}.ko
   date > ${log_file_path}
-  NPM_TEST_COMMAND="npm run test >> ${log_file_path} && echo 'OK' || echo 'KO'"
+  NPM_TEST_COMMAND="npm run test >> ${log_file_path} && touch ${ok_file_path} || touch ${ko_file_path}"
   exec_command $NPM_TEST_COMMAND
+  if [ -f ${ok_file_path} ]
+  then
+    echo "OK"
+    exit
+  else
+    echo "KO"
+    exit
+  fi
 }
 
 # check if samples.txt exists
