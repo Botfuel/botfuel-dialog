@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 LOGS_DIR='logs'
 SAMPLES_DIR='samples'
