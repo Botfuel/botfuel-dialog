@@ -1,4 +1,5 @@
 const dir = require('node-dir');
+const fs = require('fs');
 const CompositeEntityExtractor = require('./composite_entity_extractor');
 
 /**
@@ -11,7 +12,10 @@ class DirectoryEntityExtractor extends CompositeEntityExtractor {
    */
   constructor(path) {
     console.log('DirectoryEntityExtractor.constructor', path);
-    const files = dir.files(path, { sync: true }) || [];
+    let files = [];
+    if (fs.existsSync(path)) {
+      files = dir.files(path, { sync: true }) || files;
+    }
     super(files
           .filter(file => file.match(/^.*.js$/))
           .map(file => new (require(file))()));
