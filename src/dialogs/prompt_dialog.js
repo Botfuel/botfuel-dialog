@@ -19,6 +19,7 @@ class PromptDialog extends Dialog {
       // if the message entity is of interest for this dialog
       if (this.parameters.entities[messageEntity.dim] !== undefined) {
         // we want to keep the order to ease the testability
+        // eslint-disable-next-line no-await-in-loop
         await this.confirm(id, responses, messageEntity);
         dialogEntities[messageEntity.dim] = messageEntity;
       }
@@ -31,6 +32,7 @@ class PromptDialog extends Dialog {
       console.log('PromptDialog.execute: entityKey', dialogEntities[entityKey]);
       if (dialogEntities[entityKey] === undefined) {
         // we want to keep the order to ease the testability
+        // eslint-disable-next-line no-await-in-loop
         await this.ask(id, responses, entityKey);
         extractionsDone = false;
       }

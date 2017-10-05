@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const nlp = require('botfuel-nlp-sdk');
 
 /**

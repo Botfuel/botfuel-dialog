@@ -20,9 +20,7 @@ class CorpusExtractor {
   async compute(sentence) {
     console.log('CorpusExtractor.compute', sentence);
     const normalizedSentence = Corpus.normalize(sentence, this.options);
-    const entities = [];
-    this.computeEntities(normalizedSentence, this.corpus.getWords(), entities);
-    return entities;
+    return this.computeEntities(normalizedSentence, this.corpus.getWords(), []);
   }
 
   getRemainder(sentence, word) {
@@ -65,7 +63,7 @@ class CorpusExtractor {
         }
       }
     }
-    return null;
+    return entities;
   }
 }
 

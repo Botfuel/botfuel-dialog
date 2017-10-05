@@ -22,7 +22,6 @@
     "no-console": "off",
     "no-param-reassign": "off",
     "no-restricted-syntax": "off",
-    "no-await-in-loop": "off",
     "strict": 0
   }
 }
