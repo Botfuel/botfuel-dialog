@@ -1,5 +1,5 @@
-const dir = require('node-dir');
 const fs = require('fs');
+const dir = require('node-dir');
 const CompositeEntityExtractor = require('./composite_entity_extractor');
 
 /**
@@ -8,7 +8,7 @@ const CompositeEntityExtractor = require('./composite_entity_extractor');
 class DirectoryEntityExtractor extends CompositeEntityExtractor {
   /**
    * Constructor.
-   * @param {Object} config the bot's config
+   * @param {Object} path - the bot's config
    */
   constructor(path) {
     console.log('DirectoryEntityExtractor.constructor', path);

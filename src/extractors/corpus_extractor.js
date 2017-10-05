@@ -32,18 +32,19 @@ class CorpusExtractor {
       return null;
     }
     if (startIndex > 0) {
-      if (sentence[startIndex - 1] != ' ') {
+      if (sentence[startIndex - 1] !== ' ') {
         return null;
       }
     }
     const endIndex = startIndex + word.length;
     if (endIndex < sentence.length) {
-      if (sentence[endIndex] != ' ') {
+      if (sentence[endIndex] !== ' ') {
         return null;
       }
     }
     return sentence.slice(0, startIndex) + sentence.slice(endIndex);
   }
+
   computeEntities(sentence, words, entities) {
     console.log('CorpusExtractor.computeEntities', sentence, words, entities);
     if (sentence.length > 0) {
@@ -64,6 +65,7 @@ class CorpusExtractor {
         }
       }
     }
+    return null;
   }
 }
 

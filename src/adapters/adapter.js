@@ -28,7 +28,6 @@ class Adapter {
     console.log('Adapter.send', botMessages);
     for (const botMessage of botMessages) {
       switch (botMessage.type) {
-        /* eslint-disable no-await-in-loop */
         case Messages.TYPE_ACTIONS:
           await this.sendActions(botMessage);
           break;
@@ -44,7 +43,6 @@ class Adapter {
         case Messages.TYPE_TEXT:
         default:
           await this.sendText(botMessage);
-        /* eslint-enable no-await-in-loop */
       }
     }
   }
