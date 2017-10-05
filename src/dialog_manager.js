@@ -63,8 +63,8 @@ class DialogManager {
           return 1;
         }
         return intent1.value - intent2.value;
-      })
-      .reverse();
+      });
+    intents.reverse();
     for (const intent of intents) {
       if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label) {
         dialogs.push({ label: intent.label, parameters: entities });
