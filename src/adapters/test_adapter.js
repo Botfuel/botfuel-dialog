@@ -16,7 +16,6 @@ class TestAdapter extends Adapter {
     await this.bot.brain.initUserIfNecessary(this.userId);
     for (const userMessage of userMessages) {
       this.log.push(userMessage);
-      // eslint-disable-next-line no-await-in-loop
       await this.bot.sendResponse(userMessage);
     }
   }

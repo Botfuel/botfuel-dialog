@@ -28,7 +28,7 @@ class Corpus {
   }
 
   getValue(key, options) {
-    //console.log('Corpus.getValue', key, options);
+    // console.log('Corpus.getValue', key, options);
     for (const row of this.matrix) {
       for (const word of row) {
         if (Corpus.matches(key, word, options)) {

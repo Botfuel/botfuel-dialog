@@ -19,7 +19,6 @@ class ShellAdapter extends Adapter {
     for (;;) {
       console.log('ShellAdapter.run', userInput);
       const userMessage = Messages.userText(this.config.id, this.userId, userInput.payload);
-      // eslint-disable-next-line no-await-in-loop
       userInput = await this.bot.sendResponse(userMessage);
     }
   }
