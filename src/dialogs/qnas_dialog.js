@@ -1,6 +1,6 @@
 const Dialog = require('./dialog');
 
-class Qnas extends Dialog {
+class QnasDialog extends Dialog {
   constructor(config, brain) {
     super(config, brain);
     this.label = 'qnas';
@@ -8,7 +8,7 @@ class Qnas extends Dialog {
   }
 
   questionButton(question, answer) {
-    console.log('Qnas.questionButton', question, answer);
+    console.log('QnasDialog.questionButton', question, answer);
     return {
       type: 'postback',
       text: question,
@@ -26,9 +26,9 @@ class Qnas extends Dialog {
    * @param {Object} messageEntities
    */
   async execute(id, responses, messageEntities) {
-    console.log('Qnas.execute', responses, messageEntities);
+    console.log('QnasDialog.execute', responses, messageEntities);
     const qnas = messageEntities[0].value;
-    console.log('Qnas.execute: qnas', qnas);
+    console.log('QnasDialog.execute: qnas', qnas);
     if (qnas.length === 1) {
       this.textMessage(id, responses, this.label, { answer: qnas[0].answer });
     } else {
@@ -40,4 +40,4 @@ class Qnas extends Dialog {
   }
 }
 
-module.exports = Qnas;
+module.exports = QnasDialog;

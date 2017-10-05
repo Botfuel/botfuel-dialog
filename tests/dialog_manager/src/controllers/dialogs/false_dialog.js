@@ -1,4 +1,4 @@
-const Dialog = require('./dialog');
+const Dialog = require('../../../../../src/dialogs/dialog');
 
 /**
  * FalseDialog class.

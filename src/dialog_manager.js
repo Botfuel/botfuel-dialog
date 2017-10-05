@@ -14,10 +14,6 @@ class DialogManager {
     this.intentThreshold = this.config.intentThreshold || 0.8;
   }
 
-  acceptIntent(value) {
-    return (value > this.intentThreshold);
-  }
-
   getDialogPath(label) {
     console.log('DialogManager.getDialogPath', label);
     const paths = [
@@ -45,6 +41,24 @@ class DialogManager {
     return new DialogConstructor(this.config, this.brain, dialog.parameters);
   }
 
+  updateDialogs(userId, dialogs, lastDialog, intents, entities) {
+    console.log('DialogManager.updateDialogs', userId, dialogs, lastDialog, intents);
+    for (const intent of intents) {
+      if (intent.value > this.intentThreshold
+          && (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label)) {
+        dialogs.push({ label: intent.label, parameters: entities });
+      }
+    }
+    if (dialogs.length === 0) {
+      if (lastDialog !== undefined) {
+        dialogs.push(lastDialog);
+      } else {
+        // no intent detected
+        dialogs.push({ label: 'default_dialog' });
+      }
+    }
+  }
+
   /**
    * Populates and executes the stack.
    * @param {string} userId the user id
@@ -54,22 +68,8 @@ class DialogManager {
   async execute(userId, intents, entities) {
     console.log('DialogManager.execute', userId, intents, entities);
     const dialogs = await this.brain.userGet(userId, 'dialogs');
-    for (const intent of intents) {
-      if (this.acceptIntent(intent.value)) {
-        if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label) {
-          dialogs.push({ label: intent.label, parameters: entities });
-        }
-      }
-    }
-    if (dialogs.length === 0) {
-      const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-      if (lastDialog !== undefined) {
-        dialogs.push(lastDialog);
-      } else {
-        // no intent detected
-        dialogs.push({ label: 'default_dialog' });
-      }
-    }
+    const lastDialog = await this.brain.userGet(userId, 'lastDialog');
+    this.updateDialogs(userId, dialogs, lastDialog, intents, entities);
     return this.executeDialogs(userId, dialogs, entities);
   }
 
