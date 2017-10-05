@@ -28,6 +28,7 @@ class Dialog {
    */
   textMessage(userId, responses, label, parameters) {
     console.log('Dialog.textMessage', userId, label, parameters);
+    // TODO: resolve the template given the label (allowing fallback)
     const templateName = `${this.templatePath}/${label}.${this.config.locale}.txt`;
     console.log('Dialog.textMessage: templateName', templateName);
     const lines = Fs
