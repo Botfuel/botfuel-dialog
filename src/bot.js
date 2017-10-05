@@ -67,7 +67,7 @@ class Bot {
     switch (userMessage.type) {
       case Messages.TYPE_POSTBACK:
         return this.getResponsesWhenPostback(userMessage);
-      case Messages.TYPE_IMAGE:
+      case Messages.TYPE_IMAGE: // TODO: review this
         return this.getResponsesWhenDownload(userMessage);
       case Messages.TYPE_TEXT:
       default:
@@ -89,7 +89,7 @@ class Bot {
     return this.dm.execute(userMessage.user, intents, entities);
   }
 
-  async getResponsesWhenDownload(userMessage) {
+  async getResponsesWhenDownload(userMessage) { // TODO: rename
     console.log('Bot.getResponsesWhenDownload', userMessage);
     const entities = [{ url: userMessage.payload.value.url }];
     const dialog = { label: 'image' };

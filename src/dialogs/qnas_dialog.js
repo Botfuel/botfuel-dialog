@@ -13,7 +13,7 @@ class QnasDialog extends Dialog {
       type: 'postback',
       text: question,
       value: {
-        dialog: { label: 'qnas' },
+        dialog: { label: 'qnas_dialog' },
         entities: [{ dim: 'qnas', value: [{ answer }] }],
       },
     };

@@ -43,6 +43,10 @@ class DialogManager {
 
   updateDialogs(userId, dialogs, lastDialog, intents, entities) {
     console.log('DialogManager.updateDialogs', userId, dialogs, lastDialog, intents);
+    // sort by likelihood
+    // case where length == 1
+    // case where length == 2
+    // otherwise take 2 first
     for (const intent of intents) {
       if (intent.value > this.intentThreshold
           && (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label)) {
