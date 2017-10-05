@@ -57,14 +57,14 @@ class DialogManager {
         const dialog1 = this.getDialog(intent1);
         const dialog2 = this.getDialog(intent2);
         if (dialog1.oneturn && !dialog2.oneturn) {
-          return -1;
+          return 1;
         }
         if (!dialog1.oneturn && dialog2.oneturn) {
-          return 1;
+          return -1;
         }
         return intent1.value - intent2.value;
       });
-    intents.reverse();
+    console.log('DialogManager.updateDialogs: intents', intents);
     for (const intent of intents) {
       if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label) {
         dialogs.push({ label: intent.label, parameters: entities });
