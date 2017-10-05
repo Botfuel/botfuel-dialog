@@ -41,15 +41,32 @@ class DialogManager {
     return new DialogConstructor(this.config, this.brain, dialog.parameters);
   }
 
+   /**
+   * Executes the dialogs.
+   * @param {string} userId the user id
+   * @param {Object[]} dialogs - the dialogs
+   * @param {string} lastDialog - the last dialog
+   * @param {Object[]} intents - the intents
+   * @param {Object[]} entities - the entities
+   */
   updateDialogs(userId, dialogs, lastDialog, intents, entities) {
-    console.log('DialogManager.updateDialogs', userId, dialogs, lastDialog, intents);
-    // sort by likelihood
-    // case where length == 1
-    // case where length == 2
-    // otherwise take 2 first
+    console.log('DialogManager.updateDialogs', userId, dialogs, lastDialog, intents, entities);
+    intents = intents
+      .filter(intent => intent.value > this.intentThreshold)
+      .sort((intent1, intent2) => {
+        const dialog1 = this.getDialog(intent1);
+        const dialog2 = this.getDialog(intent2);
+        if (dialog1.oneturn && !dialog2.oneturn) {
+          return -1;
+        }
+        if (!dialog1.oneturn && dialog2.oneturn) {
+          return 1;
+        }
+        return intent1.value - intent2.value;
+      })
+      .reverse();
     for (const intent of intents) {
-      if (intent.value > this.intentThreshold
-          && (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label)) {
+      if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label) {
         dialogs.push({ label: intent.label, parameters: entities });
       }
     }
