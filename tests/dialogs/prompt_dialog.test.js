@@ -24,7 +24,7 @@ describe('PromptDialog', function () {
   const brain = new MemoryBrain();
   const prompt = new TestPromptDialog(brain, {
     namespace: 'testdialog',
-    entities: { dim1: {}, dim2: {} },
+    entities: { dim1: null, dim2: null },
   });
 
   beforeEach(async function () {
@@ -38,12 +38,12 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        label: 'entity_ask',
+        label: 'dim1_ask',
         parameters: { entity: 'dim1' },
       },
       {
         id: TEST_USER,
-        label: 'entity_ask',
+        label: 'dim2_ask',
         parameters: { entity: 'dim2' },
       },
     ]);
@@ -59,12 +59,12 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        label: 'entity_confirm',
+        label: 'dim1_confirm',
         parameters: { entity: { dim: 'dim1' } },
       },
       {
         id: TEST_USER,
-        label: 'entity_ask',
+        label: 'dim2_ask',
         parameters: { entity: 'dim2' },
       },
     ]);
@@ -80,12 +80,12 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        label: 'entity_confirm',
+        label: 'dim1_confirm',
         parameters: { entity: { dim: 'dim1' } },
       },
       {
         id: TEST_USER,
-        label: 'entity_confirm',
+        label: 'dim2_confirm',
         parameters: { entity: { dim: 'dim2' } },
       },
     ]);

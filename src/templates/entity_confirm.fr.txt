@@ -1,1 +1,0 @@
-L'entité {{ entity.body }} a été extraite.
