@@ -5,6 +5,7 @@ class QnasDialog extends Dialog {
     super(config, brain);
     this.label = 'qnas';
     this.templatePath = `${__dirname}/../templates`;
+    this.maxComplexity = 2;
   }
 
   questionButton(question, answer) {

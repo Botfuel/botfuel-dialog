@@ -56,11 +56,8 @@ class DialogManager {
       .sort((intent1, intent2) => {
         const dialog1 = this.getDialog(intent1);
         const dialog2 = this.getDialog(intent2);
-        if (dialog1.oneturn && !dialog2.oneturn) {
-          return 1;
-        }
-        if (!dialog1.oneturn && dialog2.oneturn) {
-          return -1;
+        if (dialog1.maxComplexity !== dialog2.maxComplexity) {
+          return dialog2.maxComplexity - dialog1.maxComplexity;
         }
         return intent1.value - intent2.value;
       });

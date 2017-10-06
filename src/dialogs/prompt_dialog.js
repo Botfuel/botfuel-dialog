@@ -4,6 +4,11 @@ const Dialog = require('./dialog');
  * PromptDialog class.
  */
 class PromptDialog extends Dialog {
+  constructor(config, brain, parameters) {
+    super(config, brain, parameters);
+    this.maxComplexity = Object.keys(parameters.entities).length;
+  }
+
   /**
    * Executes.
    * @param {string} id the user id

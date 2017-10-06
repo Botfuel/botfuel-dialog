@@ -10,7 +10,7 @@ class TextDialog extends Dialog {
   constructor(config, brain, label) {
     super(config, brain);
     this.label = label;
-    this.oneturn = true;
+    this.maxComplexity = 1;
   }
 
   /**

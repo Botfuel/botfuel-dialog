@@ -14,7 +14,7 @@ class Dialog {
    */
   constructor(config, brain, parameters) {
     // console.log('Dialog.constructor', parameters);
-    this.oneturn = false;
+    this.maxComplexity = Number.MAX_SAFE_INTEGER;
     this.config = config;
     this.brain = brain;
     this.parameters = parameters;
