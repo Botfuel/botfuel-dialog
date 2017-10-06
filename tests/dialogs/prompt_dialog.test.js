@@ -38,12 +38,12 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        label: 'dim1_ask',
+        label: 'testdialog_dim1_ask',
         parameters: { entity: 'dim1' },
       },
       {
         id: TEST_USER,
-        label: 'dim2_ask',
+        label: 'testdialog_dim2_ask',
         parameters: { entity: 'dim2' },
       },
     ]);
@@ -59,12 +59,12 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        label: 'dim1_confirm',
+        label: 'testdialog_dim1_confirm',
         parameters: { entity: { dim: 'dim1' } },
       },
       {
         id: TEST_USER,
-        label: 'dim2_ask',
+        label: 'testdialog_dim2_ask',
         parameters: { entity: 'dim2' },
       },
     ]);
@@ -80,12 +80,12 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        label: 'dim1_confirm',
+        label: 'testdialog_dim1_confirm',
         parameters: { entity: { dim: 'dim1' } },
       },
       {
         id: TEST_USER,
-        label: 'dim2_confirm',
+        label: 'testdialog_dim2_confirm',
         parameters: { entity: { dim: 'dim2' } },
       },
     ]);
