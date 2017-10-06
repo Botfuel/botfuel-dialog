@@ -6,7 +6,7 @@ const Dialog = require('./dialog');
 class PromptDialog extends Dialog {
   constructor(config, brain, parameters) {
     super(config, brain, parameters);
-    this.maxComplexity = Object.keys(parameters.entities).length;
+    this.maxComplexity = Object.keys(parameters.entities).length + 1;
   }
 
   /**
@@ -19,26 +19,23 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.execute', id, messageEntities);
     const dialogEntities = await this.brain.conversationGet(id, this.parameters.namespace) || {};
     console.log('PromptDialog.execute: dialogEntities', dialogEntities);
-    for (const messageEntity of messageEntities) {
+    for (const messageEntity of messageEntities
+               .filter((entity) => this.parameters.entities[entity.dim] !== undefined)) {
       console.log('PromptDialog.execute: messageEntity', messageEntity);
-      // if the message entity is of interest for this dialog
-      if (this.parameters.entities[messageEntity.dim] !== undefined) {
-        // we want to keep the order to ease the testability
-        // eslint-disable-next-line no-await-in-loop
-        await this.confirm(id, responses, messageEntity);
-        dialogEntities[messageEntity.dim] = messageEntity;
-      }
+      // we want to keep the order to ease the testability
+      // eslint-disable-next-line no-await-in-loop
+      await this.entityConfirm(id, responses, messageEntity);
+      dialogEntities[messageEntity.dim] = messageEntity;
     }
     console.log('PromptDialog.execute: dialogEntities', dialogEntities);
     await this.brain.conversationSet(id, this.parameters.namespace, dialogEntities);
     let extractionsDone = true;
     for (const entityKey of Object.keys(this.parameters.entities)) {
-      console.log('PromptDialog.execute: entityKey', entityKey);
-      console.log('PromptDialog.execute: entityKey', dialogEntities[entityKey]);
+      console.log('PromptDialog.execute: entityKey', entityKey, dialogEntities[entityKey]);
       if (dialogEntities[entityKey] === undefined) {
         // we want to keep the order to ease the testability
         // eslint-disable-next-line no-await-in-loop
-        await this.ask(id, responses, entityKey);
+        await this.entityAsk(id, responses, entityKey);
         extractionsDone = false;
       }
     }
@@ -51,8 +48,8 @@ class PromptDialog extends Dialog {
    * @param {Object[]} responses
    * @param {Object} entity the entity
    */
-  async confirm(id, responses, entity) {
-    console.log('PromptDialog.confirm', id, responses, entity);
+  async entityConfirm(id, responses, entity) {
+    console.log('PromptDialog.entityConfirm', id, responses, entity);
     this.textMessage(id,
                      responses,
                      `${this.parameters.namespace}_${entity.dim}_confirm`,
@@ -65,8 +62,8 @@ class PromptDialog extends Dialog {
    * @param {Object[]} responses
    * @param {string} entityKey the entityKey
    */
-  async ask(id, responses, entityKey) {
-    console.log('PromptDialog.ask', id, responses, entityKey);
+  async entityAsk(id, responses, entityKey) {
+    console.log('PromptDialog.entityAsk', id, responses, entityKey);
     this.textMessage(id,
                      responses,
                      `${this.parameters.namespace}_${entityKey}_ask`,
