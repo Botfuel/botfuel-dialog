@@ -60,15 +60,14 @@ class DialogManager {
     intents = intents
       .filter(intent => intent.value > this.intentThreshold)
       .slice(0, 2)
-      .reverse();
-    // .sort((intent1, intent2) => {
-    //   const dialog1 = this.getDialog(intent1);
-    //   const dialog2 = this.getDialog(intent2);
-    //   if (dialog1.maxComplexity !== dialog2.maxComplexity) {
-    //     return dialog2.maxComplexity - dialog1.maxComplexity;
-    //   }
-    //   return intent1.value - intent2.value;
-    // });
+      .sort((intent1, intent2) => {
+        const dialog1 = this.getDialog(intent1);
+        const dialog2 = this.getDialog(intent2);
+        //if (dialog1.maxComplexity !== dialog2.maxComplexity) {
+          return dialog2.maxComplexity - dialog1.maxComplexity;
+        //}
+        //return intent1.value - intent2.value;
+    });
     console.log('DialogManager.updateDialogs: intents', intents);
     if (intents.length === 0) { // no intent detected
       if (lastDialog !== undefined) {
