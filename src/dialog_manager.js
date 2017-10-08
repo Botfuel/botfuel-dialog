@@ -23,7 +23,7 @@ class DialogManager {
       `${__dirname}/dialogs/${label}`,
     ];
     for (const path of paths) {
-      console.log('DialogManager.getDialogPath: path', path);
+      // console.log('DialogManager.getDialogPath: path', path);
       if (fs.existsSync(`${path}.js`)) {
         return path;
       }
@@ -57,16 +57,16 @@ class DialogManager {
         const dialog1 = this.getDialog(intent1);
         const dialog2 = this.getDialog(intent2);
         if (dialog1.maxComplexity !== dialog2.maxComplexity) {
-          return dialog2.maxComplexity - dialog1.maxComplexity;
+          return dialog1.maxComplexity - dialog2.maxComplexity;
         }
-        return intent1.value - intent2.value;
+        return intent2.value - intent1.value;
       });
     console.log('DialogManager.updateDialogs: intents', intents);
     let depth = 0;
     for (const intent of intents) {
       const label = intent.label;
       if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== label) {
-        dialogs.push({ label, entities, depth });
+        dialogs.unshift({ label, entities, depth });
       }
       depth++;
     }

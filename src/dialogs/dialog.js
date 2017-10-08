@@ -31,13 +31,13 @@ class Dialog {
     console.log('Dialog.textMessage', userId, label, parameters);
     // TODO: resolve the template given the label (allowing fallback)
     const templateName = `${this.templatePath}/${label}.${this.config.locale}.txt`;
-    console.log('Dialog.textMessage: templateName', templateName);
+    // console.log('Dialog.textMessage: templateName', templateName);
     const lines = Fs
       .readFileSync(templateName, 'utf8')
       .toString()
       .split('\n');
     for (const line of lines) {
-      console.log('Dialog.textMessage: line', line);
+      // console.log('Dialog.textMessage: line', line);
       const text = _.template(line)(parameters);
       if (text !== '') {
         const message = Messages.botText(this.config.id, userId, text);
@@ -102,7 +102,7 @@ class Dialog {
    * @param {Object} message
    */
   pushMessage(responses, message) {
-    console.log('Dialog.pushMessage', responses, message);
+    // console.log('Dialog.pushMessage', responses, message);
     responses.push(message);
   }
 }
