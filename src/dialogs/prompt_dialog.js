@@ -15,8 +15,8 @@ class PromptDialog extends Dialog {
    * @param {Object[]} responses
    * @param {Object[]} messageEntities - entities array from user message
    */
-  async execute(id, responses, messageEntities, dialogAge) {
-    console.log('PromptDialog.execute', id, responses, messageEntities, dialogAge);
+  async execute(id, responses, messageEntities, confirmDialog) {
+    console.log('PromptDialog.execute', id, responses, messageEntities, confirmDialog);
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
     const dialogEntities = await this.brain.conversationGet(id, this.parameters.namespace) || {};
@@ -25,7 +25,7 @@ class PromptDialog extends Dialog {
     }
     console.log('PromptDialog.execute: dialogEntities', dialogEntities);
     await this.brain.conversationSet(id, this.parameters.namespace, dialogEntities);
-    this.confirm(id, responses, messageEntities, dialogAge);
+    this.confirm(id, responses, messageEntities, confirmDialog);
     const missingEntities = Object
           .keys(this.parameters.entities)
           .filter(entityKey => dialogEntities[entityKey] === undefined);
@@ -44,10 +44,10 @@ class PromptDialog extends Dialog {
     }
   }
 
-  confirm(id, responses, entities, dialogAge) {
-    console.log('PromptDialog.confirm', id, responses, entities, dialogAge);
+  confirm(id, responses, entities, confirmDialog) {
+    console.log('PromptDialog.confirm', id, responses, entities, confirmDialog);
     // TODO: put all this in a single template
-    if (dialogAge > 0) {
+    if (confirmDialog) {
       this.textMessage(id,
                        responses,
                        `${this.parameters.namespace}_confirm`);
