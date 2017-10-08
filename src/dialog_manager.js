@@ -90,7 +90,7 @@ class DialogManager {
    * @param {Object[]} entities - the entities
    */
   async executeDialogs(userId, dialogs, lastDialog, entities) {
-    console.log('DialogManager.executeDialogs', userId, dialogs, entities);
+    console.log('DialogManager.executeDialogs', userId, dialogs, lastDialog, entities);
     const responses = [];
     const user = await this.brain.getUser(userId);
     console.log('DialogManager.executeDialogs', user);
