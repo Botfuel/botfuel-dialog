@@ -76,6 +76,8 @@ class DialogManager {
         // no intent detected
         dialogs.push({ label: 'default_dialog' });
       }
+    } else {
+      this.generation++;
     }
   }
 
@@ -106,7 +108,6 @@ class DialogManager {
       }
     }
     await this.brain.userSet(userId, 'dialogs', dialogs);
-    this.generation++;
     return responses;
   }
 
