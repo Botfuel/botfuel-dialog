@@ -63,10 +63,18 @@ class DialogManager {
         return intent1.value - intent2.value;
       });
     console.log('DialogManager.updateDialogs: intents', intents);
+    let newGeneration = false;
     for (const intent of intents) {
-      const label = intent.label;
-      if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== label) {
-        dialogs.push({ label, entities, generation: this.generation });
+      if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label) {
+        if (!newGeneration) {
+          this.generation++;
+          newGeneration = true;
+        }
+        dialogs.push({
+          label: intent.label,
+          entities,
+          generation: this.generation
+        });
       }
     }
     if (dialogs.length === 0) {
@@ -74,10 +82,11 @@ class DialogManager {
         dialogs.push(lastDialog);
       } else {
         // no intent detected
-        dialogs.push({ label: 'default_dialog' });
+        dialogs.push({
+          label: 'default_dialog',
+          generation: this.generation
+        });
       }
-    } else {
-      this.generation++;
     }
   }
 
