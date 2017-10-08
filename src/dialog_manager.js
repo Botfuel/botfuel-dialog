@@ -51,12 +51,11 @@ class DialogManager {
    * Executes the dialogs.
    * @param {string} userId the user id
    * @param {Object[]} dialogs - the dialogs
-   * @param {string} lastDialog - the last dialog
    * @param {Object[]} intents - the intents
    * @param {Object[]} entities - the entities
    */
-  updateDialogs(userId, dialogs, lastDialog, intents, entities) {
-    console.log('DialogManager.updateDialogs', userId, dialogs, lastDialog, intents, entities);
+  async updateDialogs(userId, dialogs, intents, entities) {
+    console.log('DialogManager.updateDialogs', userId, dialogs, intents, entities);
     intents = intents
       .filter(intent => intent.value > this.intentThreshold)
       .slice(0, 2)
@@ -67,9 +66,10 @@ class DialogManager {
           return dialog2.maxComplexity - dialog1.maxComplexity;
         }
         return intent1.value - intent2.value;
-    });
+      });
     console.log('DialogManager.updateDialogs: intents', intents);
     if (intents.length === 0) { // no intent detected
+      const lastDialog = await this.brain.userGet(userId, 'lastDialog');
       if (lastDialog !== undefined) {
         dialogs.push(lastDialog);
       } else {
@@ -89,23 +89,22 @@ class DialogManager {
    * @param {Object[]} dialogs - the dialogs
    * @param {Object[]} entities - the entities
    */
-  async executeDialogs(userId, dialogs, lastDialog, entities) {
-    console.log('DialogManager.executeDialogs', userId, dialogs, lastDialog, entities);
+  async executeDialogs(userId, dialogs, entities) {
+    console.log('DialogManager.executeDialogs', userId, dialogs, entities);
     const responses = [];
     const user = await this.brain.getUser(userId);
-    console.log('DialogManager.executeDialogs', user);
+    console.log('DialogManager.executeDialogs: user', user);
     let done = true;
     while (done && dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
       console.log('DialogManager.executeDialogs: dialog', dialog);
-      let confirmDialog = null;
-      if (lastDialog === undefined) {
-        confirmDialog = false;
-      } else {
-        confirmDialog = dialog.label !== lastDialog.label;
-      }
+      // eslint-disable-next-line no-await-in-loop
+      const lastDialog = await this.brain.userGet(userId, 'lastDialog');
       // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
+      const confirmDialog = (lastDialog === undefined)
+            ? false
+            : (dialog.label !== lastDialog.label);
       // eslint-disable-next-line no-await-in-loop
       done = await this
         .getDialog(dialog)
@@ -128,9 +127,8 @@ class DialogManager {
   async execute(userId, intents, entities) {
     console.log('DialogManager.execute', userId, intents, entities);
     const dialogs = await this.brain.userGet(userId, 'dialogs');
-    const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-    this.updateDialogs(userId, dialogs, lastDialog, intents, entities);
-    return this.executeDialogs(userId, dialogs, lastDialog, entities);
+    await this.updateDialogs(userId, dialogs, intents, entities);
+    return this.executeDialogs(userId, dialogs, entities);
   }
 }
 
