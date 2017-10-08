@@ -30,7 +30,7 @@ class PromptDialog extends Dialog {
           .keys(this.parameters.entities)
           .filter(entityKey => dialogEntities[entityKey] === undefined);
     this.ask(id, responses, missingEntities);
-    return missingEntities.length !== 0;
+    return missingEntities.length === 0;
   }
 
   ask(id, responses, entities) {

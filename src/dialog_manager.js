@@ -16,7 +16,7 @@ class DialogManager {
   }
 
   getDialogPath(label) {
-    console.log('DialogManager.getDialogPath', label);
+    // console.log('DialogManager.getDialogPath', label);
     const paths = [
       `${this.config.path}/src/controllers/dialogs/${label}.${this.config.adapter}`,
       `${this.config.path}/src/controllers/dialogs/${label}`,
@@ -33,7 +33,7 @@ class DialogManager {
   }
 
   getDialog(dialog) {
-    console.log('DialogManager.getDialog', dialog);
+    // console.log('DialogManager.getDialog', dialog);
     const path = this.getDialogPath(dialog.label);
     if (path === null) {
       return null;
