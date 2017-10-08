@@ -59,7 +59,8 @@ class DialogManager {
     console.log('DialogManager.updateDialogs', userId, dialogs, lastDialog, intents, entities);
     intents = intents
       .filter(intent => intent.value > this.intentThreshold)
-      .slice(0, 2);
+      .slice(0, 2)
+      .reverse();
     // .sort((intent1, intent2) => {
     //   const dialog1 = this.getDialog(intent1);
     //   const dialog2 = this.getDialog(intent2);
