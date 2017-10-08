@@ -16,7 +16,7 @@ class PromptDialog extends Dialog {
    * @param {Object[]} messageEntities - entities array from user message
    */
   async execute(id, responses, messageEntities, dialogAge) {
-    console.log('PromptDialog.execute', id, responses, messageEntities, age);
+    console.log('PromptDialog.execute', id, responses, messageEntities, dialogAge);
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
     const dialogEntities = await this.brain.conversationGet(id, this.parameters.namespace) || {};
@@ -25,7 +25,7 @@ class PromptDialog extends Dialog {
     }
     console.log('PromptDialog.execute: dialogEntities', dialogEntities);
     await this.brain.conversationSet(id, this.parameters.namespace, dialogEntities);
-    this.confirm(id, responses, messageEntities, age);
+    this.confirm(id, responses, messageEntities, dialogAge);
     const missingEntities = Object
           .keys(this.parameters.entities)
           .filter(entityKey => dialogEntities[entityKey] === undefined);
