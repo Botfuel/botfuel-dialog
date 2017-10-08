@@ -12,7 +12,6 @@ class DialogManager {
     this.brain = brain;
     this.config = config;
     this.intentThreshold = this.config.intentThreshold || 0.8;
-    this.generation = -1;
   }
 
   getDialogPath(label) {
@@ -63,11 +62,13 @@ class DialogManager {
         return intent1.value - intent2.value;
       });
     console.log('DialogManager.updateDialogs: intents', intents);
+    let depth = 0;
     for (const intent of intents) {
       const label = intent.label;
       if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== label) {
-        dialogs.push({ label, entities, generation: this.generation });
+        dialogs.push({ label, entities, depth });
       }
+      depth++;
     }
     if (dialogs.length === 0) {
       if (lastDialog !== undefined) {
@@ -96,12 +97,10 @@ class DialogManager {
       console.log('DialogManager.executeDialogs: dialog', dialog);
       // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
-      // has the dialog justed been stacked?
-      const dialogAge = this.generation - dialog.generation;
       // eslint-disable-next-line no-await-in-loop
       done = await this
         .getDialog(dialog)
-        .execute(userId, responses, entities, dialogAge);
+        .execute(userId, responses, entities, dialog.depth);
       console.log('DialogManager.executeDialogs: done', done);
       if (done) {
         dialogs = dialogs.slice(0, -1);
@@ -121,7 +120,6 @@ class DialogManager {
     console.log('DialogManager.execute', userId, intents, entities);
     const dialogs = await this.brain.userGet(userId, 'dialogs');
     const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-    this.generation++;
     this.updateDialogs(userId, dialogs, lastDialog, intents, entities);
     return this.executeDialogs(userId, dialogs, entities);
   }
