@@ -26,8 +26,8 @@ class QnasDialog extends Dialog {
    * @param {} responses
    * @param {Object} messageEntities
    */
-  async execute(id, responses, messageEntities) {
-    console.log('QnasDialog.execute', responses, messageEntities);
+  async execute(id, responses, messageEntities, age) {
+    console.log('QnasDialog.execute', id, responses, messageEntities, age);
     const qnas = messageEntities[0].value;
     console.log('QnasDialog.execute: qnas', qnas);
     if (qnas.length === 1) {

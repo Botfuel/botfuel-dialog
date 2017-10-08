@@ -17,7 +17,8 @@ class TextDialog extends Dialog {
    * Executes.
    * @param {string} id the user id
    */
-  async execute(id, responses, messageEntities) {
+  async execute(id, responses, messageEntities, age) {
+    console.log('TextDialog.execute', id, responses, messageEntities, age);
     await this.textMessage(id, responses, this.label, messageEntities);
     return true;
   }

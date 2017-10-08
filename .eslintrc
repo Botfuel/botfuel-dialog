@@ -21,6 +21,7 @@
     "mocha/no-exclusive-tests": "error",
     "no-console": "off",
     "no-param-reassign": "off",
+    "no-plusplus": "off",
     "no-restricted-syntax": "off",
     "strict": 0
   }

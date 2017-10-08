@@ -15,59 +15,49 @@ class PromptDialog extends Dialog {
    * @param {Object[]} responses
    * @param {Object[]} messageEntities - entities array from user message
    */
-  async execute(id, responses, messageEntities) {
-    console.log('PromptDialog.execute', id, messageEntities);
+  async execute(id, responses, messageEntities, dialogAge) {
+    console.log('PromptDialog.execute', id, responses, messageEntities, age);
+    messageEntities = messageEntities
+      .filter(entity => this.parameters.entities[entity.dim] !== undefined);
     const dialogEntities = await this.brain.conversationGet(id, this.parameters.namespace) || {};
-    console.log('PromptDialog.execute: dialogEntities', dialogEntities);
-    for (const messageEntity of messageEntities
-               .filter((entity) => this.parameters.entities[entity.dim] !== undefined)) {
-      console.log('PromptDialog.execute: messageEntity', messageEntity);
-      // we want to keep the order to ease the testability
-      // eslint-disable-next-line no-await-in-loop
-      await this.entityConfirm(id, responses, messageEntity);
+    for (const messageEntity of messageEntities) {
       dialogEntities[messageEntity.dim] = messageEntity;
     }
     console.log('PromptDialog.execute: dialogEntities', dialogEntities);
     await this.brain.conversationSet(id, this.parameters.namespace, dialogEntities);
-    let extractionsDone = true;
-    for (const entityKey of Object.keys(this.parameters.entities)) {
-      console.log('PromptDialog.execute: entityKey', entityKey, dialogEntities[entityKey]);
-      if (dialogEntities[entityKey] === undefined) {
-        // we want to keep the order to ease the testability
-        // eslint-disable-next-line no-await-in-loop
-        await this.entityAsk(id, responses, entityKey);
-        extractionsDone = false;
-      }
+    this.confirm(id, responses, messageEntities, age);
+    const missingEntities = Object
+          .keys(this.parameters.entities)
+          .filter(entityKey => dialogEntities[entityKey] === undefined);
+    this.ask(id, responses, missingEntities);
+    return missingEntities.length !== 0;
+  }
+
+  ask(id, responses, entities) {
+    console.log('PromptDialog.ask', id, responses, entities);
+    // TODO: put all this in a single template
+    for (const entityKey of entities) {
+      this.textMessage(id,
+                       responses,
+                       `${this.parameters.namespace}_${entityKey}_ask`,
+                       { entity: entityKey });
     }
-    return extractionsDone;
   }
 
-  /**
-   * Confirms the entity.
-   * @param {string} id the user id
-   * @param {Object[]} responses
-   * @param {Object} entity the entity
-   */
-  async entityConfirm(id, responses, entity) {
-    console.log('PromptDialog.entityConfirm', id, responses, entity);
-    this.textMessage(id,
-                     responses,
-                     `${this.parameters.namespace}_${entity.dim}_confirm`,
-                     { entity });
-  }
-
-  /**
-   * Asks the entity.
-   * @param {string} id the user id
-   * @param {Object[]} responses
-   * @param {string} entityKey the entityKey
-   */
-  async entityAsk(id, responses, entityKey) {
-    console.log('PromptDialog.entityAsk', id, responses, entityKey);
-    this.textMessage(id,
-                     responses,
-                     `${this.parameters.namespace}_${entityKey}_ask`,
-                     { entity: entityKey });
+  confirm(id, responses, entities, dialogAge) {
+    console.log('PromptDialog.confirm', id, responses, entities, dialogAge);
+    // TODO: put all this in a single template
+    if (dialogAge > 0) {
+      this.textMessage(id,
+                       responses,
+                       `${this.parameters.namespace}_confirm`);
+    }
+    for (const entity of entities) {
+      this.textMessage(id,
+                       responses,
+                       `${this.parameters.namespace}_${entity.dim}_confirm`,
+                       { entity });
+    }
   }
 }
 

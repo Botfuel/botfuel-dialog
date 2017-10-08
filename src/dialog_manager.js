@@ -12,6 +12,7 @@ class DialogManager {
     this.brain = brain;
     this.config = config;
     this.intentThreshold = this.config.intentThreshold || 0.8;
+    this.generation = -1;
   }
 
   getDialogPath(label) {
@@ -38,7 +39,7 @@ class DialogManager {
       return null;
     }
     const DialogConstructor = require(path);
-    return new DialogConstructor(this.config, this.brain, dialog.parameters);
+    return new DialogConstructor(this.config, this.brain);
   }
 
    /**
@@ -63,8 +64,9 @@ class DialogManager {
       });
     console.log('DialogManager.updateDialogs: intents', intents);
     for (const intent of intents) {
-      if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label) {
-        dialogs.push({ label: intent.label, parameters: entities });
+      const label = intent.label;
+      if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== label) {
+        dialogs.push({ label, entities, generation: this.generation });
       }
     }
     if (dialogs.length === 0) {
@@ -78,26 +80,12 @@ class DialogManager {
   }
 
   /**
-   * Populates and executes the stack.
-   * @param {string} userId the user id
-   * @param {string[]} intents the intents
-   * @param {Object[]} entities the transient entities
-   */
-  async execute(userId, intents, entities) {
-    console.log('DialogManager.execute', userId, intents, entities);
-    const dialogs = await this.brain.userGet(userId, 'dialogs');
-    const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-    this.updateDialogs(userId, dialogs, lastDialog, intents, entities);
-    return this.executeDialogs(userId, dialogs, entities);
-  }
-
-  /**
    * Executes the dialogs.
    * @param {string} userId the user id
    * @param {Object[]} dialogs - the dialogs
    * @param {Object[]} entities - the entities
    */
-  async executeDialogs(userId, dialogs, entities) { // Entities could be replace by parameters
+  async executeDialogs(userId, dialogs, entities) {
     console.log('DialogManager.executeDialogs', userId, dialogs, entities);
     const responses = [];
     const user = await this.brain.getUser(userId);
@@ -108,10 +96,12 @@ class DialogManager {
       console.log('DialogManager.executeDialogs: dialog', dialog);
       // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
+      // has the dialog justed been stacked?
+      const dialogAge = this.generation - dialog.generation;
       // eslint-disable-next-line no-await-in-loop
       done = await this
         .getDialog(dialog)
-        .execute(userId, responses, entities);
+        .execute(userId, responses, entities, dialogAge);
       console.log('DialogManager.executeDialogs: done', done);
       if (done) {
         dialogs = dialogs.slice(0, -1);
@@ -119,6 +109,21 @@ class DialogManager {
     }
     await this.brain.userSet(userId, 'dialogs', dialogs);
     return responses;
+  }
+
+  /**
+   * Populates and executes the stack.
+   * @param {string} userId the user id
+   * @param {string[]} intents the intents
+   * @param {Object[]} entities the transient entities
+   */
+  async execute(userId, intents, entities) {
+    console.log('DialogManager.execute', userId, intents, entities);
+    const dialogs = await this.brain.userGet(userId, 'dialogs');
+    const lastDialog = await this.brain.userGet(userId, 'lastDialog');
+    this.generation++;
+    this.updateDialogs(userId, dialogs, lastDialog, intents, entities);
+    return this.executeDialogs(userId, dialogs, entities);
   }
 }
 
