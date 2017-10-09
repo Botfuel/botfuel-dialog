@@ -63,7 +63,7 @@ class Bot {
   }
 
   async getResponses(userMessage) {
-    console.log('Bot.getResponses', userMessage);
+    // console.log('Bot.getResponses', userMessage);
     switch (userMessage.type) {
       case Messages.TYPE_POSTBACK:
         return this.getResponsesWhenPostback(userMessage);

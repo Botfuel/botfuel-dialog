@@ -11,10 +11,10 @@ class TestPromptDialog extends PromptDialog {
     super({}, brain, parameters);
   }
 
-  textMessage(id, responses, label, parameters) {
+  textMessage(id, responses, template, parameters) {
     responses.push({
       id,
-      label,
+      template,
       parameters,
     });
   }
@@ -38,12 +38,12 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        label: 'testdialog_dim1_ask',
+        template: 'testdialog_dim1_ask',
         parameters: { entity: 'dim1' },
       },
       {
         id: TEST_USER,
-        label: 'testdialog_dim2_ask',
+        template: 'testdialog_dim2_ask',
         parameters: { entity: 'dim2' },
       },
     ]);
@@ -59,12 +59,12 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        label: 'testdialog_dim1_confirm',
+        template: 'testdialog_dim1_confirm',
         parameters: { entity: { dim: 'dim1' } },
       },
       {
         id: TEST_USER,
-        label: 'testdialog_dim2_ask',
+        template: 'testdialog_dim2_ask',
         parameters: { entity: 'dim2' },
       },
     ]);
@@ -80,12 +80,12 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        label: 'testdialog_dim1_confirm',
+        template: 'testdialog_dim1_confirm',
         parameters: { entity: { dim: 'dim1' } },
       },
       {
         id: TEST_USER,
-        label: 'testdialog_dim2_confirm',
+        template: 'testdialog_dim2_confirm',
         parameters: { entity: { dim: 'dim2' } },
       },
     ]);

@@ -24,13 +24,13 @@ class Dialog {
   /**
    * @param {string} userId the user id
    * @param {Object[]} responses
-   * @param {string} label the template label
+   * @param {string} template the template
    * @param {Object} parameters the template parameters
    */
-  textMessage(userId, responses, label, parameters) {
-    console.log('Dialog.textMessage', userId, label, parameters);
+  textMessage(userId, responses, template, parameters) {
+    console.log('Dialog.textMessage', userId, template, parameters);
     // TODO: resolve the template given the label (allowing fallback)
-    const templateName = `${this.templatePath}/${label}.${this.config.locale}.txt`;
+    const templateName = `${this.templatePath}/${template}.${this.config.locale}.txt`;
     // console.log('Dialog.textMessage: templateName', templateName);
     const lines = Fs
       .readFileSync(templateName, 'utf8')

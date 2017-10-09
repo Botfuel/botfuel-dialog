@@ -65,13 +65,13 @@ class DialogManager {
     for (let i = 0; i < intents.length; i++) {
       const label = intents[i].label;
       if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== label) {
-         dialogs.push({
-           label,
-           entities,
-           order: intents.length - 1 - i
-         });
-       }
-     }
+        dialogs.push({
+          label,
+          entities,
+          order: intents.length - 1 - i,
+        });
+      }
+    }
     if (dialogs.length === 0) { // no intent detected
       const dialog = await this.brain.userGet(userId, 'lastDialog');
       if (dialog !== undefined) {
@@ -80,7 +80,7 @@ class DialogManager {
       } else {
         dialogs.push({
           label: 'default_dialog',
-          order: 0
+          order: 0,
         });
       }
     }
@@ -102,12 +102,7 @@ class DialogManager {
       const dialog = dialogs[dialogs.length - 1];
       console.log('DialogManager.executeDialogs: dialog', dialog);
       // eslint-disable-next-line no-await-in-loop
-      // const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-      // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
-      // const confirmDialog = (lastDialog === undefined) // TODO: fix this
-      //      ? false
-      //      : (dialog.order !== 0 && dialog.label !== lastDialog.label);
       // eslint-disable-next-line no-await-in-loop
       done = await this
         .getDialog(dialog)

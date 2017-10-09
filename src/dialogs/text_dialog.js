@@ -7,9 +7,8 @@ class TextDialog extends Dialog {
   /**
    * Constructor.
    */
-  constructor(config, brain, label) {
-    super(config, brain);
-    this.label = label;
+  constructor(config, brain, parameters) {
+    super(config, brain, parameters);
     this.maxComplexity = 1;
   }
 
@@ -19,7 +18,7 @@ class TextDialog extends Dialog {
    */
   async execute(id, responses, messageEntities, age) {
     console.log('TextDialog.execute', id, responses, messageEntities, age);
-    await this.textMessage(id, responses, this.label, messageEntities);
+    await this.textMessage(id, responses, this.parameters.template, messageEntities);
     return true;
   }
 }

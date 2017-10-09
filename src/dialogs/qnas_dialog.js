@@ -2,8 +2,7 @@ const Dialog = require('./dialog');
 
 class QnasDialog extends Dialog {
   constructor(config, brain) {
-    super(config, brain);
-    this.label = 'qnas';
+    super(config, brain, { template: 'qnas' });
     this.templatePath = `${__dirname}/../templates`;
     this.maxComplexity = 2;
   }
@@ -31,7 +30,7 @@ class QnasDialog extends Dialog {
     const qnas = messageEntities[0].value;
     console.log('QnasDialog.execute: qnas', qnas);
     if (qnas.length === 1) {
-      this.textMessage(id, responses, this.label, { answer: qnas[0].answer });
+      this.textMessage(id, responses, this.parameters.template, { answer: qnas[0].answer });
     } else {
       const buttons = qnas.map(qna => this.questionButton(qna.questions[0], qna.answer));
       await this.textMessage(id, responses, 'qnas_header');
