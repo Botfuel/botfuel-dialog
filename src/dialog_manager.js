@@ -41,12 +41,6 @@ class DialogManager {
     return new DialogConstructor(this.config, this.brain);
   }
 
-  updateDialogsWithIntent(dialogs, intent, entities) {
-    if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intent.label) {
-      dialogs.push({ label: intent.label, entities });
-    }
-  }
-
   /**
    * Executes the dialogs.
    * @param {string} userId the user id
@@ -69,16 +63,18 @@ class DialogManager {
       });
     console.log('DialogManager.updateDialogs: intents', intents);
     if (intents.length === 0) { // no intent detected
-      const lastDialog = await this.brain.userGet(userId, 'lastDialog');
-      if (lastDialog !== undefined) {
-        dialogs.push(lastDialog);
+      const dialog = await this.brain.userGet(userId, 'lastDialog');
+      if (dialog !== undefined) {
+        dialog.order = 0;
+        dialogs.push(dialog);
       } else {
-        dialogs.push({ label: 'default_dialog' });
+        dialogs.push({ label: 'default_dialog', order: 0 });
       }
     } else {
-      this.updateDialogsWithIntent(dialogs, intents[0], entities);
-      if (intents.length === 2) {
-        this.updateDialogsWithIntent(dialogs, intents[1], entities);
+      for (let i = intents.length - 1; i >= 0; i--) {
+        if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intents[i].label) {
+          dialogs.push({ label: intents[i].label, entities, order: i });
+        }
       }
     }
   }
@@ -99,16 +95,16 @@ class DialogManager {
       const dialog = dialogs[dialogs.length - 1];
       console.log('DialogManager.executeDialogs: dialog', dialog);
       // eslint-disable-next-line no-await-in-loop
-      const lastDialog = await this.brain.userGet(userId, 'lastDialog');
+      // const lastDialog = await this.brain.userGet(userId, 'lastDialog');
       // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
-      const confirmDialog = (lastDialog === undefined)
-            ? false
-            : (dialog.label !== lastDialog.label);
+      // const confirmDialog = (lastDialog === undefined) // TODO: fix this
+      //      ? false
+      //      : (dialog.order !== 0 && dialog.label !== lastDialog.label);
       // eslint-disable-next-line no-await-in-loop
       done = await this
         .getDialog(dialog)
-        .execute(userId, responses, entities, confirmDialog);
+        .execute(userId, responses, entities, dialog.order !== 0);
       console.log('DialogManager.executeDialogs: done', done);
       if (done) {
         dialogs = dialogs.slice(0, -1);
