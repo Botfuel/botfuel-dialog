@@ -38,7 +38,7 @@ class DialogManager {
       return null;
     }
     const DialogConstructor = require(path);
-    return new DialogConstructor(this.config, this.brain, DialogConstructor.params());
+    return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
   }
 
   /**
