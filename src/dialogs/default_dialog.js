@@ -5,7 +5,7 @@ const TextDialog = require('./text_dialog');
  */
 class DefaultDialog extends TextDialog {
   constructor(config, brain) {
-    super(config, brain, 'default');
+    super(config, brain, { template: 'default' });
     this.templatePath = `${__dirname}/../templates`;
   }
 }
