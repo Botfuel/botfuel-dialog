@@ -8,13 +8,12 @@ class WsExtractor {
   /**
    * Constructor.
    */
-  constructor(options) {
-    // console.log('WsExtractor.constructor', options);
+  constructor(parameters) {
     this.client = new nlp.EntityExtraction({
       appId: process.env.BOTFUEL_APP_ID,
       appKey: process.env.BOTFUEL_APP_KEY,
     });
-    this.options = options;
+    this.parameters = parameters;
   }
 
   /**
@@ -22,7 +21,7 @@ class WsExtractor {
    */
   async compute(sentence) {
     // console.log('WsExtractor.compute', sentence);
-    const query = _.clone(this.options);
+    const query = _.clone(this.parameters);
     _.extend(query, { sentence });
     return this.client.compute(query);
   }

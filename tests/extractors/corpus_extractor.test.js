@@ -10,10 +10,10 @@ const teams = new MatrixCorpus([
   ['Football Club de Nantes', 'FCN'],
   ['Guégan'],
 ]);
+const extractor = new CorpusExtractor({ dimension: 'teams', corpus: teams });
 
 describe('CorpusExtractor', function () {
   it('should properly extract', async function () {
-    const extractor = new CorpusExtractor('teams', teams);
     const entities = await extractor.compute('Guégan joue contre l\'Olympique Lyonnais');
     expect(entities).to.eql([
       {
@@ -38,7 +38,6 @@ describe('CorpusExtractor', function () {
   });
 
   it('should properly extract when substring', async function () {
-    const extractor = new CorpusExtractor('teams', teams);
     const entities = await extractor.compute('LOL');
     expect(entities).to.eql([]);
   });

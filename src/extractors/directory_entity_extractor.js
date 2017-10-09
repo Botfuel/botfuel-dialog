@@ -18,7 +18,10 @@ class DirectoryEntityExtractor extends CompositeEntityExtractor {
     }
     super(files
           .filter(file => file.match(/^.*.js$/))
-          .map(file => new (require(file))()));
+          .map((file) => {
+            const ExtractorConstructor = require(file);
+            return new ExtractorConstructor(ExtractorConstructor.params);
+          }));
   }
 }
 

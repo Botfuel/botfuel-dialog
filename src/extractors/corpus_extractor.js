@@ -7,11 +7,10 @@ class CorpusExtractor {
   /**
    * Constructor.
    */
-  constructor(dim, corpus, options) {
-    console.log('CorpusExtractor.constructor', '<corpus>', options);
-    this.dim = dim;
-    this.corpus = corpus;
-    this.options = options;
+  constructor(parameters) {
+    this.dimension = parameters.dimension;
+    this.corpus = parameters.corpus;
+    this.options = parameters.options;
   }
 
   /**
@@ -51,7 +50,7 @@ class CorpusExtractor {
         const remainder = this.getRemainder(sentence, normalizedWord);
         if (remainder !== null) {
           entities.push({
-            dim: this.dim,
+            dim: this.dimension,
             values: [
               {
                 value: this.corpus.getValue(normalizedWord, this.options),
