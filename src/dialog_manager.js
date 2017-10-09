@@ -62,19 +62,26 @@ class DialogManager {
         return intent1.value - intent2.value;
       });
     console.log('DialogManager.updateDialogs: intents', intents);
-    if (intents.length === 0) { // no intent detected
+    for (let i = 0; i < intents.length; i++) {
+      const label = intents[i].label;
+      if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== label) {
+         dialogs.push({
+           label,
+           entities,
+           order: intents.length - 1 - i
+         });
+       }
+     }
+    if (dialogs.length === 0) { // no intent detected
       const dialog = await this.brain.userGet(userId, 'lastDialog');
       if (dialog !== undefined) {
         dialog.order = 0;
         dialogs.push(dialog);
       } else {
-        dialogs.push({ label: 'default_dialog', order: 0 });
-      }
-    } else {
-      for (let i = 0; i < intents.length; i++) {
-        if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intents[i].label) {
-          dialogs.push({ label: intents[i].label, entities, order: intents.length - 1 - i });
-        }
+        dialogs.push({
+          label: 'default_dialog',
+          order: 0
+        });
       }
     }
   }
