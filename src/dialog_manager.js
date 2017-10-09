@@ -71,9 +71,9 @@ class DialogManager {
         dialogs.push({ label: 'default_dialog', order: 0 });
       }
     } else {
-      for (let i = intents.length - 1; i >= 0; i--) {
+      for (let i = 0; i < intents.length; i++) {
         if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== intents[i].label) {
-          dialogs.push({ label: intents[i].label, entities, order: i });
+          dialogs.push({ label: intents[i].label, entities, order: intents.length - 1 - i });
         }
       }
     }
