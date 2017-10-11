@@ -37,10 +37,9 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.ask', id, responses, entities);
     // TODO: put all this in a single template
     for (const entityKey of entities) {
-      this.textMessage(id,
-                       responses,
-                       `${this.parameters.namespace}_${entityKey}_ask`,
-                       { entity: entityKey });
+      this.pushMessages(responses, this.textMessages(id,
+                                                     `${this.parameters.namespace}_${entityKey}_ask`,
+                                                     { entity: entityKey }));
     }
   }
 
@@ -48,15 +47,13 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.confirm', id, responses, entities, confirmDialog);
     // TODO: put all this in a single template
     if (confirmDialog) {
-      this.textMessage(id,
-                       responses,
-                       `${this.parameters.namespace}_confirm`);
+      this.pushMessages(responses, this.textMessages(id,
+                                                     `${this.parameters.namespace}_confirm`));
     }
     for (const entity of entities) {
-      this.textMessage(id,
-                       responses,
-                       `${this.parameters.namespace}_${entity.dim}_confirm`,
-                       { entity });
+      this.pushMessages(responses, this.textMessages(id,
+                                                     `${this.parameters.namespace}_${entity.dim}_confirm`,
+                                                     { entity }));
     }
   }
 }

@@ -11,12 +11,12 @@ class TestPromptDialog extends PromptDialog {
     super({}, brain, parameters);
   }
 
-  textMessage(id, responses, template, parameters) {
-    responses.push({
+  textMessages(id, template, parameters) {
+    return [{
       id,
       template,
       parameters,
-    });
+    }];
   }
 }
 

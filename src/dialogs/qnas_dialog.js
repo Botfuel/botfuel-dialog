@@ -1,3 +1,4 @@
+const Messages = require('../messages');
 const Dialog = require('./dialog');
 
 class QnasDialog extends Dialog {
@@ -25,16 +26,18 @@ class QnasDialog extends Dialog {
    * @param {} responses
    * @param {Object} messageEntities
    */
-  async execute(id, responses, messageEntities, age) {
-    console.log('QnasDialog.execute', id, responses, messageEntities, age);
+  async execute(id, responses, messageEntities) {
+    console.log('QnasDialog.execute', id, responses, messageEntities);
     const qnas = messageEntities[0].value;
     console.log('QnasDialog.execute: qnas', qnas);
     if (qnas.length === 1) {
-      this.textMessage(id, responses, this.parameters.template, { answer: qnas[0].answer });
+      this.pushMessages(responses, this.textMessages(id,
+                                                     this.parameters.template,
+                                                     { answer: qnas[0].answer }));
     } else {
+      this.pushMessages(responses, this.textMessages(id, 'qnas_header'));
       const buttons = qnas.map(qna => this.questionButton(qna.questions[0], qna.answer));
-      await this.textMessage(id, responses, 'qnas_header');
-      await this.actionsMessage(id, responses, buttons);
+      this.pushMessage(responses, Messages.botActions(this.config.id, id, buttons));
     }
     return true;
   }

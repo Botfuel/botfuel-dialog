@@ -27,82 +27,26 @@ class Dialog {
    * @param {string} template the template
    * @param {Object} parameters the template parameters
    */
-  textMessage(userId, responses, template, parameters) {
+  textMessages(userId, template, parameters) {
     console.log('Dialog.textMessage', userId, template, parameters);
     // TODO: resolve the template given the label (allowing fallback)
     const templateName = `${this.templatePath}/${template}.${this.config.locale}.txt`;
-    // console.log('Dialog.textMessage: templateName', templateName);
-    const lines = Fs
+    return Fs
       .readFileSync(templateName, 'utf8')
       .toString()
-      .split('\n');
-    for (const line of lines) {
-      // console.log('Dialog.textMessage: line', line);
-      const text = _.template(line)(parameters);
-      if (text !== '') {
-        const message = Messages.botText(this.config.id, userId, text);
-        this.pushMessage(responses, message);
-      }
+      .split('\n')
+      .map(line => _.template(line)(parameters))
+      .filter(text => text !== '')
+      .map(text => Messages.botText(this.config.id, userId, text));
+  }
+
+  pushMessages(responses, messages) {
+    for (const message of messages) {
+      responses.push(message);
     }
   }
 
-  /**
-   * @param {string} userId the user id
-   * @param {Object[]} responses
-   * @param {Object[]} actions
-   * @param {Object} options
-   */
-  actionsMessage(userId, responses, actions, options = {}) {
-    console.log('Dialog.actionsMessage', userId, actions, options);
-    const message = Messages.botActions(this.config.id, userId, actions, options);
-    this.pushMessage(responses, message);
-  }
-
-  /**
-   * @param {string} userId the user id
-   * @param {Object[]} responses
-   * @param {Object[]} quickreplies
-   * @param {Object} options
-   */
-  quickrepliesMessage(userId, responses, quickreplies, options = {}) {
-    console.log('Dialog.quickrepliesMessage', userId, quickreplies, options);
-    const message = Messages.botQuickreplies(this.config.id, userId, quickreplies, options);
-    this.pushMessage(responses, message);
-  }
-
-  /**
-   * Add cards message to responses
-   * @param {string} userId the user id
-   * @param {Object[]} responses
-   * @param {Object[]} cards
-   * @param {Object} options
-   */
-  cardsMessage(userId, responses, cards, options = {}) {
-    console.log('Dialog.cardsMessage', userId, cards, options);
-    const message = Messages.botCards(this.config.id, userId, cards, options);
-    this.pushMessage(responses, message);
-  }
-
-  /**
-   * Add cards message to responses
-   * @param {string} userId the user id
-   * @param {Object[]} responses
-   * @param {Object[]} imageUrl
-   * @param {Object} options
-   */
-  imageMessage(userId, responses, imageUrl, options = {}) {
-    console.log('Dialog.imageMessage', userId, imageUrl, options);
-    const message = Messages.botImage(this.config.id, userId, imageUrl, options);
-    this.pushMessage(responses, message);
-  }
-
-  /**
-   * Push message to responses
-   * @param {Object[]} responses
-   * @param {Object} message
-   */
   pushMessage(responses, message) {
-    // console.log('Dialog.pushMessage', responses, message);
     responses.push(message);
   }
 }
