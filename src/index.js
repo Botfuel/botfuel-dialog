@@ -15,6 +15,7 @@ const Postback = require('./views/parts/postback');
 const PromptDialog = require('./dialogs/prompt_dialog');
 const QuickrepliesMessage = require('./views/parts/quickreplies_message');
 const TextDialog = require('./dialogs/text_dialog');
+const UserTextMessage = require('./views/parts/user_text_message');
 const WsExtractor = require('./extractors/ws_extractor');
 
 module.exports = {
@@ -35,5 +36,6 @@ module.exports = {
   PromptDialog,
   QuickrepliesMessage,
   TextDialog,
+  UserTextMessage,
   WsExtractor,
 };
