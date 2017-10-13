@@ -30,27 +30,11 @@ class BotfuelAdapter extends WebAdapter {
    * @param {Object} botMessage
    * @returns {Promise}
    */
-  async sendText(botMessage) {
-    console.log('BotfuelAdapter.sendText', botMessage);
-    await this.postResponse({ uri: this.getUrl(botMessage), body: botMessage });
-  }
-
-  /**
-   * @param {Object} botMessage
-   * @returns {Promise}
-   */
-  async sendActions(botMessage) {
-    console.log('BotfuelAdapter.sendActions', botMessage);
-    await this.postResponse({ uri: this.getUrl(botMessage), body: botMessage });
-  }
-
-  /**
-   * @param {Object} botMessage
-   * @returns {Promise}
-   */
-  async sendQuickreplies(botMessage) {
-    console.log('BotfuelAdapter.sendQuickreplies', botMessage);
-    await this.postResponse({ uri: this.getUrl(botMessage), body: botMessage });
+  async send(botMessages) {
+    console.log('BotfuelAdapter.sendText', botMessages);
+    for (const botMessage of botMessages) {
+      await this.postResponse({ uri: this.getUrl(botMessage), body: botMessage });
+    }
   }
 }
 

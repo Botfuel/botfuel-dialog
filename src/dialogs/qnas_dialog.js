@@ -1,23 +1,12 @@
-const Messages = require('../messages');
+const ActionsMessage = require('../views/parts/actions_message');
+const Postback = require('../views/parts/postback');
 const Dialog = require('./dialog');
 
 class QnasDialog extends Dialog {
   constructor(config, brain) {
     super(config, brain, { template: 'qnas' });
-    this.templatePath = `${__dirname}/../templates`;
+    this.templatePath = `${__dirname}/../views/templates`;
     this.maxComplexity = 2;
-  }
-
-  questionButton(question, answer) {
-    console.log('QnasDialog.questionButton', question, answer);
-    return {
-      type: 'postback',
-      text: question,
-      value: {
-        dialog: { label: 'qnas_dialog' },
-        entities: [{ dim: 'qnas', value: [{ answer }] }],
-      },
-    };
   }
 
   /**
@@ -36,8 +25,13 @@ class QnasDialog extends Dialog {
                                                      { answer: qnas[0].answer }));
     } else {
       this.pushMessages(responses, this.textMessages(id, 'qnas_header'));
-      const buttons = qnas.map(qna => this.questionButton(qna.questions[0], qna.answer));
-      this.pushMessage(responses, Messages.botActions(this.config.id, id, buttons));
+      const buttons = qnas.map((qna) => {
+        return new Postback(qna.questions[0], 'qnas_dialog', [{
+          dim: 'qnas',
+          value: [{ answer: qna.answer }],
+        }]).toJson();
+      });
+      this.pushMessage(responses, new ActionsMessage(this.config.id, id, buttons).toJson());
     }
     return true;
   }

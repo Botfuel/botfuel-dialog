@@ -1,6 +1,6 @@
 const Fs = require('fs');
 const _ = require('underscore');
-const Messages = require('../messages');
+const BotTextMessage = require('../views/parts/bot_text_message');
 
 _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
 
@@ -37,7 +37,7 @@ class Dialog {
       .split('\n')
       .map(line => _.template(line)(parameters))
       .filter(text => text !== '')
-      .map(text => Messages.botText(this.config.id, userId, text));
+      .map(text => new BotTextMessage(this.config.id, userId, text).toJson());
   }
 
   pushMessages(responses, messages) {

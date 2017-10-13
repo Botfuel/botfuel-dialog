@@ -5,7 +5,6 @@ const MemoryBrain = require('./brains/memory_brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell_adapter');
 const TestAdapter = require('./adapters/test_adapter');
-const Messages = require('./messages');
 
 /**
  * Bot main class.
@@ -65,11 +64,11 @@ class Bot {
   async getResponses(userMessage) {
     // console.log('Bot.getResponses', userMessage);
     switch (userMessage.type) {
-      case Messages.TYPE_POSTBACK:
+      case 'postback':
         return this.getResponsesWhenPostback(userMessage);
-      case Messages.TYPE_IMAGE: // TODO: review this
+      case 'image': // TODO: review this
         return this.getResponsesWhenDownload(userMessage);
-      case Messages.TYPE_TEXT:
+      case 'text':
       default:
         return this.getResponsesWhenText(userMessage);
     }

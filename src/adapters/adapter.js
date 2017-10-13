@@ -1,5 +1,3 @@
-const Messages = require('../messages');
-
 /**
  * Adapts messages.
  */
@@ -26,27 +24,7 @@ class Adapter {
    */
   async send(botMessages) {
     console.log('Adapter.send', botMessages);
-    for (const botMessage of botMessages) {
-      switch (botMessage.type) {
-        /* eslint-disable no-await-in-loop */
-        case Messages.TYPE_ACTIONS:
-          await this.sendActions(botMessage);
-          break;
-        case Messages.TYPE_QUICKREPLIES:
-          await this.sendQuickreplies(botMessage);
-          break;
-        case Messages.TYPE_CARDS:
-          await this.sendCards(botMessage);
-          break;
-        case Messages.TYPE_IMAGE:
-          await this.sendImage(botMessage);
-          break;
-        case Messages.TYPE_TEXT:
-        default:
-          await this.sendText(botMessage);
-        /* eslint-enable no-await-in-loop */
-      }
-    }
+    throw new Error('Not implemented!');
   }
 }
 

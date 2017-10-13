@@ -1,4 +1,6 @@
-const Messages = require('../messages');
+const PostbackMessage = require('../views/parts/postback_message');
+const UserImageMessage = require('../views/parts/user_image_message');
+const UserTextMessage = require('../views/parts/user_text_message');
 const WebAdapter = require('./web_adapter');
 
 const uri = 'https://graph.facebook.com/v2.6/me/messages';
@@ -75,12 +77,12 @@ class MessengerAdapter extends WebAdapter {
       const message = event.message;
       // user send attachments
       if (message.attachments && message.attachments[0].type === 'image') {
-        userMessage = Messages.userImage(botId, userId, message.attachments[0].payload);
+        userMessage = new UserImageMessage(botId, userId, message.attachments[0].payload).toJson();
       } else {
-        userMessage = Messages.userText(botId, userId, message.text);
+        userMessage = new UserTextMessage(botId, userId, message.text).toJson();
       }
     } else if (event.postback) {
-      userMessage = Messages.userPostback(botId, userId, JSON.parse(event.postback.payload));
+      userMessage = new PostbackMessage(botId, userId, JSON.parse(event.postback.payload)).toJson();
     } else {
       console.log('MessengerAdapter.ProcessEvent: unknown event', JSON.stringify(event));
     }
@@ -93,60 +95,35 @@ class MessengerAdapter extends WebAdapter {
    * @param {Object} botMessage
    * @returns {Promise}
    */
-  async sendText(botMessage) {
-    console.log('MessengerAdapter.sendText', botMessage);
-    await this.postResponse({ uri, qs, body: MessengerAdapter.Text(botMessage) });
+  async send(botMessage) {
+    console.log('MessengerAdapter.send', botMessage);
+    await this.postResponse({
+      uri,
+      qs,
+      body: this.adapt(botMessage),
+    });
   }
 
-  /**
-   * Prepare messenger actions message
-   * @param {Object} botMessage
-   * @returns {Promise}
-   */
-  async sendActions(botMessage) {
+  adapt(botMessage) {
     console.log('MessengerAdapter.sendActions', botMessage);
-    await this.postResponse({ uri, qs, body: MessengerAdapter.Actions(botMessage) });
-  }
-
-  /**
-   * Prepare messenger quick replies message
-   * @param {Object} botMessage
-   * @returns {Promise}
-   */
-  async sendQuickreplies(botMessage) {
-    console.log('MessengerAdapter.sendQuickreplies', botMessage);
-    if (!botMessage.payload.value.some(String)) {
-      throw new Error('Only strings values are allowed for quick replies');
+    if (botMessage.type === 'text') {
+      return MessengerAdapter.Text(botMessage);
     }
-    await this.postResponse({ uri, qs, body: MessengerAdapter.Quickreplies(botMessage) });
+    if (botMessage.type === 'actions') {
+      return MessengerAdapter.Actions(botMessage);
+    }
+    if (botMessage.type === 'quickreplies') {
+      return MessengerAdapter.Quickreplies(botMessage);
+    }
+    if (botMessage.type === 'cards') {
+      return MessengerAdapter.Cards(botMessage);
+    }
+    if (botMessage.type === 'image') {
+      return MessengerAdapter.Image(botMessage);
+    }
+    return null;
   }
 
-  /**
-   * Prepare messenger cards message
-   * @param botMessage
-   * @returns {Promise}
-   */
-  async sendCards(botMessage) {
-    console.log('MessengerAdapter.sendCards', botMessage);
-    await this.postResponse({ uri, qs, body: MessengerAdapter.Cards(botMessage) });
-  }
-
-  /**
-   * Prepare messenger image message
-   * @param botMessage
-   * @returns {Promise}
-   */
-  async sendImage(botMessage) {
-    console.log('MessengerAdapter.sendImage', botMessage);
-    await this.postResponse({ uri, qs, body: MessengerAdapter.Image(botMessage) });
-  }
-
-  /**
-   * Prepare text message body
-   * @param {Object} botMessage
-   * @returns {Object} the body
-   * @constructor
-   */
   static Text(botMessage) {
     console.log('MessengerAdapter.Text', botMessage);
     return {
@@ -159,12 +136,6 @@ class MessengerAdapter extends WebAdapter {
     };
   }
 
-  /**
-   * Prepare actions message body
-   * @param {Object} botMessage
-   * @returns {Object} the body
-   * @constructor
-   */
   static Actions(botMessage) {
     console.log('MessengerAdapter.Actions', botMessage);
     return {
@@ -184,12 +155,6 @@ class MessengerAdapter extends WebAdapter {
     };
   }
 
-  /**
-   * Prepare action button
-   * @param {Object} action
-   * @returns {Object} the button
-   * @constructor
-   */
   static ActionButton(action) {
     console.log('MessengerAdapter.ActionButton', action);
     let button = null;
@@ -211,12 +176,6 @@ class MessengerAdapter extends WebAdapter {
     return button;
   }
 
-  /**
-   * Prepare quick replies message body
-   * @param {Object} botMessage
-   * @returns {Object} the body
-   * @constructor
-   */
   static Quickreplies(botMessage) {
     console.log('MessengerAdapter.Quickreplies', botMessage);
     // format quick replies for messenger
@@ -237,12 +196,6 @@ class MessengerAdapter extends WebAdapter {
     };
   }
 
-  /**
-   * Prepare cards message body
-   * @param {Object} botMessage
-   * @returns {Object} the body
-   * @constructor
-   */
   static Cards(botMessage) {
     console.log('MessengerAdapter.Cards', botMessage);
     // format actions buttons for messenger
@@ -266,12 +219,6 @@ class MessengerAdapter extends WebAdapter {
     };
   }
 
-  /**
-   * Prepare image message body
-   * @param {Object} botMessage
-   * @returns {Object} the body
-   * @constructor
-   */
   static Image(botMessage) {
     console.log('MessengerAdapter.Image', botMessage);
     // return the body

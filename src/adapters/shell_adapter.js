@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
-const Messages = require('../messages');
+const BotTextMessage = require('../views/parts/bot_text_message');
+const UserTextMessage = require('../views/parts/user_text_message');
 const Adapter = require('./adapter');
 
 /**
@@ -14,11 +15,15 @@ class ShellAdapter extends Adapter {
   async run() {
     console.log('ShellAdapter.run');
     await this.bot.brain.initUserIfNecessary(this.userId);
-    const botMessage = Messages.botText(this.config.id, this.userId, 'onboarding');
+    const botMessage = new BotTextMessage(this.config.id, this.userId, 'onboarding').toJson();
     let userInput = await this.send([botMessage]);
     for (;;) {
       console.log('ShellAdapter.run', userInput);
-      const userMessage = Messages.userText(this.config.id, this.userId, userInput.payload);
+      const userMessage = new UserTextMessage(
+        this.config.id,
+        this.userId,
+        userInput.payload,
+      ).toJson();
       // eslint-disable-next-line no-await-in-loop
       userInput = await this.bot.sendResponse(userMessage);
     }
