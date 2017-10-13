@@ -1,15 +1,15 @@
 class Card {
   // TODO : this is very Messenger specific, let's generalize it!
-  constructor(title, buttons, image_url) {
+  constructor(title, imageUrl, buttons) {
     this.title = title;
-    this.image_url = image_url;
+    this.imageUrl = imageUrl;
     this.buttons = buttons;
   }
 
   toJson() {
     return {
       type: this.type,
-      image_url: this.image_url,
+      image_url: this.imageUrl,
       buttons: this.buttons.map(button => button.toJson()),
     };
   }

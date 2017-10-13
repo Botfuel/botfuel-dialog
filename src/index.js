@@ -12,6 +12,7 @@ const MemoryBrain = require('./brains/memory_brain');
 const MongoBrain = require('./brains/mongo_brain');
 const Nlu = require('./nlu');
 const Postback = require('./views/parts/postback');
+const PostbackMessage = require('./views/parts/postback_message');
 const PromptDialog = require('./dialogs/prompt_dialog');
 const QuickrepliesMessage = require('./views/parts/quickreplies_message');
 const TextDialog = require('./dialogs/text_dialog');
@@ -33,6 +34,7 @@ module.exports = {
   MongoBrain,
   Nlu,
   Postback,
+  PostbackMessage,
   PromptDialog,
   QuickrepliesMessage,
   TextDialog,
