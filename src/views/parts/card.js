@@ -5,6 +5,14 @@ class Card {
     this.image_url = image_url;
     this.buttons = buttons;
   }
+
+  toJson() {
+    return {
+      type: this.type,
+      image_url: this.image_url,
+      buttons: this.buttons.map(button => button.toJson()),
+    };
+  }
 }
 
 module.exports = Card;
