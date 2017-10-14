@@ -8,7 +8,7 @@ const Postback = require('../../src/views/parts/postback');
 
 describe('CardsMessage', function () {
   it('should generate the proper json', async function () {
-    const cardsMessage = new CardsMessage('BOT_ID', 'USER_ID', [
+    const message = new CardsMessage('BOT_ID', 'USER_ID', [
       new Card('Card 1', 'https://image1.jpg', [
         new Link('Details', 'https://image1'),
         new Postback('Buy', 'products', [{ dim: 'product', value: '1' }]),
@@ -18,7 +18,7 @@ describe('CardsMessage', function () {
         new Postback('Buy', 'products', [{ dim: 'product', value: '2' }]),
       ]),
     ]);
-    expect(cardsMessage.toJson()).to.eql({
+    expect(message.toJson()).to.eql({
       type: 'actions',
       sender: 'bot',
       bot: 'BOT_ID',

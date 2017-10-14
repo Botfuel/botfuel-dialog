@@ -103,77 +103,86 @@ class MessengerAdapter extends WebAdapter {
     }
   }
 
+  adaptText(payload) {
+    return {
+      text: payload.value,
+    };
+  }
+
+  adaptQuickreplies(payload) {
+    return {
+      text: 'Quick replies' || botMessage.payload.options.text , // TODO: fix this
+      quick_replies: payload.value.map(qr => ({
+        content_type: 'text',
+        title: qr,
+        payload: qr
+      })),
+    };
+  }
+
+  adaptImage(payload) {
+    return {
+      attachment: {
+        type: 'image',
+        payload: { url: payload.value },
+      },
+    };
+  }
+
+  adaptActions(payload) {
+    console.log('MessengerAdapter.adaptActions', payload);
+    const text = 'Actions' || payload.options.text; // TODO: fix this
+    const buttons = payload.value.map(MessengerAdapter.adaptAction);
+    return {
+      attachment: {
+        type: 'template',
+        payload: { template_type: 'button', text, buttons },
+      },
+    };
+  }
+
+  adaptCards(payload) {
+    console.log('MessengerAdapter.adaptCards', payload);
+    const elements = payload.value.map((card) => {
+      const buttons = card.buttons.map(MessengerAdapter.adaptAction);
+      return Object.assign(card, { buttons });
+    });
+    return {
+      attachment: {
+        type: 'template',
+        payload: { template_type: 'generic', elements },
+      },
+    };
+  }
+
   adapt(botMessage) {
     console.log('MessengerAdapter.adapt', botMessage);
+    const payload = botMessage.payload;
     if (botMessage.type === 'text') {
-      return {
-        text: botMessage.payload.value,
-      };
-    }
-    if (botMessage.type === 'actions') {
-      return {
-        attachment: {
-          type: 'template',
-          payload: {
-            template_type: 'button',
-            text: botMessage.payload.options.text || 'Actions', // TODO: fix this
-            buttons: botMessage
-              .payload
-              .value
-              .map(MessengerAdapter.actionButton),
-          },
-        },
-      };
+      return this.adaptText(payload);;
     }
     if (botMessage.type === 'quickreplies') {
-      return {
-        text: botMessage.payload.options.text || 'Quick replies', // TODO: fix this
-        quick_replies: botMessage
-          .payload
-          .value
-          .map(qr => ({
-            content_type: 'text',
-            title: qr,
-            payload: qr
-          })),
-      };
-    }
-    if (botMessage.type === 'cards') {
-      return {
-        attachment: {
-          type: 'template',
-          payload: {
-            template_type: 'generic',
-            elements: botMessage
-              .payload
-              .value
-              .map(card => (Object.assign(card, {
-                buttons: card.buttons.map(MessengerAdapter.actionButton)
-              }))),
-          },
-        },
-      }
+      return this.adaptQuickreplies(payload);
     }
     if (botMessage.type === 'image') {
-      return {
-        attachment: {
-          type: 'image',
-          payload: {
-            url: botMessage.payload.value,
-          },
-        },
-      };
+      return this.adaptImage(payload);
+    }
+    if (botMessage.type === 'actions') {
+      return this.adaptActions(payload);
+    }
+    if (botMessage.type === 'cards') {
+      return this.adaptCards(payload);
     }
     return null;
   }
 
 
-  static actionButton(action) {
-    console.log('MessengerAdapter.actionButton', action);
+  static adaptAction(action) {
+    console.log('MessengerAdapter.adaptAction', action);
     if (action.type === 'postback') {
       return {
         type: 'postback',
-        title: action.text || action.value,
+        title: action.text,
         payload: JSON.stringify(action.value),
       };
     }
