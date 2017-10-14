@@ -87,24 +87,20 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Prepare messenger text message
-   * @param {Object} botMessage
+   * @param {Object} botMessages
    * @returns {Promise}
    */
-  async send(botMessage) {
-    console.log('MessengerAdapter.send', botMessage);
-    const message = this.adapt(botMessage);
-    console.log('MessengerAdapter.send: message', message);
-    await this.postResponse({
-      uri,
-      qs,
-      body: {
-        recipient: {
-          id: botMessage.user,
-        },
-        message,
-      },
-    });
+  async send(botMessages) {
+    console.log('MessengerAdapter.send', botMessages);
+    for (const botMessage of botMessages) {
+      const message = this.adapt(botMessage);
+      console.log('MessengerAdapter.send: message', message);
+      await this.postResponse({
+        uri,
+        qs,
+        body: { recipient: { id: botMessage.user }, message },
+      });
+    }
   }
 
   adapt(botMessage) {

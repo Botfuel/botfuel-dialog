@@ -27,7 +27,6 @@ class BotfuelAdapter extends WebAdapter {
   }
 
   /**
-   * @param {Object} botMessage
    * @returns {Promise}
    */
   async send(botMessages) {
