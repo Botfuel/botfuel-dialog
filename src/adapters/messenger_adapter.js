@@ -67,27 +67,23 @@ class MessengerAdapter extends WebAdapter {
     const userId = sender.id; // messenger user id
     const botId = recipient.id; // page id
     console.log('MessengerAdapter.processEvent', userId, botId, JSON.stringify(event));
-
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
-
     // set userMessage
     let userMessage = null;
     if (event.message) {
       const message = event.message;
       // user send attachments
       if (message.attachments && message.attachments[0].type === 'image') {
-        userMessage = new UserImageMessage(botId, userId, message.attachments[0].payload).toJson();
+        userMessage = new UserImageMessage(botId, userId, message.attachments[0].payload);
       } else {
-        userMessage = new UserTextMessage(botId, userId, message.text).toJson();
+        userMessage = new UserTextMessage(botId, userId, message.text);
       }
     } else if (event.postback) {
-      userMessage = new PostbackMessage(botId, userId, JSON.parse(event.postback.payload)).toJson();
-    } else {
-      console.log('MessengerAdapter.ProcessEvent: unknown event', JSON.stringify(event));
+      const payload = JSON.parse(event.postback.payload);
+      userMessage = new PostbackMessage(botId, userId, payload.dialog.label, payload.entities);
     }
-
-    await this.bot.sendResponse(userMessage);
+    await this.bot.sendResponse(userMessage.toJson());
   }
 
   /**
@@ -97,144 +93,102 @@ class MessengerAdapter extends WebAdapter {
    */
   async send(botMessage) {
     console.log('MessengerAdapter.send', botMessage);
+    const message = this.adapt(botMessage);
+    console.log('MessengerAdapter.send: message', message);
     await this.postResponse({
       uri,
       qs,
-      body: this.adapt(botMessage),
+      body: {
+        recipient: {
+          id: botMessage.user,
+        },
+        message,
+      },
     });
   }
 
   adapt(botMessage) {
-    console.log('MessengerAdapter.sendActions', botMessage);
+    console.log('MessengerAdapter.adapt', botMessage);
     if (botMessage.type === 'text') {
-      return MessengerAdapter.Text(botMessage);
+      return {
+        text: botMessage.payload.value,
+      };
     }
     if (botMessage.type === 'actions') {
-      return MessengerAdapter.Actions(botMessage);
-    }
-    if (botMessage.type === 'quickreplies') {
-      return MessengerAdapter.Quickreplies(botMessage);
-    }
-    if (botMessage.type === 'cards') {
-      return MessengerAdapter.Cards(botMessage);
-    }
-    if (botMessage.type === 'image') {
-      return MessengerAdapter.Image(botMessage);
-    }
-    return null;
-  }
-
-  static Text(botMessage) {
-    console.log('MessengerAdapter.Text', botMessage);
-    return {
-      recipient: {
-        id: botMessage.user,
-      },
-      message: {
-        text: botMessage.payload.value,
-      },
-    };
-  }
-
-  static Actions(botMessage) {
-    console.log('MessengerAdapter.Actions', botMessage);
-    return {
-      recipient: {
-        id: botMessage.user,
-      },
-      message: {
+      return {
         attachment: {
           type: 'template',
           payload: {
             template_type: 'button',
-            text: botMessage.payload.options.text || 'Actions',
-            buttons: botMessage.payload.value.map(MessengerAdapter.ActionButton),
+            text: botMessage.payload.options.text || 'Actions', // TODO: fix this
+            buttons: botMessage
+              .payload
+              .value
+              .map(MessengerAdapter.actionButton),
           },
         },
-      },
-    };
-  }
-
-  static ActionButton(action) {
-    console.log('MessengerAdapter.ActionButton', action);
-    let button = null;
-    // format button for messenger
-    if (action.type === 'postback') {
-      button = {
-        type: 'postback',
-        title: action.text || action.value,
-        payload: JSON.stringify(action.value),
-      };
-    } else if (action.type === 'link') {
-      button = {
-        type: 'web_url',
-        title: action.text,
-        url: action.value,
       };
     }
-    // return the button
-    return button;
-  }
-
-  static Quickreplies(botMessage) {
-    console.log('MessengerAdapter.Quickreplies', botMessage);
-    // format quick replies for messenger
-    const format = quickReply => ({
-      content_type: 'text',
-      title: quickReply,
-      payload: quickReply,
-    });
-    // return the body
-    return {
-      recipient: {
-        id: botMessage.user,
-      },
-      message: {
-        text: botMessage.payload.options.text || 'Quick replies',
-        quick_replies: botMessage.payload.value.map(format),
-      },
-    };
-  }
-
-  static Cards(botMessage) {
-    console.log('MessengerAdapter.Cards', botMessage);
-    // format actions buttons for messenger
-    const format = element => (Object.assign(element, {
-      buttons: element.buttons.map(MessengerAdapter.ActionButton),
-    }));
-    // return the body
-    return {
-      recipient: {
-        id: botMessage.user,
-      },
-      message: {
+    if (botMessage.type === 'quickreplies') {
+      return {
+        text: botMessage.payload.options.text || 'Quick replies', // TODO: fix this
+        quick_replies: botMessage
+          .payload
+          .value
+          .map(qr => ({
+            content_type: 'text',
+            title: qr,
+            payload: qr
+          })),
+      };
+    }
+    if (botMessage.type === 'cards') {
+      return {
         attachment: {
           type: 'template',
           payload: {
             template_type: 'generic',
-            elements: botMessage.payload.value.map(format),
+            elements: botMessage
+              .payload
+              .value
+              .map(card => (Object.assign(card, {
+                buttons: card.buttons.map(MessengerAdapter.actionButton)
+              }))),
           },
         },
-      },
-    };
-  }
-
-  static Image(botMessage) {
-    console.log('MessengerAdapter.Image', botMessage);
-    // return the body
-    return {
-      recipient: {
-        id: botMessage.user,
-      },
-      message: {
+      }
+    }
+    if (botMessage.type === 'image') {
+      return {
         attachment: {
           type: 'image',
           payload: {
             url: botMessage.payload.value,
           },
         },
-      },
-    };
+      };
+    }
+    return null;
+  }
+
+
+  static actionButton(action) {
+    console.log('MessengerAdapter.actionButton', action);
+    if (action.type === 'postback') {
+      return {
+        type: 'postback',
+        title: action.text || action.value,
+        payload: JSON.stringify(action.value),
+      };
+    }
+    if (action.type === 'link') {
+      return {
+        type: 'web_url',
+        title: action.text,
+        url: action.value,
+      };
+    }
+    return null;
   }
 }
 
