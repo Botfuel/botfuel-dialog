@@ -3,14 +3,14 @@ class Card {
   constructor(title, imageUrl, buttons) {
     this.title = title;
     this.imageUrl = imageUrl;
-    this.buttons = buttons;
+    this.buttons = buttons.map(button => button.toJson());
   }
 
   toJson() {
     return {
-      type: this.type,
+      title: this.title,
       image_url: this.imageUrl,
-      buttons: this.buttons.map(button => button.toJson()),
+      buttons: this.buttons,
     };
   }
 }
