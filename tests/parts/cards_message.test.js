@@ -36,7 +36,7 @@ describe('CardsMessage', function () {
                 text: 'Buy',
                 type: 'postback',
                 value: { dialog: { label: 'products' }, entities: [{ dim: 'product', value: '1' }] },
-              }
+              },
             ],
             image_url: 'https://image1.jpg',
             title: 'Card 1',

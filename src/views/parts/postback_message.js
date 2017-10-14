@@ -1,8 +1,11 @@
 const Message = require('./message');
 
 class PostbackMessage extends Message {
-  constructor(bot, user, value) {
-    super('postback', 'user', bot, user, value);
+  constructor(bot, user, dialogLabel, entities) {
+    super('postback', 'user', bot, user, {
+      dialog: { label: dialogLabel },
+      entities,
+    });
   }
 }
 
