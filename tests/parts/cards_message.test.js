@@ -19,7 +19,7 @@ describe('CardsMessage', function () {
       ]),
     ]);
     expect(message.toJson()).to.eql({
-      type: 'actions',
+      type: 'cards',
       sender: 'bot',
       bot: 'BOT_ID',
       user: 'USER_ID',
