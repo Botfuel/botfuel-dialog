@@ -32,7 +32,7 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.execute', id, responses, messageEntities, status);
     if (status === Dialog.STATUS_BLOCKED) {
       console.log('PromptDialog.execute when blocked');
-      this.confirmDialog(id, responses);
+      this.askDialog(id, responses);
       return Dialog.STATUS_WAITING;
     }
     if (status === Dialog.STATUS_WAITING) {
@@ -42,8 +42,10 @@ class PromptDialog extends Dialog {
           const booleanValue = messageEntity.values[0];
           console.log('PromptDialog.execute: system:boolean', booleanValue);
           if (booleanValue) {
+            this.confirmDialog(id, responses);
             return Dialog.STATUS_READY; // or jump below?
           } else {
+            this.denyDialog(id, responses);
             return Dialog.STATUS_COMPLETED;
           }
         }
@@ -59,6 +61,24 @@ class PromptDialog extends Dialog {
     return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_READY;
   }
 
+  askDialog(id, responses) {
+    console.log('PromptDialog.askDialog', id, responses);
+    this.pushMessages(responses, this.textMessages(id,
+                                                   `${this.parameters.namespace}_ask`));
+  }
+
+  confirmDialog(id, responses) {
+    console.log('PromptDialog.confirmDialog', id, responses);
+    this.pushMessages(responses, this.textMessages(id,
+                                                   `${this.parameters.namespace}_confirm`));
+  }
+
+  denyDialog(id, responses) {
+    console.log('PromptDialog.denyDialog', id, responses);
+    this.pushMessages(responses, this.textMessages(id,
+                                                   `${this.parameters.namespace}_deny`));
+  }
+
   askEntities(id, responses, entities) {
     console.log('PromptDialog.askEntities', id, responses, entities);
     // TODO: put all this in a single template
@@ -67,12 +87,6 @@ class PromptDialog extends Dialog {
                                                      `${this.parameters.namespace}_${entityKey}_ask`,
                                                      { entity: entityKey }));
     }
-  }
-
-  confirmDialog(id, responses) {
-    console.log('PromptDialog.confirmDialog', id, responses);
-    this.pushMessages(responses, this.textMessages(id,
-                                                   `${this.parameters.namespace}_confirm`));
   }
 
   confirmEntities(id, responses, entities) {
