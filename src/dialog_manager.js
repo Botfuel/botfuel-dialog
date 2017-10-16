@@ -87,7 +87,7 @@ class DialogManager {
     }
     if (dialogs.length === 0) { // no intent detected
       const dialog = await this.brain.userGet(userId, 'lastDialog');
-      if (dialog !== undefined) {
+      if (dialog !== undefined && dialog !== null) {
         dialog.status = Dialog.STATUS_READY;
         dialogs.push(dialog);
       } else {
@@ -117,9 +117,12 @@ class DialogManager {
       dialog.status = await this
         .getDialog(dialog)
         .execute(userId, responses, entities, dialog.status);
-      if (dialog.status === Dialog.STATUS_COMPLETED) {
+      if (dialog.status === Dialog.STATUS_DISCARDED) {
         dialogs = dialogs.slice(0, -1);
-      } else {
+        await this.brain.userSet(userId, 'lastDialog', null);
+      } else if (dialog.status === Dialog.STATUS_COMPLETED) {
+        dialogs = dialogs.slice(0, -1);
+      } else { // ready or waiting
         break;
       }
     }

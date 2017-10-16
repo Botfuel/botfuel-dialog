@@ -10,6 +10,7 @@ _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
 class Dialog {
   static STATUS_BLOCKED = 'blocked';
   static STATUS_COMPLETED = 'completed';
+  static STATUS_DISCARDED = 'discarded';
   static STATUS_READY = 'ready';
   static STATUS_WAITING = 'waiting';
 

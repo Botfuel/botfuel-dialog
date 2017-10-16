@@ -38,8 +38,8 @@ class PromptDialog extends Dialog {
           this.confirmDialog(id, responses);
           return this.executeWhenReady(id, responses, messageEntities);
         } else {
-          this.denyDialog(id, responses);
-          return Dialog.STATUS_COMPLETED;
+          this.discardDialog(id, responses);
+          return Dialog.STATUS_DISCARDED;
         }
       }
     }
@@ -85,10 +85,10 @@ class PromptDialog extends Dialog {
                                                    `${this.parameters.namespace}_confirm`));
   }
 
-  denyDialog(id, responses) {
+  discardDialog(id, responses) {
     console.log('PromptDialog.denyDialog', id, responses);
     this.pushMessages(responses, this.textMessages(id,
-                                                   `${this.parameters.namespace}_deny`));
+                                                   `${this.parameters.namespace}_discard`));
   }
 
   askEntities(id, responses, entities) {
