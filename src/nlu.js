@@ -3,6 +3,7 @@ const CompositeExtractor = require('./extractors/composite_extractor');
 const Classifier = require('./classifier');
 
 const fs = require('fs');
+const dir = require('node-dir');
 
 /**
  * A nlu module (could be replaced by an external one).
