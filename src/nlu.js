@@ -29,7 +29,7 @@ class Nlu {
   getExtractorFiles(path) {
     let files = [];
     if (fs.existsSync(path)) {
-      files = dir.files(extractorsPath, { sync: true }) || files;
+      files = dir.files(path, { sync: true }) || files;
     }
     return files.filter(file => file.match(/^.*.js$/))
   }
