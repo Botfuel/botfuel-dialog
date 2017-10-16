@@ -8,6 +8,11 @@ _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
  * Generates messages.
  */
 class Dialog {
+  static STATUS_BLOCKED = 'blocked';
+  static STATUS_COMPLETED = 'completed';
+  static STATUS_READY = 'ready';
+  static STATUS_WAITING = 'waiting';
+
   /**
    * Constructor.
    * @param {Object} parameters the dialog parameters

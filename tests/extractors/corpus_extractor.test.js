@@ -1,20 +1,20 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const MatrixCorpus = require('../../src/corpora/matrix_corpus');
+const Corpus = require('../../src/corpora/corpus');
 const CorpusExtractor = require('../../src/extractors/corpus_extractor');
 
-const teams = new MatrixCorpus([
+const teams = new Corpus([
   ['Paris Saint-Germain', 'Paris SG', 'PSG'],
   ['Olympique Lyonnais', 'L\'Olympique Lyonnais', 'OL'],
   ['Football Club de Nantes', 'FCN'],
-  ['Guégan'],
+  ['Béziers'],
 ]);
 const extractor = new CorpusExtractor({ dimension: 'teams', corpus: teams });
 
 describe('CorpusExtractor', function () {
   it('should properly extract', async function () {
-    const entities = await extractor.compute('Guégan joue contre l\'Olympique Lyonnais');
+    const entities = await extractor.compute('Béziers joue contre l\'Olympique Lyonnais');
     expect(entities).to.eql([
       {
         dim: 'teams',
@@ -30,7 +30,7 @@ describe('CorpusExtractor', function () {
         values: [
           {
             type: 'string',
-            value: 'Guégan',
+            value: 'Béziers',
           },
         ],
       },

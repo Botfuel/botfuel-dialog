@@ -1,8 +1,9 @@
 const Diacritics = require('diacritics');
 
 class Corpus {
-  constructor() {
-    this.matrix = null;
+  constructor(matrix) {
+    console.log('Corpus.constructor', matrix)
+    this.matrix = matrix;
   }
 
   static normalize(sentence, options) {

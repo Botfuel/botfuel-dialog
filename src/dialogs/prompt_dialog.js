@@ -28,18 +28,25 @@ class PromptDialog extends Dialog {
    * @param {Object[]} responses
    * @param {Object[]} messageEntities - entities array from user message
    */
-  async execute(id, responses, messageEntities, confirmDialog) {
-    console.log('PromptDialog.execute', id, responses, messageEntities, confirmDialog);
-    messageEntities = messageEntities
-      .filter(entity => this.parameters.entities[entity.dim] !== undefined);
-    this.confirm(id, responses, messageEntities, confirmDialog);
-    const missingEntities = await this.computeMissingEntities(id, messageEntities);
-    this.ask(id, responses, missingEntities);
-    return missingEntities.length === 0;
+  async execute(id, responses, messageEntities, status) {
+    console.log('PromptDialog.execute', id, responses, messageEntities, status);
+    if (status === Dialog.STATUS_BLOCKED) {
+      this.confirmDialog(id, responses);
+      return Dialog.STATUS_WAITING;
+    } if (status === Dialog.STATUS_WAITING) {
+      // TODO
+    } else { // STATUS_READY
+      messageEntities = messageEntities
+        .filter(entity => this.parameters.entities[entity.dim] !== undefined);
+      this.confirmEntities(id, responses, messageEntities);
+      const missingEntities = await this.computeMissingEntities(id, messageEntities);
+      this.askEntities(id, responses, missingEntities);
+      return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_READY;
+    }
   }
 
-  ask(id, responses, entities) {
-    console.log('PromptDialog.ask', id, responses, entities);
+  askEntities(id, responses, entities) {
+    console.log('PromptDialog.askEntities', id, responses, entities);
     // TODO: put all this in a single template
     for (const entityKey of entities) {
       this.pushMessages(responses, this.textMessages(id,
@@ -48,13 +55,15 @@ class PromptDialog extends Dialog {
     }
   }
 
-  confirm(id, responses, entities, confirmDialog) {
-    console.log('PromptDialog.confirm', id, responses, entities, confirmDialog);
+  confirmDialog(id, responses) {
+    console.log('PromptDialog.confirmDialog', id, responses);
+    this.pushMessages(responses, this.textMessages(id,
+                                                   `${this.parameters.namespace}_confirm`));
+  }
+
+  confirmEntities(id, responses, entities) {
+    console.log('PromptDialog.confirmEntities', id, responses, entities);
     // TODO: put all this in a single template
-    if (confirmDialog) {
-      this.pushMessages(responses, this.textMessages(id,
-                                                     `${this.parameters.namespace}_confirm`));
-    }
     for (const entity of entities) {
       this.pushMessages(responses, this.textMessages(id,
                                                      `${this.parameters.namespace}_${entity.dim}_confirm`,

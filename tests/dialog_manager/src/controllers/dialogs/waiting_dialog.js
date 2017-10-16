@@ -8,7 +8,7 @@ class FalseDialog extends Dialog {
    * Executes.
    */
   async execute() {
-    return false;
+    return Dialog.STATUS_WAITING;
   }
 }
 

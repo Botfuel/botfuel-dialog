@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const Dialog = require('./dialogs/dialog');
+
 /**
  * Turns NLU output into a dialog stack.
  */
@@ -41,6 +43,13 @@ class DialogManager {
     return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
   }
 
+  getDialogStatus(depth) {
+    if  (depth !== 0) {
+      return Dialog.STATUS_BLOCKED;
+    }
+    return Dialog.STATUS_READY;
+  }
+
   filterIntents(intents) {
     console.log('DialogManager.filterIntents', intents);
     return intents
@@ -73,19 +82,19 @@ class DialogManager {
         dialogs.push({
           label,
           entities,
-          order: intents.length - 1 - i,
+          status: this.getDialogStatus(intents.length - 1 - i),
         });
       }
     }
     if (dialogs.length === 0) { // no intent detected
       const dialog = await this.brain.userGet(userId, 'lastDialog');
       if (dialog !== undefined) {
-        dialog.order = 0;
+        dialog.status = Dialog.STATUS_READY;
         dialogs.push(dialog);
       } else {
         dialogs.push({
           label: 'default_dialog',
-          order: 0,
+          status: Dialog.STATUS_READY,
         });
       }
     }
@@ -100,20 +109,19 @@ class DialogManager {
   async executeDialogs(userId, dialogs, entities) {
     console.log('DialogManager.executeDialogs', userId, dialogs, entities);
     const responses = [];
-    const user = await this.brain.getUser(userId);
-    console.log('DialogManager.executeDialogs: user', user);
-    let done = true;
-    while (done && dialogs.length > 0) {
+    while (dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
       console.log('DialogManager.executeDialogs: dialog', dialog);
       // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
       // eslint-disable-next-line no-await-in-loop
-      done = await this
+      dialog.status = await this
         .getDialog(dialog)
-        .execute(userId, responses, entities, dialog.order !== 0);
-      console.log('DialogManager.executeDialogs: done', done);
-      if (done) {
+        .execute(userId, responses, entities, dialog.status);
+      if (dialog.status === Dialog.STATUS_WAITING) {
+        break;
+      }
+      if (dialog.status === Dialog.STATUS_COMPLETED) {
         dialogs = dialogs.slice(0, -1);
       }
     }

@@ -37,15 +37,15 @@ describe('DialogManager', function () {
     ]);
   });
 
-  it('should keep on the stack a dialog which is not done', async function () {
-    await dm.execute(TEST_USER, [{ label: 'false_dialog', value: 1.0 }], []);
+  it('should keep on the stack a dialog which is waiting', async function () {
+    await dm.execute(TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.length).to.be(1);
   });
 
   it('should not stack the same dialog twice', async function () {
-    await dm.execute(TEST_USER, [{ label: 'false_dialog', value: 1.0 }], []);
-    await dm.execute(TEST_USER, [{ label: 'false_dialog', value: 1.0 }], []);
+    await dm.execute(TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
+    await dm.execute(TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.length).to.be(1);
   });

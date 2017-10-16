@@ -42,6 +42,10 @@ class CorpusExtractor {
     return sentence.slice(0, startIndex) + sentence.slice(endIndex);
   }
 
+  getEntity(value) {
+    return { value, type: 'string' };
+  }
+
   computeEntities(sentence, words, entities) {
     console.log('CorpusExtractor.computeEntities', sentence, words, entities);
     if (sentence.length > 0) {
@@ -49,15 +53,8 @@ class CorpusExtractor {
         const normalizedWord = Corpus.normalize(word, this.options);
         const remainder = this.getRemainder(sentence, normalizedWord);
         if (remainder !== null) {
-          entities.push({
-            dim: this.dimension,
-            values: [
-              {
-                value: this.corpus.getValue(normalizedWord, this.options),
-                type: 'string',
-              },
-            ],
-          });
+          const value = this.corpus.getValue(normalizedWord, this.options);
+          entities.push({ dim: this.dimension, values: [ this.getEntity(value) ]});
           return this.computeEntities(remainder, words, entities);
         }
       }
