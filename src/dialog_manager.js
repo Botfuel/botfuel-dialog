@@ -117,11 +117,10 @@ class DialogManager {
       dialog.status = await this
         .getDialog(dialog)
         .execute(userId, responses, entities, dialog.status);
-      if (dialog.status === Dialog.STATUS_WAITING) {
-        break;
-      }
       if (dialog.status === Dialog.STATUS_COMPLETED) {
         dialogs = dialogs.slice(0, -1);
+      } else {
+        break;
       }
     }
     await this.brain.userSet(userId, 'dialogs', dialogs);

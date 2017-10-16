@@ -56,7 +56,7 @@ class PromptDialog extends Dialog {
     this.confirmEntities(id, responses, messageEntities);
     const missingEntities = await this.computeMissingEntities(id, messageEntities);
     this.askEntities(id, responses, missingEntities);
-    return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_WAITING;
+    return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_READY;
   }
 
   askEntities(id, responses, entities) {
