@@ -38,13 +38,13 @@ class PromptDialog extends Dialog {
       for (const messageEntity of messageEntities) {
         if (messageEntity.dim === 'system:boolean') {
           if (messageEntity.values[0]) {
-            return Dialog.STATUS_READY;
+            return Dialog.STATUS_READY; // or jump below?
           } else {
             return Dialog.STATUS_COMPLETED;
           }
         }
       }
-      return null;
+      return Dialog.STATUS_BLOCKED;
     }
     // STATUS_READY
     messageEntities = messageEntities
@@ -52,7 +52,7 @@ class PromptDialog extends Dialog {
     this.confirmEntities(id, responses, messageEntities);
     const missingEntities = await this.computeMissingEntities(id, messageEntities);
     this.askEntities(id, responses, missingEntities);
-    return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_READY;
+    return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_WAITING;
   }
 
   askEntities(id, responses, entities) {
