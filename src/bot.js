@@ -1,5 +1,6 @@
 const BotfuelAdapter = require('./adapters/botfuel_adapter');
 const DialogManager = require('./dialog_manager');
+const Dialog = require('./dialogs/dialog');
 const MessengerAdapter = require('./adapters/messenger_adapter');
 const MemoryBrain = require('./brains/memory_brain');
 const Nlu = require('./nlu');
