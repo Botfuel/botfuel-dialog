@@ -31,7 +31,7 @@ class Nlu {
     if (fs.existsSync(path)) {
       files = dir.files(path, { sync: true }) || files;
     }
-    return files.filter(file => file.match(/^.*.js$/))
+    return files.filter(file => file.match(/^.*.js$/));
   }
 
   getExtractors(path) {
