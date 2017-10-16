@@ -1,12 +1,12 @@
 /**
  * Class for extracting entities.
  */
-class CompositeEntityExtractor {
+class CompositeExtractor {
   /**
    * Constructor.
    */
   constructor(extractors) {
-    console.log('CompositeEntityExtractor.constructor', extractors);
+    console.log('CompositeEntity.constructor', extractors);
     this.extractors = extractors;
   }
 
@@ -15,10 +15,9 @@ class CompositeEntityExtractor {
    * @param {string} sentence the sentence
    */
   async compute(sentence) {
-    console.log('CompositeEntityExtractor.compute', sentence);
+    console.log('CompositeExtractor.compute', sentence);
     let entities = [];
-    for (const extractor of this.extractors) {
-      // TODO: in parallel
+    for (const extractor of this.extractors) { // TODO: in parallel
       const extractorEntities = await extractor.compute(sentence);
       entities = entities.concat(extractorEntities);
     }
@@ -26,4 +25,4 @@ class CompositeEntityExtractor {
   }
 }
 
-module.exports = CompositeEntityExtractor;
+module.exports = CompositeExtractor;

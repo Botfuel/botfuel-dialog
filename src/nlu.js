@@ -1,5 +1,5 @@
 const QnA = require('botfuel-qna-sdk');
-const DirectoryEntityExtractor = require('./extractors/directory_entity_extractor');
+const CompositeExtractor = require('./extractors/composite_extractor');
 const Classifier = require('./classifier');
 
 /**
@@ -13,7 +13,7 @@ class Nlu {
   constructor(config) {
     // console.log('Nlu.constructor');
     this.config = config;
-    this.entityExtractor = new DirectoryEntityExtractor(`${config.path}/src/extractors`);
+    this.extractor = new CompositeExtractor(this.getExtractors(`${config.path}/src/extractors`));
     this.classifier = new Classifier(config);
     if (config.qna) {
       this.qna = new QnA({
@@ -21,6 +21,25 @@ class Nlu {
         appKey: process.env.BOTFUEL_APP_KEY,
       });
     }
+  }
+
+  getExtractorFiles(path) {
+    let files = [];
+    if (fs.existsSync(path)) {
+      files = dir.files(extractorsPath, { sync: true }) || files;
+    }
+    return files.filter(file => file.match(/^.*.js$/))
+  }
+
+  getExtractors(path) {
+    // user extractors
+    const extractors = this.getExtractorFiles(path).map((file) => {
+      const ExtractorConstructor = require(file);
+      return new ExtractorConstructor(ExtractorConstructor.params);
+    });
+    // system extractors
+    extractors.push(new BooleanExtractor({ locale: this.config.locale }));
+    return extractors;
   }
 
   async init() {
@@ -53,7 +72,7 @@ class Nlu {
 
   async localCompute(sentence) {
     console.log('Nlu.localCompute', sentence);
-    const entities = await this.entityExtractor.compute(sentence);
+    const entities = await this.extractor.compute(sentence);
     console.log('Nlu.localCompute: entities', entities);
     const intents = await this.classifier.compute(sentence, entities);
     console.log('Nlu.localCompute: intents', intents);

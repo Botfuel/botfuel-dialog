@@ -35,7 +35,15 @@ class PromptDialog extends Dialog {
       return Dialog.STATUS_WAITING;
     }
     if (status === Dialog.STATUS_WAITING) {
-      // TODO
+      for (const messageEntity of messageEntities) {
+        if (messageEntity.dim === 'system:boolean') {
+          if (messageEntity.values[0]) {
+            return Dialog.STATUS_READY;
+          } else {
+            return Dialog.STATUS_COMPLETED;
+          }
+        }
+      }
       return null;
     }
     // STATUS_READY
