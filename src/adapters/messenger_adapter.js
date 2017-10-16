@@ -111,11 +111,11 @@ class MessengerAdapter extends WebAdapter {
 
   adaptQuickreplies(payload) {
     return {
-      text: 'Quick replies' || botMessage.payload.options.text , // TODO: fix this
+      text: 'Quick replies' || payload.options.text, // TODO: fix this
       quick_replies: payload.value.map(qr => ({
         content_type: 'text',
         title: qr,
-        payload: qr
+        payload: qr,
       })),
     };
   }
@@ -159,7 +159,7 @@ class MessengerAdapter extends WebAdapter {
     console.log('MessengerAdapter.adapt', botMessage);
     const payload = botMessage.payload;
     if (botMessage.type === 'text') {
-      return this.adaptText(payload);;
+      return this.adaptText(payload);
     }
     if (botMessage.type === 'quickreplies') {
       return this.adaptQuickreplies(payload);

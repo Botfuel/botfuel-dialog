@@ -33,16 +33,18 @@ class PromptDialog extends Dialog {
     if (status === Dialog.STATUS_BLOCKED) {
       this.confirmDialog(id, responses);
       return Dialog.STATUS_WAITING;
-    } if (status === Dialog.STATUS_WAITING) {
-      // TODO
-    } else { // STATUS_READY
-      messageEntities = messageEntities
-        .filter(entity => this.parameters.entities[entity.dim] !== undefined);
-      this.confirmEntities(id, responses, messageEntities);
-      const missingEntities = await this.computeMissingEntities(id, messageEntities);
-      this.askEntities(id, responses, missingEntities);
-      return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_READY;
     }
+    if (status === Dialog.STATUS_WAITING) {
+      // TODO
+      return null;
+    }
+    // STATUS_READY
+    messageEntities = messageEntities
+      .filter(entity => this.parameters.entities[entity.dim] !== undefined);
+    this.confirmEntities(id, responses, messageEntities);
+    const missingEntities = await this.computeMissingEntities(id, messageEntities);
+    this.askEntities(id, responses, missingEntities);
+    return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_READY;
   }
 
   askEntities(id, responses, entities) {

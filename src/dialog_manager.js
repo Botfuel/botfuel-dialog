@@ -1,5 +1,4 @@
 const fs = require('fs');
-
 const Dialog = require('./dialogs/dialog');
 
 /**
@@ -44,7 +43,7 @@ class DialogManager {
   }
 
   getDialogStatus(depth) {
-    if  (depth !== 0) {
+    if (depth !== 0) {
       return Dialog.STATUS_BLOCKED;
     }
     return Dialog.STATUS_READY;

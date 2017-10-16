@@ -1,4 +1,5 @@
 /* eslint-disable prefer-arrow-callback */
+/* eslint-disable quotes */
 
 const expect = require('expect.js');
 const MessengerAdapter = require('../../src/adapters/messenger_adapter');
