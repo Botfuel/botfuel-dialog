@@ -41,16 +41,9 @@ class DialogManager {
     return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
   }
 
-  /**
-   * Executes the dialogs.
-   * @param {string} userId the user id
-   * @param {Object[]} dialogs - the dialogs
-   * @param {Object[]} intents - the intents
-   * @param {Object[]} entities - the entities
-   */
-  async updateDialogs(userId, dialogs, intents, entities) {
-    console.log('DialogManager.updateDialogs', userId, dialogs, intents, entities);
-    intents = intents
+  filterIntents(intents) {
+    console.log('DialogManager.filterIntents', intents);
+    return intents
       .filter(intent => intent.value > this.intentThreshold)
       .slice(0, 2)
       .sort((intent1, intent2) => {
@@ -61,6 +54,18 @@ class DialogManager {
         }
         return intent1.value - intent2.value;
       });
+  }
+
+  /**
+   * Executes the dialogs.
+   * @param {string} userId the user id
+   * @param {Object[]} dialogs - the dialogs
+   * @param {Object[]} intents - the intents
+   * @param {Object[]} entities - the entities
+   */
+  async updateDialogs(userId, dialogs, intents, entities) {
+    console.log('DialogManager.updateDialogs', userId, dialogs, intents, entities);
+    intents = this.filterIntents(intents);
     console.log('DialogManager.updateDialogs: intents', intents);
     for (let i = 0; i < intents.length; i++) {
       const label = intents[i].label;

@@ -9,6 +9,19 @@ class PromptDialog extends Dialog {
     this.maxComplexity = Object.keys(parameters.entities).length + 1;
   }
 
+  async computeMissingEntities(id, messageEntities) {
+    console.log('PromptDialog.computeMissingEntities', messageEntities);
+    const dialogEntities = await this.brain.conversationGet(id, this.parameters.namespace) || {};
+    for (const messageEntity of messageEntities) {
+      dialogEntities[messageEntity.dim] = messageEntity;
+    }
+    console.log('PromptDialog.computeMissingEntities: dialogEntities', dialogEntities);
+    await this.brain.conversationSet(id, this.parameters.namespace, dialogEntities);
+    return Object
+      .keys(this.parameters.entities)
+      .filter(entityKey => dialogEntities[entityKey] === undefined);
+  }
+
   /**
    * Executes.
    * @param {string} id the user id
@@ -19,16 +32,8 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.execute', id, responses, messageEntities, confirmDialog);
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
-    const dialogEntities = await this.brain.conversationGet(id, this.parameters.namespace) || {};
-    for (const messageEntity of messageEntities) {
-      dialogEntities[messageEntity.dim] = messageEntity;
-    }
-    console.log('PromptDialog.execute: dialogEntities', dialogEntities);
-    await this.brain.conversationSet(id, this.parameters.namespace, dialogEntities);
     this.confirm(id, responses, messageEntities, confirmDialog);
-    const missingEntities = Object
-          .keys(this.parameters.entities)
-          .filter(entityKey => dialogEntities[entityKey] === undefined);
+    const missingEntities = await this.computeMissingEntities(id, messageEntities);
     this.ask(id, responses, missingEntities);
     return missingEntities.length === 0;
   }
