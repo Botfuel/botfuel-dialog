@@ -54,7 +54,9 @@ class Bot {
   async sendResponse(userMessage) {
     console.log('Bot.sendResponse', userMessage);
     try {
-      return this.adapter.send(await this.getResponses(userMessage));
+      const responses = await this.getResponses(userMessage);
+      console.log('Bot.sendResponse: responses', responses);
+      return this.adapter.send(responses);
     } catch (err) {
       console.error('Bot.sendResponse', err);
       throw err;
@@ -62,7 +64,7 @@ class Bot {
   }
 
   async getResponses(userMessage) {
-    // console.log('Bot.getResponses', userMessage);
+    console.log('Bot.getResponses', userMessage);
     switch (userMessage.type) {
       case 'postback':
         return this.getResponsesWhenPostback(userMessage);

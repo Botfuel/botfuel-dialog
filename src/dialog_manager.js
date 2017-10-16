@@ -125,6 +125,7 @@ class DialogManager {
       }
     }
     await this.brain.userSet(userId, 'dialogs', dialogs);
+    console.log('DialogManager.executeDialogs: responses', responses);
     return responses;
   }
 
