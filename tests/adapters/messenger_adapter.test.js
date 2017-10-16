@@ -39,7 +39,7 @@ describe('MessengerAdapter', function () {
                   url: 'https://image1',
                 },
                 {
-                  payload: "{\"dialog\":{\"label\":\"products\"},\"entities\":[{\"dim\":\"product\",\"value\":\"1\"}]}",
+                  payload: "{\"dialog\":\"products\",\"entities\":[{\"dim\":\"product\",\"value\":\"1\"}]}",
                   title: 'Buy',
                   type: 'postback',
                 },
@@ -55,7 +55,7 @@ describe('MessengerAdapter', function () {
                   url: 'https://image2',
                 },
                 {
-                  payload: "{\"dialog\":{\"label\":\"products\"},\"entities\":[{\"dim\":\"product\",\"value\":\"2\"}]}",
+                  payload: "{\"dialog\":\"products\",\"entities\":[{\"dim\":\"product\",\"value\":\"2\"}]}",
                   title: 'Buy',
                   type: 'postback',
                 },

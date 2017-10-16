@@ -35,7 +35,7 @@ describe('CardsMessage', function () {
               {
                 text: 'Buy',
                 type: 'postback',
-                value: { dialog: { label: 'products' }, entities: [{ dim: 'product', value: '1' }] },
+                value: { dialog: 'products', entities: [{ dim: 'product', value: '1' }] },
               },
             ],
             image_url: 'https://image1.jpg',
@@ -51,7 +51,7 @@ describe('CardsMessage', function () {
               {
                 text: 'Buy',
                 type: 'postback',
-                value: { dialog: { label: 'products' }, entities: [{ dim: 'product', value: '2' }] },
+                value: { dialog: 'products', entities: [{ dim: 'product', value: '2' }] },
               },
             ],
             image_url: 'https://image2.jpg',

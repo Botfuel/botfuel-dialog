@@ -78,9 +78,14 @@ class Bot {
 
   async getResponsesWhenPostback(userMessage) {
     console.log('Bot.getResponsesWhenPostback', userMessage);
-    const { dialog, entities } = userMessage.payload.value;
-    console.log('Bot.getResponsesWhenPostback: dialog, entities', dialog, entities);
-    return this.dm.executeDialogs(userMessage.user, [dialog], entities);
+    return this.dm.executeDialogs(
+      userMessage.user,
+      [{
+        label: userMessage.payload.value.dialog,
+        status: Dialog.STATUS_READY
+      }],
+      userMessage.payload.value.entities
+    );
   }
 
   async getResponsesWhenText(userMessage) {
