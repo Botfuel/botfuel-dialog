@@ -158,22 +158,20 @@ class MessengerAdapter extends WebAdapter {
   adapt(botMessage) {
     console.log('MessengerAdapter.adapt', botMessage);
     const payload = botMessage.payload;
-    if (botMessage.type === 'text') {
-      return this.adaptText(payload);
+    switch (botMessage.type) {
+      case 'text':
+        return this.adaptText(payload);
+      case 'quickreplies':
+        return this.adaptQuickreplies(payload);
+      case 'image':
+        return this.adaptImage(payload);
+      case 'actions':
+        return this.adaptActions(payload);
+      case 'cards':
+        return this.adaptCards(payload);
+      default:
+        return null;
     }
-    if (botMessage.type === 'quickreplies') {
-      return this.adaptQuickreplies(payload);
-    }
-    if (botMessage.type === 'image') {
-      return this.adaptImage(payload);
-    }
-    if (botMessage.type === 'actions') {
-      return this.adaptActions(payload);
-    }
-    if (botMessage.type === 'cards') {
-      return this.adaptCards(payload);
-    }
-    return null;
   }
 
 
