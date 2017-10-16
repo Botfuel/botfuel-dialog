@@ -86,7 +86,7 @@ class PromptDialog extends Dialog {
   }
 
   discardDialog(id, responses) {
-    console.log('PromptDialog.denyDialog', id, responses);
+    console.log('PromptDialog.discardDialog', id, responses);
     this.pushMessages(responses, this.textMessages(id,
                                                    `${this.parameters.namespace}_discard`));
   }
