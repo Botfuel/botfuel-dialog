@@ -31,13 +31,17 @@ class PromptDialog extends Dialog {
   async execute(id, responses, messageEntities, status) {
     console.log('PromptDialog.execute', id, responses, messageEntities, status);
     if (status === Dialog.STATUS_BLOCKED) {
+      console.log('PromptDialog.execute when blocked');
       this.confirmDialog(id, responses);
       return Dialog.STATUS_WAITING;
     }
     if (status === Dialog.STATUS_WAITING) {
+      console.log('PromptDialog.execute when waiting');
       for (const messageEntity of messageEntities) {
         if (messageEntity.dim === 'system:boolean') {
-          if (messageEntity.values[0]) {
+          const booleanValue = messageEntity.values[0];
+          console.log('PromptDialog.execute: system:boolean', booleanValue);
+          if (booleanValue) {
             return Dialog.STATUS_READY; // or jump below?
           } else {
             return Dialog.STATUS_COMPLETED;
@@ -46,7 +50,7 @@ class PromptDialog extends Dialog {
       }
       return Dialog.STATUS_BLOCKED;
     }
-    // STATUS_READY
+    console.log('PromptDialog.execute when ready');
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
     this.confirmEntities(id, responses, messageEntities);
