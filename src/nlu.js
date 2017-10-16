@@ -2,6 +2,8 @@ const QnA = require('botfuel-qna-sdk');
 const CompositeExtractor = require('./extractors/composite_extractor');
 const Classifier = require('./classifier');
 
+const fs = require('fs');
+
 /**
  * A nlu module (could be replaced by an external one).
  */
