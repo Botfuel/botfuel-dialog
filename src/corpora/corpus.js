@@ -2,7 +2,7 @@ const Diacritics = require('diacritics');
 
 class Corpus {
   constructor(matrix) {
-    console.log('Corpus.constructor', matrix)
+    console.log('Corpus.constructor', matrix);
     this.matrix = matrix;
   }
 
