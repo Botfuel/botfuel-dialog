@@ -14,7 +14,7 @@ describe('BooleanExtractor', function () {
         values: [
           {
             type: 'boolean',
-            values: [false],
+            value: false,
           },
         ],
       },
@@ -23,7 +23,7 @@ describe('BooleanExtractor', function () {
         values: [
           {
             type: 'boolean',
-            values: [true],
+            value: true,
           },
         ],
       },

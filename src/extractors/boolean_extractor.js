@@ -15,7 +15,7 @@ class BooleanExtractor extends CorpusExtractor {
   }
 
   getEntity(value) {
-    return { values: [value === '1'], type: 'boolean' };
+    return { value: value === '1', type: 'boolean' };
   }
 }
 

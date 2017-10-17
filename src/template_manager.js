@@ -41,9 +41,19 @@ class TemplateManager {
     return this.compile(id, `${this.namespace}_${entity.dim}_confirm`, { entity });
   }
 
+  dialogAsk(id) {
+    console.log('TemplateManager.dialogAsk', id);
+    return this.compile(id, `${this.namespace}_ask`, null);
+  }
+
   dialogConfirm(id) {
     console.log('TemplateManager.dialogConfirm', id);
     return this.compile(id, `${this.namespace}_confirm`, null);
+  }
+
+  dialogDiscard(id) {
+    console.log('TemplateManager.dialogDiscard', id);
+    return this.compile(id, `${this.namespace}_discard`, null);
   }
 }
 
