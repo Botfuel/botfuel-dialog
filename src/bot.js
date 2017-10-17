@@ -83,9 +83,9 @@ class Bot {
       userMessage.user,
       [{
         label: userMessage.payload.value.dialog,
-        status: Dialog.STATUS_READY
+        status: Dialog.STATUS_READY,
       }],
-      userMessage.payload.value.entities
+      userMessage.payload.value.entities,
     );
   }
 

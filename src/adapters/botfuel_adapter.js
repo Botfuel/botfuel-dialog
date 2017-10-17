@@ -32,6 +32,7 @@ class BotfuelAdapter extends WebAdapter {
   async send(botMessages) {
     console.log('BotfuelAdapter.sendText', botMessages);
     for (const botMessage of botMessages) {
+      // eslint-disable-next-line no-await-in-loop
       await this.postResponse({ uri: this.getUrl(botMessage), body: botMessage });
     }
   }

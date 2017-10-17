@@ -95,6 +95,7 @@ class MessengerAdapter extends WebAdapter {
     for (const botMessage of botMessages) {
       const message = this.adapt(botMessage);
       console.log('MessengerAdapter.send: message', message);
+      // eslint-disable-next-line no-await-in-loop
       await this.postResponse({
         uri,
         qs,
