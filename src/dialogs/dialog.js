@@ -1,8 +1,4 @@
-const Fs = require('fs');
-const _ = require('underscore');
-const BotTextMessage = require('../views/parts/bot_text_message');
-
-_.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
+const TemplateManager = require('../template_manager');
 
 /**
  * Generates messages.
@@ -23,26 +19,7 @@ class Dialog {
     this.config = config;
     this.brain = brain;
     this.parameters = parameters;
-    this.templatePath = `${this.config.path}/src/views/templates`;
-  }
-
-  /**
-   * @param {string} userId the user id
-   * @param {Object[]} responses
-   * @param {string} template the template
-   * @param {Object} parameters the template parameters
-   */
-  textMessages(userId, template, parameters) {
-    console.log('Dialog.textMessage', userId, template, parameters);
-    // TODO: resolve the template given the label (allowing fallback)
-    const templateName = `${this.templatePath}/${template}.${this.config.locale}.txt`;
-    return Fs
-      .readFileSync(templateName, 'utf8')
-      .toString()
-      .split('\n')
-      .map(line => _.template(line)(parameters))
-      .filter(text => text !== '')
-      .map(text => new BotTextMessage(this.config.id, userId, text).toJson());
+    this.tplManager = new TemplateManager(config, parameters.namespace);
   }
 
   pushMessages(responses, messages) {

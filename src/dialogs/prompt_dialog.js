@@ -43,9 +43,8 @@ class PromptDialog extends Dialog {
           console.log('PromptDialog.execute: system:boolean', booleanValue);
           if (booleanValue) {
             return Dialog.STATUS_READY; // or jump below?
-          } else {
-            return Dialog.STATUS_COMPLETED;
           }
+          return Dialog.STATUS_COMPLETED;
         }
       }
       return Dialog.STATUS_BLOCKED;
@@ -63,26 +62,30 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.askEntities', id, responses, entities);
     // TODO: put all this in a single template
     for (const entityKey of entities) {
-      this.pushMessages(responses, this.textMessages(id,
-                                                     `${this.parameters.namespace}_${entityKey}_ask`,
-                                                     { entity: entityKey }));
+      this.pushMessages(
+        responses,
+        this.tplManager.entityAsk(id, entityKey),
+      );
     }
-  }
-
-  confirmDialog(id, responses) {
-    console.log('PromptDialog.confirmDialog', id, responses);
-    this.pushMessages(responses, this.textMessages(id,
-                                                   `${this.parameters.namespace}_confirm`));
   }
 
   confirmEntities(id, responses, entities) {
     console.log('PromptDialog.confirmEntities', id, responses, entities);
     // TODO: put all this in a single template
     for (const entity of entities) {
-      this.pushMessages(responses, this.textMessages(id,
-                                                     `${this.parameters.namespace}_${entity.dim}_confirm`,
-                                                     { entity }));
+      this.pushMessages(
+        responses,
+        this.tplManager.entityConfirm(id, entity),
+      );
     }
+  }
+
+  confirmDialog(id, responses) {
+    console.log('PromptDialog.confirmDialog', id, responses);
+    this.pushMessages(
+      responses,
+      this.tplManager.dialogConfirm(id),
+    );
   }
 }
 
