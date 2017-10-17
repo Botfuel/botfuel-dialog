@@ -6,7 +6,8 @@ _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
 
 class TemplateManager {
   constructor(config, namespace) {
-    this.templatePath = `${config.path}/views/templates`;
+    console.log('TemplateManager.constructor', config.path);
+    this.templatePath = `${config.path}/src/views/templates`;
     this.botId = config.id;
     this.locale = config.locale;
     this.namespace = namespace;
