@@ -22,12 +22,12 @@ class QnasDialog extends Dialog {
     if (qnas.length === 1) {
       this.pushMessages(
         responses,
-        this.tplManager.compile(id, this.parameters.template, { answer: qnas[0].answer }),
+        this.templateManager.compile(id, this.parameters.template, { answer: qnas[0].answer }),
       );
     } else {
       this.pushMessages(
         responses,
-        this.tplManager.compile(id, 'qnas_header', null),
+        this.templateManager.compile(id, 'qnas_header', null),
       );
       const buttons = qnas.map(qna => new Postback(qna.questions[0], 'qnas_dialog', [{
         dim: 'qnas',

@@ -75,24 +75,28 @@ class PromptDialog extends Dialog {
 
   askDialog(id, responses) {
     console.log('PromptDialog.askDialog', id, responses);
-    this.pushMessages(responses, this.tplManager.dialogAsk(id));
+    this.pushMessages(responses, this.templateManager.dialogAsk(id));
   }
 
   confirmDialog(id, responses) {
     console.log('PromptDialog.confirmDialog', id, responses);
-    this.pushMessages(responses, this.tplManager.dialogConfirm(id));
+    this.pushMessages(responses, this.templateManager.dialogConfirm(id));
   }
 
   discardDialog(id, responses) {
     console.log('PromptDialog.discardDialog', id, responses);
-    this.pushMessages(responses, this.tplManager.dialogDiscard(id));
+    this.pushMessages(responses, this.templateManager.dialogDiscard(id));
   }
 
   askEntities(id, responses, entities) {
     console.log('PromptDialog.askEntities', id, responses, entities);
     // TODO: put all this in a single template
+    if (entities.length > 0) {
+      const entity = entities.shift();
+      this.pushMessages(responses, this.templateManager.entityAsk(id, entity));
+    }
     for (const entityKey of entities) {
-      this.pushMessages(responses, this.tplManager.entityAsk(id, entityKey));
+      this.pushMessages(responses, this.templateManager.entityAsk(id, entityKey));
     }
   }
 
@@ -100,7 +104,7 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.confirmEntities', id, responses, entities);
     // TODO: put all this in a single template
     for (const entity of entities) {
-      this.pushMessages(responses, this.tplManager.entityConfirm(id, entity));
+      this.pushMessages(responses, this.templateManager.entityConfirm(id, entity));
     }
   }
 }

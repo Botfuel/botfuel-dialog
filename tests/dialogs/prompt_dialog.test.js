@@ -23,7 +23,7 @@ class TestTemplateManager extends TemplateManager {
 class TestPromptDialog extends PromptDialog {
   constructor(config, brain, parameters) {
     super(config, brain, parameters);
-    this.tplManager = new TestTemplateManager(config, parameters.namespace);
+    this.templateManager = new TestTemplateManager(config, parameters.namespace);
   }
 }
 
