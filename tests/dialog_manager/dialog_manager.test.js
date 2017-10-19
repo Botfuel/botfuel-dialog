@@ -5,12 +5,13 @@ const DialogManager = require('../../src/dialog_manager');
 const MemoryBrain = require('../../src/brains/memory_brain');
 const BotTextMessage = require('../../src/views/parts/bot_text_message');
 
-const TEST_BOT = 1;
-const TEST_USER = 1;
+const TEST_BOT = '1';
+const TEST_USER = '1';
+const testConfig = { path: __dirname, locale: 'en', id: TEST_BOT };
 
 describe('DialogManager', function () {
   const brain = new MemoryBrain(TEST_BOT);
-  const dm = new DialogManager(brain, { path: __dirname, locale: 'en', id: TEST_BOT });
+  const dm = new DialogManager(brain, testConfig);
 
   beforeEach(async function () {
     console.log('beforeEach');
@@ -25,9 +26,7 @@ describe('DialogManager', function () {
   });
 
   it('when given an unknown label, it should return null', function () {
-    expect(dm.getDialogPath('unknown_dialog'))
-      .to
-      .be(null);
+    expect(dm.getDialogPath('unknown_dialog')).to.be(null);
   });
 
   it('should not crash when no intent', async function () {

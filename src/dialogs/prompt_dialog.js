@@ -75,29 +75,54 @@ class PromptDialog extends Dialog {
 
   askDialog(id, responses) {
     console.log('PromptDialog.askDialog', id, responses);
-    this.pushMessages(responses, this.textMessages(id,
-                                                   `${this.parameters.namespace}_ask`));
+    this.pushMessages(
+      responses,
+      this.templateManager.compile(id, `${this.parameters.namespace}_ask`, null),
+    );
   }
 
   confirmDialog(id, responses) {
     console.log('PromptDialog.confirmDialog', id, responses);
-    this.pushMessages(responses, this.textMessages(id,
-                                                   `${this.parameters.namespace}_confirm`));
+    this.pushMessages(
+      responses,
+      this.templateManager.compile(id, `${this.parameters.namespace}_confirm`, null),
+    );
   }
 
   discardDialog(id, responses) {
     console.log('PromptDialog.discardDialog', id, responses);
-    this.pushMessages(responses, this.textMessages(id,
-                                                   `${this.parameters.namespace}_discard`));
+    this.pushMessages(
+      responses,
+      this.templateManager.compile(id, `${this.parameters.namespace}_discard`, null),
+    );
   }
 
   askEntities(id, responses, entities) {
     console.log('PromptDialog.askEntities', id, responses, entities);
     // TODO: put all this in a single template
-    for (const entityKey of entities) {
-      this.pushMessages(responses, this.textMessages(id,
-                                                     `${this.parameters.namespace}_${entityKey}_ask`,
-                                                     { entity: entityKey }));
+    /*
+    // @TODO: keep this logic to ask entities sequentially
+    if (entities.length > 0) {
+      const entity = entities.shift();
+      this.pushMessages(
+        responses,
+        this.templateManager.compile(
+          id,
+          `${this.parameters.namespace}_${entity}_ask`,
+          { entity },
+        ),
+      );
+    }
+    */
+    for (const entity of entities) {
+      this.pushMessages(
+        responses,
+        this.templateManager.compile(
+          id,
+          `${this.parameters.namespace}_${entity}_ask`,
+          { entity },
+        ),
+      );
     }
   }
 
@@ -105,9 +130,14 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.confirmEntities', id, responses, entities);
     // TODO: put all this in a single template
     for (const entity of entities) {
-      this.pushMessages(responses, this.textMessages(id,
-                                                     `${this.parameters.namespace}_${entity.dim}_confirm`,
-                                                     { entity }));
+      this.pushMessages(
+        responses,
+        this.templateManager.compile(
+          id,
+          `${this.parameters.namespace}_${entity.dim}_confirm`,
+          { entity },
+        ),
+      );
     }
   }
 }

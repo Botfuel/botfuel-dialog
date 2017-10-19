@@ -12,4 +12,8 @@ class FalseDialog extends Dialog {
   }
 }
 
+FalseDialog.params = {
+  namespace: 'false',
+};
+
 module.exports = FalseDialog;
