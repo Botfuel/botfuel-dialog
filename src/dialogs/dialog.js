@@ -20,7 +20,7 @@ class Dialog {
     this.config = config;
     this.brain = brain;
     this.parameters = parameters;
-    this.templateManager = new TemplateManager(config, parameters.namespace);
+    this.templateManager = new TemplateManager(config);
   }
 
   pushMessages(responses, messages) {

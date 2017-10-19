@@ -5,12 +5,11 @@ const BotTextMessage = require('./views/parts/bot_text_message');
 _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
 
 class TemplateManager {
-  constructor(config, namespace) {
+  constructor(config) {
     console.log('TemplateManager.constructor', config.path);
     this.templatePath = `${config.path}/src/views/templates`;
     this.botId = config.id;
     this.locale = config.locale;
-    this.namespace = namespace;
   }
 
   getTemplatePath(template) {
@@ -49,31 +48,6 @@ class TemplateManager {
         .map(text => new BotTextMessage(this.botId, userId, text).toJson());
     }
     return null;
-  }
-
-  entityAsk(id, entity) {
-    console.log('TemplateManager.entityAsk', id, entity);
-    return this.compile(id, `${this.namespace}_${entity}_ask`, { entity });
-  }
-
-  entityConfirm(id, entity) {
-    console.log('TemplateManager.entityConfirm', id, entity);
-    return this.compile(id, `${this.namespace}_${entity.dim}_confirm`, { entity });
-  }
-
-  dialogAsk(id) {
-    console.log('TemplateManager.dialogAsk', id);
-    return this.compile(id, `${this.namespace}_ask`, null);
-  }
-
-  dialogConfirm(id) {
-    console.log('TemplateManager.dialogConfirm', id);
-    return this.compile(id, `${this.namespace}_confirm`, null);
-  }
-
-  dialogDiscard(id) {
-    console.log('TemplateManager.dialogDiscard', id);
-    return this.compile(id, `${this.namespace}_discard`, null);
   }
 }
 

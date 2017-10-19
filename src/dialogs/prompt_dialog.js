@@ -75,17 +75,26 @@ class PromptDialog extends Dialog {
 
   askDialog(id, responses) {
     console.log('PromptDialog.askDialog', id, responses);
-    this.pushMessages(responses, this.templateManager.dialogAsk(id));
+    this.pushMessages(
+      responses,
+      this.templateManager.compile(id, `${this.parameters.namespace}_ask`, null),
+    );
   }
 
   confirmDialog(id, responses) {
     console.log('PromptDialog.confirmDialog', id, responses);
-    this.pushMessages(responses, this.templateManager.dialogConfirm(id));
+    this.pushMessages(
+      responses,
+      this.templateManager.compile(id, `${this.parameters.namespace}_confirm`, null),
+    );
   }
 
   discardDialog(id, responses) {
     console.log('PromptDialog.discardDialog', id, responses);
-    this.pushMessages(responses, this.templateManager.dialogDiscard(id));
+    this.pushMessages(
+      responses,
+      this.templateManager.compile(id, `${this.parameters.namespace}_discard`, null),
+    );
   }
 
   askEntities(id, responses, entities) {
@@ -95,11 +104,25 @@ class PromptDialog extends Dialog {
     // @TODO: keep this logic to ask entities sequentially
     if (entities.length > 0) {
       const entity = entities.shift();
-      this.pushMessages(responses, this.templateManager.entityAsk(id, entity));
+      this.pushMessages(
+        responses,
+        this.templateManager.compile(
+          id,
+          `${this.parameters.namespace}_${entity}_ask`,
+          { entity },
+        ),
+      );
     }
     */
-    for (const entityKey of entities) {
-      this.pushMessages(responses, this.templateManager.entityAsk(id, entityKey));
+    for (const entity of entities) {
+      this.pushMessages(
+        responses,
+        this.templateManager.compile(
+          id,
+          `${this.parameters.namespace}_${entity}_ask`,
+          { entity },
+        ),
+      );
     }
   }
 
@@ -107,7 +130,14 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.confirmEntities', id, responses, entities);
     // TODO: put all this in a single template
     for (const entity of entities) {
-      this.pushMessages(responses, this.templateManager.entityConfirm(id, entity));
+      this.pushMessages(
+        responses,
+        this.templateManager.compile(
+          id,
+          `${this.parameters.namespace}_${entity.dim}_confirm`,
+          { entity },
+        ),
+      );
     }
   }
 }
