@@ -77,7 +77,7 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.askDialog', id, responses);
     this.pushMessages(
       responses,
-      this.templateManager.compile(id, `${this.parameters.namespace}_ask`, null),
+      this.viewsManager.resolve(id, `${this.parameters.namespace}_ask`, null),
     );
   }
 
@@ -85,7 +85,7 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.confirmDialog', id, responses);
     this.pushMessages(
       responses,
-      this.templateManager.compile(id, `${this.parameters.namespace}_confirm`, null),
+      this.viewsManager.resolve(id, `${this.parameters.namespace}_confirm`, null),
     );
   }
 
@@ -93,35 +93,24 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.discardDialog', id, responses);
     this.pushMessages(
       responses,
-      this.templateManager.compile(id, `${this.parameters.namespace}_discard`, null),
+      this.viewsManager.resolve(id, `${this.parameters.namespace}_discard`, null),
     );
   }
 
   askEntities(id, responses, entities) {
     console.log('PromptDialog.askEntities', id, responses, entities);
     // TODO: put all this in a single template
-    /*
-    // @TODO: keep this logic to ask entities sequentially
-    if (entities.length > 0) {
-      const entity = entities.shift();
+    if (entities.length > 1) {
       this.pushMessages(
         responses,
-        this.templateManager.compile(
-          id,
-          `${this.parameters.namespace}_${entity}_ask`,
-          { entity },
-        ),
+        this.viewsManager.resolve(id, `${this.parameters.namespace}_entities_ask`, { entities }),
       );
-    }
-    */
-    for (const entity of entities) {
+    } else if (entities.length === 1) {
+      // ask something more specific if only one entity
+      const entity = entities[0];
       this.pushMessages(
         responses,
-        this.templateManager.compile(
-          id,
-          `${this.parameters.namespace}_${entity}_ask`,
-          { entity },
-        ),
+        this.viewsManager.resolve(id, `${this.parameters.namespace}_${entity}_ask`, { entity }),
       );
     }
   }
@@ -132,13 +121,21 @@ class PromptDialog extends Dialog {
     for (const entity of entities) {
       this.pushMessages(
         responses,
-        this.templateManager.compile(
+        this.viewsManager.resolve(
           id,
           `${this.parameters.namespace}_${entity.dim}_confirm`,
           { entity },
         ),
       );
     }
+    /*
+    if (entities.length > 0) {
+      this.pushMessages(
+        responses,
+        this.viewsManager.resolve(id, `${this.parameters.namespace}_entities_confirm`, { entities }),
+      );
+    }
+    */
   }
 }
 

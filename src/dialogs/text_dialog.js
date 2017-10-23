@@ -20,7 +20,7 @@ class TextDialog extends Dialog {
     console.log('TextDialog.execute', id, responses, messageEntities);
     this.pushMessages(
       responses,
-      this.templateManager.compile(id, this.parameters.template, messageEntities),
+      this.viewsManager.resolve(id, this.parameters.template, messageEntities),
     );
     return Dialog.STATUS_COMPLETED;
   }

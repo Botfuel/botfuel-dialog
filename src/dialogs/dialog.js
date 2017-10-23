@@ -1,4 +1,4 @@
-const TemplateManager = require('../template_manager');
+const ViewsManager = require('../views_manager');
 
 /**
  * Generates messages.
@@ -20,7 +20,7 @@ class Dialog {
     this.config = config;
     this.brain = brain;
     this.parameters = parameters;
-    this.templateManager = new TemplateManager(config);
+    this.viewsManager = new ViewsManager(config);
   }
 
   pushMessages(responses, messages) {

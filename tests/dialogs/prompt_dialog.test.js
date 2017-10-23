@@ -1,7 +1,7 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const TemplateManager = require('../../src/template_manager');
+const TemplateManager = require('../../src/views_manager');
 const PromptDialog = require('../../src/dialogs/prompt_dialog');
 const MemoryBrain = require('../../src/brains/memory_brain');
 
