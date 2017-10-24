@@ -1,6 +1,19 @@
-class DialogView {
-  render(key, parameters) {
-    console.log('DialogView.render', key, parameters);
+const BotTextMessage = require('./parts/bot_text_message');
+
+class PromptView {
+  render(botId, userId, key, parameters) {
+    console.log('PromptView.render', botId, userId, key, parameters);
+    const textMessage = this.resolve(key, parameters);
+    console.log('PromptView.render: textMessage', textMessage);
+    const botMessages = [];
+    if (textMessage !== null && textMessage.length > 0) {
+      botMessages.push(new BotTextMessage(botId, userId, textMessage).toJson());
+    }
+    return botMessages;
+  }
+
+  resolve(key, parameters) {
+    console.log('PromptView.resolve', key, parameters);
     switch (key) {
       case 'ask':
         return this.ask();
@@ -50,7 +63,7 @@ class DialogView {
   }
 
   concatEntities(entities) {
-    console.log('DialogView.concatEntities', entities);
+    console.log('PromptView.concatEntities', entities);
     let result = '';
     entities.forEach((e) => {
       if (entities.length === 1 || entities.indexOf(e) === entities.length - 2) {
@@ -65,7 +78,7 @@ class DialogView {
   }
 
   concatEntitiesValues(entities) {
-    console.log('DialogView.concatEntitiesValues', entities);
+    console.log('PromptView.concatEntitiesValues', entities);
     let result = '';
     let value;
     entities.forEach((e) => {
@@ -82,4 +95,4 @@ class DialogView {
   }
 }
 
-module.exports = DialogView;
+module.exports = PromptView;

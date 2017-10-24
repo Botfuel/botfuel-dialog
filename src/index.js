@@ -18,7 +18,7 @@ const QuickrepliesMessage = require('./views/parts/quickreplies_message');
 const TextDialog = require('./dialogs/text_dialog');
 const UserTextMessage = require('./views/parts/user_text_message');
 const WsExtractor = require('./extractors/ws_extractor');
-const DialogView = require('./dialog_view');
+const PromptView = require('./views/prompt_view');
 const FileCorpus = require('./corpora/file_corpus');
 
 module.exports = {
@@ -42,6 +42,6 @@ module.exports = {
   TextDialog,
   UserTextMessage,
   WsExtractor,
-  DialogView,
+  PromptView,
   FileCorpus,
 };

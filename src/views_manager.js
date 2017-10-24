@@ -1,8 +1,6 @@
 const fs = require('fs');
 const _ = require('lodash');
-const BotTextMessage = require('./views/parts/bot_text_message');
-
-_.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
+const TextView = require('./views/text_view');
 
 class ViewsManager {
   constructor(config) {
@@ -23,9 +21,7 @@ class ViewsManager {
       `${__dirname}/views/templates/${template}.${this.locale}.txt`,
     ];
     for (const path of paths) {
-      console.log('ViewsManager.getPath: for loop path: ', path);
       if (fs.existsSync(path)) {
-        console.log('ViewsManager.getTemplatePath: path exists', path);
         return path;
       }
     }
@@ -41,14 +37,13 @@ class ViewsManager {
   resolve(userId, template, parameters) {
     console.log('ViewsManager.render', userId, template, parameters);
     const path = this.getPath(template);
-    console.log('ViewsManager.render: path', path);
     if (path) {
-      const fileExtension = this.getPath(template).split('.').pop();
+      const fileExtension = _.cloneDeep(path).split('.').pop();
       switch (fileExtension) {
-        case 'js':
-          return this.renderJsView(userId, path, template, parameters);
         case 'txt':
-          return this.renderFromTextTemplate(userId, path, parameters);
+          return this.renderTextView(userId, path, parameters);
+        case 'js':
+          return this.renderPromptView(userId, path, template, parameters);
         default:
           return null;
       }
@@ -56,47 +51,38 @@ class ViewsManager {
     return null;
   }
 
-  renderFromTextTemplate(userId, templatePath, parameters) {
-    console.log('ViewsManager.compileFromText');
-    return fs
-      .readFileSync(templatePath, 'utf8')
-      .toString()
-      .split('\n')
-      .map(line => _.template(line)(parameters))
-      .filter(Boolean)
-      .map(text => new BotTextMessage(this.botId, userId, text).toJson());
+  renderTextView(userId, templatePath, parameters) {
+    return TextView.render(this.botId, userId, templatePath, parameters);
   }
 
-  renderJsView(userId, viewPath, keysPath, parameters) {
-    const { dialogName, keysName } = this.explodeKeysPath(keysPath);
-    console.log('ViewsManager.renderJsView', dialogName, keysName);
-    const Dialog = require(viewPath);
-    const dialog = new Dialog();
-    let text = null;
-    for (const key of keysName) {
-      text = dialog.render(key, parameters);
-      if (text !== null && text.length > 0) {
+  renderPromptView(userId, viewPath, keysPath, parameters) {
+    const keys = this.getViewKeys(keysPath);
+    console.log('ViewsManager.renderPromptView', keys);
+    const View = require(viewPath);
+    const view = new View();
+    let botMessages;
+    for (const key of keys) {
+      botMessages = view.render(this.botId, userId, _.camelCase(key), parameters);
+      if (botMessages.length > 0) {
         break;
       }
     }
-    console.log('ViewsManager.renderJsView: text', text);
-    return [new BotTextMessage(this.botId, userId, text).toJson()];
+    return botMessages;
   }
 
-  explodeKeysPath(keysPath) {
-    const keys = keysPath.split('_');
-    console.log('ViewsManager.explodeKeysPath', keys);
-    const dialogName = keys[0];
-    const keysName = [];
-    if (keys[1] === 'entities' && ['ask', 'confirm', 'discard'].indexOf(keys[2]) !== -1) {
-      keysName.push(_.camelCase(`${keys[1]} ${keys[2]}`));
-    } else if (['entities', 'ask', 'confirm', 'discard'].indexOf(keys[1]) === -1) {
-      keysName.push(_.camelCase(`${keys[1]} ${keys[2]}`));
-      keysName.push(_.camelCase(`entity ${keys[2]}`));
+  getViewKeys(keysPath) {
+    const keysList = keysPath.split('_');
+    console.log('ViewsManager.getViewKeys', keysList);
+    const keys = [];
+    if (keysList[1] === 'entities' && ['ask', 'confirm', 'discard'].indexOf(keysList[2]) !== -1) {
+      keys.push(`${keysList[1]} ${keysList[2]}`);
+    } else if (['entities', 'ask', 'confirm', 'discard'].indexOf(keysList[1]) === -1) {
+      keys.push(`${keysList[1]} ${keysList[2]}`);
+      keys.push(`entity ${keysList[2]}`);
     } else {
-      keysName.push(keys[1]);
+      keys.push(keysList[1]);
     }
-    return { dialogName, keysName };
+    return keys;
   }
 }
 
