@@ -4,8 +4,7 @@ const Dialog = require('./dialog');
 
 class QnasDialog extends Dialog {
   constructor(config, brain) {
-    super(config, brain, { template: 'qnas' });
-    this.templatePath = `${__dirname}/../views/templates`;
+    super(config, brain);
     this.maxComplexity = 2;
   }
 
@@ -22,12 +21,12 @@ class QnasDialog extends Dialog {
     if (qnas.length === 1) {
       this.pushMessages(
         responses,
-        this.viewsManager.resolve(id, this.parameters.template, { answer: qnas[0].answer }),
+        this.viewsManager.resolve(id, this.dialogName, null, { answer: qnas[0].answer }),
       );
     } else {
       this.pushMessages(
         responses,
-        this.viewsManager.resolve(id, 'qnas_header', null),
+        this.viewsManager.resolve(id, 'qnas_header', null, null),
       );
       const buttons = qnas.map(qna => new Postback(qna.questions[0], 'qnas_dialog', [{
         dim: 'qnas',
