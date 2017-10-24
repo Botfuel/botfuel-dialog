@@ -39,7 +39,7 @@ describe('PromptDialog', function () {
 
   it('when given no entity, should ask for both', async function () {
     const responses = [];
-    await prompt.execute(TEST_USER, responses, []);
+    await prompt.execute(TEST_USER, responses, [], PromptDialog.STATUS_READY);
     expect(responses).to.eql([
       {
         id: TEST_USER,
@@ -56,7 +56,7 @@ describe('PromptDialog', function () {
 
   it('when given a first entity, should ask for the second one', async function () {
     const responses = [];
-    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1' }]);
+    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1' }], PromptDialog.STATUS_READY);
     expect(responses).to.eql([
       {
         id: TEST_USER,
@@ -79,7 +79,7 @@ describe('PromptDialog', function () {
 
   it('when given both entity, should ask none', async function () {
     const responses = [];
-    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1' }, { dim: 'dim2' }]);
+    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1' }, { dim: 'dim2' }], PromptDialog.STATUS_READY);
     expect(responses).to.eql([
       {
         id: TEST_USER,
