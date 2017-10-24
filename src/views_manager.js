@@ -1,5 +1,4 @@
 const fs = require('fs');
-const _ = require('lodash');
 const TextView = require('./views/text_view');
 const PromptView = require('./views/prompt_view');
 
@@ -32,25 +31,21 @@ class ViewsManager {
    * Compile the template
    * @param {string} userId the user id
    * @param {string} name the view name
-   * @param {string} key the view key
-   * @param {Object} parameters the template parameters
+   * @param {string[]/null} keys the view keys list
+   * @param {object} parameters the template parameters
    */
-  resolve(userId, name, key, parameters) {
-    console.log('ViewsManager.render', userId, name, key, parameters);
+  resolve(userId, name, keys, parameters) {
+    console.log('ViewsManager.resolve', userId, name, keys, parameters);
     const path = this.getPath(name);
     if (path) {
       const View = require(path);
       const view = new View();
-      console.log(
-        'ViewsManager.render: view, instance Text, instance Prompt',
-        view,
-        view instanceof TextView,
-        view instanceof PromptView,
-      );
       if (view instanceof TextView) {
+        console.log('ViewsManager.resolve: render TextView', view);
         return view.render(this.botId, userId, parameters);
       } else if (view instanceof PromptView) {
-        return view.render(this.botId, userId, key, parameters);
+        console.log('ViewsManager.resolve: render PromptView', view);
+        return view.render(this.botId, userId, keys, parameters);
       }
     }
     return null;
