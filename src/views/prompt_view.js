@@ -1,13 +1,17 @@
+const _ = require('lodash');
 const BotTextMessage = require('./parts/bot_text_message');
 
 class PromptView {
-  render(botId, userId, key, parameters) {
-    console.log('PromptView.render', botId, userId, key, parameters);
-    const textMessage = this.resolve(key, parameters);
-    console.log('PromptView.render: textMessage', textMessage);
+  render(botId, userId, keys, parameters) {
+    console.log('PromptView.render', botId, userId, keys, parameters);
     const botMessages = [];
-    if (textMessage !== null && textMessage.length > 0) {
-      botMessages.push(new BotTextMessage(botId, userId, textMessage).toJson());
+    for (const key of keys) {
+      const textMessage = this.resolve(_.camelCase(key), parameters);
+      console.log('PromptView.render: textMessage', textMessage);
+      if (textMessage !== null && textMessage.length > 0) {
+        botMessages.push(new BotTextMessage(botId, userId, textMessage).toJson());
+        break;
+      }
     }
     return botMessages;
   }
@@ -59,7 +63,7 @@ class PromptView {
   }
 
   entityConfirm(parameters) {
-    return `You want ${parameters.entity.body} ${parameters.entity.dim}.`;
+    return `The ${parameters.entity.dim} is ${parameters.entity.body}.`;
   }
 
   concatEntities(entities) {
