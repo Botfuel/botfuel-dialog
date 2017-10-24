@@ -1,4 +1,4 @@
-const ViewsManager = require('../views_manager');
+const TemplateManager = require('../template_manager');
 
 /**
  * Generates messages.
@@ -14,15 +14,13 @@ class Dialog {
    * Constructor.
    * @param {Object} parameters the dialog parameters
    */
-  constructor(config, brain, parameters = {}) {
-    console.log('Dialog.constructor', parameters);
+  constructor(config, brain, parameters) {
+    // console.log('Dialog.constructor', parameters);
     this.maxComplexity = Number.MAX_SAFE_INTEGER;
     this.config = config;
     this.brain = brain;
     this.parameters = parameters;
-    this.viewsManager = new ViewsManager(config);
-    this.name = this.getDialogName();
-    console.log('Dialog.constructor: name', this.name);
+    this.templateManager = new TemplateManager(config);
   }
 
   pushMessages(responses, messages) {
@@ -33,10 +31,6 @@ class Dialog {
 
   pushMessage(responses, message) {
     responses.push(message);
-  }
-
-  getDialogName() {
-    return this.constructor.name.toLowerCase().replace(/dialog/g, '');
   }
 }
 
