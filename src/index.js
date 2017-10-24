@@ -5,6 +5,7 @@ const Card = require('./views/parts/card');
 const CardsMessage = require('./views/parts/cards_message');
 const Classifier = require('./classifier');
 const CorpusExtractor = require('./extractors/corpus_extractor');
+const FileCorpus = require('./corpora/file_corpus');
 const Dialog = require('./dialogs/dialog');
 const DialogManager = require('./dialog_manager');
 const Link = require('./views/parts/link');
@@ -18,7 +19,8 @@ const QuickrepliesMessage = require('./views/parts/quickreplies_message');
 const TextDialog = require('./dialogs/text_dialog');
 const UserTextMessage = require('./views/parts/user_text_message');
 const WsExtractor = require('./extractors/ws_extractor');
-const FileCorpus = require('./corpora/file_corpus');
+const PromptView = require('./views/prompt_view');
+const TextView = require('./views/text_view');
 
 module.exports = {
   ActionsMessage,
@@ -28,6 +30,7 @@ module.exports = {
   CardsMessage,
   Classifier,
   CorpusExtractor,
+  FileCorpus,
   Dialog,
   DialogManager,
   Link,
@@ -41,5 +44,6 @@ module.exports = {
   TextDialog,
   UserTextMessage,
   WsExtractor,
-  FileCorpus,
+  PromptView,
+  TextView,
 };
