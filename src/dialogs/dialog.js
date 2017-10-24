@@ -15,12 +15,13 @@ class Dialog {
    * @param {Object} parameters the dialog parameters
    */
   constructor(config, brain, parameters) {
-    // console.log('Dialog.constructor', parameters);
+    console.log('Dialog.constructor', parameters);
     this.maxComplexity = Number.MAX_SAFE_INTEGER;
     this.config = config;
     this.brain = brain;
     this.parameters = parameters;
     this.viewsManager = new ViewsManager(config);
+    this.dialogName = this.constructor.name.toLowerCase();
   }
 
   pushMessages(responses, messages) {
