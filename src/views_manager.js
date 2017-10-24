@@ -1,27 +1,27 @@
 const fs = require('fs');
 const _ = require('lodash');
 const TextView = require('./views/text_view');
+const PromptView = require('./views/prompt_view');
 
 class ViewsManager {
   constructor(config) {
     console.log('ViewsManager.constructor', config.path);
     this.viewsPath = `${config.path}/src/views`;
-    this.templatePath = `${this.viewsPath}/templates`;
     this.botId = config.id;
     this.locale = config.locale;
   }
 
-  getPath(template) {
+  getPath(name) {
     console.log('ViewsManager.getPath');
-    const dialogName = template.split('_').shift();
     const paths = [
-      `${this.viewsPath}/${dialogName}_view.${this.locale}.js`,
-      `${this.templatePath}/${template}.${this.locale}.txt`,
-      `${__dirname}/views/${dialogName}_view.${this.locale}.js`,
-      `${__dirname}/views/templates/${template}.${this.locale}.txt`,
+      `${this.viewsPath}/${name}_view.${this.locale}.js`,
+      `${this.viewsPath}/${name}_view.js`,
+      `${__dirname}/views/${name}_view.${this.locale}.js`,
+      `${__dirname}/views/${name}_view.js`,
     ];
     for (const path of paths) {
       if (fs.existsSync(path)) {
+        console.log('ViewsManager.getPath: existing path', path);
         return path;
       }
     }
@@ -31,26 +31,32 @@ class ViewsManager {
   /**
    * Compile the template
    * @param {string} userId the user id
-   * @param {string} template the template
+   * @param {string} name the view name
+   * @param {string} key the view key
    * @param {Object} parameters the template parameters
    */
-  resolve(userId, template, parameters) {
-    console.log('ViewsManager.render', userId, template, parameters);
-    const path = this.getPath(template);
+  resolve(userId, name, key, parameters) {
+    console.log('ViewsManager.render', userId, name, key, parameters);
+    const path = this.getPath(name);
     if (path) {
-      const fileExtension = _.cloneDeep(path).split('.').pop();
-      switch (fileExtension) {
-        case 'txt':
-          return this.renderTextView(userId, path, parameters);
-        case 'js':
-          return this.renderPromptView(userId, path, template, parameters);
-        default:
-          return null;
+      const View = require(path);
+      const view = new View();
+      console.log(
+        'ViewsManager.render: view, instance Text, instance Prompt',
+        view,
+        view instanceof TextView,
+        view instanceof PromptView,
+      );
+      if (view instanceof TextView) {
+        return view.render(this.botId, userId, parameters);
+      } else if (view instanceof PromptView) {
+        return view.render(this.botId, userId, key, parameters);
       }
     }
     return null;
   }
 
+  /*
   renderTextView(userId, templatePath, parameters) {
     return TextView.render(this.botId, userId, templatePath, parameters);
   }
@@ -84,6 +90,7 @@ class ViewsManager {
     }
     return keys;
   }
+  */
 }
 
 module.exports = ViewsManager;
