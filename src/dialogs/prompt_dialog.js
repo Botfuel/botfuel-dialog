@@ -78,7 +78,7 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.askDialog', id, responses);
     this.pushMessages(
       responses,
-      this.viewsManager.resolve(id, this.dialogName, ['ask'], null),
+      this.viewsManager.resolve(id, this.name, ['ask'], null),
     );
   }
 
@@ -86,7 +86,7 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.confirmDialog', id, responses);
     this.pushMessages(
       responses,
-      this.viewsManager.resolve(id, this.dialogName, ['confirm'], null),
+      this.viewsManager.resolve(id, this.name, ['confirm'], null),
     );
   }
 
@@ -94,7 +94,7 @@ class PromptDialog extends Dialog {
     console.log('PromptDialog.discardDialog', id, responses);
     this.pushMessages(
       responses,
-      this.viewsManager.resolve(id, this.dialogName, ['discard'], null),
+      this.viewsManager.resolve(id, this.name, ['discard'], null),
     );
   }
 
@@ -104,14 +104,14 @@ class PromptDialog extends Dialog {
     if (entities.length > 1) {
       this.pushMessages(
         responses,
-        this.viewsManager.resolve(id, this.dialogName, ['entities_ask'], { entities }),
+        this.viewsManager.resolve(id, this.name, ['entities_ask'], { entities }),
       );
     } else if (entities.length === 1) {
       // ask more specific question if only one entity
       const entity = entities[0];
       this.pushMessages(
         responses,
-        this.viewsManager.resolve(id, this.dialogName, [`${entity}_ask`, 'entity_ask'], { entity }),
+        this.viewsManager.resolve(id, this.name, [`${entity}_ask`, 'entity_ask'], { entity }),
       );
     }
   }
@@ -124,7 +124,7 @@ class PromptDialog extends Dialog {
         responses,
         this.viewsManager.resolve(
           id,
-          this.dialogName,
+          this.name,
           [`${entity.dim}_confirm`, 'entity_confirm'],
           { entity },
         ),

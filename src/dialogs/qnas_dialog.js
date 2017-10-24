@@ -21,7 +21,7 @@ class QnasDialog extends Dialog {
     if (qnas.length === 1) {
       this.pushMessages(
         responses,
-        this.viewsManager.resolve(id, this.dialogName, null, { answer: qnas[0].answer }),
+        this.viewsManager.resolve(id, this.name, null, { answer: qnas[0].answer }),
       );
     } else {
       this.pushMessages(

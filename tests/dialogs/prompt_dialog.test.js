@@ -1,7 +1,7 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const TemplateManager = require('../../src/views_manager');
+const ViewsManager = require('../../src/views_manager');
 const PromptDialog = require('../../src/dialogs/prompt_dialog');
 const MemoryBrain = require('../../src/brains/memory_brain');
 
@@ -10,11 +10,12 @@ const TEST_BOT = '1';
 const testConfig = { path: __dirname, locale: 'en', id: TEST_BOT };
 const testParameters = { namespace: 'testdialog', entities: { dim1: null, dim2: null } };
 
-class TestTemplateManager extends TemplateManager {
-  compile(id, template, parameters) {
+class TestViewsManager extends ViewsManager {
+  resolve(id, name, keys, parameters) {
     return [{
       id,
-      template,
+      name,
+      keys,
       parameters,
     }];
   }
@@ -23,7 +24,7 @@ class TestTemplateManager extends TemplateManager {
 class TestPromptDialog extends PromptDialog {
   constructor(config, brain, parameters) {
     super(config, brain, parameters);
-    this.templateManager = new TestTemplateManager(config, parameters.namespace);
+    this.viewsManager = new TestViewsManager(config);
   }
 }
 
@@ -42,13 +43,9 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        template: 'testdialog_dim1_ask',
-        parameters: { entity: 'dim1' },
-      },
-      {
-        id: TEST_USER,
-        template: 'testdialog_dim2_ask',
-        parameters: { entity: 'dim2' },
+        name: 'testprompt',
+        keys: ['entities_ask'],
+        parameters: { entities: ['dim1', 'dim2'] },
       },
     ]);
     const user = await brain.getUser(TEST_USER);
@@ -63,12 +60,14 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        template: 'testdialog_dim1_confirm',
+        name: 'testprompt',
+        keys: ['dim1_confirm', 'entity_confirm'],
         parameters: { entity: { dim: 'dim1' } },
       },
       {
         id: TEST_USER,
-        template: 'testdialog_dim2_ask',
+        name: 'testprompt',
+        keys: ['dim2_ask', 'entity_ask'],
         parameters: { entity: 'dim2' },
       },
     ]);
@@ -84,12 +83,14 @@ describe('PromptDialog', function () {
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        template: 'testdialog_dim1_confirm',
+        name: 'testprompt',
+        keys: ['dim1_confirm', 'entity_confirm'],
         parameters: { entity: { dim: 'dim1' } },
       },
       {
         id: TEST_USER,
-        template: 'testdialog_dim2_confirm',
+        name: 'testprompt',
+        keys: ['dim2_confirm', 'entity_confirm'],
         parameters: { entity: { dim: 'dim2' } },
       },
     ]);
