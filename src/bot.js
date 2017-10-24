@@ -99,7 +99,9 @@ class Bot {
   async getResponsesWhenDownload(userMessage) { // TODO: rename
     console.log('Bot.getResponsesWhenDownload', userMessage);
     const entities = [{ url: userMessage.payload.value.url }];
-    const dialog = { label: 'image' };
+    const dialogs = [{
+      label: 'image'
+    }];
     console.log('Bot.getResponsesWhenPostback: dialog, entities', dialog, entities);
     return this.dm.executeDialogs(userMessage.user, [dialog], entities);
   }
