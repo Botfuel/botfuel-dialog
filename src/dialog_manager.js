@@ -42,13 +42,6 @@ class DialogManager {
     return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
   }
 
-  getDialogStatus(depth) {
-    if (depth !== 0) {
-      return Dialog.STATUS_BLOCKED;
-    }
-    return Dialog.STATUS_READY;
-  }
-
   filterIntents(intents) {
     console.log('DialogManager.filterIntents', intents);
     return intents
@@ -57,10 +50,7 @@ class DialogManager {
       .sort((intent1, intent2) => {
         const dialog1 = this.getDialog(intent1);
         const dialog2 = this.getDialog(intent2);
-        if (dialog1.maxComplexity !== dialog2.maxComplexity) {
-          return dialog2.maxComplexity - dialog1.maxComplexity;
-        }
-        return intent1.value - intent2.value;
+        return dialog2.maxComplexity - dialog1.maxComplexity;
       });
   }
 
@@ -85,10 +75,17 @@ class DialogManager {
     intents = this.filterIntents(intents);
     console.log('DialogManager.updateDialogs: intents', intents);
     if (intents.length > 0) {
+      let nbComplex = 0;
       for (let i = 0; i < intents.length; i++) {
-        const label = intents[i].label;
-        const status = this.getDialogStatus(intents.length - 1 - i);
-        this.pushDialog(dialogs, label, entities, status);
+        if (this.getDialog(intents[i]).maxComplexity > 1) {
+          nbComplex++;
+        }
+        this.pushDialog(
+          dialogs,
+          intents[i].label,
+          entities,
+          nbComplex > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY
+        );
       }
     } else { // no intent detected
       if (dialogs.length === 0) {
