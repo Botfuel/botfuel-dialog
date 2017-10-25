@@ -64,6 +64,15 @@ class DialogManager {
       });
   }
 
+  pushDialog(dialogs, label, entities, status = Dialog.STATUS_READY) {
+    if (dialogs.length > 0 && dialogs[dialogs.length - 1].label === label) {
+      dialogs[dialogs.length - 1].entities = entities;
+      dialogs[dialogs.length - 1].status = status;
+    } else {
+      dialogs.push({ label, entities, status });
+    }
+  }
+
   /**
    * Executes the dialogs.
    * @param {string} userId the user id
@@ -75,30 +84,19 @@ class DialogManager {
     console.log('DialogManager.updateDialogs', userId, dialogs, intents, entities);
     intents = this.filterIntents(intents);
     console.log('DialogManager.updateDialogs: intents', intents);
-    for (let i = 0; i < intents.length; i++) {
-      const label = intents[i].label;
-      const status = this.getDialogStatus(intents.length - 1 - i);
-      if (dialogs.length > 0 && dialogs[dialogs.length - 1].label === label) {
-        dialogs[dialogs.length - 1].entities = entities;
-        dialogs[dialogs.length - 1].status = status;
-      } else {
-        dialogs.push({ label, entities, status });
+    if (intents.length > 0) {
+      for (let i = 0; i < intents.length; i++) {
+        const label = intents[i].label;
+        const status = this.getDialogStatus(intents.length - 1 - i);
+        this.pushDialog(dialogs, label, entities, status);
       }
-    }
-    if (dialogs.length === 0) { // no intent detected
-      const dialog = await this.brain.userGet(userId, 'lastDialog');
-      if (dialog !== undefined && dialog !== null) {
-        dialogs.push({
-          label: dialog.label,
-          entities,
-          status: Dialog.STATUS_READY,
-        });
+    } else { // no intent detected
+      if (dialogs.length === 0) {
+        const dialog = await this.brain.userGet(userId, 'lastDialog') || 'default_dialog';
+        console.log('DialogManager.updateDialogs: newDialog', dialog);
+        this.pushDialog(dialogs, dialog, entities);
       } else {
-        dialogs.push({
-          label: 'default_dialog',
-          entities,
-          status: Dialog.STATUS_READY,
-        });
+        dialogs[dialogs.length - 1].entities = entities;
       }
     }
   }
@@ -114,7 +112,7 @@ class DialogManager {
     while (dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
       // eslint-disable-next-line no-await-in-loop
-      await this.brain.userSet(userId, 'lastDialog', dialog);
+      await this.brain.userSet(userId, 'lastDialog', dialog.label);
       // eslint-disable-next-line no-await-in-loop
       dialog.status = await this
         .getDialog(dialog)
