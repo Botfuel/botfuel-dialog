@@ -112,7 +112,6 @@ class DialogManager {
     console.log('DialogManager.executeDialogs', userId, dialogs);
     const responses = [];
     while (dialogs.length > 0) {
-      console.log('DialogManager.executeDialogs: dialogs', dialogs);
       const dialog = dialogs[dialogs.length - 1];
       // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);

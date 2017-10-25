@@ -77,18 +77,6 @@ class Bot {
     }
   }
 
-  async getResponsesWhenPostback(userMessage) {
-    console.log('Bot.getResponsesWhenPostback', userMessage);
-    return this.dm.executeDialogs(
-      userMessage.user,
-      [{
-        label: userMessage.payload.value.dialog,
-        status: Dialog.STATUS_READY,
-      }],
-      userMessage.payload.value.entities,
-    );
-  }
-
   async getResponsesWhenText(userMessage) {
     console.log('Bot.getResponsesWhenText', userMessage);
     const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
@@ -96,14 +84,28 @@ class Bot {
     return this.dm.execute(userMessage.user, intents, entities);
   }
 
+  async getResponsesWhenPostback(userMessage) {
+    console.log('Bot.getResponsesWhenPostback', userMessage);
+    return this.dm.executeDialogs(
+      userMessage.user,
+      [{
+        label: userMessage.payload.value.dialog,
+        status: Dialog.STATUS_READY,
+        entities: userMessage.payload.value.entities,
+      }]
+    );
+  }
+
   async getResponsesWhenDownload(userMessage) { // TODO: rename
     console.log('Bot.getResponsesWhenDownload', userMessage);
-    const entities = [{ url: userMessage.payload.value.url }];
-    const dialogs = [{
-      label: 'image'
-    }];
-    console.log('Bot.getResponsesWhenPostback: dialog, entities', dialog, entities);
-    return this.dm.executeDialogs(userMessage.user, [dialog], entities);
+    return this.dm.executeDialogs(
+      userMessage.user,
+      [{
+        label: 'image',
+        status: Dialog.STATUS_READY,
+        entities: [{ url: userMessage.payload.value.url }],
+      }]
+    );
   }
 }
 
