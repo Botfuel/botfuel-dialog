@@ -51,17 +51,7 @@ class DialogManager {
         const dialog1 = this.getDialog(intent1);
         const dialog2 = this.getDialog(intent2);
         return dialog1.maxComplexity - dialog2.maxComplexity;
-      })
-      .reverse();
-  }
-
-  pushDialog(dialogs, label, entities, status = Dialog.STATUS_READY) {
-    if (dialogs.length > 0 && dialogs[dialogs.length - 1].label === label) {
-      dialogs[dialogs.length - 1].entities = entities;
-      dialogs[dialogs.length - 1].status = status;
-    } else {
-      dialogs.push({ label, entities, status });
-    }
+      });
   }
 
   /**
@@ -77,22 +67,28 @@ class DialogManager {
     console.log('DialogManager.updateDialogs: intents', intents);
     if (intents.length > 0) {
       let nbComplex = 0;
+      let newDialogs = [];
       for (let i = 0; i < intents.length; i++) {
         if (this.getDialog(intents[i]).maxComplexity > 1) {
           nbComplex++;
         }
-        this.pushDialog(
-          dialogs,
-          intents[i].label,
-          entities,
-          nbComplex > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY
-        );
+        const status = nbComplex > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
+        const label = intents[i].label;
+        newDialogs.push({ label, entities, status });
+      }
+      for (const newDialog of newDialogs) {
+        if (dialogs.length > 0 && dialogs[dialogs.length - 1].label === newDialog.label) {
+          dialogs[dialogs.length - 1].entities = newDialog.entities;
+          dialogs[dialogs.length - 1].status = newDialog.status;
+        } else {
+          dialogs.push(newDialog);
+        }
       }
     } else { // no intent detected
       if (dialogs.length === 0) {
-        const dialog = await this.brain.userGet(userId, 'lastDialog') || 'default_dialog';
-        console.log('DialogManager.updateDialogs: newDialog', dialog);
-        this.pushDialog(dialogs, dialog, entities);
+        const label = await this.brain.userGet(userId, 'lastDialog') || 'default_dialog';
+        console.log('DialogManager.updateDialogs: newDialog', label);
+        dialogs.push({ label, entities, status: Dialog.STATUS_READY });
       } else {
         dialogs[dialogs.length - 1].entities = entities;
       }
