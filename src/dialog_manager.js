@@ -50,8 +50,9 @@ class DialogManager {
       .sort((intent1, intent2) => {
         const dialog1 = this.getDialog(intent1);
         const dialog2 = this.getDialog(intent2);
-        return dialog2.maxComplexity - dialog1.maxComplexity;
-      });
+        return dialog1.maxComplexity - dialog2.maxComplexity;
+      })
+      .reverse();
   }
 
   pushDialog(dialogs, label, entities, status = Dialog.STATUS_READY) {
