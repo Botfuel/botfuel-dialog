@@ -76,13 +76,16 @@ class DialogManager {
         const label = intents[i].label;
         newDialogs.push({ label, entities, status });
       }
-      for (const newDialog of newDialogs) {
+      console.log('DialogManager.updateDialogs: newDialogs', newDialogs);
+      while (newDialogs.length > 0) {
+        const newDialog = newDialogs[newDialogs.length - 1];
         if (dialogs.length > 0 && dialogs[dialogs.length - 1].label === newDialog.label) {
           dialogs[dialogs.length - 1].entities = newDialog.entities;
           dialogs[dialogs.length - 1].status = newDialog.status;
         } else {
           dialogs.push(newDialog);
         }
+        newDialogs = newDialogs.slice(0, -1);
       }
     } else { // no intent detected
       if (dialogs.length === 0) {
