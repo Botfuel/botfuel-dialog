@@ -11,7 +11,7 @@ const testConfig = { path: __dirname, locale: 'en', id: TEST_BOT };
 const testParameters = { namespace: 'testdialog', entities: { dim1: null, dim2: null } };
 
 class TestTemplateManager extends TemplateManager {
-  compile(id, template, parameters) {
+  compile(id, template, parameters = {}) {
     return [{
       id,
       template,
@@ -36,19 +36,19 @@ describe('PromptDialog', function () {
     await brain.initUserIfNecessary(TEST_USER);
   });
 
-  it('when given no entity, should ask for both', async function () {
+  it('when given no entity, should list both and ask for one', async function () {
     const responses = [];
     await prompt.execute(TEST_USER, responses, []);
     expect(responses).to.eql([
       {
         id: TEST_USER,
-        template: 'testdialog_dim1_ask',
-        parameters: { entity: 'dim1' },
+        template: 'testdialog_entities_ask',
+        parameters: {},
       },
       {
         id: TEST_USER,
-        template: 'testdialog_dim2_ask',
-        parameters: { entity: 'dim2' },
+        template: 'testdialog_dim1_ask',
+        parameters: { entity: 'dim1' },
       },
     ]);
     const user = await brain.getUser(TEST_USER);
@@ -57,7 +57,7 @@ describe('PromptDialog', function () {
     expect(user.conversations[0].testdialog.dim2).to.be(undefined);
   });
 
-  it('when given a first entity, should ask for the second one', async function () {
+  it('when given a first entity, should list both and ask for the second one', async function () {
     const responses = [];
     await prompt.execute(TEST_USER, responses, [{ dim: 'dim1' }]);
     expect(responses).to.eql([
@@ -65,6 +65,11 @@ describe('PromptDialog', function () {
         id: TEST_USER,
         template: 'testdialog_dim1_confirm',
         parameters: { entity: { dim: 'dim1' } },
+      },
+      {
+        id: TEST_USER,
+        template: 'testdialog_entities_ask',
+        parameters: {},
       },
       {
         id: TEST_USER,

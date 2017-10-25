@@ -100,21 +100,15 @@ class PromptDialog extends Dialog {
   askEntities(id, responses, entities) {
     console.log('PromptDialog.askEntities', id, responses, entities);
     // TODO: put all this in a single template
-    /*
-    // @TODO: keep this logic to ask entities sequentially
     if (entities.length > 0) {
-      const entity = entities.shift();
       this.pushMessages(
         responses,
         this.templateManager.compile(
           id,
-          `${this.parameters.namespace}_${entity}_ask`,
-          { entity },
+          `${this.parameters.namespace}_entities_ask`,
         ),
       );
-    }
-    */
-    for (const entity of entities) {
+      const entity = entities[0];
       this.pushMessages(
         responses,
         this.templateManager.compile(

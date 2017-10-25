@@ -34,7 +34,7 @@ class TemplateManager {
    * @param {string} template the template
    * @param {Object} parameters the template parameters
    */
-  compile(userId, template, parameters) {
+  compile(userId, template, parameters = {}) {
     console.log('TemplateManager.compile', userId, template, parameters);
     // TODO: resolve the template given the label (allowing fallback)
     const templatePath = this.getTemplatePath(template);
