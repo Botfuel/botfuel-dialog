@@ -11,17 +11,6 @@ const TEST_BOT = '1';
 const testConfig = { path: __dirname, locale: 'en', id: TEST_BOT };
 const testParameters = { namespace: 'testdialog', entities: { dim1: null, dim2: null } };
 
-class TestViewsManager extends ViewsManager {
-  resolve(id, name, key, parameters) {
-    return [{
-      id,
-      name,
-      key,
-      parameters,
-    }];
-  }
-}
-
 class TestPromptDialog extends PromptDialog {
   constructor(config, brain, parameters) {
     super(config, brain, parameters);
@@ -52,7 +41,7 @@ describe('PromptDialog', function () {
 
   it('when given a first entity, should list both and ask for the second one', async function () {
     const responses = [];
-    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1' }]);
+    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1', body: 'dim1' }]);
     expect(responses).to.eql([
       new BotTextMessage(TEST_BOT, TEST_USER, 'The dim1 is dim1.').toJson(),
       new BotTextMessage(TEST_BOT, TEST_USER, 'Which dim2?').toJson(),
