@@ -4,33 +4,24 @@ const BotTextMessage = require('./parts/bot_text_message');
 class PromptView {
   render(botId, userId, key, parameters) {
     console.log('PromptView.render', botId, userId, key, parameters);
-    let botMessages;
     switch (key) {
       case 'ask':
-        botMessages = this.ask(botId, userId);
-        break;
+        return this.ask(botId, userId);
       case 'confirm':
-        botMessages = this.confirm(botId, userId);
-        break;
+        return this.confirm(botId, userId);
       case 'discard':
-        botMessages = this.discard(botId, userId);
-        break;
+        return this.discard(botId, userId);
       case 'entities_ask':
-        botMessages = this.entitiesAsk(botId, userId, parameters);
-        break;
+        return this.entitiesAsk(botId, userId, parameters);
       case 'entities_confirm':
-        botMessages = this.entitiesConfirm(botId, userId, parameters);
-        break;
+        return this.entitiesConfirm(botId, userId, parameters);
       case 'entity_ask':
-        botMessages = this.entityAsk(botId, userId, parameters);
-        break;
+        return this.entityAsk(botId, userId, parameters);
       case 'entity_confirm':
-        botMessages = this.entityConfirm(botId, userId, parameters);
-        break;
+        return this.entityConfirm(botId, userId, parameters);
       default:
-        botMessages = [];
+        return [];
     }
-    return _.isArray(botMessages) ? botMessages : [botMessages];
   }
 
   ask(botId, userId) {

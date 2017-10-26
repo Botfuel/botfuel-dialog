@@ -1,11 +1,9 @@
-const _ = require('lodash');
 const BotTextMessage = require('./parts/bot_text_message');
 
 class TextView {
   render(botId, userId, key, parameters) {
     console.log('TextView.render');
-    const botMessages = this.getText(botId, userId, key, parameters);
-    return _.isArray(botMessages) ? botMessages : [botMessages];
+    return this.getText(botId, userId, key, parameters);
   }
 
   getText(botId, userId) {
