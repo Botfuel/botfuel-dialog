@@ -1,5 +1,5 @@
+const { BotTextMessage } = require('../messages');
 const TextView = require('./text_view');
-const BotTextMessage = require('./parts/bot_text_message');
 
 class QnasView extends TextView {
   getText(botId, userId, parameters) {

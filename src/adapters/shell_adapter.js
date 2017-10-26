@@ -1,6 +1,5 @@
 const inquirer = require('inquirer');
-const BotTextMessage = require('../views/parts/bot_text_message');
-const UserTextMessage = require('../views/parts/user_text_message');
+const { BotTextMessage, UserTextMessage } = require('../messages');
 const Adapter = require('./adapter');
 
 /**

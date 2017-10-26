@@ -1,5 +1,4 @@
-const _ = require('lodash');
-const BotTextMessage = require('./parts/bot_text_message');
+const { BotTextMessage } = require('../messages');
 
 class PromptView {
   render(botId, userId, key, parameters) {

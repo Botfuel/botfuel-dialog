@@ -1,4 +1,4 @@
-const BotTextMessage = require('./parts/bot_text_message');
+const { BotTextMessage } = require('../messages');
 
 class TextView {
   render(botId, userId, key, parameters) {

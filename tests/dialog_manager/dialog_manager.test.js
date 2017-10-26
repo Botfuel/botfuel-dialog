@@ -3,7 +3,7 @@
 const expect = require('expect.js');
 const DialogManager = require('../../src/dialog_manager');
 const MemoryBrain = require('../../src/brains/memory_brain');
-const BotTextMessage = require('../../src/views/parts/bot_text_message');
+const { BotTextMessage } = require('../../src/messages');
 
 const TEST_BOT = '1';
 const TEST_USER = '1';
