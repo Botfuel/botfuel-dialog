@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const ViewsManager = require('../views_manager');
 
 /**
@@ -15,35 +14,29 @@ class Dialog {
    * Constructor.
    * @param {Object} parameters the dialog parameters
    */
-  constructor(config, brain, parameters = {}) {
+  constructor(config, brain, maxComplexity = Number.MAX_SAFE_INTEGER, parameters = {}) {
     console.log('Dialog.constructor', parameters);
-    this.maxComplexity = Number.MAX_SAFE_INTEGER;
     this.config = config;
     this.brain = brain;
     this.parameters = parameters;
+    this.maxComplexity = maxComplexity;
     this.viewsManager = new ViewsManager(config);
-    this.name = this.getDialogName();
-    console.log('Dialog.constructor: name', this.name);
+    this.name = this.getName();
   }
 
-  pushMessages(responses, botMessages) {
-    console.log('Dialog.pushMessages', botMessages);
-    if (_.isArray(botMessages)) {
-      for (const botMessage of botMessages) {
-        responses.push(botMessage.toJson());
-      }
-    } else {
-      responses.push(botMessages.toJson());
-    }
-  }
-
-  pushMessage(responses, botMessage) {
-    console.log('Dialog.pushMessage', botMessage);
-    responses.push(botMessage.toJson());
-  }
-
-  getDialogName() {
+  getName() {
     return this.constructor.name.toLowerCase().replace(/dialog/g, '');
+  }
+
+  display(userId, responses, key, parameters) {
+    console.log('Dialog.display', userId, responses, key, parameters);
+    const botMessages = this
+          .viewsManager
+          .resolve(this.name)
+          .render(this.config.id, userId, key, parameters);
+    for (const botMessage of botMessages) {
+      responses.push(botMessage.toJson());
+    }
   }
 }
 

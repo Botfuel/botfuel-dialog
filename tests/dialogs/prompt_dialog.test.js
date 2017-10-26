@@ -8,19 +8,14 @@ const { BotTextMessage } = require('../../src/messages');
 
 const TEST_USER = '1';
 const TEST_BOT = '1';
-const testConfig = { path: __dirname, locale: 'en', id: TEST_BOT };
-const testParameters = { namespace: 'testdialog', entities: { dim1: null, dim2: null } };
-
-class TestPromptDialog extends PromptDialog {
-  constructor(config, brain, parameters) {
-    super(config, brain, parameters);
-    this.viewsManager = new ViewsManager(config);
-  }
-}
 
 describe('PromptDialog', function () {
   const brain = new MemoryBrain(TEST_BOT);
-  const prompt = new TestPromptDialog(testConfig, brain, testParameters);
+  const prompt = new PromptDialog(
+    { path: __dirname, locale: 'en', id: TEST_BOT },
+    brain,
+    { namespace: 'testdialog', entities: { dim1: null, dim2: null } },
+  );
 
   beforeEach(async function () {
     await brain.clean();
@@ -31,7 +26,8 @@ describe('PromptDialog', function () {
     const responses = [];
     await prompt.execute(TEST_USER, responses, []);
     expect(responses).to.eql([
-      new BotTextMessage(TEST_BOT, TEST_USER, 'Which dim1 and dim2?').toJson(),
+      new BotTextMessage(TEST_BOT, TEST_USER, 'Entities needed: dim1, dim2').toJson(),
+      new BotTextMessage(TEST_BOT, TEST_USER, 'Which dim1?').toJson(),
     ]);
     const user = await brain.getUser(TEST_USER);
     expect(user.conversations.length).to.be(1);
@@ -43,7 +39,8 @@ describe('PromptDialog', function () {
     const responses = [];
     await prompt.execute(TEST_USER, responses, [{ dim: 'dim1', body: 'dim1' }]);
     expect(responses).to.eql([
-      new BotTextMessage(TEST_BOT, TEST_USER, 'The dim1 is dim1.').toJson(),
+      new BotTextMessage(TEST_BOT, TEST_USER, 'Entities defined: dim1').toJson(),
+      new BotTextMessage(TEST_BOT, TEST_USER, 'Entities needed: dim2').toJson(),
       new BotTextMessage(TEST_BOT, TEST_USER, 'Which dim2?').toJson(),
     ]);
     const user = await brain.getUser(TEST_USER);
@@ -56,8 +53,7 @@ describe('PromptDialog', function () {
     const responses = [];
     await prompt.execute(TEST_USER, responses, [{ dim: 'dim1', body: 'dim1' }, { dim: 'dim2', body: 'dim2' }], PromptDialog.STATUS_READY);
     expect(responses).to.eql([
-      new BotTextMessage(TEST_BOT, TEST_USER, 'The dim1 is dim1.').toJson(),
-      new BotTextMessage(TEST_BOT, TEST_USER, 'The dim2 is dim2.').toJson(),
+      new BotTextMessage(TEST_BOT, TEST_USER, 'Entities defined: dim1, dim2').toJson(),
     ]);
     const user = await brain.getUser(TEST_USER);
     expect(user.conversations.length).to.be(1);

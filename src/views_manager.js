@@ -29,18 +29,14 @@ class ViewsManager {
 
   /**
    * resolve the view
-   * @param {string} userId the user id
    * @param {string} name the view name
-   * @param {string/null} key the view key
-   * @param {object} parameters the template parameters
    */
-  resolve(userId, name, key, parameters) {
-    console.log('ViewsManager.resolve', userId, name, key, parameters);
+  resolve(name) {
+    console.log('ViewsManager.resolve', name);
     const path = this.getPath(name);
     if (path) {
       const View = require(path);
-      const view = new View();
-      return view.render(this.botId, userId, key, parameters);
+      return new View();
     }
     return null;
   }

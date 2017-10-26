@@ -7,21 +7,17 @@ class TextDialog extends Dialog {
   /**
    * Constructor.
    */
-  constructor(config, brain, parameters) {
-    super(config, brain, parameters);
-    this.maxComplexity = 1;
+  constructor(config, brain) {
+    super(config, brain, 1);
   }
 
   /**
    * Executes.
-   * @param {string} id the user id
+   * @param {string} userId the user id
    */
-  async execute(id, responses, messageEntities) {
-    console.log('TextDialog.execute', id, responses, messageEntities);
-    this.pushMessages(
-      responses,
-      this.viewsManager.resolve(id, this.name, null, messageEntities),
-    );
+  async execute(userId, responses, messageEntities) {
+    console.log('TextDialog.execute', userId, responses, messageEntities);
+    this.display(userId, responses, null, messageEntities);
     return Dialog.STATUS_COMPLETED;
   }
 }

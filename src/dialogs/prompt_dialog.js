@@ -5,8 +5,7 @@ const Dialog = require('./dialog');
  */
 class PromptDialog extends Dialog {
   constructor(config, brain, parameters) {
-    super(config, brain, parameters);
-    this.maxComplexity = Object.keys(parameters.entities).length + 1;
+    super(config, brain, Object.keys(parameters.entities).length + 1, parameters);
   }
 
   async computeMissingEntities(userId, messageEntities) {
@@ -23,7 +22,7 @@ class PromptDialog extends Dialog {
 
   async executeWhenBlocked(userId, responses, messageEntities) {
     console.log('PromptDialog.executeWhenBlocked', userId, responses, messageEntities);
-    this.display(userId, responses, 'ask', null);
+    this.display(userId, responses, 'ask');
     return Dialog.STATUS_WAITING;
   }
 
@@ -34,11 +33,11 @@ class PromptDialog extends Dialog {
         const booleanValue = messageEntity.values[0].value;
         console.log('PromptDialog.execute: system:boolean', booleanValue);
         if (booleanValue) {
-          this.display(userId, responses, 'confirm', null);
+          this.display(userId, responses, 'confirm');
           return this.executeWhenReady(userId, responses, messageEntities);
         }
         // if not confirmed, then discard dialog
-        this.display(userId, responses, 'discard', null);
+        this.display(userId, responses, 'discard');
         return Dialog.STATUS_DISCARDED;
       }
     }
@@ -50,18 +49,8 @@ class PromptDialog extends Dialog {
     // confirm entities
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
-    // @TODO: key 'entities_confirm' if many entities ?
-    for (const entity of messageEntities) {
-      this.display(userId, responses, `${entity.dim}_confirm`, { entity });
-    }
-    // ask entities
     const missingEntities = await this.computeMissingEntities(userId, messageEntities);
-    if (missingEntities.length > 1) { // many entities
-      this.display(userId, responses, 'entities_ask', { entities: missingEntities });
-    } else if (missingEntities.length === 1) { // one entity
-      const entity = missingEntities[0];
-      this.display(userId, responses, `${entity}_ask`, { entity });
-    }
+    this.display(userId, responses, 'entities', { messageEntities, missingEntities });
     return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_READY;
   }
 
@@ -83,15 +72,6 @@ class PromptDialog extends Dialog {
       default:
         return this.executeWhenReady(userId, responses, messageEntities);
     }
-  }
-
-  display(userId, responses, key, parameters) {
-    const botMessages = this.viewsManager.resolve(userId, this.name, key, parameters);
-    console.log('PromptDialog.display: botMessages', botMessages);
-    this.pushMessages(
-      responses,
-      botMessages,
-    );
   }
 }
 
