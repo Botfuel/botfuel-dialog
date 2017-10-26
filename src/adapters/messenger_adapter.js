@@ -1,6 +1,4 @@
-const PostbackMessage = require('../views/parts/postback_message');
-const UserImageMessage = require('../views/parts/user_image_message');
-const UserTextMessage = require('../views/parts/user_text_message');
+const { PostbackMessage, UserImageMessage, UserTextMessage } = require('../messages');
 const WebAdapter = require('./web_adapter');
 
 const uri = 'https://graph.facebook.com/v2.6/me/messages';

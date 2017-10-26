@@ -1,5 +1,4 @@
-const ActionsMessage = require('../views/parts/actions_message');
-const Postback = require('../views/parts/postback');
+const { ActionsMessage, Postback } = require('../messages');
 const Dialog = require('./dialog');
 
 class QnasDialog extends Dialog {
@@ -35,7 +34,7 @@ class QnasDialog extends Dialog {
       }]));
       this.pushMessage(
         responses,
-        new ActionsMessage(this.config.id, id, buttons).toJson(),
+        new ActionsMessage(this.config.id, id, buttons),
       );
     }
     return Dialog.STATUS_COMPLETED;

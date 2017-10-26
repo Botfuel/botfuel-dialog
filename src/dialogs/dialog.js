@@ -1,4 +1,5 @@
-const TemplateManager = require('../template_manager');
+const _ = require('lodash');
+const ViewsManager = require('../views_manager');
 
 /**
  * Generates messages.
@@ -14,23 +15,35 @@ class Dialog {
    * Constructor.
    * @param {Object} parameters the dialog parameters
    */
-  constructor(config, brain, parameters) {
-    // console.log('Dialog.constructor', parameters);
+  constructor(config, brain, parameters = {}) {
+    console.log('Dialog.constructor', parameters);
     this.maxComplexity = Number.MAX_SAFE_INTEGER;
     this.config = config;
     this.brain = brain;
     this.parameters = parameters;
-    this.templateManager = new TemplateManager(config);
+    this.viewsManager = new ViewsManager(config);
+    this.name = this.getDialogName();
+    console.log('Dialog.constructor: name', this.name);
   }
 
-  pushMessages(responses, messages) {
-    for (const message of messages) {
-      responses.push(message);
+  pushMessages(responses, botMessages) {
+    console.log('Dialog.pushMessages', botMessages);
+    if (_.isArray(botMessages)) {
+      for (const botMessage of botMessages) {
+        responses.push(botMessage.toJson());
+      }
+    } else {
+      responses.push(botMessages.toJson());
     }
   }
 
-  pushMessage(responses, message) {
-    responses.push(message);
+  pushMessage(responses, botMessage) {
+    console.log('Dialog.pushMessage', botMessage);
+    responses.push(botMessage.toJson());
+  }
+
+  getDialogName() {
+    return this.constructor.name.toLowerCase().replace(/dialog/g, '');
   }
 }
 

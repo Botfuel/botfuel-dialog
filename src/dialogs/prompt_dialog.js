@@ -9,130 +9,89 @@ class PromptDialog extends Dialog {
     this.maxComplexity = Object.keys(parameters.entities).length + 1;
   }
 
-  async computeMissingEntities(id, messageEntities) {
+  async computeMissingEntities(userId, messageEntities) {
     console.log('PromptDialog.computeMissingEntities', messageEntities);
-    const dialogEntities = await this.brain.conversationGet(id, this.parameters.namespace) || {};
+    const { namespace, entities } = this.parameters;
+    const dialogEntities = await this.brain.conversationGet(userId, namespace) || {};
     for (const messageEntity of messageEntities) {
       dialogEntities[messageEntity.dim] = messageEntity;
     }
     console.log('PromptDialog.computeMissingEntities: dialogEntities', dialogEntities);
-    await this.brain.conversationSet(id, this.parameters.namespace, dialogEntities);
-    return Object
-      .keys(this.parameters.entities)
-      .filter(entityKey => dialogEntities[entityKey] === undefined);
+    await this.brain.conversationSet(userId, namespace, dialogEntities);
+    return Object.keys(entities).filter(entityKey => dialogEntities[entityKey] === undefined);
   }
 
-  async executeWhenBlocked(id, responses, messageEntities) {
-    console.log('PromptDialog.executeWhenBlocked', id, responses, messageEntities);
-    this.askDialog(id, responses);
+  async executeWhenBlocked(userId, responses, messageEntities) {
+    console.log('PromptDialog.executeWhenBlocked', userId, responses, messageEntities);
+    this.display(userId, responses, 'ask', null);
     return Dialog.STATUS_WAITING;
   }
 
-  async executeWhenWaiting(id, responses, messageEntities) {
+  async executeWhenWaiting(userId, responses, messageEntities) {
     console.log('PromptDialog.executeWhenWaiting');
     for (const messageEntity of messageEntities) {
       if (messageEntity.dim === 'system:boolean') {
         const booleanValue = messageEntity.values[0].value;
         console.log('PromptDialog.execute: system:boolean', booleanValue);
         if (booleanValue) {
-          this.confirmDialog(id, responses);
-          return this.executeWhenReady(id, responses, messageEntities);
-        } else {
-          this.discardDialog(id, responses);
-          return Dialog.STATUS_DISCARDED;
+          this.display(userId, responses, 'confirm', null);
+          return this.executeWhenReady(userId, responses, messageEntities);
         }
+        // if not confirmed, then discard dialog
+        this.display(userId, responses, 'discard', null);
+        return Dialog.STATUS_DISCARDED;
       }
     }
     return Dialog.STATUS_BLOCKED;
   }
 
-  async executeWhenReady(id, responses, messageEntities) {
-    console.log('PromptDialog.executeWhenReady');
+  async executeWhenReady(userId, responses, messageEntities) {
+    console.log('PromptDialog.executeWhenReady', messageEntities, this.parameters.entities);
+    // confirm entities
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
-    this.confirmEntities(id, responses, messageEntities);
-    const missingEntities = await this.computeMissingEntities(id, messageEntities);
-    this.askEntities(id, responses, missingEntities);
+    // @TODO: key 'entities_confirm' if many entities ?
+    for (const entity of messageEntities) {
+      this.display(userId, responses, `${entity.dim}_confirm`, { entity });
+    }
+    // ask entities
+    const missingEntities = await this.computeMissingEntities(userId, messageEntities);
+    if (missingEntities.length > 1) { // many entities
+      this.display(userId, responses, 'entities_ask', { entities: missingEntities });
+    } else if (missingEntities.length === 1) { // one entity
+      const entity = missingEntities[0];
+      this.display(userId, responses, `${entity}_ask`, { entity });
+    }
     return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_READY;
   }
 
   /**
    * Executes.
-   * @param {string} id the user id
-   * @param {Object[]} responses
-   * @param {Object[]} messageEntities - entities array from user message
+   * @param {string} userId the user id
+   * @param {object[]} responses
+   * @param {object[]} messageEntities - entities array from user message
+   * @param {string} status - the dialog status
    */
-  async execute(id, responses, messageEntities, status) {
-    console.log('PromptDialog.execute', id, responses, messageEntities, status);
-    if (status === Dialog.STATUS_BLOCKED) {
-      return this.executeWhenBlocked(id, responses, messageEntities);
+  async execute(userId, responses, messageEntities, status) {
+    console.log('PromptDialog.execute', userId, responses, messageEntities, status);
+    switch (status) {
+      case Dialog.STATUS_BLOCKED:
+        return this.executeWhenBlocked(userId, responses, messageEntities);
+      case Dialog.STATUS_WAITING:
+        return this.executeWhenWaiting(userId, responses, messageEntities);
+      case Dialog.STATUS_READY:
+      default:
+        return this.executeWhenReady(userId, responses, messageEntities);
     }
-    if (status === Dialog.STATUS_WAITING) {
-      return this.executeWhenWaiting(id, responses, messageEntities);
-    }
-    return this.executeWhenReady(id, responses, messageEntities);
   }
 
-  askDialog(id, responses) {
-    console.log('PromptDialog.askDialog', id, responses);
+  display(userId, responses, key, parameters) {
+    const botMessages = this.viewsManager.resolve(userId, this.name, key, parameters);
+    console.log('PromptDialog.display: botMessages', botMessages);
     this.pushMessages(
       responses,
-      this.templateManager.compile(id, `${this.parameters.namespace}_ask`, null),
+      botMessages,
     );
-  }
-
-  confirmDialog(id, responses) {
-    console.log('PromptDialog.confirmDialog', id, responses);
-    this.pushMessages(
-      responses,
-      this.templateManager.compile(id, `${this.parameters.namespace}_confirm`, null),
-    );
-  }
-
-  discardDialog(id, responses) {
-    console.log('PromptDialog.discardDialog', id, responses);
-    this.pushMessages(
-      responses,
-      this.templateManager.compile(id, `${this.parameters.namespace}_discard`, null),
-    );
-  }
-
-  askEntities(id, responses, entities) {
-    console.log('PromptDialog.askEntities', id, responses, entities);
-    // TODO: put all this in a single template
-    if (entities.length > 0) {
-      this.pushMessages(
-        responses,
-        this.templateManager.compile(
-          id,
-          `${this.parameters.namespace}_entities_ask`,
-        ),
-      );
-      const entity = entities[0];
-      this.pushMessages(
-        responses,
-        this.templateManager.compile(
-          id,
-          `${this.parameters.namespace}_${entity}_ask`,
-          { entity },
-        ),
-      );
-    }
-  }
-
-  confirmEntities(id, responses, entities) {
-    console.log('PromptDialog.confirmEntities', id, responses, entities);
-    // TODO: put all this in a single template
-    for (const entity of entities) {
-      this.pushMessages(
-        responses,
-        this.templateManager.compile(
-          id,
-          `${this.parameters.namespace}_${entity.dim}_confirm`,
-          { entity },
-        ),
-      );
-    }
   }
 }
 

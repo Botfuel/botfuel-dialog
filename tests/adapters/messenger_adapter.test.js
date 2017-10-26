@@ -3,10 +3,7 @@
 
 const expect = require('expect.js');
 const MessengerAdapter = require('../../src/adapters/messenger_adapter');
-const CardsMessage = require('../../src/views/parts/cards_message');
-const Card = require('../../src/views/parts/card');
-const Link = require('../../src/views/parts/link');
-const Postback = require('../../src/views/parts/postback');
+const { Card, CardsMessage, Link, Postback } = require('../../src/messages');
 
 describe('MessengerAdapter', function () {
   it('should generate the proper json', async function () {

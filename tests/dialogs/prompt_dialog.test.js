@@ -1,29 +1,20 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const TemplateManager = require('../../src/template_manager');
+const ViewsManager = require('../../src/views_manager');
 const PromptDialog = require('../../src/dialogs/prompt_dialog');
 const MemoryBrain = require('../../src/brains/memory_brain');
+const { BotTextMessage } = require('../../src/messages');
 
 const TEST_USER = '1';
 const TEST_BOT = '1';
 const testConfig = { path: __dirname, locale: 'en', id: TEST_BOT };
 const testParameters = { namespace: 'testdialog', entities: { dim1: null, dim2: null } };
 
-class TestTemplateManager extends TemplateManager {
-  compile(id, template, parameters = {}) {
-    return [{
-      id,
-      template,
-      parameters,
-    }];
-  }
-}
-
 class TestPromptDialog extends PromptDialog {
   constructor(config, brain, parameters) {
     super(config, brain, parameters);
-    this.templateManager = new TestTemplateManager(config, parameters.namespace);
+    this.viewsManager = new ViewsManager(config);
   }
 }
 
@@ -40,16 +31,7 @@ describe('PromptDialog', function () {
     const responses = [];
     await prompt.execute(TEST_USER, responses, []);
     expect(responses).to.eql([
-      {
-        id: TEST_USER,
-        template: 'testdialog_entities_ask',
-        parameters: {},
-      },
-      {
-        id: TEST_USER,
-        template: 'testdialog_dim1_ask',
-        parameters: { entity: 'dim1' },
-      },
+      new BotTextMessage(TEST_BOT, TEST_USER, 'Which dim1 and dim2?').toJson(),
     ]);
     const user = await brain.getUser(TEST_USER);
     expect(user.conversations.length).to.be(1);
@@ -59,23 +41,10 @@ describe('PromptDialog', function () {
 
   it('when given a first entity, should list both and ask for the second one', async function () {
     const responses = [];
-    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1' }]);
+    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1', body: 'dim1' }]);
     expect(responses).to.eql([
-      {
-        id: TEST_USER,
-        template: 'testdialog_dim1_confirm',
-        parameters: { entity: { dim: 'dim1' } },
-      },
-      {
-        id: TEST_USER,
-        template: 'testdialog_entities_ask',
-        parameters: {},
-      },
-      {
-        id: TEST_USER,
-        template: 'testdialog_dim2_ask',
-        parameters: { entity: 'dim2' },
-      },
+      new BotTextMessage(TEST_BOT, TEST_USER, 'The dim1 is dim1.').toJson(),
+      new BotTextMessage(TEST_BOT, TEST_USER, 'Which dim2?').toJson(),
     ]);
     const user = await brain.getUser(TEST_USER);
     expect(user.conversations.length).to.be(1);
@@ -85,18 +54,10 @@ describe('PromptDialog', function () {
 
   it('when given both entity, should ask none', async function () {
     const responses = [];
-    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1' }, { dim: 'dim2' }]);
+    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1', body: 'dim1' }, { dim: 'dim2', body: 'dim2' }], PromptDialog.STATUS_READY);
     expect(responses).to.eql([
-      {
-        id: TEST_USER,
-        template: 'testdialog_dim1_confirm',
-        parameters: { entity: { dim: 'dim1' } },
-      },
-      {
-        id: TEST_USER,
-        template: 'testdialog_dim2_confirm',
-        parameters: { entity: { dim: 'dim2' } },
-      },
+      new BotTextMessage(TEST_BOT, TEST_USER, 'The dim1 is dim1.').toJson(),
+      new BotTextMessage(TEST_BOT, TEST_USER, 'The dim2 is dim2.').toJson(),
     ]);
     const user = await brain.getUser(TEST_USER);
     expect(user.conversations.length).to.be(1);
