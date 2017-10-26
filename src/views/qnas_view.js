@@ -1,4 +1,4 @@
-const { ActionsMessage, BotTextMessage } = require('../messages');
+const { ActionsMessage, BotTextMessage, Postback } = require('../messages');
 
 class QnasView {
   render(botId, userId, key, parameters) {
