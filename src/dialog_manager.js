@@ -42,13 +42,6 @@ class DialogManager {
     return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
   }
 
-  getDialogStatus(depth) {
-    if (depth !== 0) {
-      return Dialog.STATUS_BLOCKED;
-    }
-    return Dialog.STATUS_READY;
-  }
-
   filterIntents(intents) {
     console.log('DialogManager.filterIntents', intents);
     return intents
@@ -57,10 +50,7 @@ class DialogManager {
       .sort((intent1, intent2) => {
         const dialog1 = this.getDialog(intent1);
         const dialog2 = this.getDialog(intent2);
-        if (dialog1.maxComplexity !== dialog2.maxComplexity) {
-          return dialog2.maxComplexity - dialog1.maxComplexity;
-        }
-        return intent1.value - intent2.value;
+        return dialog1.maxComplexity - dialog2.maxComplexity;
       });
   }
 
@@ -75,26 +65,35 @@ class DialogManager {
     console.log('DialogManager.updateDialogs', userId, dialogs, intents, entities);
     intents = this.filterIntents(intents);
     console.log('DialogManager.updateDialogs: intents', intents);
-    for (let i = 0; i < intents.length; i++) {
-      const label = intents[i].label;
-      if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== label) {
-        dialogs.push({
-          label,
-          entities,
-          status: this.getDialogStatus(intents.length - 1 - i),
-        });
+    if (intents.length > 0) {
+      let nbComplex = 0;
+      let newDialogs = [];
+      for (let i = 0; i < intents.length; i++) {
+        if (this.getDialog(intents[i]).maxComplexity > 1) {
+          nbComplex++;
+        }
+        const status = nbComplex > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
+        const label = intents[i].label;
+        newDialogs.push({ label, entities, status });
       }
-    }
-    if (dialogs.length === 0) { // no intent detected
-      const dialog = await this.brain.userGet(userId, 'lastDialog');
-      if (dialog !== undefined && dialog !== null) {
-        dialog.status = Dialog.STATUS_READY;
-        dialogs.push(dialog);
+      console.log('DialogManager.updateDialogs: newDialogs', newDialogs);
+      while (newDialogs.length > 0) {
+        const newDialog = newDialogs[newDialogs.length - 1];
+        if (dialogs.length > 0 && dialogs[dialogs.length - 1].label === newDialog.label) {
+          dialogs[dialogs.length - 1].entities = newDialog.entities;
+          dialogs[dialogs.length - 1].status = newDialog.status;
+        } else {
+          dialogs.push(newDialog);
+        }
+        newDialogs = newDialogs.slice(0, -1);
+      }
+    } else { // no intent detected
+      if (dialogs.length === 0) {
+        const label = await this.brain.userGet(userId, 'lastDialog') || 'default_dialog';
+        console.log('DialogManager.updateDialogs: newDialog', label);
+        dialogs.push({ label, entities, status: Dialog.STATUS_READY });
       } else {
-        dialogs.push({
-          label: 'default_dialog',
-          status: Dialog.STATUS_READY,
-        });
+        dialogs[dialogs.length - 1].entities = entities;
       }
     }
   }
@@ -103,20 +102,18 @@ class DialogManager {
    * Executes the dialogs.
    * @param {string} userId the user id
    * @param {Object[]} dialogs - the dialogs
-   * @param {Object[]} entities - the entities
    */
-  async executeDialogs(userId, dialogs, entities) {
-    console.log('DialogManager.executeDialogs', userId, dialogs, entities);
+  async executeDialogs(userId, dialogs) {
+    console.log('DialogManager.executeDialogs', userId, dialogs);
     const responses = [];
     while (dialogs.length > 0) {
-      console.log('DialogManager.executeDialogs: dialogs', dialogs);
       const dialog = dialogs[dialogs.length - 1];
       // eslint-disable-next-line no-await-in-loop
-      await this.brain.userSet(userId, 'lastDialog', dialog);
+      await this.brain.userSet(userId, 'lastDialog', dialog.label);
       // eslint-disable-next-line no-await-in-loop
       dialog.status = await this
         .getDialog(dialog)
-        .execute(userId, responses, entities, dialog.status);
+        .execute(userId, responses, dialog.entities || [], dialog.status);
       if (dialog.status === Dialog.STATUS_DISCARDED) {
         dialogs = dialogs.slice(0, -1);
         await this.brain.userSet(userId, 'lastDialog', null);
@@ -141,7 +138,7 @@ class DialogManager {
     console.log('DialogManager.execute', userId, intents, entities);
     const dialogs = await this.brain.userGet(userId, 'dialogs');
     await this.updateDialogs(userId, dialogs, intents, entities);
-    return this.executeDialogs(userId, dialogs, entities);
+    return this.executeDialogs(userId, dialogs);
   }
 }
 

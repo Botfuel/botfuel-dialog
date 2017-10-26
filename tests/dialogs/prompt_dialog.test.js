@@ -38,9 +38,9 @@ describe('PromptDialog', function () {
     await brain.initUserIfNecessary(TEST_USER);
   });
 
-  it('when given no entity, should ask for both', async function () {
+  it('when given no entity, should list both and ask for one', async function () {
     const responses = [];
-    await prompt.execute(TEST_USER, responses, [], PromptDialog.STATUS_READY);
+    await prompt.execute(TEST_USER, responses, []);
     expect(responses).to.eql([
       new BotTextMessage(TEST_BOT, TEST_USER, 'Which dim1 and dim2?').toJson(),
     ]);
@@ -50,9 +50,9 @@ describe('PromptDialog', function () {
     expect(user.conversations[0].testdialog.dim2).to.be(undefined);
   });
 
-  it('when given a first entity, should ask for the second one', async function () {
+  it('when given a first entity, should list both and ask for the second one', async function () {
     const responses = [];
-    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1', body: 'dim1' }], PromptDialog.STATUS_READY);
+    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1' }]);
     expect(responses).to.eql([
       new BotTextMessage(TEST_BOT, TEST_USER, 'The dim1 is dim1.').toJson(),
       new BotTextMessage(TEST_BOT, TEST_USER, 'Which dim2?').toJson(),

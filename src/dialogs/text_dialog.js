@@ -18,9 +18,9 @@ class TextDialog extends Dialog {
    */
   async execute(id, responses, messageEntities) {
     console.log('TextDialog.execute', id, responses, messageEntities);
-    this.pushMessage(
+    this.pushMessages(
       responses,
-      this.viewsManager.resolve(id, this.name, null, messageEntities),
+      this.templateManager.compile(id, this.parameters.template, messageEntities),
     );
     return Dialog.STATUS_COMPLETED;
   }
