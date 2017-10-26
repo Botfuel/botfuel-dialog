@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const ViewsManager = require('../views_manager');
 
 /**
@@ -25,14 +26,20 @@ class Dialog {
     console.log('Dialog.constructor: name', this.name);
   }
 
-  pushMessages(responses, messages) {
-    for (const message of messages) {
-      responses.push(message);
+  pushMessages(responses, botMessages) {
+    console.log('Dialog.pushMessages', botMessages);
+    if (_.isArray(botMessages)) {
+      for (const botMessage of botMessages) {
+        responses.push(botMessage.toJson());
+      }
+    } else {
+      responses.push(botMessages.toJson());
     }
   }
 
-  pushMessage(responses, message) {
-    responses.push(message);
+  pushMessage(responses, botMessage) {
+    console.log('Dialog.pushMessage', botMessage);
+    responses.push(botMessage.toJson());
   }
 
   getDialogName() {

@@ -32,9 +32,7 @@ describe('DialogManager', function () {
   it('should not crash when no intent', async function () {
     const responses = await dm.execute(TEST_USER, [], []);
     expect(responses).to.eql([
-      [
-        new BotTextMessage(TEST_BOT, TEST_USER, 'Not understood.').toJson(),
-      ],
+      new BotTextMessage(TEST_BOT, TEST_USER, 'Not understood.').toJson(),
     ]);
   });
 

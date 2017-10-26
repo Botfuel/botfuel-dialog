@@ -7,7 +7,7 @@ const Postback = require('./postback');
 const PostbackMessage = require('./postback_message');
 const QuickrepliesMessage = require('./quickreplies_message');
 const UserImageMessage = require('./user_image_message');
-const UserTextMessage = require('./user_image_message');
+const UserTextMessage = require('./user_text_message');
 
 module.exports = {
   Link,

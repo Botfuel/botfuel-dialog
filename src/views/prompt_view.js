@@ -1,9 +1,11 @@
 const { BotTextMessage } = require('../messages');
 
+const RESERVED_KEYS = ['ask', 'confirm', 'discard', 'entities_ask', 'entities_confirm', 'entity_ask', 'entity_confirm'];
+
 class PromptView {
   render(botId, userId, key, parameters) {
     console.log('PromptView.render', botId, userId, key, parameters);
-    switch (key) {
+    switch (this.validateKey(key)) {
       case 'ask':
         return this.ask(botId, userId);
       case 'confirm':
@@ -19,7 +21,7 @@ class PromptView {
       case 'entity_confirm':
         return this.entityConfirm(botId, userId, parameters);
       default:
-        return [];
+        return null;
     }
   }
 
@@ -81,6 +83,16 @@ class PromptView {
       }
     });
     return result;
+  }
+
+  validateKey(key) {
+    console.log('PromptView.validateKey', key);
+    if (RESERVED_KEYS.indexOf(key) === -1) {
+      // this case is possible only if we have a key like : custom_ask, custom_confirm ...
+      // extract and concat the end of the key with 'entity' prefix
+      return `entity${key.substr(key.indexOf('_'))}`;
+    }
+    return key;
   }
 }
 

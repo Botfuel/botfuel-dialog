@@ -33,7 +33,7 @@ class QnasDialog extends Dialog {
       }]));
       this.pushMessage(
         responses,
-        new ActionsMessage(this.config.id, id, buttons).toJson(),
+        new ActionsMessage(this.config.id, id, buttons),
       );
     }
     return Dialog.STATUS_COMPLETED;

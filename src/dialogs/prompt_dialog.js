@@ -1,3 +1,4 @@
+// const { BotTextMessage } = require('../messages');
 const Dialog = require('./dialog');
 
 /**
@@ -46,10 +47,15 @@ class PromptDialog extends Dialog {
   }
 
   async executeWhenReady(userId, responses, messageEntities) {
-    console.log('PromptDialog.executeWhenReady');
+    console.log('PromptDialog.executeWhenReady', messageEntities, this.parameters.entities);
     // confirm entities
+    messageEntities.forEach((entity) => {
+      console.log('TEST entity', entity, this.parameters.entities[entity.dim]);
+    });
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
+    console.log('PromptDialog.executeWhenReady: messagesEntities filtered', messageEntities);
+    // @TODO: key 'entities_confirm' if many entities ?
     for (const entity of messageEntities) {
       this.display(userId, responses, `${entity.dim}_confirm`, { entity });
     }
@@ -85,9 +91,11 @@ class PromptDialog extends Dialog {
   }
 
   display(userId, responses, key, parameters) {
+    const botMessages = this.viewsManager.resolve(userId, this.name, key, parameters);
+    console.log('PromptDialog.display: botMessages', botMessages);
     this.pushMessages(
       responses,
-      this.viewsManager.resolve(userId, this.name, key, parameters),
+      botMessages,
     );
   }
 }

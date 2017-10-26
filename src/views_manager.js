@@ -18,6 +18,7 @@ class ViewsManager {
       `${__dirname}/views/${name}_view.js`,
     ];
     for (const path of paths) {
+      console.log('ViewsManager.getPath: test path', path);
       if (fs.existsSync(path)) {
         console.log('ViewsManager.getPath: existing path', path);
         return path;
@@ -39,11 +40,7 @@ class ViewsManager {
     if (path) {
       const View = require(path);
       const view = new View();
-      let botMessages = view.render(this.botId, userId, key, parameters);
-      if (!_.isArray(botMessages)) {
-        botMessages = [botMessages];
-      }
-      return botMessages.map(botMessage => botMessage.toJson());
+      return view.render(this.botId, userId, key, parameters);
     }
     return null;
   }
