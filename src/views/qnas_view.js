@@ -14,12 +14,14 @@ class QnasView {
   }
 
   renderAnswer(botId, userId, answer) {
+    console.log('QnasView.renderAnswer', botId, userId, answer);
     return [
       new BotTextMessage(botId, userId, answer),
     ];
   }
 
   renderQuestions(botId, userId, qnas) {
+    console.log('QnasView.renderQuestions', botId, userId, qnas);
     const postbacks = qnas.map(qna => new Postback(
       qna.questions[0],
       'qnas_dialog',
@@ -30,7 +32,7 @@ class QnasView {
     ));
     return [
       new BotTextMessage(botId, userId, 'What do you mean?'),
-      new ActionsMessage(botId, user, postbacks),
+      new ActionsMessage(botId, userId, postbacks),
     ];
   }
 }

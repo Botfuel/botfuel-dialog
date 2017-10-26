@@ -34,6 +34,7 @@ class Dialog {
           .viewsManager
           .resolve(this.name)
           .render(this.config.id, userId, key, parameters);
+    console.log('Dialog.display: botMessages', botMessages);
     for (const botMessage of botMessages) {
       responses.push(botMessage.toJson());
     }
