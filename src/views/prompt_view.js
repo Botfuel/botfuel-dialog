@@ -2,68 +2,63 @@ const _ = require('lodash');
 const BotTextMessage = require('./parts/bot_text_message');
 
 class PromptView {
-  render(botId, userId, keys, parameters) {
-    console.log('PromptView.render', botId, userId, keys, parameters);
-    const botMessages = [];
-    for (const key of keys) {
-      const textMessage = this.resolve(_.camelCase(key), parameters);
-      console.log('PromptView.render: textMessage', textMessage);
-      if (textMessage !== null && textMessage.length > 0) {
-        botMessages.push(new BotTextMessage(botId, userId, textMessage).toJson());
-        break;
-      }
-    }
-    return botMessages;
-  }
-
-  resolve(key, parameters) {
-    console.log('PromptView.resolve', key, parameters);
+  render(botId, userId, key, parameters) {
+    console.log('PromptView.render', botId, userId, key, parameters);
+    let botMessages;
     switch (key) {
       case 'ask':
-        return this.ask();
+        botMessages = this.ask(botId, userId);
+        break;
       case 'confirm':
-        return this.confirm();
+        botMessages = this.confirm(botId, userId);
+        break;
       case 'discard':
-        return this.discard();
-      case 'entitiesAsk':
-        return this.entitiesAsk(parameters);
-      case 'entitiesConfirm':
-        return this.entitiesConfirm(parameters);
-      case 'entityAsk':
-        return this.entityAsk(parameters);
-      case 'entityConfirm':
-        return this.entityConfirm(parameters);
+        botMessages = this.discard(botId, userId);
+        break;
+      case 'entities_ask':
+        botMessages = this.entitiesAsk(botId, userId, parameters);
+        break;
+      case 'entities_confirm':
+        botMessages = this.entitiesConfirm(botId, userId, parameters);
+        break;
+      case 'entity_ask':
+        botMessages = this.entityAsk(botId, userId, parameters);
+        break;
+      case 'entity_confirm':
+        botMessages = this.entityConfirm(botId, userId, parameters);
+        break;
       default:
-        return null;
+        botMessages = [];
     }
+    return _.isArray(botMessages) ? botMessages : [botMessages];
   }
 
-  ask() {
-    return 'continue dialog?';
+  ask(botId, userId) {
+    return new BotTextMessage(botId, userId, 'continue dialog?');
   }
 
-  confirm() {
-    return 'dialog confirmed.';
+  confirm(botId, userId) {
+    return new BotTextMessage(botId, userId, 'dialog confirmed.');
   }
 
-  discard() {
-    return 'dialog discarded.';
+  discard(botId, userId) {
+    return new BotTextMessage(botId, userId, 'dialog discarded.');
   }
 
-  entitiesAsk(parameters) {
-    return `Which ${this.concatEntities(parameters.entities)}?`;
+  entitiesAsk(botId, userId, parameters) {
+    return new BotTextMessage(botId, userId, `Which ${this.concatEntities(parameters.entities)}?`);
   }
 
-  entitiesConfirm(parameters) {
-    return `You want ${this.concatEntitiesValues(parameters.entities)} for the dialog.`;
+  entitiesConfirm(botId, userId, parameters) {
+    return new BotTextMessage(botId, userId, `You want ${this.concatEntitiesValues(parameters.entities)} for the dialog.`);
   }
 
-  entityAsk(parameters) {
-    return `Which ${parameters.entity}?`;
+  entityAsk(botId, userId, parameters) {
+    return new BotTextMessage(botId, userId, `Which ${parameters.entity}?`);
   }
 
-  entityConfirm(parameters) {
-    return `The ${parameters.entity.dim} is ${parameters.entity.body}.`;
+  entityConfirm(botId, userId, parameters) {
+    return new BotTextMessage(botId, userId, `The ${parameters.entity.dim} is ${parameters.entity.body}.`);
   }
 
   concatEntities(entities) {
