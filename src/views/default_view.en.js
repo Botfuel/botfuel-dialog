@@ -1,8 +1,9 @@
 const TextView = require('./text_view');
+const BotTextMessage = require('./parts/bot_text_message');
 
 class DefaultView extends TextView {
-  getText() {
-    return 'Not understood.';
+  getText(botId, userId) {
+    return new BotTextMessage(botId, userId, 'Not understood.');
   }
 }
 
