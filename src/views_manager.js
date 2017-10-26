@@ -1,4 +1,5 @@
 const fs = require('fs');
+const _ = require('lodash');
 
 class ViewsManager {
   constructor(config) {
@@ -38,7 +39,10 @@ class ViewsManager {
     if (path) {
       const View = require(path);
       const view = new View();
-      const botMessages = view.render(this.botId, userId, key, parameters);
+      let botMessages = view.render(this.botId, userId, key, parameters);
+      if (!_.isArray(botMessages)) {
+        botMessages = [botMessages];
+      }
       return botMessages.map(botMessage => botMessage.toJson());
     }
     return null;
