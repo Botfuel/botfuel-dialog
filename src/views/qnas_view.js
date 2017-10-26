@@ -6,7 +6,7 @@ class QnasView {
     switch (key) {
       case 'answer':
         return this.renderAnswer(botId, userId, parameters.answer);
-      case 'question':
+      case 'questions':
         return this.renderQuestions(botId, userId, parameters.qnas);
       default:
         return null;
