@@ -11,11 +11,11 @@ const testConfig = { path: __dirname, locale: 'en', id: TEST_BOT };
 const testParameters = { namespace: 'testdialog', entities: { dim1: null, dim2: null } };
 
 class TestViewsManager extends ViewsManager {
-  resolve(id, name, keys, parameters) {
+  resolve(id, name, key, parameters) {
     return [{
       id,
       name,
-      keys,
+      key,
       parameters,
     }];
   }
@@ -44,7 +44,7 @@ describe('PromptDialog', function () {
       {
         id: TEST_USER,
         name: 'testprompt',
-        keys: ['entities_ask'],
+        key: 'entities_ask',
         parameters: { entities: ['dim1', 'dim2'] },
       },
     ]);
@@ -61,13 +61,13 @@ describe('PromptDialog', function () {
       {
         id: TEST_USER,
         name: 'testprompt',
-        keys: ['dim1_confirm', 'entity_confirm'],
+        key: 'dim1_confirm',
         parameters: { entity: { dim: 'dim1' } },
       },
       {
         id: TEST_USER,
         name: 'testprompt',
-        keys: ['dim2_ask', 'entity_ask'],
+        key: 'dim2_ask',
         parameters: { entity: 'dim2' },
       },
     ]);
@@ -84,13 +84,13 @@ describe('PromptDialog', function () {
       {
         id: TEST_USER,
         name: 'testprompt',
-        keys: ['dim1_confirm', 'entity_confirm'],
+        key: 'dim1_confirm',
         parameters: { entity: { dim: 'dim1' } },
       },
       {
         id: TEST_USER,
         name: 'testprompt',
-        keys: ['dim2_confirm', 'entity_confirm'],
+        key: 'dim2_confirm',
         parameters: { entity: { dim: 'dim2' } },
       },
     ]);
