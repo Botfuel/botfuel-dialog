@@ -1,3 +1,4 @@
+const fs = require('fs');
 const Logger = require('logtown');
 const BotfuelAdapter = require('./adapters/botfuel_adapter');
 const DialogManager = require('./dialog_manager');
@@ -15,7 +16,7 @@ const logger = Logger.getLogger('Bot');
  */
 class Bot {
   constructor(config) {
-    this.configureLogger();
+    this.configureLogger(config);
     logger.debug('constructor', config);
     switch (config.adapter) {
       case 'botfuel':
@@ -36,9 +37,17 @@ class Bot {
     this.dm = new DialogManager(this.brain, config);
   }
 
-  configureLogger() {
-    // TODO: create a botfuel wrapper
-    // TODO: check config file
+  configureLogger(config) {
+    const paths = [
+      `${config.path}/src/wrappers/${config.loggerWrapper}.js`,
+      `${__dirname}/wrappers/${config.loggerWrapper}.js`,
+    ];
+    for (const path of paths) {
+      if (fs.existsSync(path)) {
+        Logger.addWrapper(require(path));
+        break;
+      }
+    }
   }
 
   async run() {

@@ -1,4 +1,4 @@
-const logger = require('logtown').getLogger('QnasView');
+const logger = require('logtown')('QnasView');
 const { ActionsMessage, BotTextMessage, Postback } = require('../messages');
 
 class QnasView {

@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const MongoClient = require('mongodb').MongoClient;
-const logger = require('logtown').getLogger('MongoBrain');
+const logger = require('logtown')('MongoBrain', { disable: ['debug'] });
 const Brain = require('./brain');
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';

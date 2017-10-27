@@ -1,4 +1,4 @@
-const logger = require('logtown').getLogger('CorpusExtractor');
+const logger = require('logtown')('CorpusExtractor');
 const Corpus = require('../corpora/corpus');
 
 /**

@@ -1,5 +1,5 @@
 const Diacritics = require('diacritics');
-const logger = require('logtown').getLogger('Corpus');
+const logger = require('logtown')('Corpus');
 
 class Corpus {
   constructor(matrix) {

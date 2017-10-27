@@ -1,5 +1,5 @@
 const fs = require('fs');
-const logger = require('logtown').getLogger('FileCorpus');
+const logger = require('logtown')('FileCorpus');
 const Corpus = require('./corpus');
 
 class FileCorpus extends Corpus {

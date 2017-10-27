@@ -1,4 +1,4 @@
-const logger = require('logtown').getLogger('PromptDialog');
+const logger = require('logtown')('PromptDialog');
 const Dialog = require('./dialog');
 
 /**
