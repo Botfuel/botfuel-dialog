@@ -1,3 +1,5 @@
+const fs = require('fs');
+const Logger = require('logtown');
 const BotfuelAdapter = require('./adapters/botfuel_adapter');
 const DialogManager = require('./dialog_manager');
 const Dialog = require('./dialogs/dialog');
@@ -13,6 +15,7 @@ const TestAdapter = require('./adapters/test_adapter');
 class Bot {
   constructor(config) {
     console.log('Bot.constructor', config);
+    this.initLogger(config);
     switch (config.adapter) {
       case 'botfuel':
         this.adapter = new BotfuelAdapter(this, config);
@@ -47,6 +50,22 @@ class Bot {
   async init() {
     await this.brain.init();
     await this.nlu.init();
+  }
+
+  initLogger(config) {
+    console.log('Bot.initLogger');
+    const paths = [
+      `${config.path}/src/wrappers/${config.logger}.js`,
+      `${__dirname}/wrappers/${config.logger}.js`,
+    ];
+    for (const path of paths) {
+      if (fs.existsSync(path)) {
+        console.log('Bot.initLogger: existing logger wrapper', path);
+        Logger.addWrapper(require(path));
+        console.log('Bot.initLogger: logger wrapper initialized');
+        break;
+      }
+    }
   }
 
   /**
