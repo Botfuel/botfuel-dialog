@@ -1,4 +1,4 @@
-const logger = require('logtown').getLogger('MessengerAdapter');
+const logger = require('logtown')('MessengerAdapter');
 const { PostbackMessage, UserImageMessage, UserTextMessage } = require('../messages');
 const WebAdapter = require('./web_adapter');
 

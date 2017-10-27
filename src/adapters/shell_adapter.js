@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const logger = require('logtown').getLogger('ShellAdapter');
+const logger = require('logtown')('ShellAdapter');
 const { BotTextMessage, UserTextMessage } = require('../messages');
 const Adapter = require('./adapter');
 

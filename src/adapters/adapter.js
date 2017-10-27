@@ -1,4 +1,4 @@
-const logger = require('logtown').getLogger('Adapter');
+const logger = require('logtown')('Adapter');
 
 /**
  * Adapts messages.

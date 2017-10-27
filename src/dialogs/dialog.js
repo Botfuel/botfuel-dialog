@@ -1,4 +1,4 @@
-const logger = require('logtown').getLogger('Dialog');
+const logger = require('logtown')('Dialog');
 const ViewsManager = require('../views_manager');
 
 /**

@@ -16,7 +16,7 @@ const logger = Logger.getLogger('Bot');
  */
 class Bot {
   constructor(config) {
-    this.configureLogger();
+    this.configureLogger(config);
     logger.debug('constructor', config);
     switch (config.adapter) {
       case 'botfuel':

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const logger = require('logtown').getLogger('DialogManager');
+const logger = require('logtown')('DialogManager');
 const Dialog = require('./dialogs/dialog');
 
 /**

@@ -1,4 +1,4 @@
-const logger = require('logtown').getLogger('CompositeExtractor');
+const logger = require('logtown')('CompositeExtractor');
 
 /**
  * Class for extracting entities.
