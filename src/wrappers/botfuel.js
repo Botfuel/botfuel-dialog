@@ -1,5 +1,20 @@
-const botfuelLoggerWrapper = (id, level, stats, ...rest) => {
-  console.log(`${level} [${id}]`, ...rest);
-};
+const WinstonWrapper = require('logtown-winston');
+const winston = require('winston');
 
-module.exports = botfuelLoggerWrapper;
+const transports = [
+  new winston.transports.Console({
+    json: false,
+    colorize: true,
+    prettyPrint: true,
+    timestamp: true,
+    handleExceptions: true,
+    align: false,
+    level: 'silly',
+  }),
+];
+
+const options = { exitOnError: false };
+
+module.exports = {
+  wrapper: new WinstonWrapper(transports, options),
+};
