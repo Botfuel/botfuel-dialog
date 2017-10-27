@@ -1,5 +1,7 @@
 const Dialog = require('./dialog');
 
+const logger = require('logtown').getLogger('PromptDialog');
+
 /**
  * PromptDialog class.
  */
@@ -9,29 +11,29 @@ class PromptDialog extends Dialog {
   }
 
   async computeMissingEntities(userId, messageEntities) {
-    console.log('PromptDialog.computeMissingEntities', messageEntities);
+    logger.debug('computeMissingEntities', messageEntities);
     const { namespace, entities } = this.parameters;
     const dialogEntities = await this.brain.conversationGet(userId, namespace) || {};
     for (const messageEntity of messageEntities) {
       dialogEntities[messageEntity.dim] = messageEntity;
     }
-    console.log('PromptDialog.computeMissingEntities: dialogEntities', dialogEntities);
+    logger.debug('computeMissingEntities: dialogEntities', dialogEntities);
     await this.brain.conversationSet(userId, namespace, dialogEntities);
     return Object.keys(entities).filter(entityKey => dialogEntities[entityKey] === undefined);
   }
 
   async executeWhenBlocked(userId, responses, messageEntities) {
-    console.log('PromptDialog.executeWhenBlocked', userId, responses, messageEntities);
+    logger.debug('executeWhenBlocked', userId, responses, messageEntities);
     this.display(userId, responses, 'ask');
     return Dialog.STATUS_WAITING;
   }
 
   async executeWhenWaiting(userId, responses, messageEntities) {
-    console.log('PromptDialog.executeWhenWaiting');
+    logger.debug('executeWhenWaiting');
     for (const messageEntity of messageEntities) {
       if (messageEntity.dim === 'system:boolean') {
         const booleanValue = messageEntity.values[0].value;
-        console.log('PromptDialog.execute: system:boolean', booleanValue);
+        logger.debug('execute: system:boolean', booleanValue);
         if (booleanValue) {
           this.display(userId, responses, 'confirm');
           return this.executeWhenReady(userId, responses, messageEntities);
@@ -45,7 +47,7 @@ class PromptDialog extends Dialog {
   }
 
   async executeWhenReady(userId, responses, messageEntities) {
-    console.log('PromptDialog.executeWhenReady', messageEntities, this.parameters.entities);
+    logger.debug('executeWhenReady', messageEntities, this.parameters.entities);
     // confirm entities
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
@@ -62,7 +64,7 @@ class PromptDialog extends Dialog {
    * @param {string} status - the dialog status
    */
   async execute(userId, responses, messageEntities, status) {
-    console.log('PromptDialog.execute', userId, responses, messageEntities, status);
+    logger.debug('execute', userId, responses, messageEntities, status);
     switch (status) {
       case Dialog.STATUS_BLOCKED:
         return this.executeWhenBlocked(userId, responses, messageEntities);

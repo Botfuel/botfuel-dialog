@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const Brain = require('./brain');
 
+const logger = require('logtown').getLogger('MemoryBrain');
+
 /**
  * Class to wrap memory brains
  */
@@ -10,7 +12,7 @@ class MemoryBrain extends Brain {
    * @param {string} botId - bot id
    */
   constructor(botId) {
-    // console.log('MemoryBrain.constructor', botId);
+    logger.debug('constructor', botId);
     super(botId);
     this.users = {};
   }
@@ -20,7 +22,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   async clean() {
-    // console.log('MemoryBrain.clean');
+    logger.debug('clean');
     this.users = {};
   }
 
@@ -29,7 +31,7 @@ class MemoryBrain extends Brain {
    * @param {string} userId - user id
    */
   async hasUser(userId) {
-    // console.log('MemoryBrain.hasUser', userId);
+    logger.debug('hasUser', userId);
     return this.users[userId] !== undefined;
   }
 
@@ -39,7 +41,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   async addUser(userId) {
-    // console.log('MemoryBrain.addUser', userId);
+    logger.debug('addUser', userId);
     if (await this.hasUser(userId)) {
       throw new Error('An user with this id for this bot already exists');
     }
@@ -60,7 +62,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   async getUser(userId) {
-    // console.log('MemoryBrain.getUser', userId);
+    logger.debug('getUser', userId);
     if (!await this.hasUser(userId)) {
       throw new Error('User not exists');
     }
@@ -75,7 +77,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   async userSet(userId, key, value) {
-    // console.log('MemoryBrain.userSet', userId, key, value);
+    logger.debug('userSet', userId, key, value);
     const user = await this.getUser(userId);
     user[key] = value;
     return user;
@@ -88,7 +90,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   async userGet(userId, key) {
-    // console.log('MemoryBrain.userGet', userId, key);
+    logger.debug('userGet', userId, key);
     const user = await this.getUser(userId);
     return user[key];
   }
@@ -101,7 +103,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   async userPush(userId, key, value) {
-    // console.log('MemoryBrain.userPush', userId, key, value);
+    logger.debug('userPush', userId, key, value);
     const user = await this.getUser(userId);
     if (user[key]) {
       if (!_.isArray(user[key])) {
@@ -121,7 +123,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   async userShift(userId, key) {
-    // console.log('MemoryBrain.userShift', userId, key);
+    logger.debug('userShift', userId, key);
     const user = await this.getUser(userId);
     if (user[key] === undefined || !_.isArray(user[key])) {
       throw new Error('User key is not an array');
@@ -137,7 +139,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   async userPop(userId, key) {
-    // console.log('MemoryBrain.userPop', userId, key);
+    logger.debug('userPop', userId, key);
     const user = await this.getUser(userId);
     if (user[key] === undefined || !_.isArray(user[key])) {
       throw new Error('User key is not an array');
@@ -151,7 +153,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   async addConversation(userId) {
-    // console.log('MemoryBrain.addConversation', userId);
+    logger.debug('addConversation', userId);
     const conversation = { createdAt: Date.now() };
     await this.userPush(userId, 'conversations', conversation);
     return conversation;
@@ -163,7 +165,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   async getLastConversation(userId) {
-    // console.log('MemoryBrain.getLastConversation', userId);
+    logger.debug('getLastConversation', userId);
     const user = await this.getUser(userId);
     return _.last(user.conversations);
   }
@@ -176,7 +178,7 @@ class MemoryBrain extends Brain {
    * @returns {Promise}
    */
   async conversationSet(userId, key, value) {
-    // console.log('MemoryBrain.conversationSet', userId, key, value);
+    logger.debug('conversationSet', userId, key, value);
     const conversation = await this.getLastConversation(userId);
     conversation[key] = value;
     return conversation;

@@ -1,7 +1,10 @@
 const fs = require('fs');
 const Dialog = require('./dialogs/dialog');
 
+const logger = require('logtown').getLogger('DialogManager');
+
 /**
+
  * Turns NLU output into a dialog stack.
  */
 class DialogManager {
@@ -9,14 +12,14 @@ class DialogManager {
    * Constructor.
    */
   constructor(brain, config) {
-    // console.log('DialogManager.constructor');
+    logger.debug('constructor');
     this.brain = brain;
     this.config = config;
     this.intentThreshold = this.config.intentThreshold || 0.8;
   }
 
   getDialogPath(label) {
-    // console.log('DialogManager.getDialogPath', label);
+    logger.debug('getDialogPath', label);
     const paths = [
       `${this.config.path}/src/controllers/dialogs/${label}.${this.config.adapter}`,
       `${this.config.path}/src/controllers/dialogs/${label}`,
@@ -24,7 +27,7 @@ class DialogManager {
       `${__dirname}/dialogs/${label}`,
     ];
     for (const path of paths) {
-      // console.log('DialogManager.getDialogPath: path', path);
+      logger.debug('getDialogPath: path', path);
       if (fs.existsSync(`${path}.js`)) {
         return path;
       }
@@ -33,7 +36,7 @@ class DialogManager {
   }
 
   getDialog(dialog) {
-    // console.log('DialogManager.getDialog', dialog);
+    logger.debug('getDialog', dialog);
     const path = this.getDialogPath(dialog.label);
     if (path === null) {
       return null;
@@ -43,7 +46,7 @@ class DialogManager {
   }
 
   filterIntents(intents) {
-    console.log('DialogManager.filterIntents', intents);
+    logger.debug('filterIntents', intents);
     return intents
       .filter(intent => intent.value > this.intentThreshold)
       .slice(0, 2)
@@ -62,9 +65,9 @@ class DialogManager {
    * @param {Object[]} entities - the entities
    */
   async updateDialogs(userId, dialogs, intents, entities) {
-    console.log('DialogManager.updateDialogs', userId, dialogs, intents, entities);
+    logger.debug('updateDialogs', userId, dialogs, intents, entities);
     intents = this.filterIntents(intents);
-    console.log('DialogManager.updateDialogs: intents', intents);
+    logger.debug('updateDialogs: intents', intents);
     if (intents.length > 0) {
       let nbComplex = 0;
       let newDialogs = [];
@@ -76,7 +79,7 @@ class DialogManager {
         const label = intents[i].label;
         newDialogs.push({ label, entities, status });
       }
-      console.log('DialogManager.updateDialogs: newDialogs', newDialogs);
+      logger.debug('updateDialogs: newDialogs', newDialogs);
       while (newDialogs.length > 0) {
         const newDialog = newDialogs[newDialogs.length - 1];
         if (dialogs.length > 0 && dialogs[dialogs.length - 1].label === newDialog.label) {
@@ -89,7 +92,7 @@ class DialogManager {
       }
     } else if (dialogs.length === 0) { // no intent detected
       const label = await this.brain.userGet(userId, 'lastDialog') || 'default_dialog';
-      console.log('DialogManager.updateDialogs: newDialog', label);
+      logger.debug('updateDialogs: newDialog', label);
       dialogs.push({ label, entities, status: Dialog.STATUS_READY });
     } else {
       dialogs[dialogs.length - 1].entities = entities;
@@ -102,7 +105,7 @@ class DialogManager {
    * @param {Object[]} dialogs - the dialogs
    */
   async executeDialogs(userId, dialogs) {
-    console.log('DialogManager.executeDialogs', userId, dialogs);
+    logger.debug('executeDialogs', userId, dialogs);
     const responses = [];
     while (dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
@@ -123,7 +126,7 @@ class DialogManager {
       }
     }
     await this.brain.userSet(userId, 'dialogs', dialogs);
-    console.log('DialogManager.executeDialogs: responses', responses);
+    logger.debug('executeDialogs: responses', responses);
     return responses;
   }
 
@@ -134,7 +137,7 @@ class DialogManager {
    * @param {Object[]} entities the transient entities
    */
   async execute(userId, intents, entities) {
-    console.log('DialogManager.execute', userId, intents, entities);
+    logger.debug('execute', userId, intents, entities);
     const dialogs = await this.brain.userGet(userId, 'dialogs');
     await this.updateDialogs(userId, dialogs, intents, entities);
     return this.executeDialogs(userId, dialogs);

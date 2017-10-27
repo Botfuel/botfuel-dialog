@@ -3,8 +3,10 @@ const MongoClient = require('mongodb').MongoClient;
 const Brain = require('./brain');
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';
+const logger = require('logtown').getLogger('MongoBrain');
 
 /**
+
  * Class to wrap mongodb database with two models
  */
 class MongoBrain extends Brain {
@@ -13,7 +15,7 @@ class MongoBrain extends Brain {
    * @param {string} botId - bot id
    */
   constructor(botId) {
-    console.log('MongoBrain.constructor', botId);
+    logger.debug('constructor', botId);
     super(botId);
     this.users = null;
   }
@@ -23,7 +25,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async init() {
-    console.log('MongoBrain.init');
+    logger.debug('init');
     this.db = await MongoClient.connect(mongoUri);
     this.users = this.db.collection('users');
   }
@@ -41,7 +43,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async clean() {
-    console.log('MongoBrain.clean');
+    logger.debug('clean');
     return this.users.deleteMany({ botId: this.botId });
   }
 
@@ -50,7 +52,7 @@ class MongoBrain extends Brain {
    * @param {string} userId - user id
    */
   async hasUser(userId) {
-    console.log('MongoBrain.hasUser', userId);
+    logger.debug('hasUser', userId);
     const user = await this.users.findOne({ botId: this.botId, userId });
     return user !== null;
   }
@@ -61,7 +63,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async addUser(userId) {
-    console.log('MongoBrain.addUser', userId);
+    logger.debug('addUser', userId);
     const result = await this.users.insertOne({
       botId: this.botId,
       userId,
@@ -78,7 +80,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async getUser(userId) {
-    console.log('MongoBrain.getUser', userId);
+    logger.debug('getUser', userId);
     return this.users.findOne({ botId: this.botId, userId });
   }
 
@@ -90,7 +92,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async userSet(userId, key, value) {
-    console.log('MongoBrain.userSet', userId, key, value);
+    logger.debug('userSet', userId, key, value);
     const set = {};
     set[key] = value;
     const result = await this.users.findOneAndUpdate(
@@ -108,7 +110,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async userGet(userId, key) {
-    console.log('MongoBrain.userGet', userId, key);
+    logger.debug('userGet', userId, key);
     const select = {};
     select[key] = 1;
     const user = await this.users.findOne({ botId: this.botId, userId }, select);
@@ -123,7 +125,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async userPush(userId, key, value) {
-    console.log('MongoBrain.userPush', userId, key, value);
+    logger.debug('userPush', userId, key, value);
     const push = {};
     push[key] = value;
     const result = await this.users.findOneAndUpdate(
@@ -141,7 +143,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async userShift(userId, key) {
-    console.log('MongoBrain.userShift', userId, key);
+    logger.debug('userShift', userId, key);
     const pop = {};
     pop[key] = -1;
     const result = await this.users.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop });
@@ -155,7 +157,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async userPop(userId, key) {
-    console.log('MongoBrain.userPop', userId, key);
+    logger.debug('userPop', userId, key);
     const pop = {};
     pop[key] = 1;
     const result = await this.users.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop });
@@ -168,7 +170,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async addConversation(userId) {
-    console.log('MongoBrain.addConversation', userId);
+    logger.debug('addConversation', userId);
     const push = { conversations: { createdAt: Date.now() } };
     const result = await this.users.findOneAndUpdate(
       { botId: this.botId, userId },
@@ -184,7 +186,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async getLastConversation(userId) {
-    console.log('MongoBrain.getLastConversation', userId);
+    logger.debug('getLastConversation', userId);
     const result = await this.users.findOne({ botId: this.botId, userId }, { conversations: 1 });
     return _.last(result.conversations);
   }
@@ -197,7 +199,7 @@ class MongoBrain extends Brain {
    * @returns {Promise}
    */
   async conversationSet(userId, key, value) {
-    console.log('MongoBrain.conversationSet', userId, key, value);
+    logger.debug('conversationSet', userId, key, value);
     const lastConversation = await this.getLastConversation(userId);
     const set = {};
     set[`conversations.$.${key}`] = value;

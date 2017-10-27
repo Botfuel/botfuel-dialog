@@ -1,3 +1,5 @@
+const logger = require('logtown').getLogger('Brain');
+
 class Brain {
   /**
    * Constructor
@@ -10,7 +12,7 @@ class Brain {
   }
 
   async init() {
-    console.log('Brain.init');
+    logger.debug('Brain.init');
   }
 
   /**
@@ -19,7 +21,7 @@ class Brain {
    * @returns {Promise.<void>}
    */
   async initUserIfNecessary(id) {
-    // console.log('Brain.initUserIfNecessary', id);
+    logger.debug('initUserIfNecessary', id);
     const userExists = await this.hasUser(id);
     if (!userExists) {
       await this.addUser(id);
@@ -33,10 +35,11 @@ class Brain {
    * @returns {Promise.<void>}
    */
   async initLastConversationIfNecessary(id) {
+    logger.debug('initLastConversationIfNecessary', id);
     const lastConversation = await this.getLastConversation(id);
-    // console.log('Brain.initLastConversationIfNecessary', id, lastConversation);
+    logger.debug('initLastConversationIfNecessary', id, lastConversation);
     if (!this.isLastConversationValid(lastConversation)) {
-      console.log('Brain.initLastConversationIfNecessary: initialize new');
+      logger.debug('initLastConversationIfNecessary: initialize new');
       await this.addConversation(id);
     }
   }
@@ -61,7 +64,7 @@ class Brain {
    * @returns {Promise}
    */
   async conversationGet(userId, key) {
-    // console.log('Brain.conversationGet', userId, key);
+    logger.debug('conversationGet', userId, key);
     const conversation = await this.getLastConversation(userId);
     return conversation[key];
   }
