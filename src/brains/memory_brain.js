@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const logger = require('logtown')('MemoryBrain', { disable: ['debug'] });
+const logger = require('logtown')('MemoryBrain');
 const Brain = require('./brain');
 
 /**

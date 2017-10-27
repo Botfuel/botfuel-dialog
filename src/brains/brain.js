@@ -1,4 +1,4 @@
-const logger = require('logtown')('Brain', { disable: ['debug'] });
+const logger = require('logtown')('Brain');
 
 class Brain {
   /**
