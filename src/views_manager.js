@@ -1,15 +1,16 @@
 const fs = require('fs');
+const logger = require('logtown').getLogger('Corpus');
 
 class ViewsManager {
   constructor(config) {
-    console.log('ViewsManager.constructor', config.path);
+    logger.debug('constructor', config.path);
     this.viewsPath = `${config.path}/src/views`;
     this.botId = config.id;
     this.locale = config.locale;
   }
 
   getPath(name) {
-    console.log('ViewsManager.getPath');
+    logger.debug('getPath');
     const paths = [
       `${this.viewsPath}/${name}_view.${this.locale}.js`,
       `${this.viewsPath}/${name}_view.js`,
@@ -17,9 +18,9 @@ class ViewsManager {
       `${__dirname}/views/${name}_view.js`,
     ];
     for (const path of paths) {
-      console.log('ViewsManager.getPath: test path', path);
+      logger.debug('getPath: test path', path);
       if (fs.existsSync(path)) {
-        console.log('ViewsManager.getPath: existing path', path);
+        logger.debug('getPath: existing path', path);
         return path;
       }
     }
@@ -31,7 +32,7 @@ class ViewsManager {
    * @param {string} name the view name
    */
   resolve(name) {
-    console.log('ViewsManager.resolve', name);
+    logger.debug('resolve', name);
     const path = this.getPath(name);
     if (path) {
       const View = require(path);

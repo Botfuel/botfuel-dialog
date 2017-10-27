@@ -1,3 +1,4 @@
+const logger = require('logtown').getLogger('MessengerAdapter');
 const { PostbackMessage, UserImageMessage, UserTextMessage } = require('../messages');
 const WebAdapter = require('./web_adapter');
 
@@ -13,7 +14,7 @@ class MessengerAdapter extends WebAdapter {
    * @param app
    */
   createRoutes(app) {
-    console.log('MessengerAdapter.createRoutes');
+    logger.debug('createRoutes');
     super.createRoutes(app);
     app.get('/webhook', (req, res) => this.validateWebhook(req, res));
   }
@@ -25,12 +26,12 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise}
    */
   async validateWebhook(req, res) {
-    console.log('MessengerAdapter.validateWebhook');
+    logger.debug('validateWebhook');
     if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === process.env.FB_VERIFY_TOKEN) {
-      console.log('MessengerAdapter.validateWebhook: OK!');
+      logger.debug('validateWebhook: OK!');
       res.status(200).send(req.query['hub.challenge']);
     } else {
-      console.error('MessengerAdapter.validateWebhook: KO!');
+      console.error('validateWebhook: KO!');
       res.sendStatus(403);
     }
   }
@@ -42,12 +43,12 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise}
    */
   async handleMessage(req, res) {
-    console.log('MessengerAdapter.handleMessage');
+    logger.debug('handleMessage');
     const data = req.body;
     if (data.object === 'page') {
       data.entry.forEach((entry) => {
         entry.messaging.forEach(async (event) => {
-          console.log('MessengerAdapter.handleMessage: event', JSON.stringify(event));
+          logger.debug('handleMessage: event', JSON.stringify(event));
           await this.processEvent(event);
         });
       });
@@ -64,7 +65,7 @@ class MessengerAdapter extends WebAdapter {
     const { sender, recipient } = event;
     const userId = sender.id; // messenger user id
     const botId = recipient.id; // page id
-    console.log('MessengerAdapter.processEvent', userId, botId, JSON.stringify(event));
+    logger.debug('processEvent', userId, botId, JSON.stringify(event));
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
     // set userMessage
@@ -89,10 +90,10 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise}
    */
   async send(botMessages) {
-    console.log('MessengerAdapter.send', botMessages);
+    logger.debug('send', botMessages);
     for (const botMessage of botMessages) {
       const message = this.adapt(botMessage);
-      console.log('MessengerAdapter.send: message', message);
+      logger.debug('send: message', message);
       // eslint-disable-next-line no-await-in-loop
       await this.postResponse({
         uri,
@@ -129,7 +130,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   adaptActions(payload) {
-    console.log('MessengerAdapter.adaptActions', payload);
+    logger.debug('adaptActions', payload);
     const text = 'Actions' || payload.options.text; // TODO: fix this
     const buttons = payload.value.map(MessengerAdapter.adaptAction);
     return {
@@ -141,7 +142,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   adaptCards(payload) {
-    console.log('MessengerAdapter.adaptCards', payload);
+    logger.debug('adaptCards', payload);
     const elements = payload.value.map((card) => {
       const buttons = card.buttons.map(MessengerAdapter.adaptAction);
       return Object.assign(card, { buttons });
@@ -155,7 +156,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   adapt(botMessage) {
-    console.log('MessengerAdapter.adapt', botMessage);
+    logger.debug('adapt', botMessage);
     const payload = botMessage.payload;
     switch (botMessage.type) {
       case 'text':
@@ -175,7 +176,7 @@ class MessengerAdapter extends WebAdapter {
 
 
   static adaptAction(action) {
-    console.log('MessengerAdapter.adaptAction', action);
+    logger.debug('adaptAction', action);
     if (action.type === 'postback') {
       return {
         type: 'postback',

@@ -1,8 +1,9 @@
+const logger = require('logtown').getLogger('PromptView');
 const { BotTextMessage } = require('../messages');
 
 class PromptView {
   render(botId, userId, key, parameters) {
-    console.log('PromptView.render', botId, userId, key, parameters);
+    logger.debug('render', botId, userId, key, parameters);
     switch (key) {
       case 'ask':
         return this.renderAsk(botId, userId);

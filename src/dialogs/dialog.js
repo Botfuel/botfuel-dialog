@@ -1,3 +1,4 @@
+const logger = require('logtown').getLogger('Dialog');
 const ViewsManager = require('../views_manager');
 
 /**
@@ -15,7 +16,7 @@ class Dialog {
    * @param {Object} parameters the dialog parameters
    */
   constructor(config, brain, maxComplexity = Number.MAX_SAFE_INTEGER, parameters = {}) {
-    console.log('Dialog.constructor', parameters);
+    logger.debug('constructor', parameters);
     this.config = config;
     this.brain = brain;
     this.parameters = parameters;
@@ -29,12 +30,12 @@ class Dialog {
   }
 
   display(userId, responses, key, parameters) {
-    console.log('Dialog.display', userId, responses, key, parameters);
+    logger.debug('display', userId, responses, key, parameters);
     const botMessages = this
           .viewsManager
           .resolve(this.name)
           .render(this.config.id, userId, key, parameters);
-    console.log('Dialog.display: botMessages', botMessages);
+    logger.debug('display: botMessages', botMessages);
     for (const botMessage of botMessages) {
       responses.push(botMessage.toJson());
     }

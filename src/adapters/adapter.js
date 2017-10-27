@@ -1,20 +1,22 @@
+const logger = require('logtown').getLogger('Adapter');
+
 /**
  * Adapts messages.
  */
 class Adapter {
   constructor(bot, config) {
-    console.log('Adapter.constructor', '<bot>', config);
+    logger.debug('constructor', '<bot>', config);
     this.config = config;
     this.bot = bot;
   }
 
   async play(userMsgs) {
-    console.log('Adapter.play', userMsgs);
+    logger.debug('play', userMsgs);
     throw new Error('Not implemented!');
   }
 
   async run() {
-    console.log('Adapter.run');
+    logger.debug('run');
     throw new Error('Not implemented!');
   }
 
@@ -23,7 +25,7 @@ class Adapter {
    * @returns {Promise}
    */
   async send(botMessages) {
-    console.log('Adapter.send', botMessages);
+    logger.debug('send', botMessages);
     throw new Error('Not implemented!');
   }
 }

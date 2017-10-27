@@ -14,7 +14,6 @@ describe('DialogManager', function () {
   const dm = new DialogManager(brain, testConfig);
 
   beforeEach(async function () {
-    console.log('beforeEach');
     await brain.clean();
     await brain.initUserIfNecessary(TEST_USER);
   });

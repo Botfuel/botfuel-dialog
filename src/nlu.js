@@ -1,6 +1,7 @@
 const fs = require('fs');
 const dir = require('node-dir');
 const QnA = require('botfuel-qna-sdk');
+const logger = require('logtown').getLogger('Nlu');
 const Classifier = require('./classifier');
 const BooleanExtractor = require('./extractors/boolean_extractor');
 const CompositeExtractor = require('./extractors/composite_extractor');
@@ -14,7 +15,7 @@ class Nlu {
    * @param {Object} config the bot's config
    */
   constructor(config) {
-    // console.log('Nlu.constructor');
+    // logger.debug('constructor');
     this.config = config;
     this.extractor = new CompositeExtractor(this.getExtractors(`${config.path}/src/extractors`));
     this.classifier = new Classifier(config);
@@ -46,7 +47,7 @@ class Nlu {
   }
 
   async init() {
-    console.log('Nlu.init');
+    logger.debug('init');
     await this.classifier.init();
   }
 
@@ -56,7 +57,7 @@ class Nlu {
    * @return {Promise} a promise with entities and intents
    */
   async compute(sentence) {
-    console.log('Nlu.compute', sentence);
+    logger.debug('compute', sentence);
     if (this.config.qna === 'before') {
       const result = await this.qnaCompute(sentence);
       if (result.entities[0].value.length !== 0) {
@@ -74,18 +75,18 @@ class Nlu {
   }
 
   async localCompute(sentence) {
-    console.log('Nlu.localCompute', sentence);
+    logger.debug('localCompute', sentence);
     const entities = await this.extractor.compute(sentence);
-    console.log('Nlu.localCompute: entities', entities);
+    logger.debug('localCompute: entities', entities);
     const intents = await this.classifier.compute(sentence, entities);
-    console.log('Nlu.localCompute: intents', intents);
+    logger.debug('localCompute: intents', intents);
     return { intents, entities };
   }
 
   async qnaCompute(sentence) {
-    console.log('Nlu.qnaCompute', sentence);
+    logger.debug('qnaCompute', sentence);
     const qnas = await this.qna.getMatchingQnas({ sentence });
-    console.log('Nlu.compute: qnas', qnas);
+    logger.debug('compute: qnas', qnas);
     const intents = [{ label: 'qnas_dialog', value: 1.0 }];
     const entities = [{ dim: 'qnas', value: qnas }];
     return { intents, entities };

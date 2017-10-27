@@ -1,3 +1,4 @@
+const logger = require('logtown').getLogger('TextDialog');
 const Dialog = require('./dialog');
 
 /**
@@ -16,7 +17,7 @@ class TextDialog extends Dialog {
    * @param {string} userId the user id
    */
   async execute(userId, responses, messageEntities) {
-    console.log('TextDialog.execute', userId, responses, messageEntities);
+    logger.debug('execute', userId, responses, messageEntities);
     this.display(userId, responses, null, messageEntities);
     return Dialog.STATUS_COMPLETED;
   }

@@ -1,13 +1,14 @@
 const Diacritics = require('diacritics');
+const logger = require('logtown').getLogger('Corpus');
 
 class Corpus {
   constructor(matrix) {
-    console.log('Corpus.constructor', matrix);
+    logger.debug('constructor', matrix);
     this.matrix = matrix;
   }
 
   static normalize(sentence, options) {
-    // console.log('Corpus.normalize', sentence, options);
+    // logger.debug('Corpus.normalize', sentence, options);
     if (options === undefined || options.caseSensitive !== true) {
       sentence = sentence.toLowerCase();
     }
@@ -24,12 +25,12 @@ class Corpus {
   }
 
   static matches(key, word, options) {
-    // console.log('Corpus.matches', key, word, options);
+    logger.debug('matches', key, word, options);
     return Corpus.normalize(key, options) === Corpus.normalize(word, options);
   }
 
   getValue(key, options) {
-    // console.log('Corpus.getValue', key, options);
+    logger.debug('getValue', key, options);
     for (const row of this.matrix) {
       for (const word of row) {
         if (Corpus.matches(key, word, options)) {

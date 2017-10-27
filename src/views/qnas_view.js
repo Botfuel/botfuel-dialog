@@ -1,8 +1,9 @@
+const logger = require('logtown').getLogger('QnasView');
 const { ActionsMessage, BotTextMessage, Postback } = require('../messages');
 
 class QnasView {
   render(botId, userId, key, parameters) {
-    console.log('QnasView.render', botId, userId, key, parameters);
+    logger.debug('render', botId, userId, key, parameters);
     switch (key) {
       case 'answer':
         return this.renderAnswer(botId, userId, parameters.answer);
@@ -14,14 +15,14 @@ class QnasView {
   }
 
   renderAnswer(botId, userId, answer) {
-    console.log('QnasView.renderAnswer', botId, userId, answer);
+    logger.debug('renderAnswer', botId, userId, answer);
     return [
       new BotTextMessage(botId, userId, answer),
     ];
   }
 
   renderQuestions(botId, userId, qnas) {
-    console.log('QnasView.renderQuestions', botId, userId, qnas);
+    logger.debug('renderQuestions', botId, userId, qnas);
     const postbacks = qnas.map(qna => new Postback(
       qna.questions[0],
       'qnas_dialog',

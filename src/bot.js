@@ -16,7 +16,7 @@ const logger = Logger.getLogger('Bot');
  */
 class Bot {
   constructor(config) {
-    this.initLogger(config);
+    this.configureLogger();
     logger.debug('constructor', config);
     switch (config.adapter) {
       case 'botfuel':
@@ -37,6 +37,19 @@ class Bot {
     this.dm = new DialogManager(this.brain, config);
   }
 
+  configureLogger(config) {
+    const paths = [
+      `${config.path}/src/wrappers/${config.loggerWrapper}.js`,
+      `${__dirname}/wrappers/${config.loggerWrapper}.js`,
+    ];
+    for (const path of paths) {
+      if (fs.existsSync(path)) {
+        Logger.addWrapper(require(path));
+        break;
+      }
+    }
+  }
+
   async run() {
     logger.debug('run');
     await this.init();
@@ -50,22 +63,8 @@ class Bot {
   }
 
   async init() {
-    logger.info('init');
     await this.brain.init();
     await this.nlu.init();
-  }
-
-  initLogger(config) {
-    const paths = [
-      `${config.path}/src/wrappers/${config.loggerWrapper}.js`,
-      `${__dirname}/wrappers/${config.loggerWrapper}.js`,
-    ];
-    for (const path of paths) {
-      if (fs.existsSync(path)) {
-        Logger.addWrapper(require(path));
-        break;
-      }
-    }
   }
 
   /**
@@ -78,7 +77,7 @@ class Bot {
       logger.debug('sendResponse: responses', responses);
       return this.adapter.send(responses);
     } catch (err) {
-      logger.debug('sendResponse', err);
+      logger.error('sendResponse', err);
       throw err;
     }
   }

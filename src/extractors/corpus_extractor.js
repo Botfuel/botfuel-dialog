@@ -1,3 +1,4 @@
+const logger = require('logtown').getLogger('CorpusExtractor');
 const Corpus = require('../corpora/corpus');
 
 /**
@@ -17,13 +18,13 @@ class CorpusExtractor {
    * @param {string} sentence the sentence
    */
   async compute(sentence) {
-    console.log('CorpusExtractor.compute', sentence);
+    logger.debug('compute', sentence);
     const normalizedSentence = Corpus.normalize(sentence, this.options);
     return this.computeEntities(normalizedSentence, this.corpus.getWords(), []);
   }
 
   getRemainder(sentence, word) {
-    console.log('CorpusExtractor.getRemainder', sentence, word);
+    logger.debug('getRemainder', sentence, word);
     const startIndex = sentence.indexOf(word);
     if (startIndex < 0) {
       return null;
@@ -47,7 +48,7 @@ class CorpusExtractor {
   }
 
   computeEntities(sentence, words, entities) {
-    console.log('CorpusExtractor.computeEntities', sentence, words, entities);
+    logger.debug('computeEntities', sentence, words, entities);
     if (sentence.length > 0) {
       for (const word of words) {
         const normalizedWord = Corpus.normalize(word, this.options);
