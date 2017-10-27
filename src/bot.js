@@ -39,12 +39,18 @@ class Bot {
 
   configureLogger(config) {
     const paths = [
-      `${config.path}/src/wrappers/${config.loggerWrapper}.js`,
-      `${__dirname}/wrappers/${config.loggerWrapper}.js`,
+      `${config.path}/src/wrappers/${config.logger}.js`,
+      `${__dirname}/wrappers/${config.logger}.js`,
     ];
     for (const path of paths) {
       if (fs.existsSync(path)) {
-        Logger.addWrapper(require(path));
+        const loggerWrapper = require(path);
+        if (loggerWrapper.wrapper) {
+          Logger.addWrapper(loggerWrapper.wrapper);
+        }
+        if (loggerWrapper.config) {
+          Logger.configure(loggerWrapper.config);
+        }
         break;
       }
     }
