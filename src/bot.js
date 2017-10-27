@@ -9,13 +9,15 @@ const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell_adapter');
 const TestAdapter = require('./adapters/test_adapter');
 
+const logger = Logger.getLogger('Bot');
+
 /**
  * Bot main class.
  */
 class Bot {
   constructor(config) {
-    console.log('Bot.constructor', config);
     this.initLogger(config);
+    logger.debug('constructor', config);
     switch (config.adapter) {
       case 'botfuel':
         this.adapter = new BotfuelAdapter(this, config);
@@ -36,33 +38,31 @@ class Bot {
   }
 
   async run() {
-    console.log('Bot.run');
+    logger.debug('run');
     await this.init();
     return this.adapter.run();
   }
 
   async play(userMessages) {
-    console.log('Bot.play', userMessages);
+    logger.debug('play', userMessages);
     await this.init();
     return this.adapter.play(userMessages);
   }
 
   async init() {
+    logger.info('init');
     await this.brain.init();
     await this.nlu.init();
   }
 
   initLogger(config) {
-    console.log('Bot.initLogger');
     const paths = [
-      `${config.path}/src/wrappers/${config.logger}.js`,
-      `${__dirname}/wrappers/${config.logger}.js`,
+      `${config.path}/src/wrappers/${config.loggerWrapper}.js`,
+      `${__dirname}/wrappers/${config.loggerWrapper}.js`,
     ];
     for (const path of paths) {
       if (fs.existsSync(path)) {
-        console.log('Bot.initLogger: existing logger wrapper', path);
         Logger.addWrapper(require(path));
-        console.log('Bot.initLogger: logger wrapper initialized');
         break;
       }
     }
@@ -72,19 +72,19 @@ class Bot {
    * Responds.
    */
   async sendResponse(userMessage) {
-    console.log('Bot.sendResponse', userMessage);
+    logger.debug('sendResponse', userMessage);
     try {
       const responses = await this.getResponses(userMessage);
-      console.log('Bot.sendResponse: responses', responses);
+      logger.debug('sendResponse: responses', responses);
       return this.adapter.send(responses);
     } catch (err) {
-      console.error('Bot.sendResponse', err);
+      logger.debug('sendResponse', err);
       throw err;
     }
   }
 
   async getResponses(userMessage) {
-    console.log('Bot.getResponses', userMessage);
+    logger.debug('getResponses', userMessage);
     switch (userMessage.type) {
       case 'postback':
         return this.getResponsesWhenPostback(userMessage);
@@ -97,14 +97,14 @@ class Bot {
   }
 
   async getResponsesWhenText(userMessage) {
-    console.log('Bot.getResponsesWhenText', userMessage);
+    logger.debug('getResponsesWhenText', userMessage);
     const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
-    console.log('Bot.getResponsesWhenText: intents, entities', intents, entities);
+    logger.debug('getResponsesWhenText: intents, entities', intents, entities);
     return this.dm.execute(userMessage.user, intents, entities);
   }
 
   async getResponsesWhenPostback(userMessage) {
-    console.log('Bot.getResponsesWhenPostback', userMessage);
+    logger.debug('getResponsesWhenPostback', userMessage);
     return this.dm.executeDialogs(
       userMessage.user,
       [{
@@ -116,7 +116,7 @@ class Bot {
   }
 
   async getResponsesWhenDownload(userMessage) { // TODO: rename
-    console.log('Bot.getResponsesWhenDownload', userMessage);
+    logger.debug('getResponsesWhenDownload', userMessage);
     return this.dm.executeDialogs(
       userMessage.user,
       [{
