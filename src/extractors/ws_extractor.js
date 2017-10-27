@@ -1,6 +1,5 @@
 const _ = require('underscore');
 const nlp = require('botfuel-nlp-sdk');
-
 const logger = require('logtown').getLogger('Corpus');
 
 /**

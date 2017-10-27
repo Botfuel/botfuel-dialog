@@ -1,3 +1,4 @@
+const Logger = require('logtown');
 const BotfuelAdapter = require('./adapters/botfuel_adapter');
 const DialogManager = require('./dialog_manager');
 const Dialog = require('./dialogs/dialog');
@@ -6,7 +7,6 @@ const MemoryBrain = require('./brains/memory_brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell_adapter');
 const TestAdapter = require('./adapters/test_adapter');
-const Logger = require('logtown');
 
 const logger = Logger.getLogger('Bot');
 
@@ -39,9 +39,6 @@ class Bot {
   configureLogger() {
     // TODO: create a botfuel wrapper
     // TODO: check config file
-    Logger.addWrapper(function (id, level, stats, ...rest) {
-      console.log(`${level} [${id}]`, ...rest);
-    });
   }
 
   async run() {

@@ -1,8 +1,8 @@
 const Fs = require('fs');
 const Natural = require('natural');
+const logger = require('logtown').getLogger('Corpus');
 
 const INTENT_SUFFIX = '.intent';
-const logger = require('logtown').getLogger('Corpus');
 
 class Classifier {
   /**

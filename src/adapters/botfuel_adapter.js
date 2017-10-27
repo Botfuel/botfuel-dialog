@@ -1,5 +1,5 @@
-const WebAdapter = require('./web_adapter');
 const logger = require('logtown').getLogger('BotfuelAdapter');
+const WebAdapter = require('./web_adapter');
 
 class BotfuelAdapter extends WebAdapter {
   /**

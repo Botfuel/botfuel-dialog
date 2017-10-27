@@ -1,6 +1,5 @@
-const { BotTextMessage } = require('../messages');
-
 const logger = require('logtown').getLogger('PromptView');
+const { BotTextMessage } = require('../messages');
 
 class PromptView {
   render(botId, userId, key, parameters) {

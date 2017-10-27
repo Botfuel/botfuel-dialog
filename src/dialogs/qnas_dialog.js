@@ -1,6 +1,5 @@
-const Dialog = require('./dialog');
-
 const logger = require('logtown').getLogger('QnasDialog');
+const Dialog = require('./dialog');
 
 class QnasDialog extends Dialog {
   constructor(config, brain) {

@@ -1,7 +1,6 @@
 const _ = require('lodash');
-const Brain = require('./brain');
-
 const logger = require('logtown').getLogger('MemoryBrain');
+const Brain = require('./brain');
 
 /**
  * Class to wrap memory brains

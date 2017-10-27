@@ -1,7 +1,6 @@
 const fs = require('fs');
-const Dialog = require('./dialogs/dialog');
-
 const logger = require('logtown').getLogger('DialogManager');
+const Dialog = require('./dialogs/dialog');
 
 /**
 

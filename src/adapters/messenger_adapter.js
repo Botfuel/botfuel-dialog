@@ -1,7 +1,6 @@
+const logger = require('logtown').getLogger('MessengerAdapter');
 const { PostbackMessage, UserImageMessage, UserTextMessage } = require('../messages');
 const WebAdapter = require('./web_adapter');
-
-const logger = require('logtown').getLogger('MessengerAdapter');
 
 const uri = 'https://graph.facebook.com/v2.6/me/messages';
 const qs = { access_token: process.env.FB_PAGE_ACCESS_TOKEN || '' };

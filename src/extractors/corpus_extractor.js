@@ -1,6 +1,5 @@
-const Corpus = require('../corpora/corpus');
-
 const logger = require('logtown').getLogger('CorpusExtractor');
+const Corpus = require('../corpora/corpus');
 
 /**
  * Class for extracting entities.

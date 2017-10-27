@@ -1,6 +1,5 @@
-const Dialog = require('./dialog');
-
 const logger = require('logtown').getLogger('PromptDialog');
+const Dialog = require('./dialog');
 
 /**
  * PromptDialog class.

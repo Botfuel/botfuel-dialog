@@ -1,6 +1,5 @@
-const Adapter = require('./adapter');
-
 const logger = require('logtown').getLogger('TestAdapter');
+const Adapter = require('./adapter');
 
 /**
  * Test Adapter.

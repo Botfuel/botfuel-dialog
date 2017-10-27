@@ -1,11 +1,10 @@
 const fs = require('fs');
 const dir = require('node-dir');
 const QnA = require('botfuel-qna-sdk');
+const logger = require('logtown').getLogger('Nlu');
 const Classifier = require('./classifier');
 const BooleanExtractor = require('./extractors/boolean_extractor');
 const CompositeExtractor = require('./extractors/composite_extractor');
-
-const logger = require('logtown').getLogger('Nlu');
 
 /**
  * A nlu module (could be replaced by an external one).

@@ -1,5 +1,4 @@
 const Diacritics = require('diacritics');
-
 const logger = require('logtown').getLogger('Corpus');
 
 class Corpus {

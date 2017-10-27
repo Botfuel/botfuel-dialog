@@ -1,9 +1,8 @@
 const express = require('express');
 const rp = require('request-promise');
 const bodyParser = require('body-parser');
-const Adapter = require('./adapter');
-
 const logger = require('logtown').getLogger('WebAdapter');
+const Adapter = require('./adapter');
 
 class WebAdapter extends Adapter {
   /**

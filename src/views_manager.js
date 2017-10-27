@@ -1,5 +1,4 @@
 const fs = require('fs');
-
 const logger = require('logtown').getLogger('Corpus');
 
 class ViewsManager {

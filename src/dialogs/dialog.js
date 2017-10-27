@@ -1,6 +1,5 @@
-const ViewsManager = require('../views_manager');
-
 const logger = require('logtown').getLogger('Dialog');
+const ViewsManager = require('../views_manager');
 
 /**
  * Generates messages.
