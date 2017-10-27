@@ -1,11 +1,13 @@
 const Adapter = require('./adapter');
 
+const logger = require('logtown').getLogger('TestAdapter');
+
 /**
  * Test Adapter.
  */
 class TestAdapter extends Adapter {
   constructor(bot, config) {
-    console.log('TestAdapter.constructor');
+    logger.debug('constructor');
     super(bot, config);
     this.log = [];
     this.userId = 'USER_TEST';
@@ -14,7 +16,7 @@ class TestAdapter extends Adapter {
   async play(userMessages) {
     await this.bot.brain.initUserIfNecessary(this.userId);
     for (const userMessage of userMessages.map(msg => msg.toJson())) {
-      console.log('TestAdapter.play', userMessage);
+      logger.debug('play', userMessage);
       this.log.push(userMessage);
       // eslint-disable-next-line no-await-in-loop
       await this.bot.sendResponse(userMessage);
@@ -22,7 +24,7 @@ class TestAdapter extends Adapter {
   }
 
   async send(botMessages) {
-    console.log('TestAdapter.send', botMessages);
+    logger.debug('send', botMessages);
     for (const botMessage of botMessages) {
       this.log.push(botMessage);
     }

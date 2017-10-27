@@ -1,3 +1,5 @@
+const logger = require('logtown').getLogger('CompositeExtractor');
+
 /**
  * Class for extracting entities.
  */
@@ -6,7 +8,7 @@ class CompositeExtractor {
    * Constructor.
    */
   constructor(extractors) {
-    console.log('CompositeEntity.constructor', extractors);
+    logger.debug('constructor', extractors);
     this.extractors = extractors;
   }
 
@@ -15,7 +17,7 @@ class CompositeExtractor {
    * @param {string} sentence the sentence
    */
   async compute(sentence) {
-    console.log('CompositeExtractor.compute', sentence);
+    logger.debug('compute', sentence);
     let entities = [];
     for (const extractor of this.extractors) { // TODO: in parallel
       // eslint-disable-next-line no-await-in-loop

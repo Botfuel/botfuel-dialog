@@ -2,6 +2,8 @@ const inquirer = require('inquirer');
 const { BotTextMessage, UserTextMessage } = require('../messages');
 const Adapter = require('./adapter');
 
+const logger = require('logtown').getLogger('ShellAdapter');
+
 /**
  * Shell Adapter.
  */
@@ -12,12 +14,12 @@ class ShellAdapter extends Adapter {
   }
 
   async run() {
-    console.log('ShellAdapter.run');
+    logger.debug('run');
     await this.bot.brain.initUserIfNecessary(this.userId);
     const botMessage = new BotTextMessage(this.config.id, this.userId, 'onboarding').toJson();
     let userInput = await this.send([botMessage]);
     for (;;) {
-      console.log('ShellAdapter.run', userInput);
+      logger.debug('run: userInput', userInput);
       const userMessage = new UserTextMessage(
         this.config.id,
         this.userId,
@@ -29,7 +31,7 @@ class ShellAdapter extends Adapter {
   }
 
   async send(botMessages) {
-    console.log('ShellAdapter.send', botMessages);
+    logger.debug('send', botMessages);
     // TODO: adapt to msg type
     const message = botMessages.map(botMessage => botMessage.payload.value).join(' ');
     // type text

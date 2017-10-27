@@ -1,4 +1,5 @@
 const WebAdapter = require('./web_adapter');
+const logger = require('logtown').getLogger('BotfuelAdapter');
 
 class BotfuelAdapter extends WebAdapter {
   /**
@@ -8,10 +9,10 @@ class BotfuelAdapter extends WebAdapter {
    * @returns {Promise}
    */
   async handleMessage(req, res) {
-    console.log('BotfuelAdapter.handleMessage');
+    logger.debug('handleMessage');
     res.sendStatus(200);
     const userMessage = req.body; // the message is already in the expected format
-    console.log('BotfuelAdapter.handleMessage: userMessage', userMessage);
+    logger.debug('handleMessage: userMessage', userMessage);
     const userId = userMessage.user;
     await this.bot.brain.initUserIfNecessary(userId);
     await this.bot.sendResponse(userMessage);
@@ -30,7 +31,7 @@ class BotfuelAdapter extends WebAdapter {
    * @returns {Promise}
    */
   async send(botMessages) {
-    console.log('BotfuelAdapter.sendText', botMessages);
+    logger.debug('sendText', botMessages);
     for (const botMessage of botMessages) {
       // eslint-disable-next-line no-await-in-loop
       await this.postResponse({ uri: this.getUrl(botMessage), body: botMessage });

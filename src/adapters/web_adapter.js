@@ -3,18 +3,20 @@ const rp = require('request-promise');
 const bodyParser = require('body-parser');
 const Adapter = require('./adapter');
 
+const logger = require('logtown').getLogger('WebAdapter');
+
 class WebAdapter extends Adapter {
   /**
    * Run the adapter
    * @returns {Promise.<void>}
    */
   async run() {
-    console.log('WebAdapter.run');
+    logger.debug('run');
     const app = express();
     app.use(bodyParser.json());
     this.createRoutes(app);
     const port = process.env.PORT || process.env.BOTFUEL_ADAPTER_PORT || 5000;
-    app.listen(port, () => console.log('WebAdapter.run: listening on port', port));
+    app.listen(port, () => logger.debug('run: listening on port', port));
   }
 
   /**
@@ -31,17 +33,17 @@ class WebAdapter extends Adapter {
    * @returns {Promise}
    */
   async postResponse(requestOptions) {
-    console.log('WebAdapter.sendResponse', requestOptions);
+    logger.debug('sendResponse', requestOptions);
     const options = Object.assign({ method: 'POST', json: true }, requestOptions);
     try {
       const response = await rp(options);
       if (response.statusCode !== 200) { // not handled on messenger
-        console.error('WebAdapter.sendResponse: KO', response);
+        logger.error('sendResponse: KO', response);
       } else {
-        console.log('WebAdapter.sendResponse: OK');
+        logger.debug('sendResponse: OK');
       }
     } catch (error) {
-      console.error('WebAdapter.sendResponse: catch KO', error.message || error.error || error);
+      logger.error('sendResponse: catch KO', error.message || error.error || error);
     }
   }
 }
