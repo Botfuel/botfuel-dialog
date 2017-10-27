@@ -87,14 +87,12 @@ class DialogManager {
         }
         newDialogs = newDialogs.slice(0, -1);
       }
-    } else { // no intent detected
-      if (dialogs.length === 0) {
-        const label = await this.brain.userGet(userId, 'lastDialog') || 'default_dialog';
-        console.log('DialogManager.updateDialogs: newDialog', label);
-        dialogs.push({ label, entities, status: Dialog.STATUS_READY });
-      } else {
-        dialogs[dialogs.length - 1].entities = entities;
-      }
+    } else if (dialogs.length === 0) { // no intent detected
+      const label = await this.brain.userGet(userId, 'lastDialog') || 'default_dialog';
+      console.log('DialogManager.updateDialogs: newDialog', label);
+      dialogs.push({ label, entities, status: Dialog.STATUS_READY });
+    } else {
+      dialogs[dialogs.length - 1].entities = entities;
     }
   }
 
@@ -116,6 +114,7 @@ class DialogManager {
         .execute(userId, responses, dialog.entities || [], dialog.status);
       if (dialog.status === Dialog.STATUS_DISCARDED) {
         dialogs = dialogs.slice(0, -1);
+        // eslint-disable-next-line no-await-in-loop
         await this.brain.userSet(userId, 'lastDialog', null);
       } else if (dialog.status === Dialog.STATUS_COMPLETED) {
         dialogs = dialogs.slice(0, -1);

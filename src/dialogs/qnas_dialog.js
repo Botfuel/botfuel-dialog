@@ -1,4 +1,3 @@
-const { ActionsMessage, Postback } = require('../messages');
 const Dialog = require('./dialog');
 
 class QnasDialog extends Dialog {

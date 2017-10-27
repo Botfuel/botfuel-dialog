@@ -1,4 +1,3 @@
-const { BotTextMessage } = require('../messages');
 const TextView = require('./text_view');
 
 class DefaultView extends TextView {

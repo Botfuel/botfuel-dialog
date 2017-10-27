@@ -10,8 +10,10 @@ class PromptView {
         return this.renderConfirm(botId, userId);
       case 'discard':
         return this.renderDiscard(botId, userId);
-      case 'entities':
-      return this.renderEntities(botId, userId, parameters.messageEntities, parameters.missingEntities);
+      case 'entities': {
+        const { messageEntities, missingEntities } = parameters;
+        return this.renderEntities(botId, userId, messageEntities, missingEntities);
+      }
       default:
         return null;
     }

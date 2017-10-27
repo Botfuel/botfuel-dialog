@@ -92,7 +92,7 @@ class Bot {
         label: userMessage.payload.value.dialog,
         status: Dialog.STATUS_READY,
         entities: userMessage.payload.value.entities,
-      }]
+      }],
     );
   }
 
@@ -104,7 +104,7 @@ class Bot {
         label: 'image',
         status: Dialog.STATUS_READY,
         entities: [{ url: userMessage.payload.value.url }],
-      }]
+      }],
     );
   }
 }

@@ -1,5 +1,4 @@
 const fs = require('fs');
-const _ = require('lodash');
 
 class ViewsManager {
   constructor(config) {
