@@ -1,6 +1,6 @@
 const Fs = require('fs');
 const Natural = require('natural');
-const logger = require('logtown')('Corpus');
+const logger = require('logtown')('Classifier');
 
 const INTENT_SUFFIX = '.intent';
 

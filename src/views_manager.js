@@ -1,5 +1,5 @@
 const fs = require('fs');
-const logger = require('logtown')('Corpus');
+const logger = require('logtown')('ViewsManager');
 
 class ViewsManager {
   constructor(config) {

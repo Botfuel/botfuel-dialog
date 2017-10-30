@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const nlp = require('botfuel-nlp-sdk');
-const logger = require('logtown')('Corpus');
+const logger = require('logtown')('WsExtractor');
 
 /**
  * Class for extracting entities.
