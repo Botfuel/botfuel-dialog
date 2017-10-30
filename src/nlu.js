@@ -7,13 +7,12 @@ const BooleanExtractor = require('./extractors/boolean_extractor');
 const CompositeExtractor = require('./extractors/composite_extractor');
 
 /**
- * A nlu module (could be replaced by an external one).
+ * Nlu
+ * @class
+ * @classdesc A nlu module (could be replaced by an external one).
+ * @param {object} config - the bot's config
  */
 class Nlu {
-  /**
-   * Constructor.
-   * @param {Object} config the bot's config
-   */
   constructor(config) {
     // logger.debug('constructor');
     this.config = config;
@@ -27,6 +26,11 @@ class Nlu {
     }
   }
 
+  /**
+   * Get extractor files
+   * @param {string} path - extractors path
+   * @returns {Array.<string>} - extractor files
+   */
   getExtractorFiles(path) {
     let files = [];
     if (fs.existsSync(path)) {
@@ -35,6 +39,11 @@ class Nlu {
     return files.filter(file => file.match(/^.*.js$/));
   }
 
+  /**
+   * Get extractors
+   * @param {string} path - extractors path
+   * @returns {Array.<*>} - extractors instances
+   */
   getExtractors(path) {
     // user extractors
     const extractors = this.getExtractorFiles(path).map((file) => {
@@ -46,6 +55,10 @@ class Nlu {
     return extractors;
   }
 
+  /**
+   * Initialize Nlu
+   * @returns {Promise.<void>}
+   */
   async init() {
     logger.debug('init');
     await this.classifier.init();
@@ -53,7 +66,7 @@ class Nlu {
 
   /**
    * Classifies a sentence.
-   * @param {string} sentence the sentence
+   * @param {string} sentence - the sentence
    * @return {Promise} a promise with entities and intents
    */
   async compute(sentence) {
@@ -74,6 +87,11 @@ class Nlu {
     return this.localCompute(sentence);
   }
 
+  /**
+   * Compute local bot intents and entities
+   * @param sentence - the user sentence
+   * @returns {Promise.<{intents: *, entities: *}>}
+   */
   async localCompute(sentence) {
     logger.debug('localCompute', sentence);
     const entities = await this.extractor.compute(sentence);
@@ -83,6 +101,11 @@ class Nlu {
     return { intents, entities };
   }
 
+  /**
+   * Compute qnas intents and entities
+   * @param sentence - the user sentence
+   * @returns {Promise.<{intents: [null], entities: [null]}>}
+   */
   async qnaCompute(sentence) {
     logger.debug('qnaCompute', sentence);
     const qnas = await this.qna.getMatchingQnas({ sentence });
