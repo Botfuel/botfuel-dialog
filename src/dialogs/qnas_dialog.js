@@ -9,11 +9,12 @@ class QnasDialog extends Dialog {
   /**
    * Executes.
    * @param {string} userId the user id
-   * @param {} responses
+   * @param {Object[]} responses
    * @param {Object} messageEntities
    */
   async execute(userId, responses, messageEntities) {
     logger.debug('execute', userId, responses, messageEntities);
+    // @TODO add messageEntities validation here to prevent undefined messageEntities[0]
     const qnas = messageEntities[0].value;
     logger.debug('execute: qnas', qnas);
     if (qnas.length === 1) {
