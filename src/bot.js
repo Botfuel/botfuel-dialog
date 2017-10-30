@@ -12,10 +12,9 @@ const TestAdapter = require('./adapters/test_adapter');
 const logger = Logger.getLogger('Bot');
 
 /**
- * Bot main class.
- *
+ * Bot main class
  * @class
- * @param {object} config - the bot config
+ * @param {object} config - the bot's config
  */
 class Bot {
   constructor(config) {
@@ -41,9 +40,8 @@ class Bot {
   }
 
   /**
-   * Configure bot logger.
-   *
-   * @param {object} config - the bot config
+   * Configure bot logger
+   * @param {object} config - the bot's config
    */
   configureLogger(config) {
     const paths = [
@@ -66,7 +64,6 @@ class Bot {
 
   /**
    * Run the bot.
-   *
    * @async
    * @returns {Promise}
    */
@@ -78,7 +75,6 @@ class Bot {
 
   /**
    * Play user messages
-   *
    * @async
    * @param {object[]} userMessages - user messages
    * @returns {Promise}
@@ -91,7 +87,6 @@ class Bot {
 
   /**
    * Initialize bot modules
-   *
    * @async
    * @returns {Promise.<void>}
    */
@@ -102,7 +97,6 @@ class Bot {
 
   /**
    * Send bot responses to user
-   *
    * @async
    * @param {object} userMessage - user message
    * @returns {Promise}
@@ -121,7 +115,6 @@ class Bot {
 
   /**
    * Get responses based on user message type
-   *
    * @async
    * @param {object} userMessage - user message
    * @returns {Promise}
@@ -141,7 +134,6 @@ class Bot {
 
   /**
    * Get responses for a given user text message
-   *
    * @async
    * @param {object} userMessage - user message
    * @returns {Promise}
@@ -155,7 +147,6 @@ class Bot {
 
   /**
    * Get responses for a given user postback message
-   *
    * @async
    * @param {object} userMessage - user message
    * @returns {Promise}
@@ -174,7 +165,6 @@ class Bot {
 
   /**
    * Get responses for a given user image message
-   *
    * @async
    * @param {object} userMessage - user message
    * @returns {Promise}
