@@ -6,7 +6,7 @@ const uri = 'https://graph.facebook.com/v2.6/me/messages';
 const qs = { access_token: process.env.FB_PAGE_ACCESS_TOKEN || '' };
 
 /**
- * BotfuelAdapter
+ * MessengerAdapter
  * @class
  * @classdesc Messenger adapter
  * @extends WebAdapter
