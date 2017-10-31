@@ -20,7 +20,7 @@ class DialogManager {
   /**
    * Get dialog path
    * @param {string} label - the dialog's label
-   * @returns {string/null} - the dialog path if found or null
+   * @returns {string|null} - the dialog path if found or null
    */
   getDialogPath(label) {
     logger.debug('getDialogPath', label);

@@ -90,7 +90,7 @@ class Nlu {
   /**
    * Compute local bot intents and entities
    * @param sentence - the user sentence
-   * @returns {Promise.<{intents: *, entities: *}>}
+   * @returns {Promise.<object>}
    */
   async localCompute(sentence) {
     logger.debug('localCompute', sentence);
@@ -104,7 +104,7 @@ class Nlu {
   /**
    * Compute qnas intents and entities
    * @param sentence - the user sentence
-   * @returns {Promise.<{intents: [null], entities: [null]}>}
+   * @returns {Promise.<object>}
    */
   async qnaCompute(sentence) {
     logger.debug('qnaCompute', sentence);
