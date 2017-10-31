@@ -21,7 +21,7 @@ describe('DialogManager', function () {
   it('when given a label, it should return the correct path', function () {
     expect(dm.getDialogPath('test_dialog'))
       .to
-      .eql(`${__dirname}/src/controllers/dialogs/test_dialog`);
+      .eql(`${__dirname}/src/dialogs/test_dialog`);
   });
 
   it('when given an unknown label, it should return null', function () {
