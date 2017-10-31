@@ -1,53 +1,60 @@
 const logger = require('logtown')('Brain');
 
+/**
+ * Brain
+ * @class
+ * @classdesc brain let the bot to store users and conversations data
+ * @param {string|number} botId - the bot id
+ */
 class Brain {
-  /**
-   * Constructor
-   * @param {string} botId - bot id
-   */
   constructor(botId) {
     this.botId = botId;
     // TODO: get from config or default value below
     this.dayInMs = 86400000; // One day in milliseconds
   }
 
+  /**
+   * Initialize the brain
+   * @async
+   * @return {Promise.<void>}
+   */
   async init() {
     logger.debug('Brain.init');
   }
 
   /**
    * Add user if not exists
-   * @param id
-   * @returns {Promise.<void>}
+   * @async
+   * @param {string} userId - the user id
    */
-  async initUserIfNecessary(id) {
-    logger.debug('initUserIfNecessary', id);
-    const userExists = await this.hasUser(id);
+  async initUserIfNecessary(userId) {
+    logger.debug('initUserIfNecessary', userId);
+    const userExists = await this.hasUser(userId);
     if (!userExists) {
-      await this.addUser(id);
+      await this.addUser(userId);
     }
-    await this.initLastConversationIfNecessary(id);
+    await this.initLastConversationIfNecessary(userId);
   }
 
   /**
    * Add conversation to user if necessary
-   * @param id
-   * @returns {Promise.<void>}
+   * @async
+   * @param {string} userId - the user id
    */
-  async initLastConversationIfNecessary(id) {
-    logger.debug('initLastConversationIfNecessary', id);
-    const lastConversation = await this.getLastConversation(id);
-    logger.debug('initLastConversationIfNecessary', id, lastConversation);
+  async initLastConversationIfNecessary(userId) {
+    logger.debug('initLastConversationIfNecessary', userId);
+    const lastConversation = await this.getLastConversation(userId);
+    logger.debug('initLastConversationIfNecessary', userId, lastConversation);
     if (!this.isLastConversationValid(lastConversation)) {
       logger.debug('initLastConversationIfNecessary: initialize new');
-      await this.addConversation(id);
+      await this.addConversation(userId);
     }
   }
 
   /**
    * Validate user last conversation
-   * @param conversation
-   * @returns {boolean}
+   * @param {object} conversation - the conversation to validate
+   * @return {boolean}
    */
   isLastConversationValid(conversation) {
     if (!conversation) {
@@ -58,7 +65,8 @@ class Brain {
   }
 
   /**
-   * Get last conversation key value
+   * Get last conversation value for a given key
+   * @async
    * @param {string} userId - user id
    * @param {string} key - last conversation key
    * @returns {Promise}

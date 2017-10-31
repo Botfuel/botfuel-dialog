@@ -3,13 +3,13 @@ const logger = require('logtown')('MemoryBrain');
 const Brain = require('./brain');
 
 /**
- * Class to wrap memory brains
+ * MemoryBrain
+ * @class
+ * @classdesc wrap in memory brain
+ * @extends Brain
+ * @param {string|number} botId - the bot id
  */
 class MemoryBrain extends Brain {
-  /**
-   * Constructor
-   * @param {string} botId - bot id
-   */
   constructor(botId) {
     logger.debug('constructor', botId);
     super(botId);
@@ -18,7 +18,7 @@ class MemoryBrain extends Brain {
 
   /**
    * Clean the brain
-   * @returns {Promise}
+   * @async
    */
   async clean() {
     logger.debug('clean');
@@ -27,7 +27,9 @@ class MemoryBrain extends Brain {
 
   /**
    * Check if brain has user for a given userId
+   * @async
    * @param {string} userId - user id
+   * @return {boolean} the user exists
    */
   async hasUser(userId) {
     logger.debug('hasUser', userId);
@@ -36,8 +38,9 @@ class MemoryBrain extends Brain {
 
   /**
    * Add an user
+   * @async
    * @param {string} userId - user id
-   * @returns {Promise}
+   * @return {Promise.<object>} the new user
    */
   async addUser(userId) {
     logger.debug('addUser', userId);
@@ -57,8 +60,9 @@ class MemoryBrain extends Brain {
 
   /**
    * Get an user
+   * @async
    * @param {string} userId - user id
-   * @returns {Promise}
+   * @return {Promise.<object>} the user
    */
   async getUser(userId) {
     logger.debug('getUser', userId);
@@ -69,11 +73,12 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Set user key
+   * Set user key with the value
+   * @async
    * @param {string} userId - user id
    * @param {string} key - user key
    * @param {*} value - key value
-   * @returns {Promise}
+   * @return {Promise.<object>} the updated user
    */
   async userSet(userId, key, value) {
     logger.debug('userSet', userId, key, value);
@@ -84,9 +89,10 @@ class MemoryBrain extends Brain {
 
   /**
    * Get user key
+   * @async
    * @param {string} userId - user id
    * @param {string} key - user key
-   * @returns {Promise}
+   * @return {Promise.<*>} the user key value
    */
   async userGet(userId, key) {
     logger.debug('userGet', userId, key);
@@ -96,10 +102,11 @@ class MemoryBrain extends Brain {
 
   /**
    * Push value to user key array
+   * @async
    * @param {string} userId - user id
    * @param {string} key - user array key
    * @param {Object} value - Object value
-   * @returns {Promise}
+   * @return {Promise.<object>} the user
    */
   async userPush(userId, key, value) {
     logger.debug('userPush', userId, key, value);
@@ -117,9 +124,10 @@ class MemoryBrain extends Brain {
 
   /**
    * Shift value from user key array (first element)
+   * @async
    * @param {string} userId - user id
    * @param {string} key - user array key
-   * @returns {Promise}
+   * @return {Promise.<*>} the user array key first value
    */
   async userShift(userId, key) {
     logger.debug('userShift', userId, key);
@@ -133,9 +141,10 @@ class MemoryBrain extends Brain {
 
   /**
    * Pop value from user key array (last element)
+   * @async
    * @param {string} userId - user id
    * @param {string} key - user array key
-   * @returns {Promise}
+   * @return {Promise.<*>} the user array key last value
    */
   async userPop(userId, key) {
     logger.debug('userPop', userId, key);
@@ -148,8 +157,9 @@ class MemoryBrain extends Brain {
 
   /**
    * Add a conversation to an user
+   * @async
    * @param {string} userId - user id
-   * @returns {Promise}
+   * @return {Promise.<object>} the last conversation added
    */
   async addConversation(userId) {
     logger.debug('addConversation', userId);
@@ -160,8 +170,9 @@ class MemoryBrain extends Brain {
 
   /**
    * Get user last conversation
+   * @async
    * @param {string} userId - user id
-   * @returns {Promise}
+   * @return {Promise.<object>} the last conversation of the user
    */
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
@@ -171,10 +182,11 @@ class MemoryBrain extends Brain {
 
   /**
    * Set last conversation key with value
+   * @async
    * @param {string} userId - user id
    * @param {string} key - conversation key
    * @param {*} value - key value
-   * @returns {Promise}
+   * @return {Promise.<object>} the updated conversation
    */
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
