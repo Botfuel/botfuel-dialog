@@ -1,7 +1,20 @@
 const logger = require('logtown')('PromptView');
 const { BotTextMessage } = require('../messages');
 
+/**
+ * PromptView
+ * @class
+ * @classdesc represent a prompt view
+ */
 class PromptView {
+  /**
+   * Render an array of bot messages
+   * @param {string|number} botId - the bot id
+   * @param {string|number} userId - the user id
+   * @param {string} key - the dialog key
+   * @param {object} parameters - the dialog parameters
+   * @return {object[]} the bot messages
+   */
   render(botId, userId, key, parameters) {
     logger.debug('render', botId, userId, key, parameters);
     switch (key) {
@@ -20,24 +33,50 @@ class PromptView {
     }
   }
 
+  /**
+   * Render ask key
+   * @param {string|number} botId - the bot id
+   * @param {string|number} userId - the user id
+   * @return {object[]} the bot messages
+   */
   renderAsk(botId, userId) {
     return [
       new BotTextMessage(botId, userId, 'continue dialog?'),
     ];
   }
 
+  /**
+   * Render confirm key
+   * @param {string|number} botId - the bot id
+   * @param {string|number} userId - the user id
+   * @return {object[]} the bot messages
+   */
   renderConfirm(botId, userId) {
     return [
       new BotTextMessage(botId, userId, 'dialog confirmed.'),
     ];
   }
 
+  /**
+   * Render discard key
+   * @param {string|number} botId - the bot id
+   * @param {string|number} userId - the user id
+   * @return {object[]} the bot messages
+   */
   renderDiscard(botId, userId) {
     return [
       new BotTextMessage(botId, userId, 'dialog discarded.'),
     ];
   }
 
+  /**
+   * Render entities key
+   * @param {string|number} botId - the bot id
+   * @param {string|number} userId - the user id
+   * @param {object[]} messageEntities - the defined entities
+   * @param {string[]} missingEntities - the needed entities
+   * @return {object[]} the bot messages
+   */
   renderEntities(botId, userId, messageEntities, missingEntities) {
     const messages = [];
     if (messageEntities.length !== 0) {
