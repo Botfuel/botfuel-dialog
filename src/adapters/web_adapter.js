@@ -4,10 +4,17 @@ const bodyParser = require('body-parser');
 const logger = require('logtown')('WebAdapter');
 const Adapter = require('./adapter');
 
+/**
+ * WebAdapter
+ * @class
+ * @classdesc Adapter that connect bot to a web platform
+ * @param {string|number} botId - the bot id
+ * @param {object} config - the bot config
+ */
 class WebAdapter extends Adapter {
   /**
    * Run the adapter
-   * @returns {Promise.<void>}
+   * @async
    */
   async run() {
     logger.debug('run');
@@ -20,7 +27,7 @@ class WebAdapter extends Adapter {
 
   /**
    * Create adapter routes
-   * @param app
+   * @param app - the express app
    */
   createRoutes(app) {
     app.post('/webhook', (req, res) => this.handleMessage(req, res));
@@ -28,8 +35,8 @@ class WebAdapter extends Adapter {
 
   /**
    * Request web platform to send response
-   * @param requestOptions
-   * @returns {Promise}
+   * @async
+   * @param {object} requestOptions - the request options
    */
   async postResponse(requestOptions) {
     logger.debug('sendResponse', requestOptions);

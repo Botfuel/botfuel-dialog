@@ -1,12 +1,20 @@
 const logger = require('logtown')('BotfuelAdapter');
 const WebAdapter = require('./web_adapter');
 
+/**
+ * BotfuelAdapter
+ * @class
+ * @classdesc Botfuel webchat adapter
+ * @extends WebAdapter
+ * @param {string|number} botId - the bot id
+ * @param {object} config - the bot config
+ */
 class BotfuelAdapter extends WebAdapter {
   /**
    * Handler for webchat webhook post request
-   * @param {Object} req
-   * @param {Object} res
-   * @returns {Promise}
+   * @async
+   * @param {object} req - the request object
+   * @param {object} res - the response object
    */
   async handleMessage(req, res) {
     logger.debug('handleMessage');
@@ -20,15 +28,17 @@ class BotfuelAdapter extends WebAdapter {
 
   /**
    * Build request url for a given botMessage
-   * @param {Object} botMessage
-   * @returns {string}
+   * @param {Object} botMessage - the bot message
+   * @return {string} the webchat url for an user
    */
   getUrl(botMessage) {
     return `${process.env.CHAT_SERVER}/bots/${this.config.id}/users/${botMessage.user}/conversation/messages`;
   }
 
   /**
-   * @returns {Promise}
+   * Send message to webchat for each bot messages
+   * @async
+   * @param {object[]} botMessages - the bot messages
    */
   async send(botMessages) {
     logger.debug('sendText', botMessages);
