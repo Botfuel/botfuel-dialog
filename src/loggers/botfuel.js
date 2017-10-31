@@ -9,7 +9,7 @@ const transports = [
     timestamp: true,
     handleExceptions: true,
     align: false,
-    level: 'silly',
+    level: 'debug',
   }),
 ];
 
@@ -26,6 +26,18 @@ module.exports = {
         disable: ['debug'],
       },
       MemoryBrain: {
+        disable: ['debug'],
+      },
+      WsExtractor: {
+        disable: ['debug'],
+      },
+      CompositeExtractor: {
+        disable: ['debug'],
+      },
+      PromptView: {
+        disable: ['debug'],
+      },
+      QnasView: {
         disable: ['debug'],
       },
     },
