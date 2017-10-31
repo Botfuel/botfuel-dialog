@@ -17,4 +17,17 @@ const options = { exitOnError: false };
 
 module.exports = {
   wrapper: new WinstonWrapper(transports, options),
+  config: {
+    namespaces: {
+      Brain: {
+        disable: ['debug'],
+      },
+      MongoBrain: {
+        disable: ['debug'],
+      },
+      MemoryBrain: {
+        disable: ['debug'],
+      },
+    },
+  },
 };
