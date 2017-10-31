@@ -1,8 +1,18 @@
 const Message = require('./message');
 
+/**
+ * QuickrepliesMessage
+ * @class
+ * @classdesc a message with quick replies
+ * @extends Message
+ * @param {string|number} botId - the bot id
+ * @param {string|number} userId - the user id
+ * @param {string[]} texts - the array of texts
+ * @param {object} options - the message options
+ */
 class QuickrepliesMessage extends Message {
-  constructor(bot, user, texts, options) {
-    super('quickreplies', 'bot', bot, user, texts, options);
+  constructor(botId, userId, texts, options) {
+    super('quickreplies', 'bot', botId, userId, texts, options);
   }
 }
 
