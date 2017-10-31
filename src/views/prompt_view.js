@@ -9,8 +9,8 @@ const { BotTextMessage } = require('../messages');
 class PromptView {
   /**
    * Render an array of bot messages
-   * @param {string|number} botId - the bot id
-   * @param {string|number} userId - the user id
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
    * @param {string} key - the dialog key
    * @param {object} parameters - the dialog parameters
    * @return {object[]} the bot messages
@@ -35,8 +35,8 @@ class PromptView {
 
   /**
    * Render ask key
-   * @param {string|number} botId - the bot id
-   * @param {string|number} userId - the user id
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
    * @return {object[]} the bot messages
    */
   renderAsk(botId, userId) {
@@ -47,8 +47,8 @@ class PromptView {
 
   /**
    * Render confirm key
-   * @param {string|number} botId - the bot id
-   * @param {string|number} userId - the user id
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
    * @return {object[]} the bot messages
    */
   renderConfirm(botId, userId) {
@@ -59,8 +59,8 @@ class PromptView {
 
   /**
    * Render discard key
-   * @param {string|number} botId - the bot id
-   * @param {string|number} userId - the user id
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
    * @return {object[]} the bot messages
    */
   renderDiscard(botId, userId) {
@@ -71,8 +71,8 @@ class PromptView {
 
   /**
    * Render entities key
-   * @param {string|number} botId - the bot id
-   * @param {string|number} userId - the user id
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
    * @param {object[]} messageEntities - the defined entities
    * @param {string[]} missingEntities - the needed entities
    * @return {object[]} the bot messages

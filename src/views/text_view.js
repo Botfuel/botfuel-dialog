@@ -9,8 +9,8 @@ const { BotTextMessage } = require('../messages');
 class TextView {
   /**
    * Render an array of BotTextMessages
-   * @param {string|number} botId - the bot id
-   * @param {string|number} userId - the user id
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
    * @param {string} key - the dialog key
    * @param {object} parameters - the dialog parameters
    * @return {BotTextMessage[]} the array of bot text messages

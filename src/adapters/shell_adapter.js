@@ -8,7 +8,7 @@ const Adapter = require('./adapter');
  * @class
  * @classdesc shell adapter
  * @extends Adapter
- * @param {string|number} botId - the bot id
+ * @param {string} botId - the bot id
  * @param {object} config - the bot config
  */
 class ShellAdapter extends Adapter {

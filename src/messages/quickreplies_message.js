@@ -5,8 +5,8 @@ const Message = require('./message');
  * @class
  * @classdesc a message with quick replies
  * @extends Message
- * @param {string|number} botId - the bot id
- * @param {string|number} userId - the user id
+ * @param {string} botId - the bot id
+ * @param {string} userId - the user id
  * @param {string[]} texts - the array of texts
  * @param {object} options - the message options
  */

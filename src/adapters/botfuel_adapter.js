@@ -6,7 +6,7 @@ const WebAdapter = require('./web_adapter');
  * @class
  * @classdesc Botfuel webchat adapter
  * @extends WebAdapter
- * @param {string|number} botId - the bot id
+ * @param {string} botId - the bot id
  * @param {object} config - the bot config
  */
 class BotfuelAdapter extends WebAdapter {

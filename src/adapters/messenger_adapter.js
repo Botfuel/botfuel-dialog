@@ -10,7 +10,7 @@ const qs = { access_token: process.env.FB_PAGE_ACCESS_TOKEN || '' };
  * @class
  * @classdesc Messenger adapter
  * @extends WebAdapter
- * @param {string|number} botId - the bot id
+ * @param {string} botId - the bot id
  * @param {object} config - the bot config
  */
 class MessengerAdapter extends WebAdapter {

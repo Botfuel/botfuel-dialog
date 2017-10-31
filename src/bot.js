@@ -14,7 +14,7 @@ const logger = Logger.getLogger('Bot');
 /**
  * Bot main class
  * @class
- * @param {object} config - the bot's config
+ * @param {object} config - the bot config
  */
 class Bot {
   constructor(config) {
@@ -41,7 +41,7 @@ class Bot {
 
   /**
    * Configure bot logger
-   * @param {object} config - the bot's config
+   * @param {object} config - the bot config
    */
   configureLogger(config) {
     const paths = [

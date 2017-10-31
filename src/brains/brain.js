@@ -4,7 +4,7 @@ const logger = require('logtown')('Brain');
  * Brain
  * @class
  * @classdesc brain let the bot to store users and conversations data
- * @param {string|number} botId - the bot id
+ * @param {string} botId - the bot id
  */
 class Brain {
   constructor(botId) {

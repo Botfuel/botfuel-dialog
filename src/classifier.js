@@ -7,7 +7,7 @@ const INTENT_SUFFIX = '.intent';
 /**
  * Classifier
  * @class
- * @param {object} config - the bot's config
+ * @param {object} config - the bot config
  */
 class Classifier {
   constructor(config) {
@@ -72,7 +72,7 @@ class Classifier {
   }
 
   /**
-   * Train bot's model
+   * Train bot model
    * @returns {Promise.<void>}
    */
   async train() {

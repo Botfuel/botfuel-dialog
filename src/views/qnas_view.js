@@ -9,8 +9,8 @@ const { ActionsMessage, BotTextMessage, Postback } = require('../messages');
 class QnasView {
   /**
    * Render an array of bot messages
-   * @param {string|number} botId - the bot id
-   * @param {string|number} userId - the user id
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
    * @param {string} key - the dialog key
    * @param {object} parameters - the dialog parameters
    * @return {object[]} the bot messages
@@ -29,8 +29,8 @@ class QnasView {
 
   /**
    * Render a qna answer
-   * @param {string|number} botId - the bot id
-   * @param {string|number} userId - the user id
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
    * @param {string} answer - the answer
    * @return {BotTextMessage[]} the answer
    */
@@ -43,8 +43,8 @@ class QnasView {
 
   /**
    * Render qna questions
-   * @param {string|number} botId - the bot id
-   * @param {string|number} userId - the user id
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
    * @param {object[]} qnas - the qnas
    * @return {object[]} the questions
    */

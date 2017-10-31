@@ -10,7 +10,7 @@ const CompositeExtractor = require('./extractors/composite_extractor');
  * Nlu
  * @class
  * @classdesc A nlu module (could be replaced by an external one).
- * @param {object} config - the bot's config
+ * @param {object} config - the bot config
  */
 class Nlu {
   constructor(config) {

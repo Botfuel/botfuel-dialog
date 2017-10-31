@@ -5,8 +5,8 @@ const Message = require('./message');
  * @class
  * @classdesc a carousel message
  * @extends Message
- * @param {string|number} botId - the bot id
- * @param {string|number} userId - the user id
+ * @param {string} botId - the bot id
+ * @param {string} userId - the user id
  * @param {object[]} actions - the actions array
  * @param {object} options - the message options
  */

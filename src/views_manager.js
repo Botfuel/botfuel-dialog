@@ -5,7 +5,7 @@ const logger = require('logtown')('ViewsManager');
  * ViewsManager
  * @class
  * @classdesc resolve a dialog view
- * @param {object} config - the bot's config
+ * @param {object} config - the bot config
  */
 class ViewsManager {
   constructor(config) {

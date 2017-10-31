@@ -4,8 +4,8 @@
  * @classdesc a message
  * @param {string} type - the message type
  * @param {string} sender - the message sender, the bot or the user
- * @param {string|number} botId - the bot id
- * @param {string|number} userId - the user id
+ * @param {string} botId - the bot id
+ * @param {string} userId - the user id
  * @param {*} value - the message value
  * @param {object} options - the message options
  */

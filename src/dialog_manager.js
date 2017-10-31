@@ -6,8 +6,8 @@ const Dialog = require('./dialogs/dialog');
  * DialogManager
  * @class
  * @classdesc Turns NLU output into a dialog stack
- * @param {class} brain - the bot's brain
- * @param {object} config - the bot's config
+ * @param {class} brain - the bot brain
+ * @param {object} config - the bot config
  */
 class DialogManager {
   constructor(brain, config) {

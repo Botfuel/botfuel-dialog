@@ -4,8 +4,8 @@ const Message = require('./message');
  * PostbackMessage
  * @class
  * @classdesc A postback message corresponds to a user action.
- * @param {string|number} botId - the bot id
- * @param {string|number} userId - the user id
+ * @param {string} botId - the bot id
+ * @param {string} userId - the user id
  * @param {string} dialog - the postback dialog name
  * @param {object[]} entities - the dialog entities
  */
