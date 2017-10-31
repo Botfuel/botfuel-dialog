@@ -20,8 +20,8 @@ class DialogManager {
   getDialogPath(label) {
     logger.debug('getDialogPath', label);
     const paths = [
-      `${this.config.path}/src/controllers/dialogs/${label}.${this.config.adapter}`,
-      `${this.config.path}/src/controllers/dialogs/${label}`,
+      `${this.config.path}/src/dialogs/${label}.${this.config.adapter}`,
+      `${this.config.path}/src/dialogs/${label}`,
       `${__dirname}/dialogs/${label}.${this.config.adapter}`,
       `${__dirname}/dialogs/${label}`,
     ];

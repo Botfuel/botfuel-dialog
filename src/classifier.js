@@ -13,7 +13,7 @@ class Classifier {
     logger.debug('constructor', config);
     this.locale = config.locale;
     this.modelFilename = `${config.path}/models/model.json`;
-    this.intentDirname = `${config.path}/src/data/intents`;
+    this.intentDirname = `${config.path}/src/intents`;
     this.classifier = null;
     this.getStemmer().attach();
   }
