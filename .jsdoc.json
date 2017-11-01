@@ -1,0 +1,29 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc"]
+  },
+  "source": {
+    "include": ["src", "README.md"],
+    "includePattern": ".js$",
+    "excludePattern": "(node_modules/|docs)"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "templates": {
+    "referenceTitle": "Botfuel Bot SDK v2",
+    "search": {
+      "apiKey": "ALGOLIA_DOC_SEARCH_API_KEY",
+      "indexName": "INDEX_NAME",
+      "hitsPerPage": 10
+    }
+  },
+  "opts": {
+    "destination": "./docs/",
+    "encoding": "utf8",
+    "private": true,
+    "recurse": true,
+    "template": "./jsdoc-template"
+  }
+}

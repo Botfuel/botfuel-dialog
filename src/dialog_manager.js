@@ -3,13 +3,13 @@ const logger = require('logtown')('DialogManager');
 const Dialog = require('./dialogs/dialog');
 
 /**
-
- * Turns NLU output into a dialog stack.
+ * DialogManager
+ * @class
+ * @classdesc Turns NLU output into a dialog stack
+ * @param {class} brain - the bot brain
+ * @param {object} config - the bot config
  */
 class DialogManager {
-  /**
-   * Constructor.
-   */
   constructor(brain, config) {
     logger.debug('constructor');
     this.brain = brain;
@@ -17,6 +17,11 @@ class DialogManager {
     this.intentThreshold = this.config.intentThreshold || 0.8;
   }
 
+  /**
+   * Get dialog path
+   * @param {string} label - the dialog's label
+   * @returns {string|null} - the dialog path if found or null
+   */
   getDialogPath(label) {
     logger.debug('getDialogPath', label);
     const paths = [
@@ -34,6 +39,11 @@ class DialogManager {
     return null;
   }
 
+  /**
+   * Get a dialog
+   * @param {object} dialog - the dialog
+   * @returns {Dialog} - the dialog instance
+   */
   getDialog(dialog) {
     logger.debug('getDialog', dialog);
     const path = this.getDialogPath(dialog.label);
@@ -58,10 +68,10 @@ class DialogManager {
 
   /**
    * Executes the dialogs.
-   * @param {string} userId the user id
-   * @param {Object[]} dialogs - the dialogs
-   * @param {Object[]} intents - the intents
-   * @param {Object[]} entities - the entities
+   * @param {string} userId - the user id
+   * @param {object[]} dialogs - the dialogs
+   * @param {object[]} intents - the intents
+   * @param {object[]} entities - the entities
    */
   async updateDialogs(userId, dialogs, intents, entities) {
     logger.debug('updateDialogs', userId, dialogs, intents, entities);
@@ -100,8 +110,8 @@ class DialogManager {
 
   /**
    * Executes the dialogs.
-   * @param {string} userId the user id
-   * @param {Object[]} dialogs - the dialogs
+   * @param {string} userId - the user id
+   * @param {object[]} dialogs - the dialogs
    */
   async executeDialogs(userId, dialogs) {
     logger.debug('executeDialogs', userId, dialogs);
@@ -131,9 +141,9 @@ class DialogManager {
 
   /**
    * Populates and executes the stack.
-   * @param {string} userId the user id
-   * @param {string[]} intents the intents
-   * @param {Object[]} entities the transient entities
+   * @param {string} userId - the user id
+   * @param {string[]} intents - the intents
+   * @param {object[]} entities - the transient entities
    */
   async execute(userId, intents, entities) {
     logger.debug('execute', userId, intents, entities);

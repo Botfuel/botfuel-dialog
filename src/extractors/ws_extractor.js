@@ -3,12 +3,12 @@ const nlp = require('botfuel-nlp-sdk');
 const logger = require('logtown')('WsExtractor');
 
 /**
- * Class for extracting entities.
+ * WsExtractor
+ * @class
+ * @classdesc extract WS entities
+ * @param {object} parameters - the extractor parameters
  */
 class WsExtractor {
-  /**
-   * Constructor.
-   */
   constructor(parameters) {
     this.client = new nlp.EntityExtraction({
       appId: process.env.BOTFUEL_APP_ID,
@@ -18,7 +18,10 @@ class WsExtractor {
   }
 
   /**
-   * @param {string} sentence the sentence
+   * Compute entities from a sentence
+   * @async
+   * @param {string} sentence - the sentence
+   * @return {object} the entities
    */
   async compute(sentence) {
     logger.debug('compute', sentence);

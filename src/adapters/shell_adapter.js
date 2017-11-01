@@ -4,7 +4,12 @@ const { BotTextMessage, UserTextMessage } = require('../messages');
 const Adapter = require('./adapter');
 
 /**
- * Shell Adapter.
+ * ShellAdapter
+ * @class
+ * @classdesc shell adapter
+ * @extends Adapter
+ * @param {string} botId - the bot id
+ * @param {object} config - the bot config
  */
 class ShellAdapter extends Adapter {
   constructor(bot, config) {
@@ -12,6 +17,10 @@ class ShellAdapter extends Adapter {
     this.userId = 'USER_1';
   }
 
+  /**
+   * Run the adapter
+   * @async
+   */
   async run() {
     logger.debug('run');
     await this.bot.brain.initUserIfNecessary(this.userId);
@@ -29,6 +38,12 @@ class ShellAdapter extends Adapter {
     }
   }
 
+  /**
+   * Send bot messages to the shell
+   * @async
+   * @param {object[]} botMessages - the bot messages
+   * @return {Promise} the prompt
+   */
   async send(botMessages) {
     logger.debug('send', botMessages);
     // TODO: adapt to msg type

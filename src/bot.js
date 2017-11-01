@@ -12,7 +12,9 @@ const TestAdapter = require('./adapters/test_adapter');
 const logger = Logger.getLogger('Bot');
 
 /**
- * Bot main class.
+ * Bot main class
+ * @class
+ * @param {object} config - the bot config
  */
 class Bot {
   constructor(config) {
@@ -37,6 +39,10 @@ class Bot {
     this.dm = new DialogManager(this.brain, config);
   }
 
+  /**
+   * Configure bot logger
+   * @param {object} config - the bot config
+   */
   configureLogger(config) {
     const paths = [
       `${config.path}/src/loggers/${config.logger}.js`,
@@ -56,25 +62,44 @@ class Bot {
     }
   }
 
+  /**
+   * Run the bot.
+   * @async
+   * @returns {Promise}
+   */
   async run() {
     logger.debug('run');
     await this.init();
     return this.adapter.run();
   }
 
+  /**
+   * Play user messages
+   * @async
+   * @param {object[]} userMessages - user messages
+   * @returns {Promise}
+   */
   async play(userMessages) {
     logger.debug('play', userMessages);
     await this.init();
     return this.adapter.play(userMessages);
   }
 
+  /**
+   * Initialize bot modules
+   * @async
+   * @returns {Promise.<void>}
+   */
   async init() {
     await this.brain.init();
     await this.nlu.init();
   }
 
   /**
-   * Responds.
+   * Send bot responses to user
+   * @async
+   * @param {object} userMessage - user message
+   * @returns {Promise}
    */
   async sendResponse(userMessage) {
     logger.debug('sendResponse', userMessage);
@@ -88,6 +113,12 @@ class Bot {
     }
   }
 
+  /**
+   * Get responses based on user message type
+   * @async
+   * @param {object} userMessage - user message
+   * @returns {Promise}
+   */
   async getResponses(userMessage) {
     logger.debug('getResponses', userMessage);
     switch (userMessage.type) {
@@ -101,6 +132,12 @@ class Bot {
     }
   }
 
+  /**
+   * Get responses for a given user text message
+   * @async
+   * @param {object} userMessage - user message
+   * @returns {Promise}
+   */
   async getResponsesWhenText(userMessage) {
     logger.debug('getResponsesWhenText', userMessage);
     const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
@@ -108,6 +145,12 @@ class Bot {
     return this.dm.execute(userMessage.user, intents, entities);
   }
 
+  /**
+   * Get responses for a given user postback message
+   * @async
+   * @param {object} userMessage - user message
+   * @returns {Promise}
+   */
   async getResponsesWhenPostback(userMessage) {
     logger.debug('getResponsesWhenPostback', userMessage);
     return this.dm.executeDialogs(
@@ -120,6 +163,12 @@ class Bot {
     );
   }
 
+  /**
+   * Get responses for a given user image message
+   * @async
+   * @param {object} userMessage - user message
+   * @returns {Promise}
+   */
   async getResponsesWhenDownload(userMessage) { // TODO: rename
     logger.debug('getResponsesWhenDownload', userMessage);
     return this.dm.executeDialogs(

@@ -2,19 +2,45 @@ const logger = require('logtown')('Dialog');
 const ViewsManager = require('../views_manager');
 
 /**
- * Generates messages.
+ * Dialog
+ * @class
+ * @classdesc Generates messages.
+ * @param {object} config - the bot config
+ * @param {class} brain - the bot brain
+ * @param {number} [maxComplexity=Number.MAX_SAFE_INTEGER] - the dialog max complexity
+ * @param {object} [parameters={}] - the dialog parameters
  */
 class Dialog {
+  /**
+   * Dialog blocked status
+   * @static
+   */
   static STATUS_BLOCKED = 'blocked';
-  static STATUS_COMPLETED = 'completed';
-  static STATUS_DISCARDED = 'discarded';
-  static STATUS_READY = 'ready';
-  static STATUS_WAITING = 'waiting';
 
   /**
-   * Constructor.
-   * @param {Object} parameters the dialog parameters
+   * Dialog completed status
+   * @static
    */
+  static STATUS_COMPLETED = 'completed';
+
+  /**
+   * Dialog discarded status
+   * @static
+   */
+  static STATUS_DISCARDED = 'discarded';
+
+  /**
+   * Dialog ready status
+   * @static
+   */
+  static STATUS_READY = 'ready';
+
+  /**
+   * Dialog ready status
+   * @static
+   */
+  static STATUS_WAITING = 'waiting';
+
   constructor(config, brain, maxComplexity = Number.MAX_SAFE_INTEGER, parameters = {}) {
     logger.debug('constructor', parameters);
     this.config = config;
@@ -25,10 +51,21 @@ class Dialog {
     this.name = this.getName();
   }
 
+  /**
+   * Get dialog name
+   * @return {string} the dialog name
+   */
   getName() {
     return this.constructor.name.toLowerCase().replace(/dialog/g, '');
   }
 
+  /**
+   * Display a message to user
+   * @param {string} userId - the user id
+   * @param {object[]} responses - the bot responses
+   * @param {string} key - the dialog key
+   * @param {object} [parameters] - the dialog parameters
+   */
   display(userId, responses, key, parameters) {
     logger.debug('display', userId, responses, key, parameters);
     const botMessages = this

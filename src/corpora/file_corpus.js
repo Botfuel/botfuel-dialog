@@ -2,6 +2,14 @@ const fs = require('fs');
 const logger = require('logtown')('FileCorpus');
 const Corpus = require('./corpus');
 
+/**
+ * FileCorpus
+ * @class
+ * @classdesc use a corpus from a file
+ * @extends Corpus
+ * @param {string} path - the corpus path
+ * @param {string} [separator=','] - the corpus row separator
+ */
 class FileCorpus extends Corpus {
   constructor(path, separator = ',') {
     logger.debug('constructor', path, separator);

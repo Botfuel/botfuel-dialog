@@ -6,14 +6,12 @@ const Brain = require('./brain');
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';
 
 /**
-
- * Class to wrap mongodb database with two models
+ * MongoBrain
+ * @class
+ * @classdesc wrap mongodb database
+ * @param {string} botId - the bot id
  */
 class MongoBrain extends Brain {
-  /**
-   * Constructor
-   * @param {string} botId - bot id
-   */
   constructor(botId) {
     logger.debug('constructor', botId);
     super(botId);
@@ -21,8 +19,8 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Connect to database if necessary
-   * @returns {Promise}
+   * Connect to database if necessary and get users collection
+   * @async
    */
   async init() {
     logger.debug('init');
@@ -32,7 +30,7 @@ class MongoBrain extends Brain {
 
   /**
    * Remove the connected database
-   * @returns {Promise}
+   * @async
    */
   async dropDatabase() {
     await this.db.dropDatabase();
@@ -40,7 +38,8 @@ class MongoBrain extends Brain {
 
   /**
    * Clean the brain
-   * @returns {Promise}
+   * @async
+   * @return {Promise.<object>}
    */
   async clean() {
     logger.debug('clean');
@@ -49,7 +48,9 @@ class MongoBrain extends Brain {
 
   /**
    * Check if brain has user for a given userId
+   * @async
    * @param {string} userId - user id
+   * @return {boolean} the user exists
    */
   async hasUser(userId) {
     logger.debug('hasUser', userId);
@@ -59,8 +60,9 @@ class MongoBrain extends Brain {
 
   /**
    * Add an user
+   * @async
    * @param {string} userId - user id
-   * @returns {Promise}
+   * @return {Promise.<object>} the new user
    */
   async addUser(userId) {
     logger.debug('addUser', userId);
@@ -76,8 +78,9 @@ class MongoBrain extends Brain {
 
   /**
    * Get an user
+   * @async
    * @param {string} userId - user id
-   * @returns {Promise}
+   * @return {Promise.<object>} the user
    */
   async getUser(userId) {
     logger.debug('getUser', userId);
@@ -85,11 +88,12 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Set user key
+   * Set user key with the value
+   * @async
    * @param {string} userId - user id
    * @param {string} key - user key
    * @param {*} value - key value
-   * @returns {Promise}
+   * @return {Promise.<object>} the updated user
    */
   async userSet(userId, key, value) {
     logger.debug('userSet', userId, key, value);
@@ -105,9 +109,10 @@ class MongoBrain extends Brain {
 
   /**
    * Get user key
+   * @async
    * @param {string} userId - user id
    * @param {string} key - user key
-   * @returns {Promise}
+   * @return {Promise.<*>} the user key value
    */
   async userGet(userId, key) {
     logger.debug('userGet', userId, key);
@@ -119,10 +124,11 @@ class MongoBrain extends Brain {
 
   /**
    * Push value to user key array
+   * @async
    * @param {string} userId - user id
    * @param {string} key - user array key
    * @param {Object} value - Object value
-   * @returns {Promise}
+   * @return {Promise.<object>} the user
    */
   async userPush(userId, key, value) {
     logger.debug('userPush', userId, key, value);
@@ -138,9 +144,10 @@ class MongoBrain extends Brain {
 
   /**
    * Shift value from user key array (first element)
+   * @async
    * @param {string} userId - user id
    * @param {string} key - user array key
-   * @returns {Promise}
+   * @return {Promise.<*>} the user array key first value
    */
   async userShift(userId, key) {
     logger.debug('userShift', userId, key);
@@ -152,9 +159,10 @@ class MongoBrain extends Brain {
 
   /**
    * Pop value from user key array (last element)
+   * @async
    * @param {string} userId - user id
    * @param {string} key - user array key
-   * @returns {Promise}
+   * @return {Promise.<*>} the user array key last value
    */
   async userPop(userId, key) {
     logger.debug('userPop', userId, key);
@@ -166,8 +174,9 @@ class MongoBrain extends Brain {
 
   /**
    * Add a conversation to an user
+   * @async
    * @param {string} userId - user id
-   * @returns {Promise}
+   * @return {Promise.<object>} the last conversation added
    */
   async addConversation(userId) {
     logger.debug('addConversation', userId);
@@ -182,8 +191,9 @@ class MongoBrain extends Brain {
 
   /**
    * Get user last conversation
+   * @async
    * @param {string} userId - user id
-   * @returns {Promise}
+   * @return {Promise.<object>} the last conversation of the user
    */
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
@@ -193,10 +203,11 @@ class MongoBrain extends Brain {
 
   /**
    * Set last conversation key with value
+   * @async
    * @param {string} userId - user id
    * @param {string} key - conversation key
    * @param {*} value - key value
-   * @returns {Promise}
+   * @return {Promise.<object>} the updated conversation
    */
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);

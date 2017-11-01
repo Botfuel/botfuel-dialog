@@ -6,12 +6,18 @@ const uri = 'https://graph.facebook.com/v2.6/me/messages';
 const qs = { access_token: process.env.FB_PAGE_ACCESS_TOKEN || '' };
 
 /**
- * Messenger Adapter.
+ * MessengerAdapter
+ * @class
+ * @classdesc Messenger adapter
+ * @extends WebAdapter
+ * @param {string} botId - the bot id
+ * @param {object} config - the bot config
  */
 class MessengerAdapter extends WebAdapter {
   /**
-   * Override parent method to add extra route for this adapter
-   * @param app
+   * add extra route for this adapter
+   * @override
+   * @param app - the express app
    */
   createRoutes(app) {
     logger.debug('createRoutes');
@@ -21,9 +27,9 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Handler for validating messenger webhook
-   * @param {Object} req
-   * @param {Object} res
-   * @returns {Promise}
+   * @async
+   * @param {object} req - the request object
+   * @param {object} res - the response object
    */
   async validateWebhook(req, res) {
     logger.debug('validateWebhook');
@@ -38,9 +44,9 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Handler for messenger webhook post request
-   * @param {Object} req
-   * @param {Object} res
-   * @returns {Promise}
+   * @async
+   * @param {object} req - the request object
+   * @param {object} res - the response object
    */
   async handleMessage(req, res) {
     logger.debug('handleMessage');
@@ -58,8 +64,8 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Process received event (message, postback ...)
-   * @param {Object} event
-   * @returns {Promise}
+   * @async
+   * @param {object} event - the messenger event
    */
   async processEvent(event) {
     const { sender, recipient } = event;
@@ -86,8 +92,9 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * @param {Object} botMessages
-   * @returns {Promise}
+   * send message to messenger for each bot messages
+   * @async
+   * @param {object[]} botMessages - the bot messages
    */
   async send(botMessages) {
     logger.debug('send', botMessages);
@@ -103,12 +110,22 @@ class MessengerAdapter extends WebAdapter {
     }
   }
 
+  /**
+   * Adapt payload to send text
+   * @param {object} payload - the payload
+   * @return {object} the text
+   */
   adaptText(payload) {
     return {
       text: payload.value,
     };
   }
 
+  /**
+   * Adapt payload to send quickreplies
+   * @param {object} payload - the payload
+   * @return {object} the quickreplies
+   */
   adaptQuickreplies(payload) {
     return {
       text: 'Quick replies' || payload.options.text, // TODO: fix this
@@ -120,6 +137,11 @@ class MessengerAdapter extends WebAdapter {
     };
   }
 
+  /**
+   * Adapt payload to send image
+   * @param {object} payload - the payload
+   * @return {object} the image
+   */
   adaptImage(payload) {
     return {
       attachment: {
@@ -129,6 +151,11 @@ class MessengerAdapter extends WebAdapter {
     };
   }
 
+  /**
+   * Adapt payload to send actions
+   * @param {object} payload - the payload
+   * @return {object} the actions
+   */
   adaptActions(payload) {
     logger.debug('adaptActions', payload);
     const text = 'Actions' || payload.options.text; // TODO: fix this
@@ -141,6 +168,11 @@ class MessengerAdapter extends WebAdapter {
     };
   }
 
+  /**
+   * Adapt payload to send cards
+   * @param {object} payload - the payload
+   * @return {object} the cards
+   */
   adaptCards(payload) {
     logger.debug('adaptCards', payload);
     const elements = payload.value.map((card) => {
@@ -155,6 +187,11 @@ class MessengerAdapter extends WebAdapter {
     };
   }
 
+  /**
+   * Adapt payload to send specific message type
+   * @param {object} botMessage - the bot message
+   * @return {object} the adapted message
+   */
   adapt(botMessage) {
     logger.debug('adapt', botMessage);
     const payload = botMessage.payload;
@@ -174,7 +211,12 @@ class MessengerAdapter extends WebAdapter {
     }
   }
 
-
+  /**
+   * Adapt an action item to messenger (button, link ...)
+   * @static
+   * @param {object} action - the action object
+   * @return {object} the adapted action
+   */
   static adaptAction(action) {
     logger.debug('adaptAction', action);
     if (action.type === 'postback') {

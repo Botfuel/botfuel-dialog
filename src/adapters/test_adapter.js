@@ -2,7 +2,12 @@ const logger = require('logtown')('TestAdapter');
 const Adapter = require('./adapter');
 
 /**
- * Test Adapter.
+ * TestAdapter
+ * @class
+ * @classdesc test adapter
+ * @extends Adapter
+ * @param {string} botId - the bot id
+ * @param {object} config - the bot config
  */
 class TestAdapter extends Adapter {
   constructor(bot, config) {
@@ -12,6 +17,11 @@ class TestAdapter extends Adapter {
     this.userId = 'USER_TEST';
   }
 
+  /**
+   * Play user messages
+   * @async
+   * @param {object[]} userMessages - the user messages
+   */
   async play(userMessages) {
     await this.bot.brain.initUserIfNecessary(this.userId);
     for (const userMessage of userMessages.map(msg => msg.toJson())) {
@@ -22,6 +32,11 @@ class TestAdapter extends Adapter {
     }
   }
 
+  /**
+   * Send bot messages to the platform
+   * @async
+   * @param {object[]} botMessages - the bot messages
+   */
   async send(botMessages) {
     logger.debug('send', botMessages);
     for (const botMessage of botMessages) {

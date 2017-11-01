@@ -4,11 +4,12 @@ const logger = require('logtown')('Classifier');
 
 const INTENT_SUFFIX = '.intent';
 
+/**
+ * Classifier
+ * @class
+ * @param {object} config - the bot config
+ */
 class Classifier {
-  /**
-   * Constructor.
-   * @param {Object} config the bot's config
-   */
   constructor(config) {
     logger.debug('constructor', config);
     this.locale = config.locale;
@@ -18,6 +19,10 @@ class Classifier {
     this.getStemmer().attach();
   }
 
+  /**
+   * Get classifier stemmer for it's locale
+   * @returns {*|Stemmer} - the stemmer
+   */
   getStemmer() {
     switch (this.locale) {
       case 'fr':
@@ -28,6 +33,10 @@ class Classifier {
     }
   }
 
+  /**
+   * Init the classifier
+   * @returns {Promise}
+   */
   async init() {
     logger.debug('init');
     return new Promise((resolve, reject) => {
@@ -43,6 +52,10 @@ class Classifier {
     });
   }
 
+  /**
+   * Compute features for a sentence
+   * @param {string} sentence - the sentence
+   */
   computeFeatures(sentence) {
     return sentence.tokenizeAndStem();
   }
@@ -58,6 +71,10 @@ class Classifier {
     return this.classifier.getClassifications(features);
   }
 
+  /**
+   * Train bot model
+   * @returns {Promise.<void>}
+   */
   async train() {
     logger.debug('train');
     this.classifier = new Natural.LogisticRegressionClassifier(this.getStemmer());

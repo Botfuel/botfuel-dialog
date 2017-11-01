@@ -1,16 +1,25 @@
 const logger = require('logtown')('QnasDialog');
 const Dialog = require('./dialog');
 
+/**
+ * QnasDialog
+ * @class
+ * @classdesc the qnas dialog is used to wrap botfuel QnA's
+ * @extends Dialog
+ * @param {object} config - the bot config
+ * @param {class} brain - the bot brain
+ */
 class QnasDialog extends Dialog {
   constructor(config, brain) {
     super(config, brain, 2);
   }
 
   /**
-   * Executes.
+   * Executes the dialog.
    * @param {string} userId the user id
-   * @param {Object[]} responses
-   * @param {Object} messageEntities
+   * @param {object[]} responses
+   * @param {object[]} messageEntities
+   * @return {string} the dialog completed status
    */
   async execute(userId, responses, messageEntities) {
     logger.debug('execute', userId, responses, messageEntities);

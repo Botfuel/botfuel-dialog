@@ -2,19 +2,25 @@ const logger = require('logtown')('TextDialog');
 const Dialog = require('./dialog');
 
 /**
- * TextDialog class.
+ * TextDialog
+ * @class
+ * @classdesc the text dialog is used to display a text message
+ * @extends Dialog
+ * @param {object} config - the bot config
+ * @param {class} brain - the bot brain
  */
 class TextDialog extends Dialog {
-  /**
-   * Constructor.
-   */
   constructor(config, brain) {
     super(config, brain, 1);
   }
 
   /**
-   * Executes.
-   * @param {string} userId the user id
+   * Executes the dialog.
+   * @async
+   * @param {string} userId - the user id
+   * @param {object[]} responses - the bot responses
+   * @param {object[]} messageEntities - the message entities
+   * @return {string} the dialog completed status
    */
   async execute(userId, responses, messageEntities) {
     logger.debug('execute', userId, responses, messageEntities);

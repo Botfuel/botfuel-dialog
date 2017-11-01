@@ -1,28 +1,42 @@
 const logger = require('logtown')('Adapter');
 
 /**
- * Adapts messages.
+ * Adapter
+ * @class
+ * @classdesc Adapts messages to a messaging platform.
+ * @param {string} botId - the bot id
+ * @param {object} config - the bot config
  */
 class Adapter {
-  constructor(bot, config) {
-    logger.debug('constructor', '<bot>', config);
+  constructor(botId, config) {
+    logger.debug('constructor', botId, config);
     this.config = config;
-    this.bot = bot;
+    this.bot = botId;
   }
 
-  async play(userMsgs) {
-    logger.debug('play', userMsgs);
+  /**
+   * Play user messages
+   * @async
+   * @param {object[]} userMessages - the user messages
+   */
+  async play(userMessages) {
+    logger.debug('play', userMessages);
     throw new Error('Not implemented!');
   }
 
+  /**
+   * Run bot adapter
+   * @async
+   */
   async run() {
     logger.debug('run');
     throw new Error('Not implemented!');
   }
 
   /**
-   * @param botMessages
-   * @returns {Promise}
+   * Send bot messages to the platform
+   * @async
+   * @param {object[]} botMessages - the bot messages
    */
   async send(botMessages) {
     logger.debug('send', botMessages);

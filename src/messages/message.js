@@ -1,13 +1,28 @@
+/**
+ * Message
+ * @class
+ * @classdesc a message
+ * @param {string} type - the message type
+ * @param {string} sender - the message sender, the bot or the user
+ * @param {string} botId - the bot id
+ * @param {string} userId - the user id
+ * @param {*} value - the message value
+ * @param {object} options - the message options
+ */
 class Message {
-  constructor(type, sender, bot, user, value, options) {
+  constructor(type, sender, botId, userId, value, options) {
     this.type = type;
     this.sender = sender;
-    this.bot = bot;
-    this.user = user;
+    this.bot = botId;
+    this.user = userId;
     this.value = value;
     this.options = options;
   }
 
+  /**
+   * Convert a message to json
+   * @return {object} the json message
+   */
   toJson() {
     if (this.options !== undefined) {
       return {
