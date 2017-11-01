@@ -1,13 +1,14 @@
 const logger = require('logtown')('Adapter');
 
 /**
- * Adapter
- * @class
- * @classdesc Adapts messages to a messaging platform.
- * @param {string} botId - the bot id
- * @param {object} config - the bot config
+ * Adapts messages to a messaging platform.
  */
 class Adapter {
+  /**
+   * @constructor
+   * @param {string} botId - the bot id
+   * @param {object} config - the bot config
+   */
   constructor(botId, config) {
     logger.debug('constructor', botId, config);
     this.config = config;
