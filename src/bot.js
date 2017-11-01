@@ -54,6 +54,8 @@ class Bot {
       if (fs.existsSync(path)) {
         const logger = require(path);
         if (logger.wrapper) {
+          // clean wrappers
+          Logger.clean();
           Logger.addWrapper(logger.wrapper);
         }
         if (logger.config) {
