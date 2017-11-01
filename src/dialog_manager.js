@@ -8,7 +8,7 @@ const Dialog = require('./dialogs/dialog');
 class DialogManager {
   /**
    * @constructor
-   * @param {class} brain - the bot brain
+   * @param {Object} brain - the bot brain
    * @param {Object} config - the bot config
    */
   constructor(brain, config) {

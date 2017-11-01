@@ -42,7 +42,60 @@ class Bot {
   }
 
   /**
+   * Run the bot.
+   * @async
+   * @returns {Promise.<void>}
+   */
+  async run() {
+    logger.debug('run');
+    await this.init();
+    return this.adapter.run();
+  }
+
+  /**
+   * Play user messages
+   * @async
+   * @param {Object[]} userMessages - user messages
+   * @returns {Promise.<void>}
+   */
+  async play(userMessages) {
+    logger.debug('play', userMessages);
+    await this.init();
+    return this.adapter.play(userMessages);
+  }
+
+  /**
+   * Send bot responses to user
+   * @async
+   * @param {Object} userMessage - user message
+   * @returns {Promise.<void>}
+   */
+  async sendResponse(userMessage) {
+    logger.debug('sendResponse', userMessage);
+    try {
+      const responses = await this.getResponses(userMessage);
+      logger.debug('sendResponse: responses', responses);
+      return this.adapter.send(responses);
+    } catch (err) {
+      logger.error('sendResponse', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Initialize bot modules
+   * @private
+   * @async
+   * @returns {Promise.<void>}
+   */
+  async init() {
+    await this.brain.init();
+    await this.nlu.init();
+  }
+
+  /**
    * Configure bot logger
+   * @private
    * @param {Object} config - the bot config
    * @returns {void}
    */
@@ -67,58 +120,8 @@ class Bot {
   }
 
   /**
-   * Run the bot.
-   * @async
-   * @returns {Promise.<void>}
-   */
-  async run() {
-    logger.debug('run');
-    await this.init();
-    return this.adapter.run();
-  }
-
-  /**
-   * Play user messages
-   * @async
-   * @param {Object[]} userMessages - user messages
-   * @returns {Promise.<void>}
-   */
-  async play(userMessages) {
-    logger.debug('play', userMessages);
-    await this.init();
-    return this.adapter.play(userMessages);
-  }
-
-  /**
-   * Initialize bot modules
-   * @async
-   * @returns {Promise.<void>}
-   */
-  async init() {
-    await this.brain.init();
-    await this.nlu.init();
-  }
-
-  /**
-   * Send bot responses to user
-   * @async
-   * @param {Object} userMessage - user message
-   * @returns {Promise.<void>}
-   */
-  async sendResponse(userMessage) {
-    logger.debug('sendResponse', userMessage);
-    try {
-      const responses = await this.getResponses(userMessage);
-      logger.debug('sendResponse: responses', responses);
-      return this.adapter.send(responses);
-    } catch (err) {
-      logger.error('sendResponse', err);
-      throw err;
-    }
-  }
-
-  /**
    * Get responses based on user message type
+   * @private
    * @async
    * @param {Object} userMessage - user message
    * @returns {Promise.<Object[]>} the responses
@@ -138,6 +141,7 @@ class Bot {
 
   /**
    * Get responses for a given user text message
+   * @private
    * @async
    * @param {Object} userMessage - user message
    * @returns {Promise.<Object[]>} the responses
@@ -151,6 +155,7 @@ class Bot {
 
   /**
    * Get responses for a given user postback message
+   * @private
    * @async
    * @param {Object} userMessage - user message
    * @returns {Promise.<Object[]>} the responses
@@ -169,6 +174,7 @@ class Bot {
 
   /**
    * Get responses for a given user image message
+   * @private
    * @async
    * @param {Object} userMessage - user message
    * @returns {Promise.<Object[]>} the responses
