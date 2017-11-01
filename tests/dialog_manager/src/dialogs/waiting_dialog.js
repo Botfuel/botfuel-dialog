@@ -6,6 +6,7 @@ const Dialog = require('../../../../src/dialogs/dialog');
 class FalseDialog extends Dialog {
   /**
    * Executes.
+   * @returns {string}
    */
   async execute() {
     return Dialog.STATUS_WAITING;

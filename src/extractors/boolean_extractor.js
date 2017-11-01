@@ -8,7 +8,7 @@ const CorpusExtractor = require('./corpus_extractor');
 class BooleanExtractor extends CorpusExtractor {
   /**
    * @constructor
-   * @param {object} parameters - the extractor parameters
+   * @param {Object} parameters - the extractor parameters
    */
   constructor(parameters) {
     parameters.dimension = 'system:boolean';
@@ -18,8 +18,8 @@ class BooleanExtractor extends CorpusExtractor {
 
   /**
    * Get entity
-   * @param {string} value - the entity value
-   * @return {object} the entity
+   * @param {String} value - the entity value
+   * @returns {Object} the entity
    */
   getEntity(value) {
     return { value: value === '1', type: 'boolean' };

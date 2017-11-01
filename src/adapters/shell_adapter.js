@@ -10,8 +10,8 @@ const Adapter = require('./adapter');
 class ShellAdapter extends Adapter {
   /**
    * @constructor
-   * @param {string} botId - the bot id
-   * @param {object} config - the bot config
+   * @param {String} botId - the bot id
+   * @param {Object} config - the bot config
    */
   constructor(botId, config) {
     super(botId, config);
@@ -21,6 +21,7 @@ class ShellAdapter extends Adapter {
   /**
    * Run the adapter
    * @async
+   * @returns {Promise.<void>}
    */
   async run() {
     logger.debug('run');
@@ -42,8 +43,8 @@ class ShellAdapter extends Adapter {
   /**
    * Send bot messages to the shell
    * @async
-   * @param {object[]} botMessages - the bot messages
-   * @return {Promise} the prompt
+   * @param {Object[]} botMessages - the bot messages
+   * @returns {Promise} the prompt
    */
   async send(botMessages) {
     logger.debug('send', botMessages);

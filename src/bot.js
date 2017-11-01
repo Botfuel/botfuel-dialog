@@ -17,7 +17,7 @@ const logger = Logger.getLogger('Bot');
 class Bot {
   /**
    * @constructor
-   * @param {object} config - the bot config
+   * @param {Object} config - the bot config
    */
   constructor(config) {
     this.configureLogger(config);
@@ -43,7 +43,8 @@ class Bot {
 
   /**
    * Configure bot logger
-   * @param {object} config - the bot config
+   * @param {Object} config - the bot config
+   * @returns {void}
    */
   configureLogger(config) {
     const paths = [
@@ -52,14 +53,13 @@ class Bot {
     ];
     for (const path of paths) {
       if (fs.existsSync(path)) {
-        const logger = require(path);
-        if (logger.wrapper) {
-          // clean wrappers
-          Logger.clean();
-          Logger.addWrapper(logger.wrapper);
+        const loggerConfig = require(path);
+        if (loggerConfig.wrapper) {
+          Logger.clean(); // clean wrappers
+          Logger.addWrapper(loggerConfig.wrapper);
         }
-        if (logger.config) {
-          Logger.configure(logger.config);
+        if (loggerConfig.config) {
+          Logger.configure(loggerConfig.config);
         }
         break;
       }
@@ -69,7 +69,7 @@ class Bot {
   /**
    * Run the bot.
    * @async
-   * @returns {Promise}
+   * @returns {Promise.<void>}
    */
   async run() {
     logger.debug('run');
@@ -80,8 +80,8 @@ class Bot {
   /**
    * Play user messages
    * @async
-   * @param {object[]} userMessages - user messages
-   * @returns {Promise}
+   * @param {Object[]} userMessages - user messages
+   * @returns {Promise.<void>}
    */
   async play(userMessages) {
     logger.debug('play', userMessages);
@@ -102,8 +102,8 @@ class Bot {
   /**
    * Send bot responses to user
    * @async
-   * @param {object} userMessage - user message
-   * @returns {Promise}
+   * @param {Object} userMessage - user message
+   * @returns {Promise.<void>}
    */
   async sendResponse(userMessage) {
     logger.debug('sendResponse', userMessage);
@@ -120,8 +120,8 @@ class Bot {
   /**
    * Get responses based on user message type
    * @async
-   * @param {object} userMessage - user message
-   * @returns {Promise}
+   * @param {Object} userMessage - user message
+   * @returns {Promise.<Object[]>} the responses
    */
   async getResponses(userMessage) {
     logger.debug('getResponses', userMessage);
@@ -139,8 +139,8 @@ class Bot {
   /**
    * Get responses for a given user text message
    * @async
-   * @param {object} userMessage - user message
-   * @returns {Promise}
+   * @param {Object} userMessage - user message
+   * @returns {Promise.<Object[]>} the responses
    */
   async getResponsesWhenText(userMessage) {
     logger.debug('getResponsesWhenText', userMessage);
@@ -152,8 +152,8 @@ class Bot {
   /**
    * Get responses for a given user postback message
    * @async
-   * @param {object} userMessage - user message
-   * @returns {Promise}
+   * @param {Object} userMessage - user message
+   * @returns {Promise.<Object[]>} the responses
    */
   async getResponsesWhenPostback(userMessage) {
     logger.debug('getResponsesWhenPostback', userMessage);
@@ -170,8 +170,8 @@ class Bot {
   /**
    * Get responses for a given user image message
    * @async
-   * @param {object} userMessage - user message
-   * @returns {Promise}
+   * @param {Object} userMessage - user message
+   * @returns {Promise.<Object[]>} the responses
    */
   async getResponsesWhenDownload(userMessage) { // TODO: rename
     logger.debug('getResponsesWhenDownload', userMessage);

@@ -4,12 +4,12 @@
 class Card {
   /**
    * @constructor
-   * @param {string} title - the card title
-   * @param {string} imageUrl - the card image url
-   * @param {object[]} buttons - an array of actions buttons
+   * @param {String} title - the card title
+   * @param {String} imageUrl - the card image url
+   * @param {Object[]} buttons - an array of actions buttons
    */
-  // TODO : this is very Messenger specific, let's generalize it!
   constructor(title, imageUrl, buttons) {
+    // TODO : this is very Messenger specific, let's generalize it!
     this.title = title;
     this.imageUrl = imageUrl;
     this.buttons = buttons.map(button => button.toJson());
@@ -17,7 +17,7 @@ class Card {
 
   /**
    * Convert the card to json
-   * @return {object} the json card
+   * @returns {Object} the json card
    */
   toJson() {
     return {

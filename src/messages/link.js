@@ -7,8 +7,8 @@ const Action = require('./action');
 class Link extends Action {
   /**
    * @constructor
-   * @param {string} text - the link title
-   * @param {string} value - the link url
+   * @param {String} text - the link title
+   * @param {String} value - the link url
    */
   constructor(text, value) {
     super('link', text, value);

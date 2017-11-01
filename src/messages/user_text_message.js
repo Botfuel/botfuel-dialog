@@ -7,10 +7,10 @@ const Message = require('./message');
 class UserTextMessage extends Message {
   /**
    * @constructor
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @param {string} text - the message
-   * @param {object} options - the message options
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @param {String} text - the message
+   * @param {Object} options - the message options
    */
   constructor(botId, userId, text, options) {
     super('text', 'user', botId, userId, text, options);

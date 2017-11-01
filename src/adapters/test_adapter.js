@@ -8,8 +8,8 @@ const Adapter = require('./adapter');
 class TestAdapter extends Adapter {
   /**
    * @constructor
-   * @param {string} botId - the bot id
-   * @param {object} config - the bot config
+   * @param {String} botId - the bot id
+   * @param {Object} config - the bot config
    */
   constructor(botId, config) {
     logger.debug('constructor');
@@ -21,7 +21,8 @@ class TestAdapter extends Adapter {
   /**
    * Play user messages
    * @async
-   * @param {object[]} userMessages - the user messages
+   * @param {Object[]} userMessages - the user messages
+   * @returns {Promise.<void>}
    */
   async play(userMessages) {
     await this.bot.brain.initUserIfNecessary(this.userId);
@@ -36,7 +37,8 @@ class TestAdapter extends Adapter {
   /**
    * Send bot messages to the platform
    * @async
-   * @param {object[]} botMessages - the bot messages
+   * @param {Object[]} botMessages - the bot messages
+   * @returns {Promise.<void>}
    */
   async send(botMessages) {
     logger.debug('send', botMessages);

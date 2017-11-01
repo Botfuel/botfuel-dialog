@@ -13,7 +13,8 @@ class MessengerAdapter extends WebAdapter {
   /**
    * add extra route for this adapter
    * @override
-   * @param app - the express app
+   * @param {Object} app - the express app
+   * @returns {void}
    */
   createRoutes(app) {
     logger.debug('createRoutes');
@@ -24,8 +25,9 @@ class MessengerAdapter extends WebAdapter {
   /**
    * Handler for validating messenger webhook
    * @async
-   * @param {object} req - the request object
-   * @param {object} res - the response object
+   * @param {Object} req - the request object
+   * @param {Object} res - the response object
+   * @returns {Promise.<void>}
    */
   async validateWebhook(req, res) {
     logger.debug('validateWebhook');
@@ -41,8 +43,9 @@ class MessengerAdapter extends WebAdapter {
   /**
    * Handler for messenger webhook post request
    * @async
-   * @param {object} req - the request object
-   * @param {object} res - the response object
+   * @param {Object} req - the request object
+   * @param {Object} res - the response object
+   * @returns {Promise.<void>}
    */
   async handleMessage(req, res) {
     logger.debug('handleMessage');
@@ -61,7 +64,8 @@ class MessengerAdapter extends WebAdapter {
   /**
    * Process received event (message, postback ...)
    * @async
-   * @param {object} event - the messenger event
+   * @param {Object} event - the messenger event
+   * @returns {Promise.<void>}
    */
   async processEvent(event) {
     const { sender, recipient } = event;
@@ -90,7 +94,8 @@ class MessengerAdapter extends WebAdapter {
   /**
    * send message to messenger for each bot messages
    * @async
-   * @param {object[]} botMessages - the bot messages
+   * @param {Object[]} botMessages - the bot messages
+   * @returns {Promise.<void>}
    */
   async send(botMessages) {
     logger.debug('send', botMessages);
@@ -108,8 +113,8 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Adapt payload to send text
-   * @param {object} payload - the payload
-   * @return {object} the text
+   * @param {Object} payload - the payload
+   * @returns {Object} the text
    */
   adaptText(payload) {
     return {
@@ -119,8 +124,8 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Adapt payload to send quickreplies
-   * @param {object} payload - the payload
-   * @return {object} the quickreplies
+   * @param {Object} payload - the payload
+   * @returns {Object} the quickreplies
    */
   adaptQuickreplies(payload) {
     return {
@@ -135,8 +140,8 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Adapt payload to send image
-   * @param {object} payload - the payload
-   * @return {object} the image
+   * @param {Object} payload - the payload
+   * @returns {Object} the image
    */
   adaptImage(payload) {
     return {
@@ -149,8 +154,8 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Adapt payload to send actions
-   * @param {object} payload - the payload
-   * @return {object} the actions
+   * @param {Object} payload - the payload
+   * @returns {Object} the actions
    */
   adaptActions(payload) {
     logger.debug('adaptActions', payload);
@@ -166,8 +171,8 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Adapt payload to send cards
-   * @param {object} payload - the payload
-   * @return {object} the cards
+   * @param {Object} payload - the payload
+   * @returns {Object} the cards
    */
   adaptCards(payload) {
     logger.debug('adaptCards', payload);
@@ -185,8 +190,8 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Adapt payload to send specific message type
-   * @param {object} botMessage - the bot message
-   * @return {object} the adapted message
+   * @param {Object} botMessage - the bot message
+   * @returns {Object} the adapted message
    */
   adapt(botMessage) {
     logger.debug('adapt', botMessage);
@@ -210,26 +215,27 @@ class MessengerAdapter extends WebAdapter {
   /**
    * Adapt an action item to messenger (button, link ...)
    * @static
-   * @param {object} action - the action object
-   * @return {object} the adapted action
+   * @param {Object} action - the action object
+   * @returns {Object|null} the adapted action or null if action type is not valid
    */
   static adaptAction(action) {
     logger.debug('adaptAction', action);
-    if (action.type === 'postback') {
-      return {
-        type: 'postback',
-        title: action.text,
-        payload: JSON.stringify(action.value),
-      };
+    switch (action.type) {
+      case 'postback':
+        return {
+          type: 'postback',
+          title: action.text,
+          payload: JSON.stringify(action.value),
+        };
+      case 'link':
+        return {
+          type: 'web_url',
+          title: action.text,
+          url: action.value,
+        };
+      default:
+        return null;
     }
-    if (action.type === 'link') {
-      return {
-        type: 'web_url',
-        title: action.text,
-        url: action.value,
-      };
-    }
-    return null;
   }
 }
 

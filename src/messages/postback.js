@@ -7,9 +7,9 @@ const Action = require('./action');
 class Postback extends Action {
   /**
    * @constructor
-   * @param {string} text - the postback text
-   * @param {string} dialog - the postback dialog name
-   * @param {object[]} entities - the dialog entities
+   * @param {String} text - the postback text
+   * @param {String} dialog - the postback dialog name
+   * @param {Object[]} entities - the dialog entities
    */
   constructor(text, dialog, entities) {
     super('postback', text, { dialog, entities });

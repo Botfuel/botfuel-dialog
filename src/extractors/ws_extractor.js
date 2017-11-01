@@ -8,7 +8,7 @@ const logger = require('logtown')('WsExtractor');
 class WsExtractor {
   /**
    * @constructor
-   * @param {object} parameters - the extractor parameters
+   * @param {Object} parameters - the extractor parameters
    */
   constructor(parameters) {
     this.client = new nlp.EntityExtraction({
@@ -21,8 +21,8 @@ class WsExtractor {
   /**
    * Compute entities from a sentence
    * @async
-   * @param {string} sentence - the sentence
-   * @return {object} the entities
+   * @param {String} sentence - the sentence
+   * @returns {Promise.<Object[]>} the entities
    */
   async compute(sentence) {
     logger.debug('compute', sentence);

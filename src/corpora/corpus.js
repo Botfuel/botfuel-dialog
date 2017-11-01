@@ -7,7 +7,7 @@ const logger = require('logtown')('Corpus');
 class Corpus {
   /**
    * @constructor
-   * @param {string[][]} matrix - the corpus matrix
+   * @param {Array.<string[]>} matrix - the corpus matrix
    */
   constructor(matrix) {
     logger.debug('constructor', matrix);
@@ -17,9 +17,9 @@ class Corpus {
   /**
    * Normalize a sentence
    * @static
-   * @param {string} sentence - the sentence
-   * @param {object} options - the normalization options
-   * @return {string} the normalized sentence
+   * @param {String} sentence - the sentence
+   * @param {Object} options - the normalization options
+   * @returns {String} the normalized sentence
    */
   static normalize(sentence, options) {
     // logger.debug('Corpus.normalize', sentence, options);
@@ -41,10 +41,10 @@ class Corpus {
   /**
    * Check if a normalized key and word match together
    * @static
-   * @param {string} key - the key
-   * @param {string} word - the word
-   * @param {object} options - the normalization options
-   * @return {boolean} true if match, false else
+   * @param {String} key - the key
+   * @param {String} word - the word
+   * @param {Object} options - the normalization options
+   * @returns {boolean} true if match, false else
    */
   static matches(key, word, options) {
     logger.debug('matches', key, word, options);
@@ -53,9 +53,9 @@ class Corpus {
 
   /**
    * Get matching value for a key
-   * @param {string} key - the key to find
-   * @param {object} options - the normalization options
-   * @return {*} the matching value
+   * @param {String} key - the key to find
+   * @param {Object} options - the normalization options
+   * @returns {*} the matching value
    */
   getValue(key, options) {
     logger.debug('getValue', key, options);
@@ -71,7 +71,7 @@ class Corpus {
 
   /**
    * Transform matrix of words into list of words
-   * @return {string[]} the words list
+   * @returns {String[]} the words list
    */
   getWords() {
     return this.matrix.reduce((s, t) => s.concat(t));

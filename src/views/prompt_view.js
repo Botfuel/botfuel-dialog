@@ -7,11 +7,11 @@ const { BotTextMessage } = require('../messages');
 class PromptView {
   /**
    * Render an array of bot messages
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @param {string} key - the dialog key
-   * @param {object} parameters - the dialog parameters
-   * @return {object[]} the bot messages
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @param {String} key - the dialog key
+   * @param {Object} parameters - the dialog parameters
+   * @returns {Object[]} the bot messages
    */
   render(botId, userId, key, parameters) {
     logger.debug('render', botId, userId, key, parameters);
@@ -33,9 +33,9 @@ class PromptView {
 
   /**
    * Render ask key
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @return {object[]} the bot messages
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @returns {Object[]} the bot messages
    */
   renderAsk(botId, userId) {
     return [
@@ -45,9 +45,9 @@ class PromptView {
 
   /**
    * Render confirm key
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @return {object[]} the bot messages
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @returns {Object[]} the bot messages
    */
   renderConfirm(botId, userId) {
     return [
@@ -57,9 +57,9 @@ class PromptView {
 
   /**
    * Render discard key
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @return {object[]} the bot messages
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @returns {Object[]} the bot messages
    */
   renderDiscard(botId, userId) {
     return [
@@ -69,11 +69,11 @@ class PromptView {
 
   /**
    * Render entities key
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @param {object[]} messageEntities - the defined entities
-   * @param {string[]} missingEntities - the needed entities
-   * @return {object[]} the bot messages
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @param {Object[]} messageEntities - the defined entities
+   * @param {String[]} missingEntities - the needed entities
+   * @returns {Object[]} the bot messages
    */
   renderEntities(botId, userId, messageEntities, missingEntities) {
     const messages = [];

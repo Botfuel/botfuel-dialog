@@ -6,8 +6,8 @@ const logger = require('logtown')('Adapter');
 class Adapter {
   /**
    * @constructor
-   * @param {string} botId - the bot id
-   * @param {object} config - the bot config
+   * @param {String} botId - the bot id
+   * @param {Object} config - the bot config
    */
   constructor(botId, config) {
     logger.debug('constructor', botId, config);
@@ -18,7 +18,8 @@ class Adapter {
   /**
    * Play user messages
    * @async
-   * @param {object[]} userMessages - the user messages
+   * @param {Object[]} userMessages - the user messages
+   * @returns {Promise.<void>}
    */
   async play(userMessages) {
     logger.debug('play', userMessages);
@@ -28,6 +29,7 @@ class Adapter {
   /**
    * Run bot adapter
    * @async
+   * @returns {Promise.<void>}
    */
   async run() {
     logger.debug('run');
@@ -37,7 +39,8 @@ class Adapter {
   /**
    * Send bot messages to the platform
    * @async
-   * @param {object[]} botMessages - the bot messages
+   * @param {Object[]} botMessages - the bot messages
+   * @returns {Promise.<void>}
    */
   async send(botMessages) {
     logger.debug('send', botMessages);

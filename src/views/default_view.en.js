@@ -9,8 +9,8 @@ class DefaultView extends TextView {
   /**
    * Get views texts
    * @override
-   * @param {object} [parameters={}] - the dialog parameters
-   * @return {string[]}
+   * @param {Object} [parameters={}] - the dialog parameters
+   * @returns {String[]}
    */
   getTexts(parameters = {}) {
     logger.debug('getTexts', parameters);

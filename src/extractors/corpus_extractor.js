@@ -7,7 +7,7 @@ const Corpus = require('../corpora/corpus');
 class CorpusExtractor {
   /**
    * @constructor
-   * @param {object} parameters - the extractor parameters
+   * @param {Object} parameters - the extractor parameters
    */
   constructor(parameters) {
     this.dimension = parameters.dimension;
@@ -17,7 +17,8 @@ class CorpusExtractor {
 
   /**
    * Extracts the entities by applying extractors defined at the bot level.
-   * @param {string} sentence - the sentence
+   * @param {String} sentence - the sentence
+   * @returns {Promise.<Object[]>}
    */
   async compute(sentence) {
     logger.debug('compute', sentence);
@@ -27,9 +28,9 @@ class CorpusExtractor {
 
   /**
    * Get the remainder for a word in a sentence
-   * @param {string} sentence - the sentence
-   * @param {string} word - the word to find
-   * @return {string|null} the remainder
+   * @param {String} sentence - the sentence
+   * @param {String} word - the word to find
+   * @returns {String|null} the remainder
    */
   getRemainder(sentence, word) {
     logger.debug('getRemainder', sentence, word);
@@ -52,7 +53,7 @@ class CorpusExtractor {
   /**
    * Get entity
    * @param {*} value - the entity value
-   * @return {object} the entity
+   * @returns {Object} the entity
    */
   getEntity(value) {
     return { value, type: 'string' };
@@ -60,10 +61,10 @@ class CorpusExtractor {
 
   /**
    * Compute entities in a sentence
-   * @param {string} sentence - the sentence
-   * @param {string[]} words - the words
-   * @param {object[]} entities - the entities
-   * @return {object[]} the entities
+   * @param {String} sentence - the sentence
+   * @param {String[]} words - the words
+   * @param {Object[]} entities - the entities
+   * @returns {Object[]} the entities
    */
   computeEntities(sentence, words, entities) {
     logger.debug('computeEntities', sentence, words, entities);

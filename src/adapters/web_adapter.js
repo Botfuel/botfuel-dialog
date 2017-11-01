@@ -12,6 +12,7 @@ class WebAdapter extends Adapter {
   /**
    * Run the adapter
    * @async
+   * @returns {Promise.<void>}
    */
   async run() {
     logger.debug('run');
@@ -24,7 +25,8 @@ class WebAdapter extends Adapter {
 
   /**
    * Create adapter routes
-   * @param app - the express app
+   * @param {Object} app - the express app
+   * @returns {void}
    */
   createRoutes(app) {
     app.post('/webhook', (req, res) => this.handleMessage(req, res));
@@ -33,7 +35,8 @@ class WebAdapter extends Adapter {
   /**
    * Request web platform to send response
    * @async
-   * @param {object} requestOptions - the request options
+   * @param {Object} requestOptions - the request options
+   * @returns {Promise.<void>}
    */
   async postResponse(requestOptions) {
     logger.debug('sendResponse', requestOptions);

@@ -8,8 +8,8 @@ const Corpus = require('./corpus');
 class FileCorpus extends Corpus {
   /**
    * @constructor
-   * @param {string} path - the corpus path
-   * @param {string} [separator=','] - the corpus row separator
+   * @param {String} path - the corpus path
+   * @param {String} [separator=','] - the corpus row separator
    */
   constructor(path, separator = ',') {
     logger.debug('constructor', path, separator);
