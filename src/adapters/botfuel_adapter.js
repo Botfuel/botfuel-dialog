@@ -2,12 +2,8 @@ const logger = require('logtown')('BotfuelAdapter');
 const WebAdapter = require('./web_adapter');
 
 /**
- * BotfuelAdapter
- * @class
- * @classdesc Botfuel webchat adapter
+ * Botfuel webchat adapter
  * @extends WebAdapter
- * @param {string} botId - the bot id
- * @param {object} config - the bot config
  */
 class BotfuelAdapter extends WebAdapter {
   /**

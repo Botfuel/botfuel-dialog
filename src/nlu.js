@@ -7,12 +7,13 @@ const BooleanExtractor = require('./extractors/boolean_extractor');
 const CompositeExtractor = require('./extractors/composite_extractor');
 
 /**
- * Nlu
- * @class
- * @classdesc A nlu module (could be replaced by an external one).
- * @param {object} config - the bot config
+ * A nlu module (could be replaced by an external one).
  */
 class Nlu {
+  /**
+   * @constructor
+   * @param {object} config - the bot config
+   */
   constructor(config) {
     // logger.debug('constructor');
     this.config = config;

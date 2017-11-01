@@ -1,12 +1,13 @@
 /**
- * Action
- * @class
- * @classdesc action message type
- * @param {string} type - the action type
- * @param {string} text - the text
- * @param {object|*} - the value
+ * Action message type
  */
 class Action {
+  /**
+   * @constructor
+   * @param {string} type - the action type
+   * @param {string} text - the text
+   * @param {object|*} value - the value
+   */
   constructor(type, text, value) {
     this.type = type;
     this.text = text;

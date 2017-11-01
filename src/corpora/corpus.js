@@ -3,11 +3,12 @@ const logger = require('logtown')('Corpus');
 
 /**
  * Corpus
- * @class
- * @classdesc represent a corpus
- * @param {string[][]} matrix - the corpus matrix
  */
 class Corpus {
+  /**
+   * @constructor
+   * @param {string[][]} matrix - the corpus matrix
+   */
   constructor(matrix) {
     logger.debug('constructor', matrix);
     this.matrix = matrix;

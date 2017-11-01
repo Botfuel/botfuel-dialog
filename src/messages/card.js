@@ -1,12 +1,13 @@
 /**
- * Card
- * @class
- * @classdesc a card message, this message is very specific to messenger
- * @param {string} title - the card title
- * @param {string} imageUrl - the card image url
- * @param {object[]} buttons - an array of actions buttons
+ * Card message type
  */
 class Card {
+  /**
+   * @constructor
+   * @param {string} title - the card title
+   * @param {string} imageUrl - the card image url
+   * @param {object[]} buttons - an array of actions buttons
+   */
   // TODO : this is very Messenger specific, let's generalize it!
   constructor(title, imageUrl, buttons) {
     this.title = title;

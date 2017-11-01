@@ -6,12 +6,13 @@ const Brain = require('./brain');
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';
 
 /**
- * MongoBrain
- * @class
- * @classdesc wrap mongodb database
- * @param {string} botId - the bot id
+ * Brain that wrap mongodb database
  */
 class MongoBrain extends Brain {
+  /**
+   * @constructor
+   * @param {string} botId - the bot id
+   */
   constructor(botId) {
     logger.debug('constructor', botId);
     super(botId);

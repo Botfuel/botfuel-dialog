@@ -2,15 +2,16 @@ const logger = require('logtown')('PromptDialog');
 const Dialog = require('./dialog');
 
 /**
- * PromptDialog
- * @class
- * @classdesc the prompt dialog is used to ask something to the user
+ * The prompt dialog is used to ask some things to the user
  * @extends Dialog
- * @param {object} config - the bot config
- * @param {class} brain - the bot brain
- * @param {object} parameters - the dialog status
  */
 class PromptDialog extends Dialog {
+  /**
+   * @constructor
+   * @param {object} config - the bot config
+   * @param {class} brain - the bot brain
+   * @param {object} parameters - the dialog status
+   */
   constructor(config, brain, parameters) {
     super(config, brain, Object.keys(parameters.entities).length + 1, parameters);
   }

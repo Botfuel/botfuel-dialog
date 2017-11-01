@@ -2,17 +2,18 @@ const logger = require('logtown')('TestAdapter');
 const Adapter = require('./adapter');
 
 /**
- * TestAdapter
- * @class
- * @classdesc test adapter
+ * Test adapter
  * @extends Adapter
- * @param {string} botId - the bot id
- * @param {object} config - the bot config
  */
 class TestAdapter extends Adapter {
-  constructor(bot, config) {
+  /**
+   * @constructor
+   * @param {string} botId - the bot id
+   * @param {object} config - the bot config
+   */
+  constructor(botId, config) {
     logger.debug('constructor');
-    super(bot, config);
+    super(botId, config);
     this.log = [];
     this.userId = 'USER_TEST';
   }

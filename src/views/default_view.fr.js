@@ -2,9 +2,7 @@ const logger = require('logtown')('DefaultView.fr');
 const TextView = require('./text_view');
 
 /**
- * DefaultView
- * @class
- * @classdesc the default fr view
+ * Default FR text view
  * @extends TextView
  */
 class DefaultView extends TextView {

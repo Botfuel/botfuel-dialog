@@ -2,9 +2,7 @@ const logger = require('logtown')('QnasView');
 const { ActionsMessage, BotTextMessage, Postback } = require('../messages');
 
 /**
- * QnasView
- * @class
- * @classdesc represent a qnas view
+ * Qnas view
  */
 class QnasView {
   /**

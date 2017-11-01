@@ -1,12 +1,13 @@
 const logger = require('logtown')('CompositeExtractor');
 
 /**
- * CompositeExtractor
- * @class
- * @classdesc Class for extracting entities
- * @param {object[]} extractors - the extractors
+ * Composite extractor
  */
 class CompositeExtractor {
+  /**
+   * @constructor
+   * @param {object[]} extractors - the extractors
+   */
   constructor(extractors) {
     logger.debug('constructor', extractors);
     this.extractors = extractors;

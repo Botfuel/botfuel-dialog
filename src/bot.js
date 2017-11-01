@@ -13,10 +13,12 @@ const logger = Logger.getLogger('Bot');
 
 /**
  * Bot main class
- * @class
- * @param {object} config - the bot config
  */
 class Bot {
+  /**
+   * @constructor
+   * @param {object} config - the bot config
+   */
   constructor(config) {
     this.configureLogger(config);
     logger.debug('constructor', config);

@@ -2,12 +2,13 @@ const fs = require('fs');
 const logger = require('logtown')('ViewsManager');
 
 /**
- * ViewsManager
- * @class
- * @classdesc resolve a dialog view
- * @param {object} config - the bot config
+ * Views manager resolve dialogs view
  */
 class ViewsManager {
+  /**
+   * @constructor
+   * @param {object} config - the bot config
+   */
   constructor(config) {
     logger.debug('constructor', config.path);
     this.viewsPath = `${config.path}/src/views`;

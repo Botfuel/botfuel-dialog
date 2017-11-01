@@ -4,12 +4,13 @@ const Brain = require('./brain');
 
 /**
  * MemoryBrain
- * @class
- * @classdesc wrap in memory brain
  * @extends Brain
- * @param {string} botId - the bot id
  */
 class MemoryBrain extends Brain {
+  /**
+   * @constructor
+   * @param {string} botId - the bot id
+   */
   constructor(botId) {
     logger.debug('constructor', botId);
     super(botId);

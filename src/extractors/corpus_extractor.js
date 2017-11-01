@@ -2,12 +2,13 @@ const logger = require('logtown')('CorpusExtractor');
 const Corpus = require('../corpora/corpus');
 
 /**
- * CorpusExtractor
- * @class
- * @classdesc extract corpus entities
- * @param {object} parameters - the extractor parameters
+ * Extract corpus entities
  */
 class CorpusExtractor {
+  /**
+   * @constructor
+   * @param {object} parameters - the extractor parameters
+   */
   constructor(parameters) {
     this.dimension = parameters.dimension;
     this.corpus = parameters.corpus;

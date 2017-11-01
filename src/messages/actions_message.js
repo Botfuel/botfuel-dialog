@@ -1,16 +1,17 @@
 const Message = require('./message');
 
 /**
- * ActionsMessage
- * @class
- * @classdesc a message with many actions
+ * Actions message
  * @extends Message
- * @param {string} botId - the bot id
- * @param {string} userId - the user id
- * @param {object[]} actions - the actions array
- * @param {object} options - the message options
  */
 class ActionsMessage extends Message {
+  /**
+   * @constructor
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
+   * @param {object[]} actions - the actions array
+   * @param {object} options - the message options
+   */
   constructor(botId, userId, actions, options) {
     super('actions', 'bot', botId, userId, actions.map(action => action.toJson()), options);
   }

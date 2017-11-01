@@ -2,14 +2,15 @@ const logger = require('logtown')('TextDialog');
 const Dialog = require('./dialog');
 
 /**
- * TextDialog
- * @class
- * @classdesc the text dialog is used to display a text message
+ * The text dialog is used to display a text message
  * @extends Dialog
- * @param {object} config - the bot config
- * @param {class} brain - the bot brain
  */
 class TextDialog extends Dialog {
+  /**
+   * @constructor
+   * @param {object} config - the bot config
+   * @param {class} brain - the bot brain
+   */
   constructor(config, brain) {
     super(config, brain, 1);
   }

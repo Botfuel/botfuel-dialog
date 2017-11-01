@@ -2,13 +2,14 @@ const FileCorpus = require('../corpora/file_corpus');
 const CorpusExtractor = require('./corpus_extractor');
 
 /**
- * BooleanExtractor
- * @class
- * @classdesc extract boolean entities
+ * Extract boolean entities
  * @extends CorpusExtractor
- * @param {object} parameters - the extractor parameters
  */
 class BooleanExtractor extends CorpusExtractor {
+  /**
+   * @constructor
+   * @param {object} parameters - the extractor parameters
+   */
   constructor(parameters) {
     parameters.dimension = 'system:boolean';
     parameters.corpus = new FileCorpus(`${__dirname}/../corpora/boolean.${parameters.locale}.txt`);

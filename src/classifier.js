@@ -6,10 +6,12 @@ const INTENT_SUFFIX = '.intent';
 
 /**
  * Classifier
- * @class
- * @param {object} config - the bot config
  */
 class Classifier {
+  /**
+   * @constructor
+   * @param {object} config - the bot config
+   */
   constructor(config) {
     logger.debug('constructor', config);
     this.locale = config.locale;

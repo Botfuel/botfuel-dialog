@@ -1,16 +1,17 @@
 const Message = require('./message');
 
 /**
- * CardsMessage
- * @class
- * @classdesc a carousel message
+ * Cards message
  * @extends Message
- * @param {string} botId - the bot id
- * @param {string} userId - the user id
- * @param {object[]} actions - the actions array
- * @param {object} options - the message options
  */
 class CardsMessage extends Message {
+  /**
+   * @constructor
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
+   * @param {object[]} cards - the cards array
+   * @param {object} options - the message options
+   */
   constructor(botId, userId, cards, options) {
     super('cards', 'bot', botId, userId, cards.map(card => card.toJson()), options);
   }

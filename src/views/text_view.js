@@ -2,9 +2,7 @@ const logger = require('logtown')('TextView');
 const { BotTextMessage } = require('../messages');
 
 /**
- * TextView
- * @class
- * @classdesc represent a text view
+ * Text view
  */
 class TextView {
   /**

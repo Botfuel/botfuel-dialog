@@ -2,13 +2,7 @@ const logger = require('logtown')('Dialog');
 const ViewsManager = require('../views_manager');
 
 /**
- * Dialog
- * @class
- * @classdesc Generates messages.
- * @param {object} config - the bot config
- * @param {class} brain - the bot brain
- * @param {number} [maxComplexity=Number.MAX_SAFE_INTEGER] - the dialog max complexity
- * @param {object} [parameters={}] - the dialog parameters
+ * Dialog generates messages.
  */
 class Dialog {
   /**
@@ -41,6 +35,13 @@ class Dialog {
    */
   static STATUS_WAITING = 'waiting';
 
+  /**
+   * @constructor
+   * @param {object} config - the bot config
+   * @param {class} brain - the bot brain
+   * @param {number} [maxComplexity=Number.MAX_SAFE_INTEGER] - the dialog max complexity
+   * @param {object} [parameters={}] - the dialog parameters
+   */
   constructor(config, brain, maxComplexity = Number.MAX_SAFE_INTEGER, parameters = {}) {
     logger.debug('constructor', parameters);
     this.config = config;

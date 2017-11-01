@@ -3,13 +3,14 @@ const logger = require('logtown')('DialogManager');
 const Dialog = require('./dialogs/dialog');
 
 /**
- * DialogManager
- * @class
- * @classdesc Turns NLU output into a dialog stack
- * @param {class} brain - the bot brain
- * @param {object} config - the bot config
+ * Dialog manager turns NLU output into a dialog stack
  */
 class DialogManager {
+  /**
+   * @constructor
+   * @param {class} brain - the bot brain
+   * @param {object} config - the bot config
+   */
   constructor(brain, config) {
     logger.debug('constructor');
     this.brain = brain;

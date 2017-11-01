@@ -1,12 +1,13 @@
 const logger = require('logtown')('Brain');
 
 /**
- * Brain
- * @class
- * @classdesc brain let the bot to store users and conversations data
- * @param {string} botId - the bot id
+ * Brain let the bot to store users and conversations data
  */
 class Brain {
+  /**
+   * @constructor
+   * @param {string} botId - the bot id
+   */
   constructor(botId) {
     this.botId = botId;
     // TODO: get from config or default value below

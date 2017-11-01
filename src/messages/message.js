@@ -1,15 +1,16 @@
 /**
  * Message
- * @class
- * @classdesc a message
- * @param {string} type - the message type
- * @param {string} sender - the message sender, the bot or the user
- * @param {string} botId - the bot id
- * @param {string} userId - the user id
- * @param {*} value - the message value
- * @param {object} options - the message options
  */
 class Message {
+  /**
+   * @constructor
+   * @param {string} type - the message type
+   * @param {string} sender - the message sender, the bot or the user
+   * @param {string} botId - the bot id
+   * @param {string} userId - the user id
+   * @param {*} value - the message value
+   * @param {object} [options] - the message options
+   */
   constructor(type, sender, botId, userId, value, options) {
     this.type = type;
     this.sender = sender;

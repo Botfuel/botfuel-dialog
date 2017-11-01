@@ -5,12 +5,8 @@ const logger = require('logtown')('WebAdapter');
 const Adapter = require('./adapter');
 
 /**
- * WebAdapter
- * @class
- * @classdesc Adapter that connect bot to a web platform
+ * Adapter that connect bot to a web platform
  * @extends Adapter
- * @param {string} botId - the bot id
- * @param {object} config - the bot config
  */
 class WebAdapter extends Adapter {
   /**

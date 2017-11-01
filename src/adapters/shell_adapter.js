@@ -4,16 +4,17 @@ const { BotTextMessage, UserTextMessage } = require('../messages');
 const Adapter = require('./adapter');
 
 /**
- * ShellAdapter
- * @class
- * @classdesc shell adapter
+ * Shell adapter
  * @extends Adapter
- * @param {string} botId - the bot id
- * @param {object} config - the bot config
  */
 class ShellAdapter extends Adapter {
-  constructor(bot, config) {
-    super(bot, config);
+  /**
+   * @constructor
+   * @param {string} botId - the bot id
+   * @param {object} config - the bot config
+   */
+  constructor(botId, config) {
+    super(botId, config);
     this.userId = 'USER_1';
   }
 

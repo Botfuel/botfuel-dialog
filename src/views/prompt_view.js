@@ -2,9 +2,7 @@ const logger = require('logtown')('PromptView');
 const { BotTextMessage } = require('../messages');
 
 /**
- * PromptView
- * @class
- * @classdesc represent a prompt view
+ * Prompt view
  */
 class PromptView {
   /**
