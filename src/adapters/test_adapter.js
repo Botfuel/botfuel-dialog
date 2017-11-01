@@ -8,12 +8,12 @@ const Adapter = require('./adapter');
 class TestAdapter extends Adapter {
   /**
    * @constructor
-   * @param {String} botId - the bot id
+   * @param {Object} bot - the bot
    * @param {Object} config - the bot config
    */
-  constructor(botId, config) {
+  constructor(bot, config) {
     logger.debug('constructor');
-    super(botId, config);
+    super(bot, config);
     this.log = [];
     this.userId = 'USER_TEST';
   }

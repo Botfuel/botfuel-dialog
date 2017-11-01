@@ -10,11 +10,11 @@ const Adapter = require('./adapter');
 class ShellAdapter extends Adapter {
   /**
    * @constructor
-   * @param {String} botId - the bot id
+   * @param {Object} bot - the bot
    * @param {Object} config - the bot config
    */
-  constructor(botId, config) {
-    super(botId, config);
+  constructor(bot, config) {
+    super(bot, config);
     this.userId = 'USER_1';
   }
 

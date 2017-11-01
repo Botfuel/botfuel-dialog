@@ -6,13 +6,13 @@ const logger = require('logtown')('Adapter');
 class Adapter {
   /**
    * @constructor
-   * @param {String} botId - the bot id
+   * @param {Object} bot - the bot
    * @param {Object} config - the bot config
    */
-  constructor(botId, config) {
-    logger.debug('constructor', botId, config);
+  constructor(bot, config) {
+    logger.debug('constructor', bot, config);
     this.config = config;
-    this.bot = botId;
+    this.bot = bot;
   }
 
   /**
