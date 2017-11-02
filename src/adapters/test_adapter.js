@@ -29,8 +29,8 @@ class TestAdapter extends Adapter {
     for (const userMessage of userMessages) {
       const userMessageAsJson = userMessage.toJson(this.config.id, this.userId);
       // eslint-disable-next-line no-await-in-loop
-      await this.bot.respond(userMessageAsJson);
       this.log.push(userMessageAsJson);
+      await this.bot.respond(userMessageAsJson);
     }
   }
 
