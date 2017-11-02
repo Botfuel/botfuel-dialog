@@ -3,7 +3,7 @@ const nlp = require('botfuel-nlp-sdk');
 const logger = require('logtown')('WsExtractor');
 
 /**
- * Extract web service entities
+ * Extracts web service entities
  */
 class WsExtractor {
   /**
@@ -19,7 +19,7 @@ class WsExtractor {
   }
 
   /**
-   * Compute entities from a sentence
+   * Computes entities from a sentence
    * @async
    * @param {String} sentence - the sentence
    * @returns {Promise.<Object[]>} the entities
