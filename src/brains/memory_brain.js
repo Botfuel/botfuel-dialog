@@ -18,7 +18,7 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Clean the brain
+   * Cleans the brain
    * @async
    * @returns {Promise.<void>}
    */
@@ -28,7 +28,7 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Check if brain has user for a given userId
+   * Checks if brain has user for a given userId
    * @async
    * @param {String} userId - user id
    * @returns {boolean} the user exists
@@ -39,7 +39,7 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Add an user
+   * Adds an user
    * @async
    * @param {String} userId - user id
    * @returns {Promise.<Object>} the new user
@@ -61,7 +61,7 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Get an user
+   * Gets an user
    * @async
    * @param {String} userId - user id
    * @returns {Promise.<Object>} the user
@@ -75,7 +75,7 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Set user key with the value
+   * Sets user key with the value
    * @async
    * @param {String} userId - user id
    * @param {String} key - user key
@@ -90,7 +90,7 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Get user key
+   * Gets user key
    * @async
    * @param {String} userId - user id
    * @param {String} key - user key
@@ -103,7 +103,7 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Push value to user key array
+   * Pushes value to user key array
    * @async
    * @param {String} userId - user id
    * @param {String} key - user array key
@@ -125,7 +125,7 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Shift value from user key array (first element)
+   * Shifts value from user key array (first element)
    * @async
    * @param {String} userId - user id
    * @param {String} key - user array key
@@ -142,7 +142,7 @@ class MemoryBrain extends Brain {
 
 
   /**
-   * Pop value from user key array (last element)
+   * Pops value from user key array (last element)
    * @async
    * @param {String} userId - user id
    * @param {String} key - user array key
@@ -158,7 +158,7 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Add a conversation to an user
+   * Adds a conversation to an user
    * @async
    * @param {String} userId - user id
    * @returns {Promise.<Object>} the last conversation added
@@ -171,7 +171,7 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Get user last conversation
+   * Gets user last conversation
    * @async
    * @param {String} userId - user id
    * @returns {Promise.<Object>} the last conversation of the user
@@ -183,7 +183,7 @@ class MemoryBrain extends Brain {
   }
 
   /**
-   * Set last conversation key with value
+   * Sets last conversation key with value
    * @async
    * @param {String} userId - user id
    * @param {String} key - conversation key

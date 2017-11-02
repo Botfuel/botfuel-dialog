@@ -10,7 +10,7 @@ const Adapter = require('./adapter');
  */
 class WebAdapter extends Adapter {
   /**
-   * Run the adapter
+   * Runs the adapter
    * @async
    * @returns {Promise.<void>}
    */
@@ -24,7 +24,7 @@ class WebAdapter extends Adapter {
   }
 
   /**
-   * Create adapter routes
+   * Creates adapter routes
    * @param {Object} app - the express app
    * @returns {void}
    */
@@ -33,7 +33,7 @@ class WebAdapter extends Adapter {
   }
 
   /**
-   * Request web platform to send response
+   * Requests web platform to send response
    * @async
    * @param {Object} requestOptions - the request options
    * @returns {Promise.<void>}

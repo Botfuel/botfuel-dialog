@@ -7,7 +7,7 @@ const WebAdapter = require('./web_adapter');
  */
 class BotfuelAdapter extends WebAdapter {
   /**
-   * Handler for webchat webhook post request
+   * Handles webchat webhook post request
    * @async
    * @param {Object} req - the request object
    * @param {Object} res - the response object
@@ -24,7 +24,7 @@ class BotfuelAdapter extends WebAdapter {
   }
 
   /**
-   * Build request url for a given botMessage
+   * Builds request url for a given botMessage
    * @param {Object} botMessage - the bot message
    * @returns {String} the webchat url for an user
    */
@@ -33,7 +33,7 @@ class BotfuelAdapter extends WebAdapter {
   }
 
   /**
-   * Send message to webchat for each bot messages
+   * Sends message to webchat for each bot messages
    * @async
    * @param {Object[]} botMessages - the bot messages
    * @returns {Promise.<void>}

@@ -8,30 +8,35 @@ class Dialog {
   /**
    * Dialog blocked status
    * @static
+   * @type {String}
    */
   static STATUS_BLOCKED = 'blocked';
 
   /**
    * Dialog completed status
    * @static
+   * @type {String}
    */
   static STATUS_COMPLETED = 'completed';
 
   /**
    * Dialog discarded status
    * @static
+   * @type {String}
    */
   static STATUS_DISCARDED = 'discarded';
 
   /**
    * Dialog ready status
    * @static
+   * @type {String}
    */
   static STATUS_READY = 'ready';
 
   /**
    * Dialog ready status
    * @static
+   * @type {String}
    */
   static STATUS_WAITING = 'waiting';
 
@@ -53,7 +58,7 @@ class Dialog {
   }
 
   /**
-   * Get dialog name
+   * Gets dialog name
    * @returns {String} the dialog name
    */
   getName() {
@@ -61,7 +66,7 @@ class Dialog {
   }
 
   /**
-   * Display a message to user
+   * Displays a message to user
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String} key - the dialog key

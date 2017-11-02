@@ -15,7 +15,7 @@ class Brain {
   }
 
   /**
-   * Initialize the brain
+   * Initializes the brain
    * @async
    * @returns {Promise.<void>}
    */
@@ -24,7 +24,7 @@ class Brain {
   }
 
   /**
-   * Add user if not exists
+   * Adds user if not exists
    * @async
    * @param {String} userId - the user id
    * @returns {Promise.<void>}
@@ -39,7 +39,7 @@ class Brain {
   }
 
   /**
-   * Add conversation to user if necessary
+   * Adds conversation to user if necessary
    * @async
    * @param {String} userId - the user id
    * @returns {Promise.<void>}
@@ -55,7 +55,7 @@ class Brain {
   }
 
   /**
-   * Validate user last conversation
+   * Validates user last conversation
    * @param {Object} conversation - the conversation to validate
    * @returns {boolean}
    */
@@ -68,7 +68,7 @@ class Brain {
   }
 
   /**
-   * Get last conversation value for a given key
+   * Gets last conversation value for a given key
    * @async
    * @param {String} userId - user id
    * @param {String} key - last conversation key

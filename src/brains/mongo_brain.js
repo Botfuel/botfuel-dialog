@@ -20,7 +20,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Connect to database if necessary and get users collection
+   * Connects to database if necessary and get users collection
    * @async
    * @returns {Promise.<void>}
    */
@@ -31,7 +31,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Remove the connected database
+   * Removes the connected database
    * @async
    * @returns {Promise.<void>}
    */
@@ -40,7 +40,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Clean the brain
+   * Cleans the brain
    * @async
    * @returns {Promise.<Object>}
    */
@@ -50,7 +50,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Check if brain has user for a given userId
+   * Checks if brain has user for a given userId
    * @async
    * @param {String} userId - user id
    * @returns {boolean} the user exists
@@ -62,7 +62,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Add an user
+   * Adds an user
    * @async
    * @param {String} userId - user id
    * @returns {Promise.<Object>} the new user
@@ -80,7 +80,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Get an user
+   * Gets an user
    * @async
    * @param {String} userId - user id
    * @returns {Promise.<Object>} the user
@@ -91,7 +91,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Set user key with the value
+   * Sets user key with the value
    * @async
    * @param {String} userId - user id
    * @param {String} key - user key
@@ -111,7 +111,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Get user key
+   * Gets user key
    * @async
    * @param {String} userId - user id
    * @param {String} key - user key
@@ -126,7 +126,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Push value to user key array
+   * Pushes value to user key array
    * @async
    * @param {String} userId - user id
    * @param {String} key - user array key
@@ -146,7 +146,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Shift value from user key array (first element)
+   * Shifts value from user key array (first element)
    * @async
    * @param {String} userId - user id
    * @param {String} key - user array key
@@ -161,7 +161,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Pop value from user key array (last element)
+   * Pops value from user key array (last element)
    * @async
    * @param {String} userId - user id
    * @param {String} key - user array key
@@ -176,7 +176,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Add a conversation to an user
+   * Adds a conversation to an user
    * @async
    * @param {String} userId - user id
    * @returns {Promise.<Object>} the last conversation added
@@ -193,7 +193,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Get user last conversation
+   * Gets user last conversation
    * @async
    * @param {String} userId - user id
    * @returns {Promise.<Object>} the last conversation of the user
@@ -205,7 +205,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Set last conversation key with value
+   * Sets last conversation key with value
    * @async
    * @param {String} userId - user id
    * @param {String} key - conversation key

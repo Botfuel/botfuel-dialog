@@ -19,7 +19,7 @@ class TestAdapter extends Adapter {
   }
 
   /**
-   * Play user messages
+   * Plays user messages
    * @async
    * @param {Object[]} userMessages - the user messages
    * @returns {Promise.<void>}
@@ -35,7 +35,7 @@ class TestAdapter extends Adapter {
   }
 
   /**
-   * Send bot messages to the platform
+   * Sends bot messages to the platform
    * @async
    * @param {Object[]} botMessages - the bot messages
    * @returns {Promise.<void>}

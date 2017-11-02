@@ -17,7 +17,7 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * Compute the dialog missing entities
+   * Computes the dialog missing entities
    * @async
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
@@ -36,7 +36,7 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * Execute dialog when blocked status
+   * Executes dialog when blocked status
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
@@ -50,7 +50,7 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * Execute dialog when waiting status
+   * Executes dialog when waiting status
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
@@ -76,7 +76,7 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * Execute dialog when ready status
+   * Executes dialog when ready status
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
