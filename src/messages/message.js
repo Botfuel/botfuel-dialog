@@ -20,11 +20,13 @@ class Message {
    * Converts a message to json
    * @returns {Object} the json message
    */
-  toJson() {
+  toJson(bot, user) {
     if (this.options === undefined || this.options === null) {
       return {
         type: this.type,
         sender: this.sender,
+        bot,
+        user,
         payload: {
           value: this.valueAsJson(),
         },
@@ -33,6 +35,8 @@ class Message {
     return {
       type: this.type,
       sender: this.sender,
+      bot,
+      user,
       payload: {
         value: this.valueAsJson(),
         options: this.options,

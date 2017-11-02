@@ -15,9 +15,11 @@ describe('CardsMessage', function () {
         new Postback('Buy', 'products', [{ dim: 'product', value: '2' }]),
       ]),
     ]);
-    expect(message.toJson()).to.eql({
+    expect(message.toJson('BOT', 'USER')).to.eql({
       type: 'cards',
       sender: 'bot',
+      bot: 'BOT',
+      user: 'USER',
       payload: {
         value: [
           {

@@ -32,8 +32,8 @@ describe('PromptDialog', function () {
       []
     );
     expect(adapter.log).to.eql([
-      new BotTextMessage('Entities needed: dim1, dim2').toJson(),
-      new BotTextMessage('Which dim1?').toJson(),
+      new BotTextMessage('Entities needed: dim1, dim2').toJson(TEST_BOT, TEST_USER),
+      new BotTextMessage('Which dim1?').toJson(TEST_BOT, TEST_USER),
     ]);
     const user = await brain.getUser(TEST_USER);
     expect(user.conversations.length).to.be(1);
@@ -49,9 +49,9 @@ describe('PromptDialog', function () {
       [{ dim: 'dim1', body: 'dim1' }]
     );
     expect(adapter.log).to.eql([
-      new BotTextMessage('Entities defined: dim1').toJson(),
-      new BotTextMessage('Entities needed: dim2').toJson(),
-      new BotTextMessage('Which dim2?').toJson(),
+      new BotTextMessage('Entities defined: dim1').toJson(TEST_BOT, TEST_USER),
+      new BotTextMessage('Entities needed: dim2').toJson(TEST_BOT, TEST_USER),
+      new BotTextMessage('Which dim2?').toJson(TEST_BOT, TEST_USER),
     ]);
     const user = await brain.getUser(TEST_USER);
     expect(user.conversations.length).to.be(1);
@@ -68,7 +68,7 @@ describe('PromptDialog', function () {
       PromptDialog.STATUS_READY
     );
     expect(adapter.log).to.eql([
-      new BotTextMessage('Entities defined: dim1, dim2').toJson(),
+      new BotTextMessage('Entities defined: dim1, dim2').toJson(TEST_BOT, TEST_USER),
     ]);
     const user = await brain.getUser(TEST_USER);
     expect(user.conversations.length).to.be(1);

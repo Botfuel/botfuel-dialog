@@ -1,17 +1,18 @@
 const logger = require('logtown')('QnasView');
 const { ActionsMessage, BotTextMessage, Postback } = require('../messages');
+const View = require('./view');
 
 /**
  * Qnas view
  */
-class QnasView {
+class QnasView extends View {
   /**
    * Render an array of bot messages
    * @param {String} key - the dialog key
    * @param {Object} parameters - the dialog parameters
    * @returns {Object[]} the bot messages
    */
-  render(botId, userId, key, parameters) {
+  render(key, parameters) {
     logger.debug('render', key, parameters);
     switch (key) {
       case 'answer':
@@ -30,10 +31,10 @@ class QnasView {
    * @param {String} answer - the answer
    * @returns {BotTextMessage[]} the answer
    */
-  renderAnswer(botId, userId, answer) {
+  renderAnswer(answer) {
     logger.debug('renderAnswer', botId, userId, answer);
     return [
-      new BotTextMessage(botId, userId, answer),
+      new BotTextMessage(answer),
     ];
   }
 

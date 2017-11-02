@@ -27,19 +27,17 @@ class ShellAdapter extends Adapter {
     logger.debug('run');
     await this.bot.brain.initUserIfNecessary(this.userId);
     const botMessage = new BotTextMessage('onboarding');
-    botMessage.bot = this.config.id;
-    botMessage.user = this.userId;
-    await this.runWhenUserInput(await this.send([
-      botMessage.toJson()
-    ]));
+    const userInput = await this.send([
+      botMessage.toJson(this.config.id, this.userId)
+    ]);
+    await this.runWhenUserInput(userInput);
   }
 
    async runWhenUserInput(userInput) {
      logger.debug('runWhenUserInput', userInput);
      const userMessage = new UserTextMessage(userInput.payload);
-     userMessage.bot = this.config.id;
-     userMessage.user = this.userId;
-     await this.runWhenUserInput(await this.bot.respond(userMessage.toJson()));
+     const userInput = await this.bot.respond(userMessage.toJson(this.config.id, this.userId));
+     await this.runWhenUserInput(userInput);
   }
   /**
    * Sends bot messages to the shell

@@ -15,7 +15,7 @@ class ActionsMessage extends Message {
   }
 
   valueAsJson() {
-    return this.value.map(action => action.toJson())
+    return this.value.map(action => action.toJson());
   }
 }
 

@@ -15,7 +15,7 @@ class CardsMessage extends Message {
   }
 
   valueAsJson() {
-    return this.value.map(card => card.toJson())
+    return this.value.map(card => card.toJson());
   }
 }
 

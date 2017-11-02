@@ -78,12 +78,7 @@ class Dialog {
     const botMessages = this
           .viewsManager
           .resolve(this.name)
-          .render(key, parameters)
-          .map(message => {
-            message.bot = this.config.id;
-            message.user = userId;
-            return message.toJson();
-          });
+          .renderAsJson(this.config.id, userId, key, parameters);
     adapter.send(botMessages);
   }
 }

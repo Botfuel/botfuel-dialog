@@ -34,7 +34,7 @@ describe('DialogManager', function () {
     const adapter = new TestAdapter();
     await dm.execute(adapter, TEST_USER, [], []);
     expect(adapter.log).to.eql([
-      new BotTextMessage('Not understood.').toJson(),
+      new BotTextMessage('Not understood.').toJson(TEST_BOT, TEST_USER),
     ]);
   });
 
