@@ -6,15 +6,14 @@ class Message {
    * @constructor
    * @param {String} type - the message type
    * @param {String} sender - the message sender, the bot or the user
-   * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {*} value - the message value
    * @param {Object} [options] - the message options
    */
-  constructor(type, sender, botId, userId, value, options) {
+  constructor(type, sender, userId, value, options) {
     this.type = type;
     this.sender = sender;
-    this.bot = botId;
+    this.bot = process.env.BOT_ID;
     this.user = userId;
     this.value = value;
     this.options = options;

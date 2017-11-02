@@ -5,12 +5,11 @@ const DialogManager = require('../../src/dialog_manager');
 const MemoryBrain = require('../../src/brains/memory_brain');
 const { BotTextMessage } = require('../../src/messages');
 
-const TEST_BOT = '1';
 const TEST_USER = '1';
-const testConfig = { path: __dirname, locale: 'en', id: TEST_BOT };
+const testConfig = { path: __dirname, locale: 'en' };
 
 describe('DialogManager', function () {
-  const brain = new MemoryBrain(TEST_BOT);
+  const brain = new MemoryBrain();
   const dm = new DialogManager(brain, testConfig);
 
   beforeEach(async function () {
@@ -31,7 +30,7 @@ describe('DialogManager', function () {
   it('should not crash when no intent', async function () {
     const responses = await dm.execute(TEST_USER, [], []);
     expect(responses).to.eql([
-      new BotTextMessage(TEST_BOT, TEST_USER, 'Not understood.').toJson(),
+      new BotTextMessage(TEST_USER, 'Not understood.').toJson(),
     ]);
   });
 

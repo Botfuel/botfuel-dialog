@@ -41,7 +41,7 @@ class Bot {
       default:
         this.adapter = new ShellAdapter(this, config);
     }
-    this.brain = new MemoryBrain(config.id);
+    this.brain = new MemoryBrain();
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
   }

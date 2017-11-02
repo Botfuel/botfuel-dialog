@@ -8,7 +8,7 @@ const { Card, CardsMessage, Link, Postback } = require('../../src/messages');
 describe('MessengerAdapter', function () {
   it('should generate the proper json', async function () {
     const adapter = new MessengerAdapter(null, null);
-    const message = new CardsMessage('BOT_ID', 'USER_ID', [
+    const message = new CardsMessage('USER_ID', [
       new Card('Card 1', 'https://image1.jpg', [
         new Link('Details', 'https://image1'),
         new Postback('Buy', 'products', [{ dim: 'product', value: '1' }]),

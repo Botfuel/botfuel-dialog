@@ -38,7 +38,7 @@ class Dialog {
   /**
    * @constructor
    * @param {Object} config - the bot config
-   * @param {class} brain - the bot brain
+   * @param {Brain} brain - the bot brain
    * @param {number} [maxComplexity=Number.MAX_SAFE_INTEGER] - the dialog max complexity
    * @param {Object} [parameters={}] - the dialog parameters
    */
@@ -64,8 +64,8 @@ class Dialog {
    * Display a message to user
    * @param {String} userId - the user id
    * @param {Object[]} responses - the bot responses
-   * @param {String} key - the dialog key
-   * @param {Object} [parameters] - the dialog parameters
+   * @param {String} key - the view key
+   * @param {Object} [parameters] - the view parameters
    * @returns {void}
    */
   display(userId, responses, key, parameters) {
@@ -73,7 +73,7 @@ class Dialog {
     const botMessages = this
           .viewsManager
           .resolve(this.name)
-          .render(this.config.id, userId, key, parameters);
+          .render(userId, key, parameters);
     logger.debug('display: botMessages', botMessages);
     for (const botMessage of botMessages) {
       responses.push(botMessage.toJson());

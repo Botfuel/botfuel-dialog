@@ -68,10 +68,9 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise.<void>}
    */
   async processEvent(event) {
-    const { sender, recipient } = event;
+    const { sender } = event;
     const userId = sender.id; // messenger user id
-    const botId = recipient.id; // page id
-    logger.debug('processEvent', userId, botId, JSON.stringify(event));
+    logger.debug('processEvent', userId, JSON.stringify(event));
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
     // set userMessage
@@ -80,13 +79,13 @@ class MessengerAdapter extends WebAdapter {
       const message = event.message;
       // user send attachments
       if (message.attachments && message.attachments[0].type === 'image') {
-        userMessage = new UserImageMessage(botId, userId, message.attachments[0].payload);
+        userMessage = new UserImageMessage(userId, message.attachments[0].payload);
       } else {
-        userMessage = new UserTextMessage(botId, userId, message.text);
+        userMessage = new UserTextMessage(userId, message.text);
       }
     } else if (event.postback) {
       const payload = JSON.parse(event.postback.payload);
-      userMessage = new PostbackMessage(botId, userId, payload.dialog, payload.entities);
+      userMessage = new PostbackMessage(userId, payload.dialog, payload.entities);
     }
     await this.bot.sendResponse(userMessage.toJson());
   }

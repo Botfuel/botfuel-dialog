@@ -12,7 +12,7 @@ class ViewsManager {
   constructor(config) {
     logger.debug('constructor', config.path);
     this.viewsPath = `${config.path}/src/views`;
-    this.botId = config.id;
+    this.botId = process.env.BOT_ID;
     this.locale = config.locale;
   }
 

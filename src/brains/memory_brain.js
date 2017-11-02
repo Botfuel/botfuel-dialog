@@ -9,11 +9,10 @@ const Brain = require('./brain');
 class MemoryBrain extends Brain {
   /**
    * @constructor
-   * @param {String} botId - the bot id
    */
-  constructor(botId) {
-    logger.debug('constructor', botId);
-    super(botId);
+  constructor() {
+    logger.debug('constructor');
+    super();
     this.users = {};
   }
 

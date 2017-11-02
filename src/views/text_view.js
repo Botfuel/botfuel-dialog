@@ -7,17 +7,16 @@ const { BotTextMessage } = require('../messages');
 class TextView {
   /**
    * Render an array of BotTextMessages
-   * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {String} key - the dialog key
    * @param {Object} parameters - the dialog parameters
    * @returns {BotTextMessage[]} the array of bot text messages
    */
-  render(botId, userId, key, parameters) {
-    logger.debug('render', botId, userId, key, parameters);
+  render(userId, key, parameters) {
+    logger.debug('render', userId, key, parameters);
     return this
       .getTexts(parameters)
-      .map(text => new BotTextMessage(botId, userId, text));
+      .map(text => new BotTextMessage(userId, text));
   }
 
   /**

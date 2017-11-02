@@ -11,11 +11,10 @@ const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';
 class MongoBrain extends Brain {
   /**
    * @constructor
-   * @param {String} botId - the bot id
    */
-  constructor(botId) {
-    logger.debug('constructor', botId);
-    super(botId);
+  constructor() {
+    logger.debug('constructor');
+    super();
     this.users = null;
   }
 

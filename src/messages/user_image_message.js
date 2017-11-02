@@ -7,12 +7,12 @@ const Message = require('./message');
 class UserImageMessage extends Message {
   /**
    * @constructor
-   * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {String} value - the image url
+   * @param {Object} [options] - the message options
    */
-  constructor(botId, userId, value) {
-    super('image', 'user', botId, userId, value);
+  constructor(userId, value, options) {
+    super('image', 'user', userId, value, options);
   }
 }
 

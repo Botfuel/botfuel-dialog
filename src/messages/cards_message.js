@@ -7,13 +7,12 @@ const Message = require('./message');
 class CardsMessage extends Message {
   /**
    * @constructor
-   * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {Object[]} cards - the cards array
-   * @param {Object} options - the message options
+   * @param {Object} [options] - the message options
    */
-  constructor(botId, userId, cards, options) {
-    super('cards', 'bot', botId, userId, cards.map(card => card.toJson()), options);
+  constructor(userId, cards, options) {
+    super('cards', 'bot', userId, cards.map(card => card.toJson()), options);
   }
 }
 

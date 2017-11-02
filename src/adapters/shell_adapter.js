@@ -26,15 +26,11 @@ class ShellAdapter extends Adapter {
   async run() {
     logger.debug('run');
     await this.bot.brain.initUserIfNecessary(this.userId);
-    const botMessage = new BotTextMessage(this.config.id, this.userId, 'onboarding').toJson();
+    const botMessage = new BotTextMessage(this.userId, 'onboarding').toJson();
     let userInput = await this.send([botMessage]);
     for (;;) {
       logger.debug('run: userInput', userInput);
-      const userMessage = new UserTextMessage(
-        this.config.id,
-        this.userId,
-        userInput.payload,
-      ).toJson();
+      const userMessage = new UserTextMessage(this.userId, userInput.payload).toJson();
       // eslint-disable-next-line no-await-in-loop
       userInput = await this.bot.sendResponse(userMessage);
     }

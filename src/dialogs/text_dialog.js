@@ -9,7 +9,7 @@ class TextDialog extends Dialog {
   /**
    * @constructor
    * @param {Object} config - the bot config
-   * @param {class} brain - the bot brain
+   * @param {Brain} brain - the bot brain
    */
   constructor(config, brain) {
     super(config, brain, 1);

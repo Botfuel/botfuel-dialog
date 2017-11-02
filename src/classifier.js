@@ -72,7 +72,7 @@ class Classifier {
    */
   async compute(sentence, entities) {
     logger.debug('compute', sentence, entities);
-    const features = this.computeFeatures(sentence, entities);
+    const features = this.computeFeatures(sentence); // entities can also be parts of the features
     return this.classifier.getClassifications(features);
   }
 

@@ -9,7 +9,6 @@ const MEMORY_BRAIN_LABEL = 'memory';
 const MONGO_BRAIN_LABEL = 'mongo';
 
 // bot + user ids
-const BOT_ID = 'BOT_TEST';
 const USER_ID = 'USER_TEST';
 
 const brainTest = (brainLabel) => {
@@ -18,12 +17,12 @@ const brainTest = (brainLabel) => {
   beforeEach(async function () {
     switch (brainLabel) {
       case MONGO_BRAIN_LABEL:
-        brain = new MongoBrain(BOT_ID);
+        brain = new MongoBrain();
         await brain.init();
         break;
       case MEMORY_BRAIN_LABEL:
       default:
-        brain = new MemoryBrain(BOT_ID);
+        brain = new MemoryBrain();
     }
   });
 
@@ -48,7 +47,7 @@ const brainTest = (brainLabel) => {
     const user = await brain.getUser(USER_ID);
     expect(user).to.include.keys('botId', 'userId', 'conversations', 'dialogs', 'createdAt');
     expect(user.userId).to.be(USER_ID);
-    expect(user.botId).to.be(BOT_ID);
+    expect(user.botId).to.be(process.env.BOT_ID);
     expect(user.conversations).to.empty();
     expect(user.dialogs).to.empty();
   });

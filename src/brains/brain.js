@@ -6,10 +6,9 @@ const logger = require('logtown')('Brain');
 class Brain {
   /**
    * @constructor
-   * @param {String} botId - the bot id
    */
-  constructor(botId) {
-    this.botId = botId;
+  constructor() {
+    this.botId = process.env.BOT_ID;
     // TODO: get from config or default value below
     this.dayInMs = 86400000; // One day in milliseconds
   }

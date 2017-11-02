@@ -18,7 +18,7 @@ class BooleanExtractor extends CorpusExtractor {
 
   /**
    * Get entity
-   * @param {String} value - the entity value
+   * @param {*} value - the entity value
    * @returns {Object} the entity
    */
   getEntity(value) {
