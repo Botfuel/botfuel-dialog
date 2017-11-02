@@ -12,12 +12,17 @@ const TestAdapter = require('./adapters/test_adapter');
 const logger = Logger.getLogger('Bot');
 
 /**
- * Bot main class
+ * This is the bot main class.
+ * A bot has :
+ * - an {@link Adapter},
+ * - a {@link Brain},
+ * - a {@link Nlu} (Natural Language Understanding) module,
+ * - a {@link DialogManager}.
  */
 class Bot {
   /**
    * @constructor
-   * @param {object} config - the bot config
+   * @param {object} config - the bot configuration
    */
   constructor(config) {
     this.configureLogger(config);
@@ -42,8 +47,8 @@ class Bot {
   }
 
   /**
-   * Configure bot logger
-   * @param {object} config - the bot config
+   * Configures the logger.
+   * @param {object} config - the bot configuration
    */
   configureLogger(config) {
     const paths = [
@@ -67,31 +72,32 @@ class Bot {
   }
 
   /**
-   * Run the bot.
+   * Runs the bot.
    * @async
-   * @returns {Promise}
+   * @returns {Promise.<void>}
    */
   async run() {
     logger.debug('run');
     await this.init();
-    return this.adapter.run();
+    await this.adapter.run();
   }
 
   /**
-   * Play user messages
+   * Plays user messages (only available with the {@link TestAdapter}).
    * @async
-   * @param {object[]} userMessages - user messages
-   * @returns {Promise}
+   * @param {string[]} userMessages - the user messages
+   * @returns {Promise.<void>}
    */
   async play(userMessages) {
     logger.debug('play', userMessages);
     await this.init();
-    return this.adapter.play(userMessages);
+    await this.adapter.play(userMessages);
   }
 
   /**
-   * Initialize bot modules
+   * Initializes the bot.
    * @async
+   * @private
    * @returns {Promise.<void>}
    */
   async init() {
@@ -100,10 +106,10 @@ class Bot {
   }
 
   /**
-   * Send bot responses to user
+   * Responds to the user.
    * @async
-   * @param {object} userMessage - user message
-   * @returns {Promise}
+   * @param {object} userMessage - the user message
+   * @returns {Promise.<void>}
    */
   async sendResponse(userMessage) {
     logger.debug('sendResponse', userMessage);
@@ -118,10 +124,11 @@ class Bot {
   }
 
   /**
-   * Get responses based on user message type
+   * Computes the responses.
    * @async
-   * @param {object} userMessage - user message
-   * @returns {Promise}
+   * @private
+   * @param {object} userMessage - the user message
+   * @returns {Promise.<object[]>}
    */
   async getResponses(userMessage) {
     logger.debug('getResponses', userMessage);
@@ -137,10 +144,11 @@ class Bot {
   }
 
   /**
-   * Get responses for a given user text message
+   * Computes the responses for a user message of type text.
    * @async
-   * @param {object} userMessage - user message
-   * @returns {Promise}
+   * @private
+   * @param {object} userMessage - the user text message
+   * @returns {Promise.<object[]>}
    */
   async getResponsesWhenText(userMessage) {
     logger.debug('getResponsesWhenText', userMessage);
@@ -150,10 +158,11 @@ class Bot {
   }
 
   /**
-   * Get responses for a given user postback message
+   * Computes the responses for a user message of type postback.
    * @async
-   * @param {object} userMessage - user message
-   * @returns {Promise}
+   * @private
+   * @param {object} userMessage - the user postback message
+   * @returns {Promise.<object[]>}
    */
   async getResponsesWhenPostback(userMessage) {
     logger.debug('getResponsesWhenPostback', userMessage);
@@ -168,10 +177,11 @@ class Bot {
   }
 
   /**
-   * Get responses for a given user image message
+   * Computes the responses for a user message of type image.
    * @async
-   * @param {object} userMessage - user message
-   * @returns {Promise}
+   * @private
+   * @param {object} userMessage - the user image message
+   * @returns {Promise.<object[]>}
    */
   async getResponsesWhenDownload(userMessage) { // TODO: rename
     logger.debug('getResponsesWhenDownload', userMessage);
