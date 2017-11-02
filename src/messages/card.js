@@ -16,7 +16,7 @@ class Card {
   }
 
   /**
-   * Convert the card to json
+   * Converts the card to json
    * @returns {Object} the json card
    */
   toJson() {
