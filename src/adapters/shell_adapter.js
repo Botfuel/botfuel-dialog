@@ -36,7 +36,7 @@ class ShellAdapter extends Adapter {
    async runWhenUserInput(userInput) {
      logger.debug('runWhenUserInput', userInput);
      const userMessage = new UserTextMessage(userInput.payload);
-     const userInput = await this.bot.respond(userMessage.toJson(this.config.id, this.userId));
+     userInput = await this.bot.respond(userMessage.toJson(this.config.id, this.userId));
      await this.runWhenUserInput(userInput);
   }
   /**
