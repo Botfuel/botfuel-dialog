@@ -47,7 +47,6 @@ class Bot {
   }
 
   /**
-<<<<<<< HEAD
    * Configures the logger.
    * @param {object} config - the bot configuration
    */
@@ -74,9 +73,6 @@ class Bot {
 
   /**
    * Runs the bot.
-=======
-   * Run the bot.
->>>>>>> 1f4295cd6f9ae086086784fd90da212d6a1fb152
    * @async
    * @returns {Promise.<void>}
    */
@@ -89,11 +85,7 @@ class Bot {
   /**
    * Plays user messages (only available with the {@link TestAdapter}).
    * @async
-<<<<<<< HEAD
    * @param {string[]} userMessages - the user messages
-=======
-   * @param {Object[]} userMessages - user messages
->>>>>>> 1f4295cd6f9ae086086784fd90da212d6a1fb152
    * @returns {Promise.<void>}
    */
   async play(userMessages) {
@@ -103,7 +95,6 @@ class Bot {
   }
 
   /**
-<<<<<<< HEAD
    * Initializes the bot.
    * @async
    * @private
@@ -118,11 +109,6 @@ class Bot {
    * Responds to the user.
    * @async
    * @param {object} userMessage - the user message
-=======
-   * Send bot responses to user
-   * @async
-   * @param {Object} userMessage - user message
->>>>>>> 1f4295cd6f9ae086086784fd90da212d6a1fb152
    * @returns {Promise.<void>}
    */
   async sendResponse(userMessage) {
@@ -138,56 +124,11 @@ class Bot {
   }
 
   /**
-<<<<<<< HEAD
-   * Computes the responses.
-   * @async
-   * @private
-   * @param {object} userMessage - the user message
-   * @returns {Promise.<object[]>}
-=======
-   * Initialize bot modules
-   * @private
-   * @async
-   * @returns {Promise.<void>}
-   */
-  async init() {
-    await this.brain.init();
-    await this.nlu.init();
-  }
-
-  /**
-   * Configure bot logger
-   * @private
-   * @param {Object} config - the bot config
-   * @returns {void}
-   */
-  configureLogger(config) {
-    const paths = [
-      `${config.path}/src/loggers/${config.logger}.js`,
-      `${__dirname}/loggers/${config.logger}.js`,
-    ];
-    for (const path of paths) {
-      if (fs.existsSync(path)) {
-        const loggerConfig = require(path);
-        if (loggerConfig.wrapper) {
-          Logger.clean(); // clean wrappers
-          Logger.addWrapper(loggerConfig.wrapper);
-        }
-        if (loggerConfig.config) {
-          Logger.configure(loggerConfig.config);
-        }
-        break;
-      }
-    }
-  }
-
-  /**
-   * Get responses based on user message type
+   * Computes the responses based on user message type.
    * @private
    * @async
    * @param {Object} userMessage - user message
    * @returns {Promise.<Object[]>} the responses
->>>>>>> 1f4295cd6f9ae086086784fd90da212d6a1fb152
    */
   async getResponses(userMessage) {
     logger.debug('getResponses', userMessage);
@@ -203,19 +144,11 @@ class Bot {
   }
 
   /**
-<<<<<<< HEAD
    * Computes the responses for a user message of type text.
    * @async
    * @private
    * @param {object} userMessage - the user text message
    * @returns {Promise.<object[]>}
-=======
-   * Get responses for a given user text message
-   * @private
-   * @async
-   * @param {Object} userMessage - user message
-   * @returns {Promise.<Object[]>} the responses
->>>>>>> 1f4295cd6f9ae086086784fd90da212d6a1fb152
    */
   async getResponsesWhenText(userMessage) {
     logger.debug('getResponsesWhenText', userMessage);
@@ -225,19 +158,11 @@ class Bot {
   }
 
   /**
-<<<<<<< HEAD
    * Computes the responses for a user message of type postback.
    * @async
    * @private
    * @param {object} userMessage - the user postback message
    * @returns {Promise.<object[]>}
-=======
-   * Get responses for a given user postback message
-   * @private
-   * @async
-   * @param {Object} userMessage - user message
-   * @returns {Promise.<Object[]>} the responses
->>>>>>> 1f4295cd6f9ae086086784fd90da212d6a1fb152
    */
   async getResponsesWhenPostback(userMessage) {
     logger.debug('getResponsesWhenPostback', userMessage);
@@ -252,19 +177,11 @@ class Bot {
   }
 
   /**
-<<<<<<< HEAD
    * Computes the responses for a user message of type image.
    * @async
    * @private
    * @param {object} userMessage - the user image message
    * @returns {Promise.<object[]>}
-=======
-   * Get responses for a given user image message
-   * @private
-   * @async
-   * @param {Object} userMessage - user message
-   * @returns {Promise.<Object[]>} the responses
->>>>>>> 1f4295cd6f9ae086086784fd90da212d6a1fb152
    */
   async getResponsesWhenDownload(userMessage) { // TODO: rename
     logger.debug('getResponsesWhenDownload', userMessage);
