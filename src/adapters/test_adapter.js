@@ -32,7 +32,7 @@ class TestAdapter extends Adapter {
       userMessage.bot = this.config.id;
       this.log.push(userMessage.toJson());
       // eslint-disable-next-line no-await-in-loop
-      await this.bot.respond(userMessage);
+      await this.bot.respond(userMessage.toJson());
     }
   }
 
