@@ -11,7 +11,7 @@ const qs = { access_token: process.env.FB_PAGE_ACCESS_TOKEN || '' };
  */
 class MessengerAdapter extends WebAdapter {
   /**
-   * add extra route for this adapter
+   * adds extra route for this adapter
    * @override
    * @param {Object} app - the express app
    * @returns {void}
@@ -23,7 +23,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Handler for validating messenger webhook
+   * Handles messenger validation webhook
    * @async
    * @param {Object} req - the request object
    * @param {Object} res - the response object
@@ -41,7 +41,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Handler for messenger webhook post request
+   * Handles messenger post request webhook
    * @async
    * @param {Object} req - the request object
    * @param {Object} res - the response object
@@ -62,7 +62,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Process received event (message, postback ...)
+   * Processes received event (message, postback ...)
    * @async
    * @param {Object} event - the messenger event
    * @returns {Promise.<void>}
@@ -94,7 +94,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * send message to messenger for each bot messages
+   * sends message to messenger for each bot messages
    * @async
    * @param {Object[]} botMessages - the bot messages
    * @returns {Promise.<void>}
@@ -114,7 +114,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Adapt payload to send text
+   * Adapts payload to send text
    * @param {Object} payload - the payload
    * @returns {Object} the text
    */
@@ -125,7 +125,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Adapt payload to send quickreplies
+   * Adapts payload to send quickreplies
    * @param {Object} payload - the payload
    * @returns {Object} the quickreplies
    */
@@ -141,7 +141,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Adapt payload to send image
+   * Adapts payload to send image
    * @param {Object} payload - the payload
    * @returns {Object} the image
    */
@@ -155,7 +155,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Adapt payload to send actions
+   * Adapts payload to send actions
    * @param {Object} payload - the payload
    * @returns {Object} the actions
    */
@@ -172,7 +172,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Adapt payload to send cards
+   * Adapts payload to send cards
    * @param {Object} payload - the payload
    * @returns {Object} the cards
    */
@@ -191,7 +191,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Adapt payload to send specific message type
+   * Adapts payload to send specific message type
    * @param {Object} botMessage - the bot message
    * @returns {Object} the adapted message
    */
@@ -215,7 +215,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Adapt an action item to messenger (button, link ...)
+   * Adapts an action item to messenger (button, link ...)
    * @static
    * @param {Object} action - the action object
    * @returns {Object|null} the adapted action or null if action type is not valid

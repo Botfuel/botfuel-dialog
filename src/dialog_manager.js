@@ -4,6 +4,10 @@ const Dialog = require('./dialogs/dialog');
 
 /**
  * Dialog manager turns NLU output into a dialog stack
+ * A Dialog manager has:
+ * - an intent threshold
+ * The Dialog manager have access to:
+ * - the bot {@link Brain},
  */
 class DialogManager {
   /**
@@ -19,7 +23,7 @@ class DialogManager {
   }
 
   /**
-   * Get dialog path
+   * Gets dialog path
    * @param {String} label - the dialog's label
    * @returns {String|null} - the dialog path if found or null
    */
@@ -41,7 +45,7 @@ class DialogManager {
   }
 
   /**
-   * Get a dialog
+   * Gets a dialog and instantiates it
    * @param {Object} dialog - the dialog
    * @returns {Dialog} - the dialog instance
    */
@@ -73,7 +77,7 @@ class DialogManager {
   }
 
   /**
-   * Executes the dialogs.
+   * Updates the dialogs.
    * @param {String} userId - the user id
    * @param {Object[]} dialogs - the dialogs
    * @param {Object[]} intents - the intents
@@ -117,6 +121,7 @@ class DialogManager {
 
   /**
    * Executes the dialogs.
+   * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} dialogs - the dialogs
    * @returns {Promise.<void>}
@@ -146,6 +151,7 @@ class DialogManager {
 
   /**
    * Populates and executes the stack.
+   * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String[]} intents - the intents
    * @param {Object[]} entities - the transient entities

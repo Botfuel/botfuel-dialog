@@ -15,7 +15,7 @@ class Action {
   }
 
   /**
-   * Convert the action to json
+   * Converts the action to json
    * @returns {Object} the json action
    */
   toJson() {

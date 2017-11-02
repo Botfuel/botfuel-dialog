@@ -17,6 +17,8 @@ class QnasDialog extends Dialog {
 
   /**
    * Executes the dialog.
+   * @async
+   * @param {Adapter} adapter - the adapter
    * @param {String} userId the user id
    * @param {Object[]} messageEntities - the message entities
    * @returns {String} the dialog completed status

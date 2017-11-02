@@ -17,7 +17,7 @@ class Message {
   }
 
   /**
-   * Convert a message to json
+   * Converts a message to json
    * @returns {Object} the json message
    */
   toJson() {

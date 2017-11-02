@@ -24,7 +24,7 @@ class QnasView {
   }
 
   /**
-   * Render a qna answer
+   * Renders a qna answer
    * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {String} answer - the answer

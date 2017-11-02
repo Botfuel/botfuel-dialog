@@ -2,7 +2,7 @@ const logger = require('logtown')('CorpusExtractor');
 const Corpus = require('../corpora/corpus');
 
 /**
- * Extract corpus entities
+ * Extracts corpus entities
  */
 class CorpusExtractor {
   /**
@@ -27,7 +27,7 @@ class CorpusExtractor {
   }
 
   /**
-   * Get the remainder for a word in a sentence
+   * Gets the remainder for a word in a sentence
    * @param {String} sentence - the sentence
    * @param {String} word - the word to find
    * @returns {String|null} the remainder
@@ -51,7 +51,7 @@ class CorpusExtractor {
   }
 
   /**
-   * Get entity
+   * Gets entity
    * @param {*} value - the entity value
    * @returns {Object} the entity
    */
@@ -60,7 +60,7 @@ class CorpusExtractor {
   }
 
   /**
-   * Compute entities in a sentence
+   * Computes entities in a sentence
    * @param {String} sentence - the sentence
    * @param {String[]} words - the words
    * @param {Object[]} entities - the entities

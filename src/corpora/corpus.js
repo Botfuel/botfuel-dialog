@@ -15,7 +15,7 @@ class Corpus {
   }
 
   /**
-   * Normalize a sentence
+   * Normalizes a sentence
    * @static
    * @param {String} sentence - the sentence
    * @param {Object} options - the normalization options
@@ -39,7 +39,7 @@ class Corpus {
   }
 
   /**
-   * Check if a normalized key and word match together
+   * Checks if a normalized key and word match together
    * @static
    * @param {String} key - the key
    * @param {String} word - the word
@@ -52,7 +52,7 @@ class Corpus {
   }
 
   /**
-   * Get matching value for a key
+   * Gets matching value for a key
    * @param {String} key - the key to find
    * @param {Object} options - the normalization options
    * @returns {*} the matching value
@@ -70,7 +70,7 @@ class Corpus {
   }
 
   /**
-   * Transform matrix of words into list of words
+   * Transforms matrix of words into list of words
    * @returns {String[]} the words list
    */
   getWords() {

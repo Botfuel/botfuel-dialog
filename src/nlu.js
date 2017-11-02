@@ -28,7 +28,7 @@ class Nlu {
   }
 
   /**
-   * Get extractor files
+   * Gets extractor files
    * @param {String} path - extractors path
    * @returns {Array.<string>} - extractor files
    */
@@ -41,7 +41,7 @@ class Nlu {
   }
 
   /**
-   * Get extractors
+   * Gets and instantiates extractors
    * @param {String} path - extractors path
    * @returns {Array.<*>} - extractors instances
    */
@@ -57,7 +57,7 @@ class Nlu {
   }
 
   /**
-   * Initialize Nlu
+   * Initializes the Nlu module
    * @returns {Promise.<void>}
    */
   async init() {
@@ -89,7 +89,7 @@ class Nlu {
   }
 
   /**
-   * Compute local bot intents and entities
+   * Computes local bot intents and entities
    * @param {String} sentence - the user sentence
    * @returns {Promise.<Object>}
    */
@@ -103,7 +103,7 @@ class Nlu {
   }
 
   /**
-   * Compute qnas intents and entities
+   * Computes qnas intents and entities
    * @param {String} sentence - the user sentence
    * @returns {Promise.<Object>}
    */

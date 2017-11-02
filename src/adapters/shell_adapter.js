@@ -19,7 +19,7 @@ class ShellAdapter extends Adapter {
   }
 
   /**
-   * Run the adapter
+   * Runs the adapter
    * @async
    * @returns {Promise.<void>}
    */
@@ -42,7 +42,7 @@ class ShellAdapter extends Adapter {
      await this.runWhenUserInput(await this.bot.respond(userMessage.toJson()));
   }
   /**
-   * Send bot messages to the shell
+   * Sends bot messages to the shell
    * @async
    * @param {Object[]} botMessages - the bot messages
    * @returns {Promise} the prompt
