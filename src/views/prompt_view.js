@@ -6,7 +6,7 @@ const { BotTextMessage } = require('../messages');
  */
 class PromptView {
   /**
-   * Render an array of bot messages
+   * Renders an array of bot messages
    * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {String} key - the dialog key
@@ -32,7 +32,7 @@ class PromptView {
   }
 
   /**
-   * Render ask key
+   * Renders ask key
    * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @returns {Object[]} the bot messages
@@ -44,7 +44,7 @@ class PromptView {
   }
 
   /**
-   * Render confirm key
+   * Renders confirm key
    * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @returns {Object[]} the bot messages
@@ -56,7 +56,7 @@ class PromptView {
   }
 
   /**
-   * Render discard key
+   * Renders discard key
    * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @returns {Object[]} the bot messages
@@ -68,7 +68,7 @@ class PromptView {
   }
 
   /**
-   * Render entities key
+   * Renders entities key
    * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the defined entities

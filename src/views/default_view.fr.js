@@ -7,7 +7,7 @@ const TextView = require('./text_view');
  */
 class DefaultView extends TextView {
   /**
-   * Get views texts
+   * Gets view texts
    * @override
    * @param {Object} [parameters={}] - the dialog parameters
    * @returns {String[]}

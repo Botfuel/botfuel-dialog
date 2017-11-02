@@ -6,7 +6,7 @@ const { ActionsMessage, BotTextMessage, Postback } = require('../messages');
  */
 class QnasView {
   /**
-   * Render an array of bot messages
+   * Renders an array of bot messages
    * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {String} key - the dialog key
@@ -26,7 +26,7 @@ class QnasView {
   }
 
   /**
-   * Render a qna answer
+   * Renders a qna answer
    * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {String} answer - the answer
@@ -40,7 +40,7 @@ class QnasView {
   }
 
   /**
-   * Render qna questions
+   * Renders qna questions
    * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {Object[]} qnas - the qnas
