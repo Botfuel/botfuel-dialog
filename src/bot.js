@@ -57,14 +57,14 @@ class Bot {
     ];
     for (const path of paths) {
       if (fs.existsSync(path)) {
-        const logger = require(path);
-        if (logger.wrapper) {
+        const loggerConfig = require(path);
+        if (loggerConfig.wrapper) {
           // clean wrappers
           Logger.clean();
-          Logger.addWrapper(logger.wrapper);
+          Logger.addWrapper(loggerConfig.wrapper);
         }
-        if (logger.config) {
-          Logger.configure(logger.config);
+        if (loggerConfig.config) {
+          Logger.configure(loggerConfig.config);
         }
         break;
       }
