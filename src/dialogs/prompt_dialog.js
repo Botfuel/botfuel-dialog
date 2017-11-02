@@ -38,8 +38,9 @@ class PromptDialog extends Dialog {
   /**
    * Execute dialog when blocked status
    * @async
+   * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} messageEntities - the message entities
+   * @param {Object[]} [messageEntities] - the message entities
    * @returns {Promise.<string>} the next dialog's status
    */
   async executeWhenBlocked(adapter, userId, messageEntities) {
@@ -51,6 +52,7 @@ class PromptDialog extends Dialog {
   /**
    * Execute dialog when waiting status
    * @async
+   * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
    * @returns {Promise.<string>} the next dialog's status
@@ -76,6 +78,7 @@ class PromptDialog extends Dialog {
   /**
    * Execute dialog when ready status
    * @async
+   * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
    * @returns {Promise.<string>} the next dialog's status
@@ -92,6 +95,8 @@ class PromptDialog extends Dialog {
 
   /**
    * Executes dialog according to it's status.
+   * @async
+   * @param {Adapter} adapter - the adapter
    * @param {String} userId the user id
    * @param {Object[]} messageEntities - entities array from user message
    * @param {String} status - the dialog status

@@ -62,6 +62,7 @@ class Dialog {
 
   /**
    * Display a message to user
+   * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String} key - the dialog key
    * @param {Object} [parameters] - the dialog parameters

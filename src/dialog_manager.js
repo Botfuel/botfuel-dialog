@@ -117,6 +117,7 @@ class DialogManager {
 
   /**
    * Executes the dialogs.
+   * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} dialogs - the dialogs
    * @returns {Promise.<void>}
@@ -146,6 +147,7 @@ class DialogManager {
 
   /**
    * Populates and executes the stack.
+   * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String[]} intents - the intents
    * @param {Object[]} entities - the transient entities
