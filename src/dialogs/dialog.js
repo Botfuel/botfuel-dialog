@@ -63,21 +63,18 @@ class Dialog {
   /**
    * Display a message to user
    * @param {String} userId - the user id
-   * @param {Object[]} responses - the bot responses
    * @param {String} key - the dialog key
    * @param {Object} [parameters] - the dialog parameters
    * @returns {void}
    */
-  display(userId, responses, key, parameters) {
-    logger.debug('display', userId, responses, key, parameters);
+  display(adapter, userId, key, parameters) {
+    logger.debug('display', userId, key, parameters);
     const botMessages = this
           .viewsManager
           .resolve(this.name)
-          .render(this.config.id, userId, key, parameters);
-    logger.debug('display: botMessages', botMessages);
-    for (const botMessage of botMessages) {
-      responses.push(botMessage.toJson());
-    }
+          .render(this.config.id, userId, key, parameters)
+          .map(dialog => dialog.toJson());
+    adapter.send(botMessages);
   }
 }
 

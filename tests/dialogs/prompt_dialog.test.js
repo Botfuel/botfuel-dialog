@@ -3,6 +3,7 @@
 const expect = require('expect.js');
 const PromptDialog = require('../../src/dialogs/prompt_dialog');
 const MemoryBrain = require('../../src/brains/memory_brain');
+const TestAdapter = require('../../src/adapters/test_adapter');
 const { BotTextMessage } = require('../../src/messages');
 
 const TEST_USER = '1';
@@ -22,9 +23,13 @@ describe('PromptDialog', function () {
   });
 
   it('when given no entity, should list both and ask for one', async function () {
-    const responses = [];
-    await prompt.execute(TEST_USER, responses, []);
-    expect(responses).to.eql([
+    const adapter = new TestAdapter();
+    await prompt.execute(
+      adapter,
+      TEST_USER,
+      []
+    );
+    expect(adapter.log).to.eql([
       new BotTextMessage(TEST_BOT, TEST_USER, 'Entities needed: dim1, dim2').toJson(),
       new BotTextMessage(TEST_BOT, TEST_USER, 'Which dim1?').toJson(),
     ]);
@@ -35,9 +40,13 @@ describe('PromptDialog', function () {
   });
 
   it('when given a first entity, should list both and ask for the second one', async function () {
-    const responses = [];
-    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1', body: 'dim1' }]);
-    expect(responses).to.eql([
+    const adapter = new TestAdapter();
+    await prompt.execute(
+      adapter,
+      TEST_USER,
+      [{ dim: 'dim1', body: 'dim1' }]
+    );
+    expect(adapter.log).to.eql([
       new BotTextMessage(TEST_BOT, TEST_USER, 'Entities defined: dim1').toJson(),
       new BotTextMessage(TEST_BOT, TEST_USER, 'Entities needed: dim2').toJson(),
       new BotTextMessage(TEST_BOT, TEST_USER, 'Which dim2?').toJson(),
@@ -49,9 +58,14 @@ describe('PromptDialog', function () {
   });
 
   it('when given both entity, should ask none', async function () {
-    const responses = [];
-    await prompt.execute(TEST_USER, responses, [{ dim: 'dim1', body: 'dim1' }, { dim: 'dim2', body: 'dim2' }], PromptDialog.STATUS_READY);
-    expect(responses).to.eql([
+    const adapter = new TestAdapter();
+    await prompt.execute(
+      adapter,
+      TEST_USER,
+      [{ dim: 'dim1', body: 'dim1' }, { dim: 'dim2', body: 'dim2' }],
+      PromptDialog.STATUS_READY
+    );
+    expect(adapter.log).to.eql([
       new BotTextMessage(TEST_BOT, TEST_USER, 'Entities defined: dim1, dim2').toJson(),
     ]);
     const user = await brain.getUser(TEST_USER);

@@ -39,17 +39,17 @@ class WebAdapter extends Adapter {
    * @returns {Promise.<void>}
    */
   async postResponse(requestOptions) {
-    logger.debug('sendResponse', requestOptions);
+    logger.debug('postResponse', requestOptions);
     const options = Object.assign({ method: 'POST', json: true }, requestOptions);
     try {
       const response = await rp(options);
       if (response.statusCode !== 200) { // not handled on messenger
-        logger.error('sendResponse: KO', response);
+        logger.error('postResponse: KO', response);
       } else {
-        logger.debug('sendResponse: OK');
+        logger.debug('postResponse: OK');
       }
     } catch (error) {
-      logger.error('sendResponse: catch KO', error.message || error.error || error);
+      logger.error('postResponse: catch KO', error.message || error.error || error);
     }
   }
 }

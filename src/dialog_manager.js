@@ -119,11 +119,10 @@ class DialogManager {
    * Executes the dialogs.
    * @param {String} userId - the user id
    * @param {Object[]} dialogs - the dialogs
-   * @returns {Object[]} the responses
+   * @returns {Promise.<void>}
    */
-  async executeDialogs(userId, dialogs) {
+  async executeDialogs(adapter, userId, dialogs) {
     logger.debug('executeDialogs', userId, dialogs);
-    const responses = [];
     while (dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
       // eslint-disable-next-line no-await-in-loop
@@ -131,7 +130,7 @@ class DialogManager {
       // eslint-disable-next-line no-await-in-loop
       dialog.status = await this
         .getDialog(dialog)
-        .execute(userId, responses, dialog.entities || [], dialog.status);
+        .execute(adapter, userId, dialog.entities || [], dialog.status);
       if (dialog.status === Dialog.STATUS_DISCARDED) {
         dialogs = dialogs.slice(0, -1);
         // eslint-disable-next-line no-await-in-loop
@@ -143,8 +142,6 @@ class DialogManager {
       }
     }
     await this.brain.userSet(userId, 'dialogs', dialogs);
-    logger.debug('executeDialogs: responses', responses);
-    return responses;
   }
 
   /**
@@ -152,13 +149,13 @@ class DialogManager {
    * @param {String} userId - the user id
    * @param {String[]} intents - the intents
    * @param {Object[]} entities - the transient entities
-   * @returns {Promise.<Object[]>} the dialogs responses
+   * @returns {Promise.<void>}
    */
-  async execute(userId, intents, entities) {
+  async execute(adapter, userId, intents, entities) {
     logger.debug('execute', userId, intents, entities);
     const dialogs = await this.brain.userGet(userId, 'dialogs');
     await this.updateDialogs(userId, dialogs, intents, entities);
-    return this.executeDialogs(userId, dialogs);
+    await this.executeDialogs(adapter, userId, dialogs);
   }
 }
 

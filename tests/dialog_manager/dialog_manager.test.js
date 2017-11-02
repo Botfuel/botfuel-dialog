@@ -3,15 +3,15 @@
 const expect = require('expect.js');
 const DialogManager = require('../../src/dialog_manager');
 const MemoryBrain = require('../../src/brains/memory_brain');
+const TestAdapter = require('../../src/adapters/test_adapter');
 const { BotTextMessage } = require('../../src/messages');
 
 const TEST_BOT = '1';
 const TEST_USER = '1';
-const testConfig = { path: __dirname, locale: 'en', id: TEST_BOT };
 
 describe('DialogManager', function () {
   const brain = new MemoryBrain(TEST_BOT);
-  const dm = new DialogManager(brain, testConfig);
+  const dm = new DialogManager(brain, { path: __dirname, locale: 'en', id: TEST_BOT });
 
   beforeEach(async function () {
     await brain.clean();
@@ -29,21 +29,22 @@ describe('DialogManager', function () {
   });
 
   it('should not crash when no intent', async function () {
-    const responses = await dm.execute(TEST_USER, [], []);
-    expect(responses).to.eql([
+    const adapter = new TestAdapter();
+    await dm.execute(adapter, TEST_USER, [], []);
+    expect(adapter.log).to.eql([
       new BotTextMessage(TEST_BOT, TEST_USER, 'Not understood.').toJson(),
     ]);
   });
 
   it('should keep on the stack a dialog which is waiting', async function () {
-    await dm.execute(TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
+    await dm.execute(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.length).to.be(1);
   });
 
   it('should not stack the same dialog twice', async function () {
-    await dm.execute(TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
-    await dm.execute(TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
+    await dm.execute(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
+    await dm.execute(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.length).to.be(1);
   });

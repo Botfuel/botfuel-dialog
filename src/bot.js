@@ -3,6 +3,7 @@ const Logger = require('logtown');
 const BotfuelAdapter = require('./adapters/botfuel_adapter');
 const DialogManager = require('./dialog_manager');
 const Dialog = require('./dialogs/dialog');
+const LoggerManager = require('./logger_manager');
 const MessengerAdapter = require('./adapters/messenger_adapter');
 const MemoryBrain = require('./brains/memory_brain');
 const Nlu = require('./nlu');
@@ -25,7 +26,7 @@ class Bot {
    * @param {object} config - the bot configuration
    */
   constructor(config) {
-    this.configureLogger(config);
+    LoggerManager.configure(config);
     logger.debug('constructor', config);
     switch (config.adapter) {
       case 'botfuel':
@@ -47,28 +48,14 @@ class Bot {
   }
 
   /**
-   * Configures the logger.
-   * @param {object} config - the bot configuration
+   * Initializes the bot.
+   * @async
+   * @private
+   * @returns {Promise.<void>}
    */
-  configureLogger(config) {
-    const paths = [
-      `${config.path}/src/loggers/${config.logger}.js`,
-      `${__dirname}/loggers/${config.logger}.js`,
-    ];
-    for (const path of paths) {
-      if (fs.existsSync(path)) {
-        const logger = require(path);
-        if (logger.wrapper) {
-          // clean wrappers
-          Logger.clean();
-          Logger.addWrapper(logger.wrapper);
-        }
-        if (logger.config) {
-          Logger.configure(logger.config);
-        }
-        break;
-      }
-    }
+  async init() {
+    await this.brain.init();
+    await this.nlu.init();
   }
 
   /**
@@ -95,51 +82,23 @@ class Bot {
   }
 
   /**
-   * Initializes the bot.
-   * @async
-   * @private
-   * @returns {Promise.<void>}
-   */
-  async init() {
-    await this.brain.init();
-    await this.nlu.init();
-  }
-
-  /**
    * Responds to the user.
    * @async
    * @param {object} userMessage - the user message
    * @returns {Promise.<void>}
    */
-  async sendResponse(userMessage) {
-    logger.debug('sendResponse', userMessage);
-    try {
-      const responses = await this.getResponses(userMessage);
-      logger.debug('sendResponse: responses', responses);
-      return this.adapter.send(responses);
-    } catch (err) {
-      logger.error('sendResponse', err);
-      throw err;
-    }
-  }
-
-  /**
-   * Computes the responses based on user message type.
-   * @private
-   * @async
-   * @param {Object} userMessage - user message
-   * @returns {Promise.<Object[]>} the responses
-   */
-  async getResponses(userMessage) {
-    logger.debug('getResponses', userMessage);
+  async respond(userMessage) {
+    logger.debug('respond', userMessage);
     switch (userMessage.type) {
       case 'postback':
-        return this.getResponsesWhenPostback(userMessage);
-      case 'image': // TODO: review this
-        return this.getResponsesWhenDownload(userMessage);
+        await this.respondWhenPostback(userMessage);
+        break;
+      case 'image':
+        await this.respondWhenImage(userMessage);
+        break;
       case 'text':
       default:
-        return this.getResponsesWhenText(userMessage);
+        await this.respondWhenText(userMessage);
     }
   }
 
@@ -148,13 +107,13 @@ class Bot {
    * @async
    * @private
    * @param {object} userMessage - the user text message
-   * @returns {Promise.<object[]>}
+   * @returns {Promise.<void>}
    */
-  async getResponsesWhenText(userMessage) {
-    logger.debug('getResponsesWhenText', userMessage);
+  async respondWhenText(userMessage) {
+    logger.debug('respondWhenText', userMessage);
     const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
-    logger.debug('getResponsesWhenText: intents, entities', intents, entities);
-    return this.dm.execute(userMessage.user, intents, entities);
+    logger.debug('respondWhenText: intents, entities', intents, entities);
+    await this.dm.execute(this.adapter, userMessage.user, intents, entities);
   }
 
   /**
@@ -162,11 +121,12 @@ class Bot {
    * @async
    * @private
    * @param {object} userMessage - the user postback message
-   * @returns {Promise.<object[]>}
+   * @returns {Promise.<void>}
    */
-  async getResponsesWhenPostback(userMessage) {
-    logger.debug('getResponsesWhenPostback', userMessage);
-    return this.dm.executeDialogs(
+  async respondWhenPostback(userMessage) {
+    logger.debug('respondWhenPostback', userMessage);
+    await this.dm.executeDialogs(
+      this.adapter,
       userMessage.user,
       [{
         label: userMessage.payload.value.dialog,
@@ -181,11 +141,12 @@ class Bot {
    * @async
    * @private
    * @param {object} userMessage - the user image message
-   * @returns {Promise.<object[]>}
+   * @returns {Promise.<void>}
    */
-  async getResponsesWhenDownload(userMessage) { // TODO: rename
-    logger.debug('getResponsesWhenDownload', userMessage);
-    return this.dm.executeDialogs(
+  async respondWhenImage(userMessage) {
+    logger.debug('respondWhenImage', userMessage);
+    await this.dm.executeDialogs(
+      this.adapter,
       userMessage.user,
       [{
         label: 'image',

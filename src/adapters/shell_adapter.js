@@ -36,7 +36,7 @@ class ShellAdapter extends Adapter {
         userInput.payload,
       ).toJson();
       // eslint-disable-next-line no-await-in-loop
-      userInput = await this.bot.sendResponse(userMessage);
+      userInput = await this.bot.respond(userMessage);
     }
   }
 

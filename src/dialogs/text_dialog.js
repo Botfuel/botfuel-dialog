@@ -19,13 +19,12 @@ class TextDialog extends Dialog {
    * Executes the dialog.
    * @async
    * @param {String} userId - the user id
-   * @param {Object[]} responses - the bot responses
    * @param {Object[]} messageEntities - the message entities
    * @returns {String} the dialog completed status
    */
-  async execute(userId, responses, messageEntities) {
-    logger.debug('execute', userId, responses, messageEntities);
-    this.display(userId, responses, null, messageEntities);
+  async execute(adapter, userId, messageEntities) {
+    logger.debug('execute', userId, messageEntities);
+    this.display(adapter, userId, null, messageEntities);
     return Dialog.STATUS_COMPLETED;
   }
 }

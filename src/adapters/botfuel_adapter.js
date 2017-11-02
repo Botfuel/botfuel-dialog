@@ -20,7 +20,7 @@ class BotfuelAdapter extends WebAdapter {
     logger.debug('handleMessage: userMessage', userMessage);
     const userId = userMessage.user;
     await this.bot.brain.initUserIfNecessary(userId);
-    await this.bot.sendResponse(userMessage);
+    await this.bot.respond(userMessage);
   }
 
   /**

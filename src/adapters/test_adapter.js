@@ -30,7 +30,7 @@ class TestAdapter extends Adapter {
       logger.debug('play', userMessage);
       this.log.push(userMessage);
       // eslint-disable-next-line no-await-in-loop
-      await this.bot.sendResponse(userMessage);
+      await this.bot.respond(userMessage);
     }
   }
 
