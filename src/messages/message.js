@@ -40,6 +40,10 @@ class Message {
     };
   }
 
+  /**
+   * Returns the json value
+   * @returns {*} the json value
+   */
   valueAsJson() {
     return this.value;
   }

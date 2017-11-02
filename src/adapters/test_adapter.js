@@ -29,7 +29,7 @@ class TestAdapter extends Adapter {
     for (const userMessage of userMessages) {
       logger.debug('play', userMessage);
       userMessage.user = this.userId;
-      userMessage.bot = this.config.id;
+      userMessage.bot = this.bot.id;
       this.log.push(userMessage.toJson());
       // eslint-disable-next-line no-await-in-loop
       await this.bot.respond(userMessage.toJson());

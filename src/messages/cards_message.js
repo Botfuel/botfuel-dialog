@@ -14,8 +14,12 @@ class CardsMessage extends Message {
     super('cards', 'bot', cards, options);
   }
 
+  /**
+   * Maps cards to json objects
+   * @returns {Object[]} the json cards
+   */
   valueAsJson() {
-    return this.value.map(card => card.toJson())
+    return this.value.map(card => card.toJson());
   }
 }
 

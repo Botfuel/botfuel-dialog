@@ -49,7 +49,6 @@ class Dialog {
    */
   constructor(config, brain, maxComplexity = Number.MAX_SAFE_INTEGER, parameters = {}) {
     logger.debug('constructor', parameters);
-    this.config = config;
     this.brain = brain;
     this.parameters = parameters;
     this.maxComplexity = maxComplexity;
@@ -80,7 +79,7 @@ class Dialog {
           .resolve(this.name)
           .render(key, parameters)
           .map((message) => {
-            message.bot = this.config.id;
+            message.bot = adapter.bot.id;
             message.user = userId;
             return message.toJson();
           });

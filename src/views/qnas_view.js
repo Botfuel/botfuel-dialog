@@ -11,7 +11,7 @@ class QnasView {
    * @param {Object} parameters - the dialog parameters
    * @returns {Object[]} the bot messages
    */
-  render(botId, userId, key, parameters) {
+  render(key, parameters) {
     logger.debug('render', key, parameters);
     switch (key) {
       case 'answer':
@@ -25,20 +25,18 @@ class QnasView {
 
   /**
    * Renders a qna answer
-   * @param {String} botId - the bot id
-   * @param {String} userId - the user id
    * @param {String} answer - the answer
    * @returns {BotTextMessage[]} the answer
    */
-  renderAnswer(botId, userId, answer) {
-    logger.debug('renderAnswer', botId, userId, answer);
+  renderAnswer(answer) {
+    logger.debug('renderAnswer', answer);
     return [
-      new BotTextMessage(botId, userId, answer),
+      new BotTextMessage(answer),
     ];
   }
 
   /**
-   * Render qna questions
+   * Renders qna questions
    * @param {Object[]} qnas - the qnas
    * @returns {Object[]} the questions
    */

@@ -68,10 +68,9 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise.<void>}
    */
   async processEvent(event) {
-    const { sender, recipient } = event;
+    const { sender } = event;
     const userId = sender.id; // messenger user id
-    const botId = recipient.id; // page id
-    logger.debug('processEvent', userId, botId, JSON.stringify(event));
+    logger.debug('processEvent', userId, this.bot.id, JSON.stringify(event));
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
     // set userMessage
@@ -88,7 +87,7 @@ class MessengerAdapter extends WebAdapter {
       const payload = JSON.parse(event.postback.payload);
       userMessage = new PostbackMessage(payload.dialog, payload.entities);
     }
-    userMessage.bot = botId;
+    userMessage.bot = this.bot.id;
     userMessage.user = userId;
     await this.bot.respond(userMessage.toJson());
   }

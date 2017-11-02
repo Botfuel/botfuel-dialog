@@ -14,8 +14,12 @@ class ActionsMessage extends Message {
     super('actions', 'bot', actions, options);
   }
 
+  /**
+   * Maps actions to json objects
+   * @returns {Object[]} the json actions
+   */
   valueAsJson() {
-    return this.value.map(action => action.toJson())
+    return this.value.map(action => action.toJson());
   }
 }
 

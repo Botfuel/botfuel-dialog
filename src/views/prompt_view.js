@@ -6,7 +6,7 @@ const { BotTextMessage } = require('../messages');
  */
 class PromptView {
   /**
-   * Render an array of bot messages
+   * Renders an array of bot messages
    * @param {String} key - the dialog key
    * @param {Object} parameters - the dialog parameters
    * @returns {Object[]} the bot messages
@@ -30,7 +30,7 @@ class PromptView {
   }
 
   /**
-   * Render ask key
+   * Renders ask key
    * @returns {Object[]} the bot messages
    */
   renderAsk() {
@@ -40,7 +40,7 @@ class PromptView {
   }
 
   /**
-   * Render confirm key
+   * Renders confirm key
    * @returns {Object[]} the bot messages
    */
   renderConfirm() {
@@ -50,17 +50,17 @@ class PromptView {
   }
 
   /**
-   * Render discard key
+   * Renders discard key
    * @returns {Object[]} the bot messages
    */
-  renderDiscard(d) {
+  renderDiscard() {
     return [
       new BotTextMessage('dialog discarded.'),
     ];
   }
 
   /**
-   * Render entities key
+   * Renders entities key
    * @param {Object[]} messageEntities - the defined entities
    * @param {String[]} missingEntities - the needed entities
    * @returns {Object[]} the bot messages
@@ -73,12 +73,8 @@ class PromptView {
       ));
     }
     if (missingEntities.length !== 0) {
-      messages.push(new BotTextMessage(
-        `Entities needed: ${missingEntities.join(', ')}`,
-      ));
-      messages.push(new BotTextMessage(
-        `Which ${missingEntities[0]}?`,
-      ));
+      messages.push(new BotTextMessage(`Entities needed: ${missingEntities.join(', ')}`));
+      messages.push(new BotTextMessage(`Which ${missingEntities[0]}?`));
     }
     return messages;
   }
