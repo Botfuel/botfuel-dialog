@@ -1,7 +1,15 @@
 const fs = require('fs');
 const Logger = require('logtown');
 
+/**
+ * Configure the logger facade
+ */
 class LoggerManager {
+  /**
+   * Configures the logger wrapper and configuration
+   * @param {Object} config - the bot configuration
+   * @returns {void}
+   */
   static configure(config) {
     const paths = [
       `${config.path}/src/loggers/${config.logger}.js`,
