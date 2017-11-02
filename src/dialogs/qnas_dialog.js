@@ -8,7 +8,7 @@ const Dialog = require('./dialog');
 class QnasDialog extends Dialog {
   /**
    * @constructor
-   * @param {object} config - the bot config
+   * @param {Object} config - the bot config
    * @param {class} brain - the bot brain
    */
   constructor(config, brain) {
@@ -17,10 +17,10 @@ class QnasDialog extends Dialog {
 
   /**
    * Executes the dialog.
-   * @param {string} userId the user id
-   * @param {object[]} responses
-   * @param {object[]} messageEntities
-   * @return {string} the dialog completed status
+   * @param {String} userId the user id
+   * @param {Object[]} responses - the bot responses
+   * @param {Object[]} messageEntities - the message entities
+   * @returns {String} the dialog completed status
    */
   async execute(userId, responses, messageEntities) {
     logger.debug('execute', userId, responses, messageEntities);

@@ -12,7 +12,7 @@ const CompositeExtractor = require('./extractors/composite_extractor');
 class Nlu {
   /**
    * @constructor
-   * @param {object} config - the bot config
+   * @param {Object} config - the bot config
    */
   constructor(config) {
     // logger.debug('constructor');
@@ -29,7 +29,7 @@ class Nlu {
 
   /**
    * Get extractor files
-   * @param {string} path - extractors path
+   * @param {String} path - extractors path
    * @returns {Array.<string>} - extractor files
    */
   getExtractorFiles(path) {
@@ -42,7 +42,7 @@ class Nlu {
 
   /**
    * Get extractors
-   * @param {string} path - extractors path
+   * @param {String} path - extractors path
    * @returns {Array.<*>} - extractors instances
    */
   getExtractors(path) {
@@ -67,8 +67,8 @@ class Nlu {
 
   /**
    * Classifies a sentence.
-   * @param {string} sentence - the sentence
-   * @return {Promise} a promise with entities and intents
+   * @param {String} sentence - the sentence
+   * @returns {Promise} a promise with entities and intents
    */
   async compute(sentence) {
     logger.debug('compute', sentence);
@@ -90,8 +90,8 @@ class Nlu {
 
   /**
    * Compute local bot intents and entities
-   * @param sentence - the user sentence
-   * @returns {Promise.<object>}
+   * @param {String} sentence - the user sentence
+   * @returns {Promise.<Object>}
    */
   async localCompute(sentence) {
     logger.debug('localCompute', sentence);
@@ -104,8 +104,8 @@ class Nlu {
 
   /**
    * Compute qnas intents and entities
-   * @param sentence - the user sentence
-   * @returns {Promise.<object>}
+   * @param {String} sentence - the user sentence
+   * @returns {Promise.<Object>}
    */
   async qnaCompute(sentence) {
     logger.debug('qnaCompute', sentence);

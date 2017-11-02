@@ -7,7 +7,7 @@ const logger = require('logtown')('ViewsManager');
 class ViewsManager {
   /**
    * @constructor
-   * @param {object} config - the bot config
+   * @param {Object} config - the bot config
    */
   constructor(config) {
     logger.debug('constructor', config.path);
@@ -18,8 +18,8 @@ class ViewsManager {
 
   /**
    * Get dialog path for a given name
-   * @param {string} name - the dialog name
-   * @returns {string|null} the dialog path if exists or null
+   * @param {String} name - the dialog name
+   * @returns {String|null} the dialog path if exists or null
    */
   getPath(name) {
     logger.debug('getPath');
@@ -41,7 +41,7 @@ class ViewsManager {
 
   /**
    * Resolve a view for a given dialog name
-   * @param {string} name - the view name
+   * @param {String} name - the view name
    * @returns {class|null} the dialog instance or null
    */
   resolve(name) {

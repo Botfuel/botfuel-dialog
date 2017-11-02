@@ -6,7 +6,7 @@ const logger = require('logtown')('CompositeExtractor');
 class CompositeExtractor {
   /**
    * @constructor
-   * @param {object[]} extractors - the extractors
+   * @param {Object[]} extractors - the extractors
    */
   constructor(extractors) {
     logger.debug('constructor', extractors);
@@ -15,7 +15,8 @@ class CompositeExtractor {
 
   /**
    * Extracts the entities by applying extractors defined at the bot level.
-   * @param {string} sentence - the sentence
+   * @param {String} sentence - the sentence
+   * @returns {Promise.<Object[]>}
    */
   async compute(sentence) {
     logger.debug('compute', sentence);

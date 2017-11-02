@@ -4,9 +4,9 @@
 class Action {
   /**
    * @constructor
-   * @param {string} type - the action type
-   * @param {string} text - the text
-   * @param {object|*} value - the value
+   * @param {String} type - the action type
+   * @param {String} text - the text
+   * @param {Object|*} value - the value
    */
   constructor(type, text, value) {
     this.type = type;
@@ -16,7 +16,7 @@ class Action {
 
   /**
    * Convert the action to json
-   * @return {object} the json action
+   * @returns {Object} the json action
    */
   toJson() {
     return {

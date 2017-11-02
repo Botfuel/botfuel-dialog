@@ -7,11 +7,11 @@ const { BotTextMessage } = require('../messages');
 class TextView {
   /**
    * Render an array of BotTextMessages
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @param {string} key - the dialog key
-   * @param {object} parameters - the dialog parameters
-   * @return {BotTextMessage[]} the array of bot text messages
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @param {String} key - the dialog key
+   * @param {Object} parameters - the dialog parameters
+   * @returns {BotTextMessage[]} the array of bot text messages
    */
   render(botId, userId, key, parameters) {
     logger.debug('render', botId, userId, key, parameters);
@@ -22,8 +22,8 @@ class TextView {
 
   /**
    * Get views texts
-   * @return {string[]}
-   * @param {object} [parameters={}] - the dialog parameters
+   * @returns {String[]}
+   * @param {Object} [parameters={}] - the dialog parameters
    */
   getTexts(parameters = {}) {
     logger.debug('getTexts', parameters);

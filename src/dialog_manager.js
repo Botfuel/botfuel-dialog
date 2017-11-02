@@ -8,8 +8,8 @@ const Dialog = require('./dialogs/dialog');
 class DialogManager {
   /**
    * @constructor
-   * @param {class} brain - the bot brain
-   * @param {object} config - the bot config
+   * @param {Object} brain - the bot brain
+   * @param {Object} config - the bot config
    */
   constructor(brain, config) {
     logger.debug('constructor');
@@ -20,8 +20,8 @@ class DialogManager {
 
   /**
    * Get dialog path
-   * @param {string} label - the dialog's label
-   * @returns {string|null} - the dialog path if found or null
+   * @param {String} label - the dialog's label
+   * @returns {String|null} - the dialog path if found or null
    */
   getDialogPath(label) {
     logger.debug('getDialogPath', label);
@@ -42,7 +42,7 @@ class DialogManager {
 
   /**
    * Get a dialog
-   * @param {object} dialog - the dialog
+   * @param {Object} dialog - the dialog
    * @returns {Dialog} - the dialog instance
    */
   getDialog(dialog) {
@@ -55,6 +55,11 @@ class DialogManager {
     return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
   }
 
+  /**
+   * Filters and sorts intents
+   * @param {Object[]} intents - the intents
+   * @returns {Object[]} the filtered and sorted intents
+   */
   filterIntents(intents) {
     logger.debug('filterIntents', intents);
     return intents
@@ -69,10 +74,11 @@ class DialogManager {
 
   /**
    * Executes the dialogs.
-   * @param {string} userId - the user id
-   * @param {object[]} dialogs - the dialogs
-   * @param {object[]} intents - the intents
-   * @param {object[]} entities - the entities
+   * @param {String} userId - the user id
+   * @param {Object[]} dialogs - the dialogs
+   * @param {Object[]} intents - the intents
+   * @param {Object[]} entities - the entities
+   * @returns {void}
    */
   async updateDialogs(userId, dialogs, intents, entities) {
     logger.debug('updateDialogs', userId, dialogs, intents, entities);
@@ -111,8 +117,9 @@ class DialogManager {
 
   /**
    * Executes the dialogs.
-   * @param {string} userId - the user id
-   * @param {object[]} dialogs - the dialogs
+   * @param {String} userId - the user id
+   * @param {Object[]} dialogs - the dialogs
+   * @returns {Object[]} the responses
    */
   async executeDialogs(userId, dialogs) {
     logger.debug('executeDialogs', userId, dialogs);
@@ -142,9 +149,10 @@ class DialogManager {
 
   /**
    * Populates and executes the stack.
-   * @param {string} userId - the user id
-   * @param {string[]} intents - the intents
-   * @param {object[]} entities - the transient entities
+   * @param {String} userId - the user id
+   * @param {String[]} intents - the intents
+   * @param {Object[]} entities - the transient entities
+   * @returns {Promise.<Object[]>} the dialogs responses
    */
   async execute(userId, intents, entities) {
     logger.debug('execute', userId, intents, entities);

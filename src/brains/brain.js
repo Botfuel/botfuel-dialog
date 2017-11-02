@@ -6,7 +6,7 @@ const logger = require('logtown')('Brain');
 class Brain {
   /**
    * @constructor
-   * @param {string} botId - the bot id
+   * @param {String} botId - the bot id
    */
   constructor(botId) {
     this.botId = botId;
@@ -17,7 +17,7 @@ class Brain {
   /**
    * Initialize the brain
    * @async
-   * @return {Promise.<void>}
+   * @returns {Promise.<void>}
    */
   async init() {
     logger.debug('Brain.init');
@@ -26,7 +26,8 @@ class Brain {
   /**
    * Add user if not exists
    * @async
-   * @param {string} userId - the user id
+   * @param {String} userId - the user id
+   * @returns {Promise.<void>}
    */
   async initUserIfNecessary(userId) {
     logger.debug('initUserIfNecessary', userId);
@@ -40,7 +41,8 @@ class Brain {
   /**
    * Add conversation to user if necessary
    * @async
-   * @param {string} userId - the user id
+   * @param {String} userId - the user id
+   * @returns {Promise.<void>}
    */
   async initLastConversationIfNecessary(userId) {
     logger.debug('initLastConversationIfNecessary', userId);
@@ -54,8 +56,8 @@ class Brain {
 
   /**
    * Validate user last conversation
-   * @param {object} conversation - the conversation to validate
-   * @return {boolean}
+   * @param {Object} conversation - the conversation to validate
+   * @returns {boolean}
    */
   isLastConversationValid(conversation) {
     if (!conversation) {
@@ -68,8 +70,8 @@ class Brain {
   /**
    * Get last conversation value for a given key
    * @async
-   * @param {string} userId - user id
-   * @param {string} key - last conversation key
+   * @param {String} userId - user id
+   * @param {String} key - last conversation key
    * @returns {Promise}
    */
   async conversationGet(userId, key) {

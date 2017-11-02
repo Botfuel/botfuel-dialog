@@ -10,7 +10,7 @@ const INTENT_SUFFIX = '.intent';
 class Classifier {
   /**
    * @constructor
-   * @param {object} config - the bot config
+   * @param {Object} config - the bot config
    */
   constructor(config) {
     logger.debug('constructor', config);
@@ -37,7 +37,8 @@ class Classifier {
 
   /**
    * Init the classifier
-   * @returns {Promise}
+   * @async
+   * @returns {Promise.<void|Error>}
    */
   async init() {
     logger.debug('init');
@@ -56,7 +57,8 @@ class Classifier {
 
   /**
    * Compute features for a sentence
-   * @param {string} sentence - the sentence
+   * @param {String} sentence - the sentence
+   * @returns {String[]} the tokenized and stemmed sentence
    */
   computeFeatures(sentence) {
     return sentence.tokenizeAndStem();
@@ -64,8 +66,9 @@ class Classifier {
 
   /**
    * Classifies a sentence.
-   * @param {string} sentence the sentence
-   * @return {Promise} a promise with entities and intents
+   * @param {String} sentence - the sentence
+   * @param {Object[]} entities - the entities
+   * @returns {Promise.<*>} a promise with entities and intents
    */
   async compute(sentence, entities) {
     logger.debug('compute', sentence, entities);

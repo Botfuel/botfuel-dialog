@@ -7,9 +7,9 @@ const Message = require('./message');
 class UserImageMessage extends Message {
   /**
    * @constructor
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @param {string} value - the image url
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @param {String} value - the image url
    */
   constructor(botId, userId, value) {
     super('image', 'user', botId, userId, value);

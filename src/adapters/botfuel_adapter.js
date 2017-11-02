@@ -9,8 +9,9 @@ class BotfuelAdapter extends WebAdapter {
   /**
    * Handler for webchat webhook post request
    * @async
-   * @param {object} req - the request object
-   * @param {object} res - the response object
+   * @param {Object} req - the request object
+   * @param {Object} res - the response object
+   * @returns {Promise.<void>}
    */
   async handleMessage(req, res) {
     logger.debug('handleMessage');
@@ -25,7 +26,7 @@ class BotfuelAdapter extends WebAdapter {
   /**
    * Build request url for a given botMessage
    * @param {Object} botMessage - the bot message
-   * @return {string} the webchat url for an user
+   * @returns {String} the webchat url for an user
    */
   getUrl(botMessage) {
     return `${process.env.CHAT_SERVER}/bots/${this.config.id}/users/${botMessage.user}/conversation/messages`;
@@ -34,7 +35,8 @@ class BotfuelAdapter extends WebAdapter {
   /**
    * Send message to webchat for each bot messages
    * @async
-   * @param {object[]} botMessages - the bot messages
+   * @param {Object[]} botMessages - the bot messages
+   * @returns {Promise.<void>}
    */
   async send(botMessages) {
     logger.debug('sendText', botMessages);

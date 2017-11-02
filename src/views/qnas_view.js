@@ -7,11 +7,11 @@ const { ActionsMessage, BotTextMessage, Postback } = require('../messages');
 class QnasView {
   /**
    * Render an array of bot messages
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @param {string} key - the dialog key
-   * @param {object} parameters - the dialog parameters
-   * @return {object[]} the bot messages
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @param {String} key - the dialog key
+   * @param {Object} parameters - the dialog parameters
+   * @returns {Object[]} the bot messages
    */
   render(botId, userId, key, parameters) {
     logger.debug('render', botId, userId, key, parameters);
@@ -27,10 +27,10 @@ class QnasView {
 
   /**
    * Render a qna answer
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @param {string} answer - the answer
-   * @return {BotTextMessage[]} the answer
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @param {String} answer - the answer
+   * @returns {BotTextMessage[]} the answer
    */
   renderAnswer(botId, userId, answer) {
     logger.debug('renderAnswer', botId, userId, answer);
@@ -41,10 +41,10 @@ class QnasView {
 
   /**
    * Render qna questions
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @param {object[]} qnas - the qnas
-   * @return {object[]} the questions
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @param {Object[]} qnas - the qnas
+   * @returns {Object[]} the questions
    */
   renderQuestions(botId, userId, qnas) {
     logger.debug('renderQuestions', botId, userId, qnas);

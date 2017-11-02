@@ -7,10 +7,10 @@ const Message = require('./message');
 class PostbackMessage extends Message {
   /**
    * @constructor
-   * @param {string} botId - the bot id
-   * @param {string} userId - the user id
-   * @param {string} dialog - the postback dialog name
-   * @param {object[]} entities - the dialog entities
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
+   * @param {String} dialog - the postback dialog name
+   * @param {Object[]} entities - the dialog entities
    */
   constructor(botId, userId, dialog, entities) {
     super('postback', 'user', botId, userId, { dialog, entities });

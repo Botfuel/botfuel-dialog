@@ -8,9 +8,9 @@ const Dialog = require('./dialog');
 class PromptDialog extends Dialog {
   /**
    * @constructor
-   * @param {object} config - the bot config
+   * @param {Object} config - the bot config
    * @param {class} brain - the bot brain
-   * @param {object} parameters - the dialog status
+   * @param {Object} parameters - the dialog status
    */
   constructor(config, brain, parameters) {
     super(config, brain, Object.keys(parameters.entities).length + 1, parameters);
@@ -19,9 +19,9 @@ class PromptDialog extends Dialog {
   /**
    * Compute the dialog missing entities
    * @async
-   * @param {string} userId - the user id
-   * @param {object[]} messageEntities - the message entities
-   * @return {Promise.<string[]>}
+   * @param {String} userId - the user id
+   * @param {Object[]} messageEntities - the message entities
+   * @returns {Promise.<string[]>}
    */
   async computeMissingEntities(userId, messageEntities) {
     logger.debug('computeMissingEntities', messageEntities);
@@ -38,10 +38,10 @@ class PromptDialog extends Dialog {
   /**
    * Execute dialog when blocked status
    * @async
-   * @param {string} userId - the user id
-   * @param {object[]} responses - the responses to display
-   * @param {object[]} messageEntities - the message entities
-   * @return {Promise.<string>} the next dialog's status
+   * @param {String} userId - the user id
+   * @param {Object[]} responses - the responses to display
+   * @param {Object[]} messageEntities - the message entities
+   * @returns {Promise.<string>} the next dialog's status
    */
   async executeWhenBlocked(userId, responses, messageEntities) {
     logger.debug('executeWhenBlocked', userId, responses, messageEntities);
@@ -52,10 +52,10 @@ class PromptDialog extends Dialog {
   /**
    * Execute dialog when waiting status
    * @async
-   * @param {string} userId - the user id
-   * @param {object[]} responses - the responses to display
-   * @param {object[]} messageEntities - the message entities
-   * @return {Promise.<string>} the next dialog's status
+   * @param {String} userId - the user id
+   * @param {Object[]} responses - the responses to display
+   * @param {Object[]} messageEntities - the message entities
+   * @returns {Promise.<string>} the next dialog's status
    */
   async executeWhenWaiting(userId, responses, messageEntities) {
     logger.debug('executeWhenWaiting');
@@ -78,10 +78,10 @@ class PromptDialog extends Dialog {
   /**
    * Execute dialog when ready status
    * @async
-   * @param {string} userId - the user id
-   * @param {object[]} responses - the responses to display
-   * @param {object[]} messageEntities - the message entities
-   * @return {Promise.<string>} the next dialog's status
+   * @param {String} userId - the user id
+   * @param {Object[]} responses - the responses to display
+   * @param {Object[]} messageEntities - the message entities
+   * @returns {Promise.<string>} the next dialog's status
    */
   async executeWhenReady(userId, responses, messageEntities) {
     logger.debug('executeWhenReady', messageEntities, this.parameters.entities);
@@ -95,11 +95,11 @@ class PromptDialog extends Dialog {
 
   /**
    * Executes dialog according to it's status.
-   * @param {string} userId the user id
-   * @param {object[]} responses
-   * @param {object[]} messageEntities - entities array from user message
-   * @param {string} status - the dialog status
-   * @return {function} the execute method according to the dialog status
+   * @param {String} userId the user id
+   * @param {Object[]} responses - the responses to display
+   * @param {Object[]} messageEntities - entities array from user message
+   * @param {String} status - the dialog status
+   * @returns {function} the execute method according to the dialog status
    */
   async execute(userId, responses, messageEntities, status) {
     logger.debug('execute', userId, responses, messageEntities, status);

@@ -37,10 +37,10 @@ class Dialog {
 
   /**
    * @constructor
-   * @param {object} config - the bot config
+   * @param {Object} config - the bot config
    * @param {class} brain - the bot brain
    * @param {number} [maxComplexity=Number.MAX_SAFE_INTEGER] - the dialog max complexity
-   * @param {object} [parameters={}] - the dialog parameters
+   * @param {Object} [parameters={}] - the dialog parameters
    */
   constructor(config, brain, maxComplexity = Number.MAX_SAFE_INTEGER, parameters = {}) {
     logger.debug('constructor', parameters);
@@ -54,7 +54,7 @@ class Dialog {
 
   /**
    * Get dialog name
-   * @return {string} the dialog name
+   * @returns {String} the dialog name
    */
   getName() {
     return this.constructor.name.toLowerCase().replace(/dialog/g, '');
@@ -62,10 +62,11 @@ class Dialog {
 
   /**
    * Display a message to user
-   * @param {string} userId - the user id
-   * @param {object[]} responses - the bot responses
-   * @param {string} key - the dialog key
-   * @param {object} [parameters] - the dialog parameters
+   * @param {String} userId - the user id
+   * @param {Object[]} responses - the bot responses
+   * @param {String} key - the dialog key
+   * @param {Object} [parameters] - the dialog parameters
+   * @returns {void}
    */
   display(userId, responses, key, parameters) {
     logger.debug('display', userId, responses, key, parameters);
