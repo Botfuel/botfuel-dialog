@@ -26,13 +26,11 @@ class QnasView extends View {
 
   /**
    * Renders a qna answer
-   * @param {String} botId - the bot id
-   * @param {String} userId - the user id
    * @param {String} answer - the answer
    * @returns {BotTextMessage[]} the answer
    */
   renderAnswer(answer) {
-    logger.debug('renderAnswer', botId, userId, answer);
+    logger.debug('renderAnswer', answer);
     return [
       new BotTextMessage(answer),
     ];
