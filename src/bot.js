@@ -49,6 +49,7 @@ class Bot {
   /**
    * Configures the logger.
    * @param {object} config - the bot configuration
+   * @returns {void}
    */
   configureLogger(config) {
     const paths = [
