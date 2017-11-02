@@ -12,7 +12,7 @@ class Card {
     // TODO : this is very Messenger specific, let's generalize it!
     this.title = title;
     this.imageUrl = imageUrl;
-    this.buttons = buttons.map(button => button.toJson());
+    this.buttons = buttons;
   }
 
   /**
@@ -23,7 +23,7 @@ class Card {
     return {
       title: this.title,
       image_url: this.imageUrl,
-      buttons: this.buttons,
+      buttons: this.buttons.map(button => button.toJson()),
     };
   }
 }

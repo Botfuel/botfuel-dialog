@@ -26,9 +26,9 @@ class TestAdapter extends Adapter {
    */
   async play(userMessages) {
     await this.bot.brain.initUserIfNecessary(this.userId);
-    for (const userMessage of userMessages.map(msg => msg.toJson())) {
+    for (const userMessage of userMessages) {
       logger.debug('play', userMessage);
-      this.log.push(userMessage);
+      this.log.push(userMessage.toJson());
       // eslint-disable-next-line no-await-in-loop
       await this.bot.respond(userMessage);
     }

@@ -5,7 +5,7 @@ const { Card, CardsMessage, Link, Postback } = require('../../src/messages');
 
 describe('CardsMessage', function () {
   it('should generate the proper json', async function () {
-    const message = new CardsMessage('BOT_ID', 'USER_ID', [
+    const message = new CardsMessage([
       new Card('Card 1', 'https://image1.jpg', [
         new Link('Details', 'https://image1'),
         new Postback('Buy', 'products', [{ dim: 'product', value: '1' }]),
@@ -18,8 +18,6 @@ describe('CardsMessage', function () {
     expect(message.toJson()).to.eql({
       type: 'cards',
       sender: 'bot',
-      bot: 'BOT_ID',
-      user: 'USER_ID',
       payload: {
         value: [
           {

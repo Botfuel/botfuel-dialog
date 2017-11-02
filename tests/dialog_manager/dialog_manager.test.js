@@ -9,6 +9,8 @@ const { BotTextMessage } = require('../../src/messages');
 const TEST_BOT = '1';
 const TEST_USER = '1';
 
+// require('../../src/logger_manager').configure({ logger: 'botfuel'});
+
 describe('DialogManager', function () {
   const brain = new MemoryBrain(TEST_BOT);
   const dm = new DialogManager(brain, { path: __dirname, locale: 'en', id: TEST_BOT });
@@ -32,7 +34,7 @@ describe('DialogManager', function () {
     const adapter = new TestAdapter();
     await dm.execute(adapter, TEST_USER, [], []);
     expect(adapter.log).to.eql([
-      new BotTextMessage(TEST_BOT, TEST_USER, 'Not understood.').toJson(),
+      new BotTextMessage('Not understood.').toJson(),
     ]);
   });
 
