@@ -4,6 +4,6 @@ node_js:
 services:
 - mongodb
 env:
-- BOTFUEL_PROXY_HOST=https://api.botfuel.io/staging BOTFUEL_APP_ID=29ce6795 BOTFUEL_APP_KEY=703d9ff1e2cfdf6a2ccc591213e57053
+- BOT_ID=BOT_TEST BOTFUEL_PROXY_HOST=https://api.botfuel.io/staging BOTFUEL_APP_ID=29ce6795 BOTFUEL_APP_KEY=703d9ff1e2cfdf6a2ccc591213e57053
 notifications:
    slack: botfuel:m19mrLajAVq0CkYHceYCGnL9
