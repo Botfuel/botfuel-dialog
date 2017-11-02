@@ -17,7 +17,7 @@ class ViewsManager {
   }
 
   /**
-   * Get dialog path for a given name
+   * Gets dialog path for a given name
    * @param {String} name - the dialog name
    * @returns {String|null} the dialog path if exists or null
    */
@@ -40,7 +40,7 @@ class ViewsManager {
   }
 
   /**
-   * Resolve a view for a given dialog name
+   * Resolves a view for a given dialog name
    * @param {String} name - the view name
    * @returns {class|null} the dialog instance or null
    */
