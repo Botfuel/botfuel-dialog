@@ -7,7 +7,7 @@ class Message {
    * @param {String} type - the message type
    * @param {String} sender - the message sender, the bot or the user
    * @param {*} value - the message value
-   * @param {Object} [options] - the message options
+   * @param {Object} [options] - the optional message options
    */
   constructor(type, sender, value, options) {
     this.type = type;

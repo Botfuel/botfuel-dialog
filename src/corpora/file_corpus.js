@@ -9,7 +9,7 @@ class FileCorpus extends Corpus {
   /**
    * @constructor
    * @param {String} path - the corpus path
-   * @param {String} [separator=','] - the corpus row separator
+   * @param {String} [separator=','] - the optional corpus row separator
    */
   constructor(path, separator = ',') {
     logger.debug('constructor', path, separator);

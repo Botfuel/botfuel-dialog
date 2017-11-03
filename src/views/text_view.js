@@ -9,7 +9,7 @@ class TextView extends View {
   /**
    * Renders an array of BotTextMessages.
    * @param {String} key - the dialog key
-   * @param {Object} [parameters] - the dialog parameters
+   * @param {Object} [parameters] - the optional dialog parameters
    * @returns {BotTextMessage[]} the array of bot text messages
    */
   render(key, parameters) {
@@ -21,7 +21,7 @@ class TextView extends View {
 
   /**
    * Gets views texts
-   * @param {Object} [parameters={}] - the dialog parameters
+   * @param {Object} [parameters={}] - the optional dialog parameters
    * @returns {String[]}
    */
   getTexts(parameters = {}) {

@@ -8,7 +8,7 @@ class CardsMessage extends Message {
   /**
    * @constructor
    * @param {Object[]} cards - the cards array
-   * @param {Object} [options] - the message options
+   * @param {Object} [options] - the optional message options
    */
   constructor(cards, options) {
     super('cards', 'bot', cards, options);

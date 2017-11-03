@@ -8,7 +8,7 @@ class BotTextMessage extends Message {
   /**
    * @constructor
    * @param {String} value - the text value
-   * @param {Object} [options] - the message options
+   * @param {Object} [options] - the optional message options
    */
   constructor(value, options) {
     super('text', 'bot', value, options);

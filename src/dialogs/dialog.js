@@ -44,8 +44,8 @@ class Dialog {
    * @constructor
    * @param {Object} config - the bot config
    * @param {class} brain - the bot brain
-   * @param {number} [maxComplexity=Number.MAX_SAFE_INTEGER] - the dialog max complexity
-   * @param {Object} [parameters={}] - the dialog parameters
+   * @param {number} [maxComplexity=Number.MAX_SAFE_INTEGER] - the optional dialog max complexity
+   * @param {Object} [parameters={}] - the optional dialog parameters
    */
   constructor(config, brain, maxComplexity = Number.MAX_SAFE_INTEGER, parameters = {}) {
     logger.debug('constructor', parameters);
@@ -69,7 +69,7 @@ class Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String} key - the dialog key
-   * @param {Object} [parameters] - the dialog parameters
+   * @param {Object} [parameters] - the optional dialog parameters
    * @returns {void}
    */
   display(adapter, userId, key, parameters) {

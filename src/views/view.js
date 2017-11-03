@@ -9,7 +9,7 @@ class View {
    * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {String} key - the view key
-   * @param {Object} [parameters] - the view parameters
+   * @param {Object} [parameters] - the optional view parameters
    * @returns {Object[]} the json messages
    */
   renderAsJson(botId, userId, key, parameters) {

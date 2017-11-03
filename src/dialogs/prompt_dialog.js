@@ -40,7 +40,7 @@ class PromptDialog extends Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} [messageEntities] - the message entities
+   * @param {Object[]} [messageEntities] - the optional message entities
    * @returns {Promise.<string>} the next dialog's status
    */
   async executeWhenBlocked(adapter, userId, messageEntities) {
