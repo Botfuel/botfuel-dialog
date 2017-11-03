@@ -6,14 +6,14 @@ const MemoryBrain = require('../../src/brains/memory_brain');
 const TestAdapter = require('../../src/adapters/test_adapter');
 const { BotTextMessage } = require('../../src/messages');
 
-const TEST_BOT = '1';
 const TEST_USER = '1';
+const TEST_BOT = process.env.BOT_ID;
 
 // require('../../src/logger_manager').configure({ logger: 'botfuel'});
 
 describe('DialogManager', function () {
   const brain = new MemoryBrain(TEST_BOT);
-  const dm = new DialogManager(brain, { path: __dirname, locale: 'en', id: TEST_BOT });
+  const dm = new DialogManager(brain, { path: __dirname, locale: 'en' });
 
   beforeEach(async function () {
     await brain.clean();
@@ -31,7 +31,7 @@ describe('DialogManager', function () {
   });
 
   it('should not crash when no intent', async function () {
-    const adapter = new TestAdapter();
+    const adapter = new TestAdapter({ id: TEST_BOT }, {});
     await dm.execute(adapter, TEST_USER, [], []);
     expect(adapter.log).to.eql([
       new BotTextMessage('Not understood.').toJson(TEST_BOT, TEST_USER),

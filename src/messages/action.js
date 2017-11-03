@@ -14,6 +14,10 @@ class Action {
     this.value = value;
   }
 
+  /**
+   * Converts action to json
+   * @returns {Object} the json action
+   */
   toJson() {
     return {
       type: this.type,

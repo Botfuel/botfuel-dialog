@@ -49,7 +49,6 @@ class Dialog {
    */
   constructor(config, brain, maxComplexity = Number.MAX_SAFE_INTEGER, parameters = {}) {
     logger.debug('constructor', parameters);
-    this.config = config;
     this.brain = brain;
     this.parameters = parameters;
     this.maxComplexity = maxComplexity;
@@ -78,7 +77,7 @@ class Dialog {
     const botMessages = this
           .viewsManager
           .resolve(this.name)
-          .renderAsJson(this.config.id, userId, key, parameters);
+          .renderAsJson(adapter.bot.id, userId, key, parameters);
     adapter.send(botMessages);
   }
 }

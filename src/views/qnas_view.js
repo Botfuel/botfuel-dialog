@@ -9,7 +9,7 @@ class QnasView extends View {
   /**
    * Render an array of bot messages
    * @param {String} key - the dialog key
-   * @param {Object} parameters - the dialog parameters
+   * @param {Object} [parameters] - the dialog parameters
    * @returns {Object[]} the bot messages
    */
   render(key, parameters) {
@@ -37,7 +37,7 @@ class QnasView extends View {
   }
 
   /**
-   * Render qna questions
+   * Renders qna questions
    * @param {Object[]} qnas - the qnas
    * @returns {Object[]} the questions
    */
