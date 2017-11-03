@@ -25,7 +25,7 @@ class TextDialog extends Dialog {
    */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
-    this.display(adapter, userId, null, messageEntities);
+    await this.display(adapter, userId, null, messageEntities);
     return Dialog.STATUS_COMPLETED;
   }
 }

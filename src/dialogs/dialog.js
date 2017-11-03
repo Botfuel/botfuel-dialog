@@ -73,13 +73,13 @@ class Dialog {
    * @param {Object} [parameters] - the dialog parameters
    * @returns {void}
    */
-  display(adapter, userId, key, parameters) {
+  async display(adapter, userId, key, parameters) {
     logger.debug('display', userId, key, parameters);
     const botMessages = this
           .viewsManager
           .resolve(this.name)
           .renderAsJson(this.config.id, userId, key, parameters);
-    adapter.send(botMessages);
+    await adapter.send(botMessages);
   }
 }
 

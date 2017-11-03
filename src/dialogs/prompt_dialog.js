@@ -45,7 +45,7 @@ class PromptDialog extends Dialog {
    */
   async executeWhenBlocked(adapter, userId, messageEntities) {
     // logger.debug('executeWhenBlocked', '<adapter>', userId, messageEntities);
-    this.display(adapter, userId, 'ask');
+    await this.display(adapter, userId, 'ask');
     return Dialog.STATUS_WAITING;
   }
 
@@ -64,11 +64,11 @@ class PromptDialog extends Dialog {
         const booleanValue = messageEntity.values[0].value;
         logger.debug('execute: system:boolean', booleanValue);
         if (booleanValue) {
-          this.display(adapter, userId, 'confirm');
+          await this.display(adapter, userId, 'confirm');
           return this.executeWhenReady(adapter, userId, messageEntities);
         }
         // if not confirmed, then discard dialog
-        this.display(adapter, userId, 'discard');
+        await this.display(adapter, userId, 'discard');
         return Dialog.STATUS_DISCARDED;
       }
     }
@@ -89,7 +89,7 @@ class PromptDialog extends Dialog {
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
     const missingEntities = await this.computeMissingEntities(userId, messageEntities);
-    this.display(adapter, userId, 'entities', { messageEntities, missingEntities });
+    await this.display(adapter, userId, 'entities', { messageEntities, missingEntities });
     return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_READY;
   }
 
