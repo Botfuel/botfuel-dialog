@@ -28,7 +28,6 @@ class Bot {
     LoggerManager.configure(config);
     this.id = process.env.BOT_ID;
     logger.debug('constructor', config);
-    this.id = process.env.BOT_ID; // define bot id
     switch (config.adapter) {
       case 'botfuel':
         this.adapter = new BotfuelAdapter(this, config);
