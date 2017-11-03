@@ -7,14 +7,14 @@ const TestAdapter = require('../../src/adapters/test_adapter');
 const { BotTextMessage } = require('../../src/messages');
 
 const TEST_USER = '1';
-const TEST_BOT = '1';
+const TEST_BOT = process.env.BOT_ID;
 
 // require('../../src/logger_manager').configure({ logger: 'botfuel'});
 
 describe('PromptDialog', function () {
   const brain = new MemoryBrain(TEST_BOT);
   const prompt = new PromptDialog(
-    { path: __dirname, locale: 'en', id: TEST_BOT },
+    { path: __dirname, locale: 'en' },
     brain,
     { namespace: 'testdialog', entities: { dim1: null, dim2: null } },
   );
@@ -25,11 +25,11 @@ describe('PromptDialog', function () {
   });
 
   it('when given no entity, should list both and ask for one', async function () {
-    const adapter = new TestAdapter();
+    const adapter = new TestAdapter({ id: TEST_BOT }, {});
     await prompt.execute(
       adapter,
       TEST_USER,
-      []
+      [],
     );
     expect(adapter.log).to.eql([
       new BotTextMessage('Entities needed: dim1, dim2').toJson(TEST_BOT, TEST_USER),
@@ -42,11 +42,11 @@ describe('PromptDialog', function () {
   });
 
   it('when given a first entity, should list both and ask for the second one', async function () {
-    const adapter = new TestAdapter();
+    const adapter = new TestAdapter({ id: TEST_BOT }, {});
     await prompt.execute(
       adapter,
       TEST_USER,
-      [{ dim: 'dim1', body: 'dim1' }]
+      [{ dim: 'dim1', body: 'dim1' }],
     );
     expect(adapter.log).to.eql([
       new BotTextMessage('Entities defined: dim1').toJson(TEST_BOT, TEST_USER),
@@ -60,12 +60,12 @@ describe('PromptDialog', function () {
   });
 
   it('when given both entity, should ask none', async function () {
-    const adapter = new TestAdapter();
+    const adapter = new TestAdapter({ id: TEST_BOT }, {});
     await prompt.execute(
       adapter,
       TEST_USER,
       [{ dim: 'dim1', body: 'dim1' }, { dim: 'dim2', body: 'dim2' }],
-      PromptDialog.STATUS_READY
+      PromptDialog.STATUS_READY,
     );
     expect(adapter.log).to.eql([
       new BotTextMessage('Entities defined: dim1, dim2').toJson(TEST_BOT, TEST_USER),

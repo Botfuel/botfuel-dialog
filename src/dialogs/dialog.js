@@ -44,12 +44,11 @@ class Dialog {
    * @constructor
    * @param {Object} config - the bot config
    * @param {class} brain - the bot brain
-   * @param {number} [maxComplexity=Number.MAX_SAFE_INTEGER] - the dialog max complexity
-   * @param {Object} [parameters={}] - the dialog parameters
+   * @param {number} [maxComplexity=Number.MAX_SAFE_INTEGER] - the optional dialog max complexity
+   * @param {Object} [parameters={}] - the optional dialog parameters
    */
   constructor(config, brain, maxComplexity = Number.MAX_SAFE_INTEGER, parameters = {}) {
     logger.debug('constructor', parameters);
-    this.config = config;
     this.brain = brain;
     this.parameters = parameters;
     this.maxComplexity = maxComplexity;
@@ -70,7 +69,7 @@ class Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String} key - the dialog key
-   * @param {Object} [parameters] - the dialog parameters
+   * @param {Object} [parameters] - the optional dialog parameters
    * @returns {void}
    */
   async display(adapter, userId, key, parameters) {
@@ -78,7 +77,7 @@ class Dialog {
     const botMessages = this
           .viewsManager
           .resolve(this.name)
-          .renderAsJson(this.config.id, userId, key, parameters);
+          .renderAsJson(adapter.bot.id, userId, key, parameters);
     await adapter.send(botMessages);
   }
 }

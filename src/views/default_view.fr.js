@@ -9,7 +9,7 @@ class DefaultView extends TextView {
   /**
    * Gets view texts
    * @override
-   * @param {Object} [parameters={}] - the dialog parameters
+   * @param {Object} [parameters={}] - the optional dialog parameters
    * @returns {String[]}
    */
   getTexts(parameters = {}) {

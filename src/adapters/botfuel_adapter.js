@@ -29,7 +29,7 @@ class BotfuelAdapter extends WebAdapter {
    * @returns {String} the webchat url for an user
    */
   getUrl(botMessage) {
-    return `${process.env.CHAT_SERVER}/bots/${this.config.id}/users/${botMessage.user}/conversation/messages`;
+    return `${process.env.CHAT_SERVER}/bots/${this.bot.id}/users/${botMessage.user}/conversation/messages`;
   }
 
   /**

@@ -1,4 +1,3 @@
-const fs = require('fs');
 const Logger = require('logtown');
 const BotfuelAdapter = require('./adapters/botfuel_adapter');
 const DialogManager = require('./dialog_manager');
@@ -27,6 +26,7 @@ class Bot {
    */
   constructor(config) {
     LoggerManager.configure(config);
+    this.id = process.env.BOT_ID;
     logger.debug('constructor', config);
     switch (config.adapter) {
       case 'botfuel':
@@ -42,7 +42,7 @@ class Bot {
       default:
         this.adapter = new ShellAdapter(this, config);
     }
-    this.brain = new MemoryBrain(config.id);
+    this.brain = new MemoryBrain(this.id);
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
   }

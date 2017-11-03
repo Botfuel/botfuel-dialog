@@ -1,6 +1,6 @@
 {
   "name": "@botfuel/bot-sdk2",
-  "version": "0.37.6",
+  "version": "0.38.0",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel SDK2",
@@ -10,7 +10,7 @@
   "scripts": {
     "prepublish": "npm run compile",
     "compile": "rm -rf build; babel src --out-dir build; cp -r src/corpora/*.txt build/corpora/",
-    "test": "MONGODB_URI=mongodb://localhost/sdk-brain-test mocha --timeout 30000 --require babel-polyfill --require babel-register tests/**/*.test.js",
+    "test": "BOT_ID=TEST_BOT MONGODB_URI=mongodb://localhost/sdk-brain-test mocha --timeout 30000 --require babel-polyfill --require babel-register tests/**/*.test.js",
     "style": "eslint src; eslint tests",
     "test-samples": "./scripts/test-samples.sh",
     "docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
