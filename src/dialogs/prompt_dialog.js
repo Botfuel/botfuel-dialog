@@ -44,7 +44,7 @@ class PromptDialog extends Dialog {
    * @returns {Promise.<string>} the next dialog's status
    */
   async executeWhenBlocked(adapter, userId, messageEntities) {
-    // logger.debug('executeWhenBlocked', '<adapter>', userId, messageEntities);
+    logger.debug('executeWhenBlocked', userId, messageEntities);
     this.display(adapter, userId, 'ask');
     return Dialog.STATUS_WAITING;
   }
@@ -58,7 +58,7 @@ class PromptDialog extends Dialog {
    * @returns {Promise.<string>} the next dialog's status
    */
   async executeWhenWaiting(adapter, userId, messageEntities) {
-    // logger.debug('executeWhenWaiting');
+    logger.debug('executeWhenWaiting', userId, messageEntities);
     for (const messageEntity of messageEntities) {
       if (messageEntity.dim === 'system:boolean') {
         const booleanValue = messageEntity.values[0].value;
@@ -84,7 +84,7 @@ class PromptDialog extends Dialog {
    * @returns {Promise.<string>} the next dialog's status
    */
   async executeWhenReady(adapter, userId, messageEntities) {
-    // logger.debug('executeWhenReady', messageEntities, this.parameters.entities);
+    logger.debug('executeWhenReady', userId, messageEntities, this.parameters.entities);
     // confirm entities
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
@@ -103,7 +103,7 @@ class PromptDialog extends Dialog {
    * @returns {function} the execute method according to the dialog status
    */
   async execute(adapter, userId, messageEntities, status) {
-    // logger.debug('execute', userId, messageEntities, status);
+    logger.debug('execute', userId, messageEntities, status);
     switch (status) {
       case Dialog.STATUS_BLOCKED:
         return this.executeWhenBlocked(adapter, userId, messageEntities);

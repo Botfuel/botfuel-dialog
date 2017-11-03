@@ -34,7 +34,7 @@ class ShellAdapter extends Adapter {
   }
 
   /**
-   * Recursive method that handles each user input
+   * Runs recursively for each user input
    * @async
    * @param {Object} userInput - the user input
    * @returns {Promise.<void>}

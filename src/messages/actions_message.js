@@ -15,7 +15,7 @@ class ActionsMessage extends Message {
   }
 
   /**
-   * Maps actions to json objects
+   * Renders json actions
    * @returns {Object[]} the json actions
    */
   valueAsJson() {

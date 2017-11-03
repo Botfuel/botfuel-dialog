@@ -15,7 +15,7 @@ class CardsMessage extends Message {
   }
 
   /**
-   * Maps cards to json objects
+   * Renders json cards
    * @returns {Object[]} the json cards
    */
   valueAsJson() {

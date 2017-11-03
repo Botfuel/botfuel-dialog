@@ -18,15 +18,17 @@ class Message {
 
   /**
    * Converts a message to json
+   * @param {String} botId - the bot id
+   * @param {String} userId - the user id
    * @returns {Object} the json message
    */
-  toJson(bot, user) {
+  toJson(botId, userId) {
     if (this.options === undefined || this.options === null) {
       return {
         type: this.type,
         sender: this.sender,
-        bot,
-        user,
+        bot: botId,
+        user: userId,
         payload: {
           value: this.valueAsJson(),
         },
@@ -35,8 +37,8 @@ class Message {
     return {
       type: this.type,
       sender: this.sender,
-      bot,
-      user,
+      bot: botId,
+      user: userId,
       payload: {
         value: this.valueAsJson(),
         options: this.options,
@@ -45,7 +47,7 @@ class Message {
   }
 
   /**
-   * Returns the json value
+   * Returns the value as json
    * @returns {*} the json value
    */
   valueAsJson() {
