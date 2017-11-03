@@ -17,7 +17,7 @@ describe('MessengerAdapter', function () {
         new Postback('Buy', 'products', [{ dim: 'product', value: '2' }]),
       ]),
     ]);
-    expect(new MessengerAdapter().adapt(message.toJson())).to.eql({
+    expect(new MessengerAdapter().adapt(message.toJson('BOT', 'USER'))).to.eql({
       attachment: {
         type: 'template',
         payload: {

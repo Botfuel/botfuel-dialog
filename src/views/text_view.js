@@ -1,10 +1,11 @@
 const logger = require('logtown')('TextView');
 const { BotTextMessage } = require('../messages');
+const View = require('./view');
 
 /**
  * Text view
  */
-class TextView {
+class TextView extends View {
   /**
    * Renders an array of BotTextMessages.
    * @param {String} key - the dialog key

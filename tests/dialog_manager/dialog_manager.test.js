@@ -2,7 +2,6 @@
 
 const expect = require('expect.js');
 const Bot = require('../../src/bot');
-const TestAdapter = require('../../src/adapters/test_adapter');
 const { BotTextMessage } = require('../../src/messages');
 
 const TEST_USER = '1';
@@ -11,8 +10,6 @@ const TEST_USER = '1';
 
 describe('DialogManager', function () {
   const bot = new Bot({ path: __dirname, locale: 'en', adapter: 'test' });
-  // const brain = new MemoryBrain(TEST_BOT);
-  // const dm = new DialogManager(brain, { path: __dirname, locale: 'en' });
 
   beforeEach(async function () {
     await bot.brain.clean();
@@ -32,7 +29,7 @@ describe('DialogManager', function () {
   it('should not crash when no intent', async function () {
     await bot.dm.execute(bot.adapter, TEST_USER, [], []);
     expect(bot.adapter.log).to.eql([
-      new BotTextMessage('Not understood.').toJson(),
+      new BotTextMessage('Not understood.').toJson(bot.id, TEST_USER),
     ]);
   });
 

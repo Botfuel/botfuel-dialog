@@ -27,11 +27,10 @@ class ShellAdapter extends Adapter {
     logger.debug('run');
     await this.bot.brain.initUserIfNecessary(this.userId);
     const botMessage = new BotTextMessage('onboarding');
-    botMessage.bot = this.bot.id;
-    botMessage.user = this.userId;
-    await this.runWhenUserInput(await this.send([
-      botMessage.toJson(),
-    ]));
+    const userInput = await this.send([
+      botMessage.toJson(this.bot.id, this.userId),
+    ]);
+    await this.runWhenUserInput(userInput);
   }
 
   /**
@@ -43,9 +42,8 @@ class ShellAdapter extends Adapter {
   async runWhenUserInput(userInput) {
     logger.debug('runWhenUserInput', userInput);
     const userMessage = new UserTextMessage(userInput.payload);
-    userMessage.bot = this.bot.id;
-    userMessage.user = this.userId;
-    await this.runWhenUserInput(await this.bot.respond(userMessage.toJson()));
+    userInput = await this.bot.respond(userMessage.toJson(this.bot.id, this.userId));
+    await this.runWhenUserInput(userInput);
   }
 
   /**
