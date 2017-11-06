@@ -25,13 +25,16 @@ class QnasDialog extends Dialog {
    */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
-    // @TODO add messageEntities validation here to prevent undefined messageEntities[0]
-    const qnas = messageEntities[0].value;
-    logger.debug('execute: qnas', qnas);
-    if (qnas.length === 1) {
-      await this.display(adapter, userId, 'answer', { answer: qnas[0].answer });
+    if (messageEntities.length === 0) {
+      await this.display(adapter, userId, 'default_dialog');
     } else {
-      await this.display(adapter, userId, 'questions', { qnas });
+      const qnas = messageEntities[0].value;
+      logger.debug('execute: qnas', qnas);
+      if (qnas.length === 1) {
+        await this.display(adapter, userId, 'answer', { answer: qnas[0].answer });
+      } else {
+        await this.display(adapter, userId, 'questions', { qnas });
+      }
     }
     return Dialog.STATUS_COMPLETED;
   }

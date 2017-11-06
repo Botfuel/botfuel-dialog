@@ -130,13 +130,13 @@ class DialogManager {
     logger.debug('executeDialogs', userId, dialogs);
     while (dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
-      if (dialog.maxComplexity > 1) {
+      const dialogInstance = await this.getDialog(dialog);
+      if (dialogInstance.maxComplexity > 1) {
         // eslint-disable-next-line no-await-in-loop
         await this.brain.userSet(userId, 'lastDialog', dialog.label);
       }
       // eslint-disable-next-line no-await-in-loop
-      dialog.status = await this
-        .getDialog(dialog)
+      dialog.status = await dialogInstance
         .execute(adapter, userId, dialog.entities || [], dialog.status);
       if (dialog.status === Dialog.STATUS_DISCARDED) {
         dialogs = dialogs.slice(0, -1);
