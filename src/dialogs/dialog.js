@@ -1,5 +1,5 @@
 const logger = require('logtown')('Dialog');
-const ViewsManager = require('../views_manager');
+const ViewManager = require('../view_manager');
 
 /**
  * Dialog generates messages.
@@ -52,7 +52,7 @@ class Dialog {
     this.brain = brain;
     this.parameters = parameters;
     this.maxComplexity = maxComplexity;
-    this.viewsManager = new ViewsManager(config);
+    this.viewManager = new ViewManager(config);
     this.name = this.getName();
   }
 
@@ -75,7 +75,7 @@ class Dialog {
   async display(adapter, userId, key, parameters) {
     logger.debug('display', userId, key, parameters);
     const botMessages = this
-          .viewsManager
+          .viewManager
           .resolve(this.name)
           .renderAsJson(adapter.bot.id, userId, key, parameters);
     await adapter.send(botMessages);

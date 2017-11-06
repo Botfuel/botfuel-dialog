@@ -3,15 +3,10 @@ const { ActionsMessage, BotTextMessage, Postback } = require('../messages');
 const View = require('./view');
 
 /**
- * Qnas view
+ * Qnas dialog's view.
+ * @extends View
  */
 class QnasView extends View {
-  /**
-   * Render an array of bot messages
-   * @param {String} key - the dialog key
-   * @param {Object} [parameters] - the optional dialog parameters
-   * @returns {Object[]} the bot messages
-   */
   render(key, parameters) {
     logger.debug('render', key, parameters);
     switch (key) {
@@ -25,9 +20,10 @@ class QnasView extends View {
   }
 
   /**
-   * Renders a qna answer
+   * Renders an answer.
+   * @private
    * @param {String} answer - the answer
-   * @returns {BotTextMessage[]} the answer
+   * @returns {BotTextMessage[]} the answer as a text message
    */
   renderAnswer(answer) {
     logger.debug('renderAnswer', answer);
@@ -37,9 +33,10 @@ class QnasView extends View {
   }
 
   /**
-   * Renders qna questions
+   * Renders the questions.
+   * @private
    * @param {Object[]} qnas - the qnas
-   * @returns {Object[]} the questions
+   * @returns {Object[]} the questions as messages
    */
   renderQuestions(qnas) {
     logger.debug('renderQuestions', qnas);

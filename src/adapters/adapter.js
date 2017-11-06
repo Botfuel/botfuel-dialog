@@ -1,7 +1,7 @@
 const logger = require('logtown')('Adapter');
 
 /**
- * Adapts messages to a messaging platform.
+ * An adapter for a given messaging platform adapts the messages to the messaging platform.
  */
 class Adapter {
   /**
@@ -16,7 +16,7 @@ class Adapter {
   }
 
   /**
-   * Plays user messages
+   * Plays some user messages.
    * @async
    * @param {Object[]} userMessages - the user messages
    * @returns {Promise.<void>}
@@ -27,7 +27,7 @@ class Adapter {
   }
 
   /**
-   * Runs bot adapter
+   * Adapter's method for running the bot.
    * @async
    * @returns {Promise.<void>}
    */
@@ -37,7 +37,7 @@ class Adapter {
   }
 
   /**
-   * Sends bot messages to the platform
+   * Sends the bot messages to the messaging platform.
    * @async
    * @param {Object[]} botMessages - the bot messages
    * @returns {Promise.<void>}

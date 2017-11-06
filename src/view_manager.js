@@ -1,10 +1,10 @@
 const fs = require('fs');
-const logger = require('logtown')('ViewsManager');
+const logger = require('logtown')('ViewManager');
 
 /**
- * Views manager resolve dialogs view
+ * The view manager resolves the view for a given dialog.
  */
-class ViewsManager {
+class ViewManager {
   /**
    * @constructor
    * @param {Object} config - the bot config
@@ -16,9 +16,9 @@ class ViewsManager {
   }
 
   /**
-   * Gets dialog path for a given name
+   * Gets the path for a given name.
    * @param {String} name - the dialog name
-   * @returns {String|null} the dialog path if exists or null
+   * @returns {String|null} the path if exists or null
    */
   getPath(name) {
     logger.debug('getPath');
@@ -39,9 +39,9 @@ class ViewsManager {
   }
 
   /**
-   * Resolves a view for a given dialog name
-   * @param {String} name - the view name
-   * @returns {class|null} the dialog instance or null
+   * Resolves the view for a given dialog name.
+   * @param {String} name - the dialog name
+   * @returns {View|null} the view instance or null
    */
   resolve(name) {
     logger.debug('resolve', name);
@@ -54,4 +54,4 @@ class ViewsManager {
   }
 }
 
-module.exports = ViewsManager;
+module.exports = ViewManager;

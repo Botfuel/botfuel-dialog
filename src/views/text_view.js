@@ -3,15 +3,10 @@ const { BotTextMessage } = require('../messages');
 const View = require('./view');
 
 /**
- * Text view
+ * View that renders text messages only.
+ * @extends View
  */
 class TextView extends View {
-  /**
-   * Renders an array of BotTextMessages.
-   * @param {String} key - the dialog key
-   * @param {Object} [parameters] - the optional dialog parameters
-   * @returns {BotTextMessage[]} the array of bot text messages
-   */
   render(key, parameters) {
     logger.debug('render', key, parameters);
     return this
@@ -20,9 +15,9 @@ class TextView extends View {
   }
 
   /**
-   * Gets views texts
-   * @param {Object} [parameters={}] - the optional dialog parameters
-   * @returns {String[]}
+   * Gets the texts used for building the BotTextMessages.
+   * @param {Object} [parameters={}] - optional dialog parameters
+   * @returns {String[]} an array of strings
    */
   getTexts(parameters = {}) {
     logger.debug('getTexts', parameters);

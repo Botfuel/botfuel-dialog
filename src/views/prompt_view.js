@@ -3,15 +3,10 @@ const { BotTextMessage } = require('../messages');
 const View = require('./view');
 
 /**
- * Prompt view
+ * Prompt dialog's view.
+ * @extends View
  */
 class PromptView extends View {
-  /**
-   * Renders an array of bot messages
-   * @param {String} key - the dialog key
-   * @param {Object} [parameters] - the optional ialog parameters
-   * @returns {Object[]} the bot messages
-   */
   render(key, parameters) {
     logger.debug('render', key, parameters);
     switch (key) {
@@ -31,7 +26,8 @@ class PromptView extends View {
   }
 
   /**
-   * Renders ask key
+   * Asks for confirmation.
+   * @private
    * @returns {Object[]} the bot messages
    */
   renderAsk() {
@@ -41,7 +37,8 @@ class PromptView extends View {
   }
 
   /**
-   * Renders confirm key
+   * Confirms the dialog.
+   * @private
    * @returns {Object[]} the bot messages
    */
   renderConfirm() {
@@ -51,7 +48,8 @@ class PromptView extends View {
   }
 
   /**
-   * Renders discard key
+   * Discards the dialog.
+   * @private
    * @returns {Object[]} the bot messages
    */
   renderDiscard() {
@@ -61,7 +59,8 @@ class PromptView extends View {
   }
 
   /**
-   * Renders entities key
+   * Confirms the defined entities and asks for the needed ones.
+   * @private
    * @param {Object[]} messageEntities - the defined entities
    * @param {String[]} missingEntities - the needed entities
    * @returns {Object[]} the bot messages
