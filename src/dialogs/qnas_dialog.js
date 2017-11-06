@@ -12,7 +12,7 @@ class QnasDialog extends Dialog {
    * @param {class} brain - the bot brain
    */
   constructor(config, brain) {
-    super(config, brain, 2);
+    super(config, brain, 1); // TODO: this is a hack for avoiding recording this dialog in lastDialog
   }
 
   /**
@@ -25,18 +25,15 @@ class QnasDialog extends Dialog {
    */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
-    if (messageEntities.length === 0) {
-      await this.display(adapter, userId, 'default_dialog');
+    const qnas = messageEntities[0].value;
+    logger.debug('execute: qnas', qnas);
+    if (qnas.length === 1) {
+      await this.display(adapter, userId, 'answer', { answer: qnas[0].answer });
+      return Dialog.STATUS_COMPLETED;
     } else {
-      const qnas = messageEntities[0].value;
-      logger.debug('execute: qnas', qnas);
-      if (qnas.length === 1) {
-        await this.display(adapter, userId, 'answer', { answer: qnas[0].answer });
-      } else {
-        await this.display(adapter, userId, 'questions', { qnas });
-      }
+      await this.display(adapter, userId, 'questions', { qnas });
+      return Dialog.STATUS_READY;
     }
-    return Dialog.STATUS_COMPLETED;
   }
 }
 
