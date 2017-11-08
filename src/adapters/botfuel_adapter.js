@@ -18,7 +18,7 @@ class BotfuelAdapter extends WebAdapter {
     res.sendStatus(200);
     const userMessage = req.body; // the message is already in the expected format
     logger.debug('handleMessage: userMessage', userMessage);
-    const userId = userMessage.use;r
+    const userId = userMessage.user;
     await this.bot.brain.initUserIfNecessary(userId);
     await this.bot.respond(userMessage);
   }
