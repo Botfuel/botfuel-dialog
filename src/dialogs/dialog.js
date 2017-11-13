@@ -5,40 +5,17 @@ const ViewManager = require('../view_manager');
  * Dialog generates messages.
  */
 class Dialog {
-  /**
-   * Dialog blocked status
-   * @static
-   * @type {String}
-   */
   static STATUS_BLOCKED = 'blocked';
-
-  /**
-   * Dialog completed status
-   * @static
-   * @type {String}
-   */
   static STATUS_COMPLETED = 'completed';
-
-  /**
-   * Dialog discarded status
-   * @static
-   * @type {String}
-   */
   static STATUS_DISCARDED = 'discarded';
-
-  /**
-   * Dialog ready status
-   * @static
-   * @type {String}
-   */
   static STATUS_READY = 'ready';
-
-  /**
-   * Dialog ready status
-   * @static
-   * @type {String}
-   */
   static STATUS_WAITING = 'waiting';
+
+  get STATUS_BLOCKED() { return Dialog.STATUS_BLOCKED; }
+  get STATUS_COMPLETED() { return Dialog.STATUS_COMPLETED; }
+  get STATUS_DISCARDED() { return Dialog.STATUS_DISCARDED; }
+  get STATUS_READY() { return Dialog.STATUS_READY; }
+  get STATUS_WAITING() { return Dialog.STATUS_WAITING; }
 
   /**
    * @constructor

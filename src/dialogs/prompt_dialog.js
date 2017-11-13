@@ -46,7 +46,7 @@ class PromptDialog extends Dialog {
   async executeWhenBlocked(adapter, userId, messageEntities) {
     logger.debug('executeWhenBlocked', userId, messageEntities);
     await this.display(adapter, userId, 'ask');
-    return Dialog.STATUS_WAITING;
+    return this.STATUS_WAITING;
   }
 
   /**
@@ -69,10 +69,10 @@ class PromptDialog extends Dialog {
         }
         // if not confirmed, then discard dialog
         await this.display(adapter, userId, 'discard');
-        return Dialog.STATUS_DISCARDED;
+        return this.STATUS_DISCARDED;
       }
     }
-    return Dialog.STATUS_BLOCKED;
+    return this.STATUS_BLOCKED;
   }
 
   /**
@@ -93,11 +93,11 @@ class PromptDialog extends Dialog {
     if (missingEntities.length === 0) {
       return this.executeWhenCompleted(adapter, userId, messageEntities);
     }
-    return Dialog.STATUS_READY;
+    return this.STATUS_READY;
   }
 
   executeWhenCompleted(adapter, userId, messageEntities) {
-    return Dialog.STATUS_COMPLETED;
+    return this.STATUS_COMPLETED;
   }
 
   /**
@@ -112,11 +112,11 @@ class PromptDialog extends Dialog {
   async execute(adapter, userId, messageEntities, status) {
     logger.debug('execute', userId, messageEntities, status);
     switch (status) {
-      case Dialog.STATUS_BLOCKED:
+      case this.STATUS_BLOCKED:
         return this.executeWhenBlocked(adapter, userId, messageEntities);
-      case Dialog.STATUS_WAITING:
+      case this.STATUS_WAITING:
         return this.executeWhenWaiting(adapter, userId, messageEntities);
-      case Dialog.STATUS_READY:
+      case this.STATUS_READY:
       default:
         return this.executeWhenReady(adapter, userId, messageEntities);
     }

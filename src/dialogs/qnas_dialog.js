@@ -29,10 +29,10 @@ class QnasDialog extends Dialog {
     logger.debug('execute: qnas', qnas);
     if (qnas.length === 1) {
       await this.display(adapter, userId, 'answer', { answer: qnas[0].answer });
-      return Dialog.STATUS_COMPLETED;
+      return this.STATUS_COMPLETED;
     } else {
       await this.display(adapter, userId, 'questions', { qnas });
-      return Dialog.STATUS_READY;
+      return this.STATUS_READY;
     }
   }
 }
