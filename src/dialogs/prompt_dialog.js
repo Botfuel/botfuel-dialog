@@ -90,7 +90,14 @@ class PromptDialog extends Dialog {
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
     const missingEntities = await this.computeMissingEntities(userId, messageEntities);
     await this.display(adapter, userId, 'entities', { messageEntities, missingEntities });
-    return missingEntities.length === 0 ? Dialog.STATUS_COMPLETED : Dialog.STATUS_READY;
+    if (missingEntities.length === 0) {
+      return this.executeWhenCompleted(adapter, userId, messageEntities);
+    }
+    return Dialog.STATUS_READY;
+  }
+
+  executeWhenCompleted(adapter, userId, messageEntities) {
+    return Dialog.STATUS_COMPLETED;
   }
 
   /**
