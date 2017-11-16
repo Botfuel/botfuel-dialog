@@ -30,7 +30,7 @@ class ShellAdapter extends Adapter {
     const userInput = await this.send([
       botMessage.toJson(this.bot.id, this.userId),
     ]);
-    await this.runWhenUserInput(userInput);
+    // await this.runWhenUserInput(userInput);
   }
 
   /**
@@ -42,8 +42,8 @@ class ShellAdapter extends Adapter {
   async runWhenUserInput(userInput) {
     logger.debug('runWhenUserInput', userInput);
     const userMessage = new UserTextMessage(userInput.payload);
-    userInput = await this.bot.respond(userMessage.toJson(this.bot.id, this.userId));
-    await this.runWhenUserInput(userInput);
+    await this.bot.respond(userMessage.toJson(this.bot.id, this.userId));
+    // await this.runWhenUserInput(userInput);
   }
 
   /**
@@ -57,13 +57,12 @@ class ShellAdapter extends Adapter {
     // TODO: adapt to msg type
     const message = botMessages.map(botMessage => botMessage.payload.value).join(' ');
     // type text
-    return inquirer.prompt([
-      {
-        type: 'input',
-        name: 'payload',
-        message,
-      },
-    ]);
+    const userInput = await inquirer.prompt([{
+      type: 'input',
+      name: 'payload',
+      message: message,
+    }]);
+    return this.runWhenUserInput(userInput);
   }
 }
 
