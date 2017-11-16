@@ -9,7 +9,7 @@ const { BotTextMessage } = require('../../src/messages');
 const TEST_USER = '1';
 const TEST_BOT = process.env.BOT_ID;
 
-// require('../../src/logger_manager').configure({ logger: 'botfuel'});
+// require('../../src/logger_manager').configure({ logger: 'botfuel' });
 
 describe('DialogManager', function () {
   const brain = new MemoryBrain(TEST_BOT);
@@ -41,13 +41,13 @@ describe('DialogManager', function () {
   it('should keep on the stack a dialog which is waiting', async function () {
     await dm.execute(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
-    expect(user.dialogs.length).to.be(1);
+    expect(user.dialogs.stack.length).to.be(1);
   });
 
   it('should not stack the same dialog twice', async function () {
     await dm.execute(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
     await dm.execute(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
-    expect(user.dialogs.length).to.be(1);
+    expect(user.dialogs.stack.length).to.be(1);
   });
 });
