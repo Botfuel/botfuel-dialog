@@ -7,20 +7,21 @@ const View = require('./view');
  * @extends View
  */
 class TextView extends View {
-  render(key, parameters) {
-    logger.debug('render', key, parameters);
+  // eslint-disable-next-line require-jsdoc
+  render(key, data) {
+    logger.debug('render', key, data);
     return this
-      .getTexts(parameters)
+      .getTexts(data)
       .map(text => new BotTextMessage(text));
   }
 
   /**
    * Gets the texts used for building the BotTextMessages.
-   * @param {Object} [parameters={}] - optional dialog parameters
+   * @param {Object} data - data used at display time
    * @returns {String[]} an array of strings
    */
-  getTexts(parameters = {}) {
-    logger.debug('getTexts', parameters);
+  getTexts(data) {
+    logger.debug('getTexts', data);
     return [];
   }
 }

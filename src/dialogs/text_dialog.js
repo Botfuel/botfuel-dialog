@@ -2,7 +2,7 @@ const logger = require('logtown')('TextDialog');
 const Dialog = require('./dialog');
 
 /**
- * The text dialog is used to display a text message
+ * The text dialog is used to display text messages.
  * @extends Dialog
  */
 class TextDialog extends Dialog {
@@ -21,12 +21,21 @@ class TextDialog extends Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
-   * @returns {String} the dialog completed status
+   * @returns {String} the new dialog status
    */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
-    await this.display(adapter, userId, null, messageEntities);
+    const data = await this.getViewData(messageEntities);
+    await this.display(adapter, userId, null, data);
     return this.STATUS_COMPLETED;
+  }
+
+  /**
+   * Returns optional data used to generate the view.
+   * @returns {Object} the data
+   */
+  async getViewData() {
+    return {};
   }
 }
 

@@ -7,8 +7,9 @@ const View = require('./view');
  * @extends View
  */
 class PromptView extends View {
-  render(key, parameters) {
-    logger.debug('render', key, parameters);
+  // eslint-disable-next-line require-jsdoc
+  render(key, data) {
+    logger.debug('render', key, data);
     switch (key) {
       case 'ask':
         return this.renderAsk();
@@ -17,7 +18,7 @@ class PromptView extends View {
       case 'discard':
         return this.renderDiscard();
       case 'entities': {
-        const { messageEntities, missingEntities } = parameters;
+        const { messageEntities, missingEntities } = data;
         return this.renderEntities(messageEntities, missingEntities);
       }
       default:

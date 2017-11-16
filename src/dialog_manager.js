@@ -130,6 +130,7 @@ class DialogManager {
     logger.debug('executeDialogs', userId, dialogs);
     while (dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
+      // eslint-disable-next-line no-await-in-loop
       const dialogInstance = await this.getDialog(dialog);
       if (dialogInstance.maxComplexity > 1) {
         // eslint-disable-next-line no-await-in-loop

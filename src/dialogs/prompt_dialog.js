@@ -2,7 +2,7 @@ const logger = require('logtown')('PromptDialog');
 const Dialog = require('./dialog');
 
 /**
- * The prompt dialog is used to ask some things to the user
+ * The prompt dialog prompts the user for a number of entities.
  * @extends Dialog
  */
 class PromptDialog extends Dialog {
@@ -10,14 +10,15 @@ class PromptDialog extends Dialog {
    * @constructor
    * @param {Object} config - the bot config
    * @param {class} brain - the bot brain
-   * @param {Object} parameters - the dialog status
+   * @param {Object} parameters - the dialog parameters,
+   * parameters.entities is a map mapping entities to optional parameters
    */
   constructor(config, brain, parameters) {
     super(config, brain, Object.keys(parameters.entities).length + 1, parameters);
   }
 
   /**
-   * Computes the dialog missing entities
+   * Computes the missing entities.
    * @async
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
@@ -36,12 +37,12 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * Executes dialog when blocked status
+   * Executes the dialog when status is 'blocked'.
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} [messageEntities] - the optional message entities
-   * @returns {Promise.<string>} the next dialog's status
+   * @param {Object[]} [messageEntities] - the message entities
+   * @returns {Promise.<string>} the new dialog status
    */
   async executeWhenBlocked(adapter, userId, messageEntities) {
     logger.debug('executeWhenBlocked', userId, messageEntities);
@@ -50,12 +51,12 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * Executes dialog when waiting status
+   * Executes the dialog when status is 'waiting'.
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
-   * @returns {Promise.<string>} the next dialog's status
+   * @returns {Promise.<string>} the new dialog status
    */
   async executeWhenWaiting(adapter, userId, messageEntities) {
     logger.debug('executeWhenWaiting', userId, messageEntities);
@@ -64,10 +65,12 @@ class PromptDialog extends Dialog {
         const booleanValue = messageEntity.values[0].value;
         logger.debug('execute: system:boolean', booleanValue);
         if (booleanValue) {
+          // eslint-disable-next-line no-await-in-loop
           await this.display(adapter, userId, 'confirm');
           return this.executeWhenReady(adapter, userId, messageEntities);
         }
         // if not confirmed, then discard dialog
+        // eslint-disable-next-line no-await-in-loop
         await this.display(adapter, userId, 'discard');
         return this.STATUS_DISCARDED;
       }
@@ -76,12 +79,12 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * Executes dialog when ready status
+   * Executes the dialog when status is 'ready'.
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
-   * @returns {Promise.<string>} the next dialog's status
+   * @returns {Promise.<string>} the new dialog status
    */
   async executeWhenReady(adapter, userId, messageEntities) {
     logger.debug('executeWhenReady', userId, messageEntities, this.parameters.entities);
@@ -96,18 +99,23 @@ class PromptDialog extends Dialog {
     return this.STATUS_READY;
   }
 
-  executeWhenCompleted(adapter, userId, messageEntities) {
+  /**
+   * Executes the dialog when status is 'completed'.
+   * @async
+   * @returns {Promise.<string>} the new dialog status
+   */
+  async executeWhenCompleted() {
     return this.STATUS_COMPLETED;
   }
 
   /**
-   * Executes dialog according to it's status.
+   * Executes the dialog.
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId the user id
-   * @param {Object[]} messageEntities - entities array from user message
+   * @param {Object[]} messageEntities - the message entities
    * @param {String} status - the dialog status
-   * @returns {function} the execute method according to the dialog status
+   * @returns {Promise.<string>} the new dialog status
    */
   async execute(adapter, userId, messageEntities, status) {
     logger.debug('execute', userId, messageEntities, status);

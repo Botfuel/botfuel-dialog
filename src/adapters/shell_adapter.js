@@ -4,7 +4,7 @@ const { BotTextMessage, UserTextMessage } = require('../messages');
 const Adapter = require('./adapter');
 
 /**
- * Shell adapter
+ * Shell adapter.
  * @extends Adapter
  */
 class ShellAdapter extends Adapter {

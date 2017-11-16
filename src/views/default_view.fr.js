@@ -6,8 +6,9 @@ const TextView = require('./text_view');
  * @extends TextView
  */
 class DefaultView extends TextView {
-  getTexts(parameters = {}) {
-    logger.debug('getTexts', parameters);
+  // eslint-disable-next-line require-jsdoc
+  getTexts(data) {
+    logger.debug('getTexts', data);
     return ['Je n\'ai pas compris.'];
   }
 }

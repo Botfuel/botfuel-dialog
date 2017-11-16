@@ -11,10 +11,25 @@ class Dialog {
   static STATUS_READY = 'ready';
   static STATUS_WAITING = 'waiting';
 
+  /**
+   * Returns STATUS_BLOCKED.
+   */
   get STATUS_BLOCKED() { return Dialog.STATUS_BLOCKED; }
+  /**
+   * Returns STATUS_COMPLETED.
+   */
   get STATUS_COMPLETED() { return Dialog.STATUS_COMPLETED; }
+  /**
+   * Returns STATUS_DISCARDED.
+   */
   get STATUS_DISCARDED() { return Dialog.STATUS_DISCARDED; }
+  /**
+   * Returns STATUS_READY.
+   */
   get STATUS_READY() { return Dialog.STATUS_READY; }
+  /**
+   * Returns STATUS_WAITING.
+   */
   get STATUS_WAITING() { return Dialog.STATUS_WAITING; }
 
   /**
@@ -46,15 +61,15 @@ class Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String} key - the dialog key
-   * @param {Object} [parameters] - the optional dialog parameters
+   * @param {Object} [data] - data used at display time
    * @returns {void}
    */
-  async display(adapter, userId, key, parameters) {
-    logger.debug('display', userId, key, parameters);
+  async display(adapter, userId, key, data) {
+    logger.debug('display', userId, key, data);
     const botMessages = this
           .viewManager
           .resolve(this.name)
-          .renderAsJson(adapter.bot.id, userId, key, parameters);
+          .renderAsJson(adapter.bot.id, userId, key, data);
     await adapter.send(botMessages);
   }
 }
