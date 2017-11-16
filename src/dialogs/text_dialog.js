@@ -25,17 +25,20 @@ class TextDialog extends Dialog {
    */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
-    const data = await this.getViewData(messageEntities);
+    const data = await this.getViewData(userId, messageEntities);
     await this.display(adapter, userId, null, data);
     return this.STATUS_COMPLETED;
   }
 
   /**
    * Returns optional data used to generate the view.
+   * @param {String} userId - the user id
+   * @param {Object[]} messageEntities - the message entities
    * @returns {Object} the data
    */
-  async getViewData() {
-    return {};
+  async getViewData(userId, messageEntities) {
+    logger.debug('getViewData', userId, messageEntities);
+    return null;
   }
 }
 
