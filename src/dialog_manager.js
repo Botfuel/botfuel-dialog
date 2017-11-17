@@ -94,7 +94,7 @@ class DialogManager {
    * @returns {void}
    */
   async setDialogs(userId, dialogs) {
-    logger.error('setDialogs', userId, dialogs);
+    logger.debug('setDialogs', userId, dialogs);
     await this.brain.userSet(userId, 'dialogs', dialogs);
   }
 

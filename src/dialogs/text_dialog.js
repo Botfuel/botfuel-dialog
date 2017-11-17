@@ -20,7 +20,6 @@ class TextDialog extends Dialog {
     logger.debug('execute', userId, messageEntities);
     const data = await this.getViewData(userId, messageEntities);
     await this.display(adapter, userId, null, data);
-    logger.error('execute: AFTER DISPLAY');
     return this.STATUS_COMPLETED;
   }
 
