@@ -60,7 +60,7 @@ class ShellAdapter extends Adapter {
     const userInput = await inquirer.prompt([{
       type: 'input',
       name: 'payload',
-      message: message,
+      message,
     }]);
     return this.runWhenUserInput(userInput);
   }
