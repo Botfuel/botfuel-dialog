@@ -95,7 +95,7 @@ class DialogManager {
    */
   async setDialogs(userId, dialogs) {
     logger.debug('setDialogs', userId, dialogs);
-    await this.brain.userSet(userId, 'dialogs', dialogs);
+    return this.brain.userSet(userId, 'dialogs', dialogs);
   }
 
   /**
@@ -148,35 +148,51 @@ class DialogManager {
   }
 
   /**
+   * Executes the dialogs and saves the dialogs object.
+   * @param {Adapter} adapter - the adapter
+   * @param {String} userId - the user id
+   * @param {Object[]} dialogs - the dialogs data
+   * @returns {Promise.<void>}
+   */
+  async executeDialogs(adapter, userId, dialogs) {
+    await this.executeDialogsRec(adapter, userId, dialogs);
+    return this.setDialogs(userId, dialogs);
+  }
+
+  /**
    * Executes the dialogs.
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object} dialogs - the dialogs data
-   * @returns {Promise.<Object>}
+   * @param {Object[]} dialogs - the dialogs data
+   * @returns {Promise.<void>}
    */
-  async executeDialogs(adapter, userId, dialogs) {
+  async executeDialogsRec(adapter, userId, dialogs) {
     logger.debug('executeDialogs', '<adapter>', userId, dialogs);
-    while (dialogs.stack.length > 0) {
-      const dialog = dialogs.stack[dialogs.stack.length - 1];
-      // eslint-disable-next-line no-await-in-loop
-      const { status, isComplex } = await this.executeDialog(adapter, userId, dialogs, dialog);
-      if (status === Dialog.STATUS_DISCARDED) {
-        logger.debug('executeDialogs: status discarded');
-        dialogs.stack = dialogs.stack.slice(0, -1);
-        dialogs.lastLabel = null;
-      } else if (status === Dialog.STATUS_COMPLETED) {
-        logger.debug('executeDialogs: status completed');
-        dialogs.stack = dialogs.stack.slice(0, -1);
-        if (isComplex) {
-          dialogs.lastLabel = dialog.label;
-        }
-      } else { // ready or waiting
-        logger.debug('executeDialogs: status ready or waiting');
-        dialog.status = status;
-        return dialogs; // we don't want to execute another dialog
-      }
+    if (dialogs.stack.length === 0) {
+      return dialogs;
     }
-    return dialogs;
+    const dialog = dialogs.stack[dialogs.stack.length - 1];
+    // eslint-disable-next-line no-await-in-loop
+    const { status, isComplex } = await this.executeDialog(adapter, userId, dialogs, dialog);
+    if (status === Dialog.STATUS_DISCARDED) {
+      logger.debug('executeDialogs: status discarded start');
+      dialogs.stack = dialogs.stack.slice(0, -1);
+      dialogs.lastLabel = null;
+      logger.debug('executeDialogs: status discarded end');
+    } else if (status === Dialog.STATUS_COMPLETED) {
+      logger.debug('executeDialogs: status completed start');
+      dialogs.stack = dialogs.stack.slice(0, -1);
+      if (isComplex) {
+        dialogs.lastLabel = dialog.label;
+      }
+      logger.debug('executeDialogs: status completed end');
+    } else { // ready or waiting
+      logger.debug('executeDialogs: status ready/waiting start');
+      dialog.status = status;
+      logger.debug('executeDialogs: status ready/waiting end');
+      return dialogs; // we don't want to execute another dialog
+    }
+    return this.executeDialogsRec(adapter, userId, dialogs);
   }
 
   /**
