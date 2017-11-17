@@ -65,7 +65,7 @@ class Dialog {
    * @returns {Promise.<void>}
    */
   async display(adapter, userId, key, data) {
-    logger.warn('display', userId, key, data);
+    logger.debug('display', userId, key, data);
     const botMessages = this
           .viewManager
           .resolve(this.name)
