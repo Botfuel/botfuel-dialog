@@ -3,11 +3,13 @@ const logger = require('logtown')('DialogManager');
 const Dialog = require('./dialogs/dialog');
 
 /**
- * Dialog manager turns NLU output into a dialog stack
- * A Dialog manager has:
- * - an intent threshold
- * The Dialog manager have access to:
- * - the bot {@link Brain},
+ * The dialog manager turns NLU output into a dialog stack.
+ *
+ * A dialog manager has:
+ * - an intent threshold.
+ *
+ * The dialog manager has access to:
+ * - the bot {@link Brain}.
  */
 class DialogManager {
   /**
@@ -16,7 +18,6 @@ class DialogManager {
    * @param {Object} config - the bot config
    */
   constructor(brain, config) {
-    logger.debug('constructor');
     this.brain = brain;
     this.config = config;
     this.intentThreshold = this.config.intentThreshold || 0.8;
@@ -77,9 +78,30 @@ class DialogManager {
   }
 
   /**
+   * Returns the dialogs data (stack and label of last dialog).
+   * @param {String} userId - the user id
+   * @returns {Promise.<Object>} the data
+   */
+  async getDialogs(userId) {
+    logger.debug('getDialogs', userId);
+    return this.brain.userGet(userId, 'dialogs');
+  }
+
+  /**
+   * Sets the dialogs data (stack and label of last dialog).
+   * @param {String} userId - the user id
+   * @param {Object} dialogs - the dialogs data
+   * @returns {void}
+   */
+  async setDialogs(userId, dialogs) {
+    logger.debug('setDialogs', userId, dialogs);
+    await this.brain.userSet(userId, 'dialogs', dialogs);
+  }
+
+  /**
    * Updates the dialogs.
    * @param {String} userId - the user id
-   * @param {Object[]} dialogs - the dialogs
+   * @param {Object} dialogs - the dialogs data
    * @param {Object[]} intents - the intents
    * @param {Object[]} entities - the entities
    * @returns {void}
@@ -102,20 +124,26 @@ class DialogManager {
       logger.debug('updateDialogs: newDialogs', newDialogs);
       while (newDialogs.length > 0) {
         const newDialog = newDialogs[newDialogs.length - 1];
-        if (dialogs.length > 0 && dialogs[dialogs.length - 1].label === newDialog.label) {
-          dialogs[dialogs.length - 1].entities = newDialog.entities;
-          dialogs[dialogs.length - 1].status = newDialog.status;
+        const length = dialogs.stack.length;
+        if (length > 0 && dialogs.stack[length - 1].label === newDialog.label) {
+          dialogs.stack[length - 1].entities = newDialog.entities;
+          dialogs.stack[length - 1].status = newDialog.status;
         } else {
-          dialogs.push(newDialog);
+          dialogs.stack.push(newDialog);
         }
         newDialogs = newDialogs.slice(0, -1);
       }
-    } else if (dialogs.length === 0) { // no intent detected
-      const label = await this.brain.userGet(userId, 'lastDialog') || 'default_dialog';
-      logger.debug('updateDialogs: newDialog', label);
-      dialogs.push({ label, entities, status: Dialog.STATUS_READY });
     } else {
-      dialogs[dialogs.length - 1].entities = entities;
+      const length = dialogs.stack.length;
+      if (length === 0) { // no intent detected
+        dialogs.stack.push({
+          label: dialogs.lastLabel || 'default_dialog',
+          entities,
+          status: Dialog.STATUS_READY,
+        });
+      } else {
+        dialogs.stack[length - 1].entities = entities;
+      }
     }
   }
 
@@ -123,33 +151,30 @@ class DialogManager {
    * Executes the dialogs.
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} dialogs - the dialogs
+   * @param {Object[]} dialogs - the dialogs data
    * @returns {Promise.<void>}
    */
   async executeDialogs(adapter, userId, dialogs) {
-    logger.debug('executeDialogs', userId, dialogs);
-    while (dialogs.length > 0) {
-      const dialog = dialogs[dialogs.length - 1];
+    logger.debug('executeDialogs', adapter, userId, dialogs);
+    while (dialogs.stack.length > 0) {
+      const dialog = dialogs.stack[dialogs.stack.length - 1];
       // eslint-disable-next-line no-await-in-loop
       const dialogInstance = await this.getDialog(dialog);
       if (dialogInstance.maxComplexity > 1) {
-        // eslint-disable-next-line no-await-in-loop
-        await this.brain.userSet(userId, 'lastDialog', dialog.label);
+        dialogs.lastLabel = dialog.label;
       }
       // eslint-disable-next-line no-await-in-loop
       dialog.status = await dialogInstance
         .execute(adapter, userId, dialog.entities || [], dialog.status);
       if (dialog.status === Dialog.STATUS_DISCARDED) {
-        dialogs = dialogs.slice(0, -1);
-        // eslint-disable-next-line no-await-in-loop
-        await this.brain.userSet(userId, 'lastDialog', null);
+        dialogs.stack = dialogs.stack.slice(0, -1);
+        dialogs.lastLabel = null;
       } else if (dialog.status === Dialog.STATUS_COMPLETED) {
-        dialogs = dialogs.slice(0, -1);
+        dialogs.stack = dialogs.stack.slice(0, -1);
       } else { // ready or waiting
         break;
       }
     }
-    await this.brain.userSet(userId, 'dialogs', dialogs);
   }
 
   /**
@@ -162,9 +187,11 @@ class DialogManager {
    */
   async execute(adapter, userId, intents, entities) {
     logger.debug('execute', userId, intents, entities);
-    const dialogs = await this.brain.userGet(userId, 'dialogs');
+    const dialogs = await this.getDialogs(userId);
+    logger.debug('execute: dialogs', dialogs);
     await this.updateDialogs(userId, dialogs, intents, entities);
     await this.executeDialogs(adapter, userId, dialogs);
+    await this.setDialogs(userId, dialogs);
   }
 }
 

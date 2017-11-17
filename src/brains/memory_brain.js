@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const logger = require('logtown')('MemoryBrain');
 const Brain = require('./brain');
 
@@ -49,13 +48,7 @@ class MemoryBrain extends Brain {
     if (await this.hasUser(userId)) {
       throw new Error('An user with this id for this bot already exists');
     }
-    const newUser = {
-      botId: this.botId,
-      userId,
-      conversations: [],
-      dialogs: [],
-      createdAt: Date.now(),
-    };
+    const newUser = this.getUserInitValue(userId);
     this.users[userId] = newUser;
     return newUser;
   }
@@ -100,86 +93,6 @@ class MemoryBrain extends Brain {
     logger.debug('userGet', userId, key);
     const user = await this.getUser(userId);
     return user[key];
-  }
-
-  /**
-   * Pushes value to user key array
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - user array key
-   * @param {Object} value - Object value
-   * @returns {Promise.<Object>} the user
-   */
-  async userPush(userId, key, value) {
-    logger.debug('userPush', userId, key, value);
-    const user = await this.getUser(userId);
-    if (user[key]) {
-      if (!_.isArray(user[key])) {
-        throw new Error('User key is not an array');
-      }
-      user[key].push(value);
-    } else {
-      user[key] = [value];
-    }
-    return user;
-  }
-
-  /**
-   * Shifts value from user key array (first element)
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - user array key
-   * @returns {Promise.<*>} the user array key first value
-   */
-  async userShift(userId, key) {
-    logger.debug('userShift', userId, key);
-    const user = await this.getUser(userId);
-    if (user[key] === undefined || !_.isArray(user[key])) {
-      throw new Error('User key is not an array');
-    }
-    return user[key].shift();
-  }
-
-
-  /**
-   * Pops value from user key array (last element)
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - user array key
-   * @returns {Promise.<*>} the user array key last value
-   */
-  async userPop(userId, key) {
-    logger.debug('userPop', userId, key);
-    const user = await this.getUser(userId);
-    if (user[key] === undefined || !_.isArray(user[key])) {
-      throw new Error('User key is not an array');
-    }
-    return user[key].pop();
-  }
-
-  /**
-   * Adds a conversation to an user
-   * @async
-   * @param {String} userId - user id
-   * @returns {Promise.<Object>} the last conversation added
-   */
-  async addConversation(userId) {
-    logger.debug('addConversation', userId);
-    const conversation = { createdAt: Date.now() };
-    await this.userPush(userId, 'conversations', conversation);
-    return conversation;
-  }
-
-  /**
-   * Gets user last conversation
-   * @async
-   * @param {String} userId - user id
-   * @returns {Promise.<Object>} the last conversation of the user
-   */
-  async getLastConversation(userId) {
-    logger.debug('getLastConversation', userId);
-    const user = await this.getUser(userId);
-    return _.last(user.conversations);
   }
 
   /**
