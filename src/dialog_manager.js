@@ -164,15 +164,20 @@ class DialogManager {
         dialogs.lastLabel = dialog.label;
       }
       // eslint-disable-next-line no-await-in-loop
-      dialog.status = await dialogInstance
+      const status = await dialogInstance
         .execute(adapter, userId, dialog.entities || [], dialog.status);
-      if (dialog.status === Dialog.STATUS_DISCARDED) {
-        dialogs.stack = dialogs.stack.slice(0, -1);
-        dialogs.lastLabel = null;
-      } else if (dialog.status === Dialog.STATUS_COMPLETED) {
-        dialogs.stack = dialogs.stack.slice(0, -1);
-      } else { // ready or waiting
-        break;
+      logger.debug('executeDialogs: status', status);
+      switch (status) {
+        case Dialog.STATUS_DISCARDED:
+          dialogs.stack = dialogs.stack.slice(0, -1);
+          dialogs.lastLabel = null;
+          break;
+        case Dialog.STATUS_COMPLETED:
+          dialogs.stack = dialogs.stack.slice(0, -1);
+          break;
+        default: // ready or waiting
+          dialog.status = status;
+          return;
       }
     }
   }

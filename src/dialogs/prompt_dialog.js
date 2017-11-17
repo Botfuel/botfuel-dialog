@@ -33,7 +33,9 @@ class PromptDialog extends Dialog {
     }
     logger.debug('computeMissingEntities: dialogEntities', dialogEntities);
     await this.brain.conversationSet(userId, namespace, dialogEntities);
-    const missingEntities = Object.keys(entities).filter(entityKey => dialogEntities[entityKey] === undefined);
+    const missingEntities = Object
+          .keys(entities)
+          .filter(entityKey => dialogEntities[entityKey] === undefined);
     logger.debug('computeMissingEntities: missingEntities', missingEntities);
     return missingEntities;
   }
