@@ -36,8 +36,8 @@ class ShellAdapter extends Adapter {
     await this.bot.brain.initUserIfNecessary(this.userId);
     const botMessage = new BotTextMessage('onboarding');
     await this.send([botMessage.toJson(this.bot.id, this.userId)]);
-    this.rl.on('line', (input) => {
-      this.runWhenUserInput({ payload: input }).then(() => logger.debug('The loop is done !'));
+    this.rl.on('line', async (input) => {
+      await this.runWhenUserInput({ payload: input });
     });
   }
 
