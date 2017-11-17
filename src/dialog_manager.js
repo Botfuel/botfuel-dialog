@@ -183,7 +183,6 @@ class DialogManager {
           return;
       }
     }
-    logger.debug('executeDialogs: dialogs', dialogs);
   }
 
   /**
@@ -197,9 +196,10 @@ class DialogManager {
   async execute(adapter, userId, intents, entities) {
     logger.debug('execute', userId, intents, entities);
     const dialogs = await this.getDialogs(userId);
-    logger.debug('execute: dialogs', dialogs);
+    logger.debug('execute: dialogs before execution', dialogs);
     await this.updateDialogs(userId, dialogs, intents, entities);
     await this.executeDialogs(adapter, userId, dialogs);
+    logger.debug('execute: dialogs after execution', dialogs);
     await this.setDialogs(userId, dialogs);
   }
 }
