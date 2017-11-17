@@ -37,7 +37,7 @@ class ShellAdapter extends Adapter {
    * @returns {Promise.<void>}
    */
   async runWhenUserInput(userInput) {
-    logger.debug('runWhenUserInput', userInput);
+    logger.info('runWhenUserInput', userInput);
     const userMessage = new UserTextMessage(userInput.payload);
     await this.bot.respond(userMessage.toJson(this.bot.id, this.userId));
   }
@@ -49,12 +49,13 @@ class ShellAdapter extends Adapter {
    * @returns {Promise} the prompt
    */
   async send(botMessages) {
-    logger.debug('send', botMessages);
+    logger.info('send', botMessages);
     const userInput = await inquirer.prompt([{
       type: 'input',
       name: 'payload',
       message: botMessages.map(botMessage => botMessage.payload.value).join(' '),
     }]);
+    console.log(await this.bot.brain.userGet(this.userId, 'dialogs'));
     return this.runWhenUserInput(userInput);
   }
 }

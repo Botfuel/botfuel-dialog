@@ -44,7 +44,7 @@ class ViewManager {
    * @returns {View|null} the view instance or null
    */
   resolve(name) {
-    logger.debug('resolve', name);
+    logger.info('resolve', name);
     const path = this.getPath(name);
     if (path) {
       const View = require(path);

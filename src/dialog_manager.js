@@ -80,7 +80,7 @@ class DialogManager {
   /**
    * Returns the dialogs data (stack and label of last dialog).
    * @param {String} userId - the user id
-   * @returns {Promise.<Object>} the data
+   * @returns {Promise.<Object[]>} the data
    */
   async getDialogs(userId) {
     logger.debug('getDialogs', userId);
@@ -94,7 +94,7 @@ class DialogManager {
    * @returns {void}
    */
   async setDialogs(userId, dialogs) {
-    logger.debug('setDialogs', userId, dialogs);
+    logger.error('setDialogs', userId, dialogs);
     await this.brain.userSet(userId, 'dialogs', dialogs);
   }
 
@@ -108,6 +108,7 @@ class DialogManager {
    */
   async updateDialogs(userId, dialogs, intents, entities) {
     logger.debug('updateDialogs', userId, dialogs, intents, entities);
+    logger.info('updateDialogs: dialogs', dialogs);
     intents = this.filterIntents(intents);
     logger.debug('updateDialogs: intents', intents);
     if (intents.length > 0) {
@@ -145,6 +146,7 @@ class DialogManager {
         dialogs.stack[length - 1].entities = entities;
       }
     }
+    logger.info('updateDialogs: updated dialogs', dialogs.stack);
   }
 
   /**
@@ -169,21 +171,21 @@ class DialogManager {
       logger.error('executeDialogs: status after execute', status);
       switch (status) {
         case Dialog.STATUS_DISCARDED:
-          logger.debug('executeDialogs: status discarded');
+          logger.error('executeDialogs: status discarded');
           dialogs.stack = dialogs.stack.slice(0, -1);
           dialogs.lastLabel = null;
           break;
         case Dialog.STATUS_COMPLETED:
-          logger.debug('executeDialogs: status completed');
+          logger.error('executeDialogs: status completed');
           dialogs.stack = dialogs.stack.slice(0, -1);
           break;
         default: // ready or waiting
-          logger.debug('executeDialogs: status ready or waiting');
+          logger.error('executeDialogs: status ready or waiting');
           dialog.status = status;
           return;
       }
     }
-    logger.debug('executeDialogs: dialogs', dialogs);
+    logger.error('executeDialogs: dialogs at the end of the method', dialogs);
   }
 
   /**
@@ -195,9 +197,8 @@ class DialogManager {
    * @returns {Promise.<void>}
    */
   async execute(adapter, userId, intents, entities) {
-    logger.debug('execute', userId, intents, entities);
+    logger.info('execute', userId, intents, entities);
     const dialogs = await this.getDialogs(userId);
-    logger.debug('execute: dialogs', dialogs);
     await this.updateDialogs(userId, dialogs, intents, entities);
     await this.executeDialogs(adapter, userId, dialogs);
     await this.setDialogs(userId, dialogs);
