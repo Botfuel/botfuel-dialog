@@ -91,14 +91,12 @@ class Bot {
     logger.debug('respond', userMessage);
     switch (userMessage.type) {
       case 'postback':
-        await this.respondWhenPostback(userMessage);
-        break;
+        return this.respondWhenPostback(userMessage);
       case 'image':
-        await this.respondWhenImage(userMessage);
-        break;
+        return this.respondWhenImage(userMessage);
       case 'text':
       default:
-        await this.respondWhenText(userMessage);
+        return this.respondWhenText(userMessage);
     }
   }
 
@@ -113,7 +111,7 @@ class Bot {
     logger.debug('respondWhenText', userMessage);
     const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
     logger.debug('respondWhenText: intents, entities', intents, entities);
-    await this.dm.execute(this.adapter, userMessage.user, intents, entities);
+    return this.dm.execute(this.adapter, userMessage.user, intents, entities);
   }
 
   /**
@@ -125,7 +123,7 @@ class Bot {
    */
   async respondWhenPostback(userMessage) {
     logger.debug('respondWhenPostback', userMessage);
-    await this.dm.executeDialogs(
+    return this.dm.executeDialogs(
       this.adapter,
       userMessage.user,
       {
@@ -149,7 +147,7 @@ class Bot {
    */
   async respondWhenImage(userMessage) {
     logger.debug('respondWhenImage', userMessage);
-    await this.dm.executeDialogs(
+    return this.dm.executeDialogs(
       this.adapter,
       userMessage.user,
       {

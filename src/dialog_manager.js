@@ -161,21 +161,26 @@ class DialogManager {
       // eslint-disable-next-line no-await-in-loop
       const { status, isComplex } = await this.executeDialog(adapter, userId, dialogs, dialog);
       if (status === Dialog.STATUS_DISCARDED) {
-        logger.debug('executeDialogs: status discarded');
+        logger.debug('executeDialogs: status discarded start');
         dialogs.stack = dialogs.stack.slice(0, -1);
         dialogs.lastLabel = null;
+        logger.debug('executeDialogs: status discarded end');
       } else if (status === Dialog.STATUS_COMPLETED) {
-        logger.debug('executeDialogs: status completed');
+        logger.debug('executeDialogs: status completed start');
         dialogs.stack = dialogs.stack.slice(0, -1);
         if (isComplex) {
           dialogs.lastLabel = dialog.label;
         }
+        logger.debug('executeDialogs: status completed end');
       } else { // ready or waiting
-        logger.debug('executeDialogs: status ready or waiting');
+        logger.debug('executeDialogs: status ready/waiting start');
         dialog.status = status;
+        logger.debug('executeDialogs: status ready/waiting end');
         return dialogs; // we don't want to execute another dialog
       }
+      logger.debug('executeDialogs (within loop): dialogs', dialogs);
     }
+    logger.debug('executeDialogs (before return): dialogs', dialogs);
     return dialogs;
   }
 
