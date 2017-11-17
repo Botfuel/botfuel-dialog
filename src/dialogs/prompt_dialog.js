@@ -22,7 +22,7 @@ class PromptDialog extends Dialog {
    * @async
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
-   * @returns {Promise.<string[]>}
+   * @returns {Promise.<String[]>}
    */
   async computeMissingEntities(userId, messageEntities) {
     logger.debug('computeMissingEntities', userId, messageEntities);
@@ -46,7 +46,7 @@ class PromptDialog extends Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} [messageEntities] - the message entities
-   * @returns {Promise.<string>} the new dialog status
+   * @returns {Promise.<String>} the new dialog status
    */
   async executeWhenBlocked(adapter, userId, messageEntities) {
     logger.debug('executeWhenBlocked', userId, messageEntities);
@@ -60,7 +60,7 @@ class PromptDialog extends Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
-   * @returns {Promise.<string>} the new dialog status
+   * @returns {Promise.<String>} the new dialog status
    */
   async executeWhenWaiting(adapter, userId, messageEntities) {
     logger.debug('executeWhenWaiting', userId, messageEntities);
@@ -114,15 +114,7 @@ class PromptDialog extends Dialog {
     return this.STATUS_COMPLETED;
   }
 
-  /**
-   * Executes the dialog.
-   * @async
-   * @param {Adapter} adapter - the adapter
-   * @param {String} userId the user id
-   * @param {Object[]} messageEntities - the message entities
-   * @param {String} status - the dialog status
-   * @returns {Promise.<string>} the new dialog status
-   */
+  // eslint-disable-next-line require-jsdoc
   async execute(adapter, userId, messageEntities, status) {
     logger.info('execute', userId, messageEntities, status);
     switch (status) {
@@ -130,7 +122,6 @@ class PromptDialog extends Dialog {
         return this.executeWhenBlocked(adapter, userId, messageEntities);
       case this.STATUS_WAITING:
         return this.executeWhenWaiting(adapter, userId, messageEntities);
-      case this.STATUS_READY:
       default:
         return this.executeWhenReady(adapter, userId, messageEntities);
     }

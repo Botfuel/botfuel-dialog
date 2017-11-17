@@ -62,7 +62,7 @@ class Dialog {
    * @param {String} userId - the user id
    * @param {String} key - the dialog key
    * @param {Object} [data] - data used at display time
-   * @returns {void}
+   * @returns {Promise.<void>}
    */
   async display(adapter, userId, key, data) {
     logger.warn('display', userId, key, data);
@@ -70,8 +70,18 @@ class Dialog {
           .viewManager
           .resolve(this.name)
           .renderAsJson(adapter.bot.id, userId, key, data);
-    await adapter.send(botMessages);
-    logger.error('display: after send message');
+    return adapter.send(botMessages);
+  }
+
+  /**
+   * Executes the dialog.
+   * @param {Adapter} adapter - the adapter
+   * @param {String} userId - the user id
+   * @param {String[]} messageEntities - the message entities
+   * @returns {Promise.<void>}
+   */
+  async execute() {
+    throw new Error('Not implemented!');
   }
 }
 

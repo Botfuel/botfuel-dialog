@@ -50,4 +50,10 @@ describe('DialogManager', function () {
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.stack.length).to.be(1);
   });
+
+  it('should empty the stack', async function () {
+    await dm.execute(null, TEST_USER, [{ label: 'void_dialog', value: 1.0 }], []);
+    const user = await dm.brain.getUser(TEST_USER);
+    expect(user.dialogs.stack.length).to.be(0);
+  });
 });
