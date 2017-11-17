@@ -128,11 +128,15 @@ class Bot {
     await this.dm.executeDialogs(
       this.adapter,
       userMessage.user,
-      [{
-        label: userMessage.payload.value.dialog,
-        status: Dialog.STATUS_READY,
-        entities: userMessage.payload.value.entities,
-      }],
+      {
+        stack: [
+          {
+            label: userMessage.payload.value.dialog,
+            status: Dialog.STATUS_READY,
+            entities: userMessage.payload.value.entities,
+          },
+        ],
+      },
     );
   }
 
@@ -148,11 +152,15 @@ class Bot {
     await this.dm.executeDialogs(
       this.adapter,
       userMessage.user,
-      [{
-        label: 'image',
-        status: Dialog.STATUS_READY,
-        entities: [{ url: userMessage.payload.value.url }],
-      }],
+      {
+        stack: [
+          {
+            label: 'image',
+            status: Dialog.STATUS_READY,
+            entities: [{ url: userMessage.payload.value.url }],
+          },
+        ],
+      },
     );
   }
 }

@@ -69,13 +69,7 @@ class MongoBrain extends Brain {
    */
   async addUser(userId) {
     logger.debug('addUser', userId);
-    const result = await this.users.insertOne({
-      botId: this.botId,
-      userId,
-      conversations: [],
-      dialogs: [],
-      createdAt: Date.now(),
-    });
+    const result = await this.users.insertOne(this.getUserInitValue(userId));
     return result.ops[0];
   }
 
@@ -123,85 +117,6 @@ class MongoBrain extends Brain {
     select[key] = 1;
     const user = await this.users.findOne({ botId: this.botId, userId }, select);
     return user[key];
-  }
-
-  /**
-   * Pushes value to user key array
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - user array key
-   * @param {Object} value - Object value
-   * @returns {Promise.<Object>} the user
-   */
-  async userPush(userId, key, value) {
-    logger.debug('userPush', userId, key, value);
-    const push = {};
-    push[key] = value;
-    const result = await this.users.findOneAndUpdate(
-      { botId: this.botId, userId },
-      { $push: push },
-      { returnOriginal: false },
-    );
-    return result.value;
-  }
-
-  /**
-   * Shifts value from user key array (first element)
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - user array key
-   * @returns {Promise.<*>} the user array key first value
-   */
-  async userShift(userId, key) {
-    logger.debug('userShift', userId, key);
-    const pop = {};
-    pop[key] = -1;
-    const result = await this.users.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop });
-    return result.value[key].shift();
-  }
-
-  /**
-   * Pops value from user key array (last element)
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - user array key
-   * @returns {Promise.<*>} the user array key last value
-   */
-  async userPop(userId, key) {
-    logger.debug('userPop', userId, key);
-    const pop = {};
-    pop[key] = 1;
-    const result = await this.users.findOneAndUpdate({ botId: this.botId, userId }, { $pop: pop });
-    return result.value[key].pop();
-  }
-
-  /**
-   * Adds a conversation to an user
-   * @async
-   * @param {String} userId - user id
-   * @returns {Promise.<Object>} the last conversation added
-   */
-  async addConversation(userId) {
-    logger.debug('addConversation', userId);
-    const push = { conversations: { createdAt: Date.now() } };
-    const result = await this.users.findOneAndUpdate(
-      { botId: this.botId, userId },
-      { $push: push },
-      { returnOriginal: false },
-    );
-    return _.last(result.value.conversations);
-  }
-
-  /**
-   * Gets user last conversation
-   * @async
-   * @param {String} userId - user id
-   * @returns {Promise.<Object>} the last conversation of the user
-   */
-  async getLastConversation(userId) {
-    logger.debug('getLastConversation', userId);
-    const result = await this.users.findOne({ botId: this.botId, userId }, { conversations: 1 });
-    return _.last(result.conversations);
   }
 
   /**

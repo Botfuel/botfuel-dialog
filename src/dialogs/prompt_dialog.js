@@ -33,7 +33,11 @@ class PromptDialog extends Dialog {
     }
     logger.debug('computeMissingEntities: dialogEntities', dialogEntities);
     await this.brain.conversationSet(userId, namespace, dialogEntities);
-    return Object.keys(entities).filter(entityKey => dialogEntities[entityKey] === undefined);
+    const missingEntities = Object
+          .keys(entities)
+          .filter(entityKey => dialogEntities[entityKey] === undefined);
+    logger.debug('computeMissingEntities: missingEntities', missingEntities);
+    return missingEntities;
   }
 
   /**
@@ -87,7 +91,7 @@ class PromptDialog extends Dialog {
    * @returns {Promise.<string>} the new dialog status
    */
   async executeWhenReady(adapter, userId, messageEntities) {
-    logger.debug('executeWhenReady', userId, messageEntities, this.parameters.entities);
+    logger.debug('executeWhenReady', userId, messageEntities);
     // confirm entities
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
@@ -105,6 +109,7 @@ class PromptDialog extends Dialog {
    * @returns {Promise.<string>} the new dialog status
    */
   async executeWhenCompleted() {
+    logger.debug('executeWhenCompleted');
     return this.STATUS_COMPLETED;
   }
 

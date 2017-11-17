@@ -1,7 +1,8 @@
+const _ = require('lodash');
 const logger = require('logtown')('Brain');
 
 /**
- * Brain let the bot to store users and conversations data
+ * A brain is a storage for user and conversation data.
  */
 class Brain {
   /**
@@ -15,7 +16,7 @@ class Brain {
   }
 
   /**
-   * Initializes the brain
+   * Initializes the brain.
    * @async
    * @returns {Promise.<void>}
    */
@@ -24,7 +25,34 @@ class Brain {
   }
 
   /**
-   * Adds user if not exists
+   * Gets the init value for creating a new user.
+   * @param {String} userId - the user id
+   * @returns {Object}
+   */
+  getUserInitValue(userId) {
+    return {
+      botId: this.botId,
+      userId,
+      conversations: [],
+      dialogs: { stack: [], lastLabel: null },
+      createdAt: Date.now(),
+    };
+  }
+
+  /**
+   * Gets the init value for creating a new conversation.
+   * @returns {Object}
+   */
+  getConversationInitValue() {
+    return {
+      conversations: {
+        createdAt: Date.now(),
+      },
+    };
+  }
+
+  /**
+   * Inits a user if necessary (if he does not exist).
    * @async
    * @param {String} userId - the user id
    * @returns {Promise.<void>}
@@ -39,27 +67,54 @@ class Brain {
   }
 
   /**
-   * Adds conversation to user if necessary
+   * Inits the last conversation of a user if necessary (if it does not exist).
    * @async
    * @param {String} userId - the user id
    * @returns {Promise.<void>}
    */
   async initLastConversationIfNecessary(userId) {
     logger.debug('initLastConversationIfNecessary', userId);
-    const lastConversation = await this.getLastConversation(userId);
-    logger.debug('initLastConversationIfNecessary', userId, lastConversation);
-    if (!this.isLastConversationValid(lastConversation)) {
-      logger.debug('initLastConversationIfNecessary: initialize new');
+    const lastConversationValid = await this.isLastConversationValid(userId);
+    if (!lastConversationValid) {
       await this.addConversation(userId);
     }
   }
 
   /**
-   * Validates user last conversation
-   * @param {Object} conversation - the conversation to validate
-   * @returns {boolean}
+   * Adds a conversation to a user.
+   * @async
+   * @param {String} userId - user id
+   * @returns {Promise.<Object>} the last conversation added
    */
-  isLastConversationValid(conversation) {
+  async addConversation(userId) {
+    logger.debug('addConversation', userId);
+    const conversations = await this.userGet(userId, 'conversations');
+    const conversation = this.getConversationInitValue();
+    conversations.push(conversation);
+    await this.userSet(userId, 'conversations', conversations);
+    return conversation;
+  }
+
+  /**
+   * Gets user last conversation
+   * @async
+   * @param {String} userId - user id
+   * @returns {Promise.<Object>} the last conversation of the user
+   */
+  async getLastConversation(userId) {
+    logger.debug('getLastConversation', userId);
+    const user = await this.getUser(userId);
+    return _.last(user.conversations);
+  }
+
+  /**
+   * Returns a boolean indicating if the last conversation of the user is still valid.
+   * @async
+   * @param {String} userId - user id
+   * @returns {Boolean} a boolean indicating if the last conversation is valid
+   */
+  async isLastConversationValid(userId) {
+    const conversation = await this.getLastConversation(userId);
     if (!conversation) {
       return false;
     }
