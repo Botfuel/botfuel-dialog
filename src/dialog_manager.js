@@ -169,17 +169,21 @@ class DialogManager {
       logger.debug('executeDialogs: status', status);
       switch (status) {
         case Dialog.STATUS_DISCARDED:
+          logger.debug('executeDialogs: status discarded');
           dialogs.stack = dialogs.stack.slice(0, -1);
           dialogs.lastLabel = null;
           break;
         case Dialog.STATUS_COMPLETED:
+          logger.debug('executeDialogs: status completed');
           dialogs.stack = dialogs.stack.slice(0, -1);
           break;
         default: // ready or waiting
+          logger.debug('executeDialogs: status ready or waiting');
           dialog.status = status;
           return;
       }
     }
+    logger.debug('executeDialogs: dialogs', dialogs);
   }
 
   /**
