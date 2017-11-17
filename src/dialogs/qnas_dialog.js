@@ -22,7 +22,7 @@ class QnasDialog extends Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId the user id
    * @param {Object[]} messageEntities - the message entities
-   * @returns {String} the new dialog status
+   * @returns {Promise.<String>} the new dialog status
    */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);

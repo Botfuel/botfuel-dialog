@@ -21,7 +21,7 @@ class TextDialog extends Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
-   * @returns {String} the new dialog status
+   * @returns {Promise.<String>} the new dialog status
    */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
@@ -32,9 +32,10 @@ class TextDialog extends Dialog {
 
   /**
    * Returns optional data used to generate the view.
+   * @async
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
-   * @returns {Object} the data
+   * @returns {Promise.<Object>} the data
    */
   async getViewData(userId, messageEntities) {
     logger.debug('getViewData', userId, messageEntities);

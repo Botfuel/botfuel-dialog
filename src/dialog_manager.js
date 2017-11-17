@@ -95,7 +95,7 @@ class DialogManager {
    */
   async setDialogs(userId, dialogs) {
     logger.debug('setDialogs', userId, dialogs);
-    await this.brain.userSet(userId, 'dialogs', dialogs);
+    return this.brain.userSet(userId, 'dialogs', dialogs);
   }
 
   /**
@@ -106,7 +106,7 @@ class DialogManager {
    * @param {Object[]} entities - the entities
    * @returns {void}
    */
-  async updateDialogs(userId, dialogs, intents, entities) {
+  updateDialogs(userId, dialogs, intents, entities) {
     logger.debug('updateDialogs', userId, dialogs, intents, entities);
     intents = this.filterIntents(intents);
     logger.debug('updateDialogs: intents', intents);
@@ -159,14 +159,7 @@ class DialogManager {
     while (dialogs.stack.length > 0) {
       const dialog = dialogs.stack[dialogs.stack.length - 1];
       // eslint-disable-next-line no-await-in-loop
-      const dialogInstance = await this.getDialog(dialog);
-      if (dialogInstance.maxComplexity > 1) {
-        dialogs.lastLabel = dialog.label;
-      }
-      // eslint-disable-next-line no-await-in-loop
-      const status = await dialogInstance
-        .execute(adapter, userId, dialog.entities || [], dialog.status);
-      logger.debug('executeDialogs: status', status);
+      const { status, isComplex } = await this.executeDialog(adapter, userId, dialogs, dialog);
       switch (status) {
         case Dialog.STATUS_DISCARDED:
           logger.debug('executeDialogs: status discarded');
@@ -176,13 +169,33 @@ class DialogManager {
         case Dialog.STATUS_COMPLETED:
           logger.debug('executeDialogs: status completed');
           dialogs.stack = dialogs.stack.slice(0, -1);
+          if (isComplex) {
+            dialogs.lastLabel = dialog.label;
+          }
           break;
         default: // ready or waiting
           logger.debug('executeDialogs: status ready or waiting');
           dialog.status = status;
-          return;
+          return; // we don't want to execute another dialog
       }
     }
+  }
+
+  /**
+   * Executes a dialog.
+   * @param {Adapter} adapter - the adapter
+   * @param {String} userId - the user id
+   * @param {Object[]} dialogs - the dialogs data
+   * @param {String} dialog - the dialog label
+   * @returns {Promise.<Object>}
+   */
+  async executeDialog(adapter, userId, dialogs, dialog) {
+    logger.debug('executeDialog', '<adapter>', userId, dialogs, dialog);
+    const dialogInstance = await this.getDialog(dialog);
+    const status = await dialogInstance
+          .execute(adapter, userId, dialog.entities || [], dialog.status);
+    const isComplex = dialogInstance.maxComplexity > 1;
+    return { status, isComplex };
   }
 
   /**
@@ -197,10 +210,10 @@ class DialogManager {
     logger.debug('execute', userId, intents, entities);
     const dialogs = await this.getDialogs(userId);
     logger.debug('execute: dialogs before execution', dialogs);
-    await this.updateDialogs(userId, dialogs, intents, entities);
+    this.updateDialogs(userId, dialogs, intents, entities);
     await this.executeDialogs(adapter, userId, dialogs);
     logger.debug('execute: dialogs after execution', dialogs);
-    await this.setDialogs(userId, dialogs);
+    return this.setDialogs(userId, dialogs);
   }
 }
 
