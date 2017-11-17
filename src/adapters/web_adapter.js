@@ -42,9 +42,9 @@ class WebAdapter extends Adapter {
     logger.debug('postResponse', requestOptions);
     const options = Object.assign({ method: 'POST', json: true }, requestOptions);
     try {
-      const response = await rp(options);
-      if (response.statusCode !== 200) { // not handled on messenger
-        logger.error('postResponse: KO', response);
+      const res = await rp(options);
+      if (res.statusCode && res.statusCode !== 200) { // not handled on messenger
+        logger.error('postResponse: KO', res);
       } else {
         logger.debug('postResponse: OK');
       }

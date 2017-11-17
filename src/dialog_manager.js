@@ -108,7 +108,6 @@ class DialogManager {
    */
   updateDialogs(userId, dialogs, intents, entities) {
     logger.debug('updateDialogs', userId, dialogs, intents, entities);
-    logger.info('updateDialogs: dialogs', dialogs);
     intents = this.filterIntents(intents);
     logger.debug('updateDialogs: intents', intents);
     if (intents.length > 0) {
@@ -146,15 +145,14 @@ class DialogManager {
         dialogs.stack[length - 1].entities = entities;
       }
     }
-    logger.info('updateDialogs: updated dialogs', dialogs.stack);
   }
 
   /**
    * Executes the dialogs.
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} dialogs - the dialogs data
-   * @returns {Promise.<void>}
+   * @param {Object} dialogs - the dialogs data
+   * @returns {Promise.<Object>}
    */
   async executeDialogs(adapter, userId, dialogs) {
     logger.debug('executeDialogs', '<adapter>', userId, dialogs);
@@ -207,12 +205,10 @@ class DialogManager {
    * @returns {Promise.<void>}
    */
   async execute(adapter, userId, intents, entities) {
-    logger.info('execute', userId, intents, entities);
+    logger.debug('execute', userId, intents, entities);
     const dialogs = await this.getDialogs(userId);
-    logger.debug('execute: dialogs before execution', dialogs);
     this.updateDialogs(userId, dialogs, intents, entities);
     await this.executeDialogs(adapter, userId, dialogs);
-    logger.debug('execute: dialogs after execution', dialogs);
     return this.setDialogs(userId, dialogs);
   }
 }
