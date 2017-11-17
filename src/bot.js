@@ -134,6 +134,7 @@ class Bot {
             entities: userMessage.payload.value.entities,
           },
         ],
+        lastLabel: null,
       },
     );
   }
@@ -158,6 +159,7 @@ class Bot {
             entities: [{ url: userMessage.payload.value.url }],
           },
         ],
+        lastLabel: null,
       },
     );
   }

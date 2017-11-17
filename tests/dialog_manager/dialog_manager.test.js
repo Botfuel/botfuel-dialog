@@ -1,6 +1,7 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
+const Dialog = require('../../src/dialogs/dialog');
 const DialogManager = require('../../src/dialog_manager');
 const MemoryBrain = require('../../src/brains/memory_brain');
 const TestAdapter = require('../../src/adapters/test_adapter');
@@ -51,8 +52,25 @@ describe('DialogManager', function () {
     expect(user.dialogs.stack.length).to.be(1);
   });
 
-  it('should empty the stack', async function () {
-    await dm.execute(null, TEST_USER, [{ label: 'void_dialog', value: 1.0 }], []);
+  it('should empty the stack (1)', async function () {
+    const adapter = new TestAdapter({ id: TEST_BOT }, {});
+    await dm.execute(adapter, TEST_USER, [{ label: 'default_dialog', value: 1.0 }], []);
+    const user = await dm.brain.getUser(TEST_USER);
+    expect(user.dialogs.stack.length).to.be(0);
+  });
+
+  it('should empty the stack (2)', async function () {
+    const adapter = new TestAdapter({ id: TEST_BOT }, {});
+    await dm.executeDialogs(adapter, TEST_USER, {
+      stack: [
+        {
+          label: 'default_dialog',
+          status: Dialog.STATUS_READY,
+          entities: [],
+        },
+      ],
+      lastLabel: null,
+    });
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.stack.length).to.be(0);
   });
