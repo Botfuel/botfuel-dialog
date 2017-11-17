@@ -155,7 +155,7 @@ class DialogManager {
    * @returns {Promise.<void>}
    */
   async executeDialogs(adapter, userId, dialogs) {
-    logger.debug('executeDialogs', adapter, userId, dialogs);
+    logger.debug('executeDialogs', '<adapter>', userId, dialogs);
     while (dialogs.stack.length > 0) {
       const dialog = dialogs.stack[dialogs.stack.length - 1];
       // eslint-disable-next-line no-await-in-loop
