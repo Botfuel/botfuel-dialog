@@ -18,6 +18,7 @@ describe('CorpusExtractor', function () {
     expect(entities).to.eql([
       {
         dim: 'teams',
+        body: 'Olympique Lyonnais',
         values: [
           {
             type: 'string',
@@ -27,6 +28,7 @@ describe('CorpusExtractor', function () {
       },
       {
         dim: 'teams',
+        body: 'Béziers',
         values: [
           {
             type: 'string',
