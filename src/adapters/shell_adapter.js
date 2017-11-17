@@ -27,10 +27,7 @@ class ShellAdapter extends Adapter {
     logger.debug('run');
     await this.bot.brain.initUserIfNecessary(this.userId);
     const botMessage = new BotTextMessage('onboarding');
-    const userInput = await this.send([
-      botMessage.toJson(this.bot.id, this.userId),
-    ]);
-    // await this.runWhenUserInput(userInput);
+    await this.send([botMessage.toJson(this.bot.id, this.userId)]);
   }
 
   /**
@@ -43,7 +40,6 @@ class ShellAdapter extends Adapter {
     logger.debug('runWhenUserInput', userInput);
     const userMessage = new UserTextMessage(userInput.payload);
     await this.bot.respond(userMessage.toJson(this.bot.id, this.userId));
-    // await this.runWhenUserInput(userInput);
   }
 
   /**
@@ -54,13 +50,10 @@ class ShellAdapter extends Adapter {
    */
   async send(botMessages) {
     logger.debug('send', botMessages);
-    // TODO: adapt to msg type
-    const message = botMessages.map(botMessage => botMessage.payload.value).join(' ');
-    // type text
     const userInput = await inquirer.prompt([{
       type: 'input',
       name: 'payload',
-      message,
+      message: botMessages.map(botMessage => botMessage.payload.value).join(' '),
     }]);
     return this.runWhenUserInput(userInput);
   }

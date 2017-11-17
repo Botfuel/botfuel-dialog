@@ -166,7 +166,7 @@ class DialogManager {
       // eslint-disable-next-line no-await-in-loop
       const status = await dialogInstance
         .execute(adapter, userId, dialog.entities || [], dialog.status);
-      logger.debug('executeDialogs: status', status);
+      logger.error('executeDialogs: status after execute', status);
       switch (status) {
         case Dialog.STATUS_DISCARDED:
           logger.debug('executeDialogs: status discarded');
