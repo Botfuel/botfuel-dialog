@@ -176,9 +176,10 @@ class DialogManager {
         default: // ready or waiting
           logger.debug('executeDialogs: status ready or waiting');
           dialog.status = status;
-          return; // we don't want to execute another dialog
+          return dialogs; // we don't want to execute another dialog
       }
     }
+    return dialogs;
   }
 
   /**
