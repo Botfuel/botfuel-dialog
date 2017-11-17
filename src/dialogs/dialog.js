@@ -72,6 +72,17 @@ class Dialog {
           .renderAsJson(adapter.bot.id, userId, key, data);
     return adapter.send(botMessages);
   }
+
+  /**
+   * Executes the dialog.
+   * @param {Adapter} adapter - the adapter
+   * @param {String} userId - the user id
+   * @param {String[]} messageEntities - the message entities
+   * @returns {Promise.<void>}
+   */
+  async execute() {
+    throw new Error('Not implemented!');
+  }
 }
 
 module.exports = Dialog;

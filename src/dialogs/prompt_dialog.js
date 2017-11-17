@@ -113,15 +113,7 @@ class PromptDialog extends Dialog {
     return this.STATUS_COMPLETED;
   }
 
-  /**
-   * Executes the dialog.
-   * @async
-   * @param {Adapter} adapter - the adapter
-   * @param {String} userId the user id
-   * @param {Object[]} messageEntities - the message entities
-   * @param {String} status - the dialog status
-   * @returns {Promise.<string>} the new dialog status
-   */
+  // eslint-disable-next-line require-jsdoc
   async execute(adapter, userId, messageEntities, status) {
     logger.debug('execute', userId, messageEntities, status);
     switch (status) {

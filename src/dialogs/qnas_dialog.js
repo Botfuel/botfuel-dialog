@@ -16,14 +16,7 @@ class QnasDialog extends Dialog {
     super(config, brain, 1);
   }
 
-  /**
-   * Executes the dialog.
-   * @async
-   * @param {Adapter} adapter - the adapter
-   * @param {String} userId the user id
-   * @param {Object[]} messageEntities - the message entities
-   * @returns {Promise.<String>} the new dialog status
-   */
+  // eslint-disable-next-line require-jsdoc
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
     const qnas = messageEntities[0].value;
