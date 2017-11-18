@@ -1,6 +1,7 @@
 const fs = require('fs');
 const dir = require('node-dir');
-const QnA = require('botfuel-qna-sdk');
+const Qna = require('botfuel-qna-sdk');
+const Spellchecking = require('botfuel-nlp-sdk').Spellchecking;
 const logger = require('logtown')('Nlu');
 const Classifier = require('./classifier');
 const BooleanExtractor = require('./extractors/boolean_extractor');
@@ -15,12 +16,18 @@ class Nlu {
    * @param {Object} config - the bot config
    */
   constructor(config) {
-    // logger.debug('constructor');
+    logger.debug('constructor', config);
     this.config = config;
     this.extractor = new CompositeExtractor(this.getExtractors(`${config.path}/src/extractors`));
     this.classifier = new Classifier(config);
     if (config.qna) {
-      this.qna = new QnA({
+      this.qna = new Qna({
+        appId: process.env.BOTFUEL_APP_ID,
+        appKey: process.env.BOTFUEL_APP_KEY,
+      });
+    }
+    if (config.spellchecking) {
+      this.spellchecking = new Spellchecking({
         appId: process.env.BOTFUEL_APP_ID,
         appKey: process.env.BOTFUEL_APP_KEY,
       });
@@ -72,6 +79,10 @@ class Nlu {
    */
   async compute(sentence) {
     logger.debug('compute', sentence);
+    if (this.config.spellchecking) {
+      const result = await this.spellcheck(sentence, this.config.spellchecking);
+      sentence = result.correctSentence;
+    }
     if (this.config.qna === 'before') {
       const result = await this.qnaCompute(sentence);
       if (result.entities[0].value.length !== 0) {
@@ -111,9 +122,32 @@ class Nlu {
     logger.debug('qnaCompute', sentence);
     const qnas = await this.qna.getMatchingQnas({ sentence });
     logger.debug('compute: qnas', qnas);
-    const intents = [{ label: 'qnas_dialog', value: 1.0 }];
-    const entities = [{ dim: 'qnas', value: qnas }];
+    const intents = [
+      {
+        label: 'qnas_dialog',
+        value: 1.0,
+      },
+    ];
+    const entities = [
+      {
+        dim: 'qnas',
+        value: qnas,
+      },
+    ];
     return { intents, entities };
+  }
+
+    /**
+   * Spellchecks a sentence.
+   * @param {String} sentence - a sentence
+   * @param {String} key - a dictionary key
+   * @returns {Object} the spellchecking result
+   */
+  async spellcheck(sentence, key) {
+    logger.debug('spellcheck', sentence, key);
+    const result = await this.spellchecking.compute({ sentence, key });
+    logger.debug('spellcheck: result', result);
+    return result;
   }
 }
 
