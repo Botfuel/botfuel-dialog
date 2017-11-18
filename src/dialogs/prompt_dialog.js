@@ -51,7 +51,7 @@ class PromptDialog extends Dialog {
   async executeWhenBlocked(adapter, userId, messageEntities) {
     logger.debug('executeWhenBlocked', userId, messageEntities);
     await this.display(adapter, userId, 'ask');
-    return this.STATUS_WAITING;
+    return { status: this.STATUS_WAITING };
   }
 
   /**
@@ -76,10 +76,10 @@ class PromptDialog extends Dialog {
         // if not confirmed, then discard dialog
         // eslint-disable-next-line no-await-in-loop
         await this.display(adapter, userId, 'discard');
-        return this.STATUS_DISCARDED;
+        return { status: this.STATUS_DISCARDED };
       }
     }
-    return this.STATUS_BLOCKED;
+    return { status: this.STATUS_BLOCKED };
   }
 
   /**
@@ -99,9 +99,9 @@ class PromptDialog extends Dialog {
     const missingEntities = await this.computeMissingEntities(userId, messageEntities);
     await this.display(adapter, userId, 'entities', { messageEntities, missingEntities });
     if (missingEntities.length === 0) {
-      return this.STATUS_COMPLETED;
+      return this.executeWhenCompleted(adapter, userId, messageEntities);
     }
-    return this.STATUS_READY;
+    return { status: this.STATUS_READY };
   }
 
   /**
@@ -112,9 +112,9 @@ class PromptDialog extends Dialog {
    * @param {Object[]} messageEntities - the message entities
    * @returns {Promise.<string>} the new dialog status
    */
-  async executeWhenCompleted(adapter, userId, messageEntities) {
-    logger.debug('executeWhenCompleted', adapter, userId, messageEntities);
-    return this.STATUS_COMPLETED;
+  async executeWhenCompleted() {
+    logger.debug('executeWhenCompleted');
+    return { status: this.STATUS_COMPLETED };
   }
 
   // eslint-disable-next-line require-jsdoc

@@ -11,6 +11,7 @@ describe('BooleanExtractor', function () {
     expect(entities).to.eql([
       {
         dim: 'system:boolean',
+        body: 'no',
         values: [
           {
             type: 'boolean',
@@ -20,6 +21,7 @@ describe('BooleanExtractor', function () {
       },
       {
         dim: 'system:boolean',
+        body: 'yes',
         values: [
           {
             type: 'boolean',
