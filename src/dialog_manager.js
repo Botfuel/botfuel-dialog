@@ -80,7 +80,7 @@ class DialogManager {
   /**
    * Returns the dialogs data (stack and label of last dialog).
    * @param {String} userId - the user id
-   * @returns {Promise.<Object>} the data
+   * @returns {Promise.<Object[]>} the data
    */
   async getDialogs(userId) {
     logger.debug('getDialogs', userId);
@@ -229,7 +229,6 @@ class DialogManager {
   async execute(adapter, userId, intents, entities) {
     logger.debug('execute', userId, intents, entities);
     const dialogs = await this.getDialogs(userId);
-    logger.debug('execute: dialogs before execution', dialogs);
     this.updateDialogs(userId, dialogs, intents, entities);
     return this.executeDialogs(adapter, userId, dialogs);
   }
