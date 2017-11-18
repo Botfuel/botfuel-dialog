@@ -9,7 +9,7 @@ class FalseDialog extends Dialog {
    * @returns {string}
    */
   async execute() {
-    return Dialog.STATUS_WAITING;
+    return { status: Dialog.STATUS_WAITING };
   }
 }
 

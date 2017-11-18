@@ -148,7 +148,21 @@ class DialogManager {
   }
 
   /**
+   * Pushes a dialog in the dialog stack.
+   * @async
+   * @param {String} userId - the user id
+   * @param {Object} dialog - the dialog
+   * @returns {Promise.<void>}
+   */
+  async pushDialog(userId, dialog) {
+    const dialogs = await this.getDialogs(userId);
+    dialogs.push(dialog);
+    return this.setDialogs(userId, dialogs);
+  }
+
+  /**
    * Executes the dialogs and saves the dialogs object.
+   * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} dialogs - the dialogs data
@@ -161,6 +175,7 @@ class DialogManager {
 
   /**
    * Executes the dialogs.
+   * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} dialogs - the dialogs data
@@ -173,43 +188,34 @@ class DialogManager {
     }
     const dialog = dialogs.stack[dialogs.stack.length - 1];
     // eslint-disable-next-line no-await-in-loop
-    const { status, isComplex } = await this.executeDialog(adapter, userId, dialogs, dialog);
+    const dialogInstance = await this.getDialog(dialog);
+    const dialogResult = await dialogInstance
+          .execute(adapter, userId, dialog.entities || [], dialog.status);
+    logger.debug('executeDialogs: dialogResult', dialogResult);
+    const status = dialogResult.status || Dialog.STATUS_COMPLETED;
+    const isComplex = dialogInstance.maxComplexity > 1;
     if (status === Dialog.STATUS_DISCARDED) {
-      logger.debug('executeDialogs: status discarded start');
       dialogs.stack = dialogs.stack.slice(0, -1);
       dialogs.lastLabel = null;
-      logger.debug('executeDialogs: status discarded end');
     } else if (status === Dialog.STATUS_COMPLETED) {
-      logger.debug('executeDialogs: status completed start');
       dialogs.stack = dialogs.stack.slice(0, -1);
       if (isComplex) {
         dialogs.lastLabel = dialog.label;
       }
-      logger.debug('executeDialogs: status completed end');
     } else { // ready or waiting
-      logger.debug('executeDialogs: status ready/waiting start');
       dialog.status = status;
-      logger.debug('executeDialogs: status ready/waiting end');
-      return dialogs; // we don't want to execute another dialog
+      // we don't want to execute another dialog
+      // TODO: decide what to do if both a status and a dialog are provided
+      return dialogs;
+    }
+    const newDialog = dialogResult.newDialog;
+    logger.debug('executeDialogs: newDialog', newDialog);
+    if (newDialog) {
+      const intents = [{ label: newDialog.label, value: 1.0 }];
+      const entities = newDialog.entities;
+      this.updateDialogs(userId, dialogs, intents, entities);
     }
     return this.executeDialogsRec(adapter, userId, dialogs);
-  }
-
-  /**
-   * Executes a dialog.
-   * @param {Adapter} adapter - the adapter
-   * @param {String} userId - the user id
-   * @param {Object[]} dialogs - the dialogs data
-   * @param {String} dialog - the dialog label
-   * @returns {Promise.<Object>}
-   */
-  async executeDialog(adapter, userId, dialogs, dialog) {
-    logger.debug('executeDialog', '<adapter>', userId, dialogs, dialog);
-    const dialogInstance = await this.getDialog(dialog);
-    const status = await dialogInstance
-          .execute(adapter, userId, dialog.entities || [], dialog.status);
-    const isComplex = dialogInstance.maxComplexity > 1;
-    return { status, isComplex };
   }
 
   /**

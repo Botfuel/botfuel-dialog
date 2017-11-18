@@ -74,7 +74,11 @@ class CorpusExtractor {
         const remainder = this.getRemainder(sentence, normalizedWord);
         if (remainder !== null) {
           const value = this.corpus.getValue(normalizedWord, this.options);
-          entities.push({ dim: this.dimension, values: [this.getEntity(value)] });
+          entities.push({
+            dim: this.dimension,
+            body: word,
+            values: [this.getEntity(value)],
+          });
           return this.computeEntities(remainder, words, entities);
         }
       }

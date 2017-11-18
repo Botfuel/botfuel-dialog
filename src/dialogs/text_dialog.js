@@ -20,7 +20,7 @@ class TextDialog extends Dialog {
     logger.debug('execute', userId, messageEntities);
     const data = await this.getViewData(userId, messageEntities);
     await this.display(adapter, userId, null, data);
-    return this.STATUS_COMPLETED;
+    return { status: this.STATUS_COMPLETED };
   }
 
   /**
