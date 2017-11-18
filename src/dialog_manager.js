@@ -106,71 +106,54 @@ class DialogManager {
    * @param {Object[]} entities - the entities
    * @returns {void}
    */
-  updateDialogs(userId, dialogs, intents, entities) {
-    logger.debug('updateDialogs', userId, dialogs, intents, entities);
+  updateWithIntents(userId, dialogs, intents, entities) {
+    logger.debug('updateWithIntents', userId, dialogs, intents, entities);
     intents = this.filterIntents(intents);
-    logger.debug('updateDialogs: intents', intents);
-    if (intents.length > 0) {
-      let nbComplex = 0;
-      let newDialogs = [];
-      for (let i = 0; i < intents.length; i++) {
-        if (this.getDialog(intents[i]).maxComplexity > 1) {
-          nbComplex++;
-        }
-        const status = nbComplex > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
-        const label = intents[i].label;
-        newDialogs.push({ label, entities, status });
+    logger.debug('updateWithIntents: intents', intents);
+    let nbComplex = 0;
+    const newDialogs = [];
+    for (let i = 0; i < intents.length; i++) {
+      if (this.getDialog(intents[i]).maxComplexity > 1) {
+        nbComplex++;
       }
-      logger.debug('updateDialogs: newDialogs', newDialogs);
-      while (newDialogs.length > 0) {
-        const newDialog = newDialogs[newDialogs.length - 1];
-        const length = dialogs.stack.length;
-        if (length > 0 && dialogs.stack[length - 1].label === newDialog.label) {
-          dialogs.stack[length - 1].entities = newDialog.entities;
-          dialogs.stack[length - 1].status = newDialog.status;
-        } else {
-          dialogs.stack.push(newDialog);
-        }
-        newDialogs = newDialogs.slice(0, -1);
-      }
-    } else {
-      const length = dialogs.stack.length;
-      if (length === 0) { // no intent detected
-        dialogs.stack.push({
-          label: dialogs.lastLabel || 'default_dialog',
-          entities,
-          status: Dialog.STATUS_READY,
-        });
-      } else {
-        dialogs.stack[length - 1].entities = entities;
-      }
+      const status = nbComplex > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
+      const label = intents[i].label;
+      newDialogs.push({ label, entities, status });
     }
+    this.updateWithDialogs(userId, dialogs, newDialogs, entities);
   }
 
   /**
-   * Pushes a dialog in the dialog stack.
-   * @async
+   * Updates the dialogs.
    * @param {String} userId - the user id
-   * @param {Object} dialog - the dialog
-   * @returns {Promise.<void>}
+   * @param {Object} dialogs - the dialogs data
+   * @param {Object[]} newDialogs - new dialogs to be added to the dialog stack
+   * @param {Object[]} entities - the entities
+   * @returns {void}
    */
-  async pushDialog(userId, dialog) {
-    const dialogs = await this.getDialogs(userId);
-    dialogs.push(dialog);
-    return this.setDialogs(userId, dialogs);
-  }
-
-  /**
-   * Executes the dialogs and saves the dialogs object.
-   * @async
-   * @param {Adapter} adapter - the adapter
-   * @param {String} userId - the user id
-   * @param {Object[]} dialogs - the dialogs data
-   * @returns {Promise.<void>}
-   */
-  async executeDialogs(adapter, userId, dialogs) {
-    await this.executeDialogsRec(adapter, userId, dialogs);
-    return this.setDialogs(userId, dialogs);
+  updateWithDialogs(userId, dialogs, newDialogs, entities) {
+    logger.debug('updateWithDialogs', userId, dialogs, newDialogs, entities);
+    while (newDialogs.length > 0) {
+      const newDialog = newDialogs[newDialogs.length - 1];
+      const length = dialogs.stack.length;
+      if (length > 0 && dialogs.stack[length - 1].label === newDialog.label) {
+        dialogs.stack[length - 1].entities = newDialog.entities;
+        dialogs.stack[length - 1].status = newDialog.status || Dialog.STATUS_READY;
+      } else {
+        dialogs.stack.push(newDialog);
+      }
+      newDialogs = newDialogs.slice(0, -1);
+    }
+    if (dialogs.stack.length === 0) { // no intent detected
+      dialogs.stack.push({
+        label: dialogs.lastLabel || 'default_dialog',
+        entities: entities || [],
+        status: Dialog.STATUS_READY,
+      });
+    }
+    if (entities) {
+      dialogs.stack[dialogs.stack.length - 1].entities = entities;
+    }
   }
 
   /**
@@ -181,8 +164,8 @@ class DialogManager {
    * @param {Object[]} dialogs - the dialogs data
    * @returns {Promise.<void>}
    */
-  async executeDialogsRec(adapter, userId, dialogs) {
-    logger.debug('executeDialogs', '<adapter>', userId, dialogs);
+  async execute(adapter, userId, dialogs) {
+    logger.debug('execute', '<adapter>', userId, dialogs);
     if (dialogs.stack.length === 0) {
       return dialogs;
     }
@@ -191,7 +174,7 @@ class DialogManager {
     const dialogInstance = await this.getDialog(dialog);
     const dialogResult = await dialogInstance
           .execute(adapter, userId, dialog.entities || [], dialog.status);
-    logger.debug('executeDialogs: dialogResult', dialogResult);
+    logger.debug('execute: dialogResult', dialogResult);
     const status = dialogResult.status || Dialog.STATUS_COMPLETED;
     const isComplex = dialogInstance.maxComplexity > 1;
     if (status === Dialog.STATUS_DISCARDED) {
@@ -209,13 +192,12 @@ class DialogManager {
       return dialogs;
     }
     const newDialog = dialogResult.newDialog;
-    logger.debug('executeDialogs: newDialog', newDialog);
+    logger.debug('execute: newDialog', newDialog);
     if (newDialog) {
-      const intents = [{ label: newDialog.label, value: 1.0 }];
-      const entities = newDialog.entities;
-      this.updateDialogs(userId, dialogs, intents, entities);
+      newDialog.status = Dialog.STATUS_READY;
+      this.updateWithDialogs(userId, dialogs, [newDialog]);
     }
-    return this.executeDialogsRec(adapter, userId, dialogs);
+    return this.execute(adapter, userId, dialogs);
   }
 
   /**
@@ -226,11 +208,27 @@ class DialogManager {
    * @param {Object[]} entities - the transient entities
    * @returns {Promise.<void>}
    */
-  async execute(adapter, userId, intents, entities) {
+  async executeIntents(adapter, userId, intents, entities) {
     logger.debug('execute', userId, intents, entities);
     const dialogs = await this.getDialogs(userId);
-    this.updateDialogs(userId, dialogs, intents, entities);
-    return this.executeDialogs(adapter, userId, dialogs);
+    this.updateWithIntents(userId, dialogs, intents, entities);
+    await this.execute(adapter, userId, dialogs);
+    return this.setDialogs(userId, dialogs);
+  }
+
+  /**
+   * Populates and executes the stack.
+   * @param {Adapter} adapter - the adapter
+   * @param {String} userId - the user id
+   * @param {Object[]} newDialogs - the new dialogs
+   * @returns {Promise.<void>}
+   */
+  async executeDialogs(adapter, userId, newDialogs) {
+    logger.debug('executeWithDialogs', userId, newDialogs);
+    const dialogs = await this.getDialogs(userId);
+    this.updateWithDialogs(userId, dialogs, newDialogs);
+    await this.execute(adapter, userId, dialogs);
+    return this.setDialogs(userId, dialogs);
   }
 }
 

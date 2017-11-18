@@ -1,7 +1,6 @@
 const Logger = require('logtown');
 const BotfuelAdapter = require('./adapters/botfuel_adapter');
 const DialogManager = require('./dialog_manager');
-const Dialog = require('./dialogs/dialog');
 const LoggerManager = require('./logger_manager');
 const MessengerAdapter = require('./adapters/messenger_adapter');
 const MemoryBrain = require('./brains/memory_brain');
@@ -111,7 +110,7 @@ class Bot {
     logger.debug('respondWhenText', userMessage);
     const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
     logger.debug('respondWhenText: intents, entities', intents, entities);
-    return this.dm.execute(this.adapter, userMessage.user, intents, entities);
+    return this.dm.executeIntents(this.adapter, userMessage.user, intents, entities);
   }
 
   /**
@@ -123,20 +122,11 @@ class Bot {
    */
   async respondWhenPostback(userMessage) {
     logger.debug('respondWhenPostback', userMessage);
-    return this.dm.executeDialogs(
-      this.adapter,
-      userMessage.user,
-      {
-        stack: [
-          {
-            label: userMessage.payload.value.dialog,
-            status: Dialog.STATUS_READY,
-            entities: userMessage.payload.value.entities,
-          },
-        ],
-        lastLabel: null,
-      },
-    );
+    const dialog = {
+      label: userMessage.payload.value.dialog,
+      entities: userMessage.payload.value.entities,
+    };
+    return this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
   }
 
   /**
@@ -148,20 +138,11 @@ class Bot {
    */
   async respondWhenImage(userMessage) {
     logger.debug('respondWhenImage', userMessage);
-    return this.dm.executeDialogs(
-      this.adapter,
-      userMessage.user,
-      {
-        stack: [
-          {
-            label: 'image',
-            status: Dialog.STATUS_READY,
-            entities: [{ url: userMessage.payload.value.url }],
-          },
-        ],
-        lastLabel: null,
-      },
-    );
+    const dialog = {
+      label: 'image',
+      entities: [{ url: userMessage.payload.value.url }],
+    };
+    return this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
   }
 }
 

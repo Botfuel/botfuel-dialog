@@ -1,7 +1,6 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const Dialog = require('../../src/dialogs/dialog');
 const DialogManager = require('../../src/dialog_manager');
 const MemoryBrain = require('../../src/brains/memory_brain');
 const TestAdapter = require('../../src/adapters/test_adapter');
@@ -33,44 +32,35 @@ describe('DialogManager', function () {
 
   it('should not crash when no intent', async function () {
     const adapter = new TestAdapter({ id: TEST_BOT }, {});
-    await dm.execute(adapter, TEST_USER, [], []);
+    await dm.executeIntents(adapter, TEST_USER, [], []);
     expect(adapter.log).to.eql([
       new BotTextMessage('Not understood.').toJson(TEST_BOT, TEST_USER),
     ]);
   });
 
   it('should keep on the stack a dialog which is waiting', async function () {
-    await dm.execute(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
+    await dm.executeIntents(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.stack.length).to.be(1);
   });
 
   it('should not stack the same dialog twice', async function () {
-    await dm.execute(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
-    await dm.execute(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
+    await dm.executeIntents(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
+    await dm.executeIntents(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.stack.length).to.be(1);
   });
 
   it('should empty the stack (1)', async function () {
     const adapter = new TestAdapter({ id: TEST_BOT }, {});
-    await dm.execute(adapter, TEST_USER, [{ label: 'default_dialog', value: 1.0 }], []);
+    await dm.executeIntents(adapter, TEST_USER, [{ label: 'default_dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.stack.length).to.be(0);
   });
 
   it('should empty the stack (2)', async function () {
     const adapter = new TestAdapter({ id: TEST_BOT }, {});
-    await dm.executeDialogs(adapter, TEST_USER, {
-      stack: [
-        {
-          label: 'default_dialog',
-          status: Dialog.STATUS_READY,
-          entities: [],
-        },
-      ],
-      lastLabel: null,
-    });
+    await dm.executeDialogs(adapter, TEST_USER, [{ label: 'default_dialog' }]);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.stack.length).to.be(0);
   });
