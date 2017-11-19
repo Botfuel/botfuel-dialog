@@ -7,6 +7,10 @@
   "files": [
     "build"
   ],
+  "bin": {
+    "botfuel-run": "./build/run.js",
+    "botfuel-train": "./build/train.js"
+  },
   "scripts": {
     "prepublish": "npm run compile",
     "compile": "rm -rf build; babel src --out-dir build; cp -r src/corpora/*.txt build/corpora/",
