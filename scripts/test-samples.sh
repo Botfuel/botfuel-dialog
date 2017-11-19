@@ -42,7 +42,7 @@ link() {
 }
 
 train() {
-  npm run train -- shell_config &> /dev/null & PID=$!
+  ./node_modules/.bin/botfuel-train ../../../../shell_config &> /dev/null & PID=$!
   screen_output "Train sample" ${PID}
 }
 
