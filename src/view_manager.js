@@ -1,5 +1,6 @@
 const fs = require('fs');
 const logger = require('logtown')('ViewManager');
+const { ViewError } = require('./errors');
 
 /**
  * The view manager resolves the view for a given dialog.
@@ -50,7 +51,12 @@ class ViewManager {
       const View = require(path);
       return new View();
     }
-    return null;
+
+    throw new ViewError({
+      view: {
+        name,
+      },
+    });
   }
 }
 
