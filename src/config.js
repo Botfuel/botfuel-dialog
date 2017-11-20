@@ -1,5 +1,10 @@
 const path = require('path');
 
+/**
+* Returns the contents of the bot config file
+* @param {String} configFileName - the bot config file name/path
+* @returns {Object} the contents of the bot config file
+*/
 function resolveConfigFile(configFileName) {
   if (!configFileName) {
     console.log('You must specify a config file: ./node-modules/.bin/botfuel-train config-file.js');
