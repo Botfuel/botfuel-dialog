@@ -20,6 +20,7 @@
     "docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
   },
   "dependencies": {
+    "actions-on-google": "^1.6.0",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.1",
     "botfuel-nlp-sdk": "^1.1.1",

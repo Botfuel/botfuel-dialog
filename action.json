@@ -1,0 +1,23 @@
+{
+  "actions": [
+    {
+      "description": "Default Welcome Intent",
+      "name": "MAIN",
+      "fulfillment": {
+        "conversationName": "botfuel"
+      },
+      "intent": {
+        "name": "actions.intent.MAIN",
+        "trigger": {
+          "queryPatterns": ["botfuel"]
+        }
+      }
+    }
+  ],
+  "conversations": {
+    "botfuel": {
+      "name": "botfuel",
+      "url": "https://32c09f1a.ngrok.io/webhook"
+    }
+  }
+}

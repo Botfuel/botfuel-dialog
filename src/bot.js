@@ -7,6 +7,7 @@ const MemoryBrain = require('./brains/memory_brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell_adapter');
 const TestAdapter = require('./adapters/test_adapter');
+const GoogleAssistantManager = require('./adapters/google_assistant_adapter');
 
 const logger = Logger.getLogger('Bot');
 
@@ -33,6 +34,9 @@ class Bot {
         break;
       case 'messenger':
         this.adapter = new MessengerAdapter(this, config);
+        break;
+      case 'google-assistant':
+        this.adapter = new GoogleAssistantManager(this, config);
         break;
       case 'test':
         this.adapter = new TestAdapter(this, config);
