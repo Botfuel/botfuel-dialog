@@ -6,24 +6,23 @@ const Brain = require('./brain');
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';
 
 /**
- * Brain that wrap mongodb database
+ * Brain with MongoDB storage.
  */
 class MongoBrain extends Brain {
-  /**
-   * @constructor
-   * @param {String} botId - the bot id
-   */
+  // eslint-disable-next-line require-jsdoc
   constructor(botId) {
     logger.debug('constructor', botId);
     super(botId);
     this.users = null;
   }
 
-  /**
-   * Connects to database if necessary and get users collection
-   * @async
-   * @returns {Promise.<void>}
-   */
+  // eslint-disable-next-line require-jsdoc
+  async clean() {
+    logger.debug('clean');
+    return this.users.deleteMany({ botId: this.botId });
+  }
+
+  // eslint-disable-next-line require-jsdoc
   async init() {
     logger.debug('init');
     this.db = await MongoClient.connect(mongoUri);
@@ -31,7 +30,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Removes the connected database
+   * Drops the database.
    * @async
    * @returns {Promise.<void>}
    */
@@ -39,59 +38,27 @@ class MongoBrain extends Brain {
     await this.db.dropDatabase();
   }
 
-  /**
-   * Cleans the brain
-   * @async
-   * @returns {Promise.<Object>}
-   */
-  async clean() {
-    logger.debug('clean');
-    return this.users.deleteMany({ botId: this.botId });
-  }
-
-  /**
-   * Checks if brain has user for a given userId
-   * @async
-   * @param {String} userId - user id
-   * @returns {boolean} the user exists
-   */
+  // eslint-disable-next-line require-jsdoc
   async hasUser(userId) {
     logger.debug('hasUser', userId);
     const user = await this.users.findOne({ botId: this.botId, userId });
     return user !== null;
   }
 
-  /**
-   * Adds an user
-   * @async
-   * @param {String} userId - user id
-   * @returns {Promise.<Object>} the new user
-   */
+  // eslint-disable-next-line require-jsdoc
   async addUser(userId) {
     logger.debug('addUser', userId);
     const result = await this.users.insertOne(this.getUserInitValue(userId));
     return result.ops[0];
   }
 
-  /**
-   * Gets an user
-   * @async
-   * @param {String} userId - user id
-   * @returns {Promise.<Object>} the user
-   */
+  // eslint-disable-next-line require-jsdoc
   async getUser(userId) {
     logger.debug('getUser', userId);
     return this.users.findOne({ botId: this.botId, userId });
   }
 
-  /**
-   * Sets user key with the value
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - user key
-   * @param {*} value - key value
-   * @returns {Promise.<Object>} the updated user
-   */
+  // eslint-disable-next-line require-jsdoc
   async userSet(userId, key, value) {
     logger.debug('userSet', userId, key, value);
     const set = {};
@@ -104,29 +71,7 @@ class MongoBrain extends Brain {
     return result.value;
   }
 
-  /**
-   * Gets user key
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - user key
-   * @returns {Promise.<*>} the user key value
-   */
-  async userGet(userId, key) {
-    logger.debug('userGet', userId, key);
-    const select = {};
-    select[key] = 1;
-    const user = await this.users.findOne({ botId: this.botId, userId }, select);
-    return user[key];
-  }
-
-  /**
-   * Sets last conversation key with value
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - conversation key
-   * @param {*} value - key value
-   * @returns {Promise.<Object>} the updated conversation
-   */
+  // eslint-disable-next-line require-jsdoc
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
     const lastConversation = await this.getLastConversation(userId);

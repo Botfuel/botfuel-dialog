@@ -3,6 +3,7 @@ const logger = require('logtown')('Brain');
 
 /**
  * A brain is a storage for user and conversation data.
+ * Some of the brain methods use a scope which is either 'user' or 'last conversation'.
  */
 class Brain {
   /**
@@ -18,10 +19,21 @@ class Brain {
   /**
    * Initializes the brain.
    * @async
+   * @private
    * @returns {Promise.<void>}
    */
   async init() {
-    logger.debug('Brain.init');
+    logger.debug('init');
+  }
+
+  /**
+   * Empties the brain.
+   * @async
+   * @abstract
+   * @returns {Promise.<void>}
+   */
+  async clean() {
+    throw new Error('Not implemented!');
   }
 
   /**
@@ -81,6 +93,37 @@ class Brain {
   }
 
   /**
+   * Checks if there is a user for a given id.
+   * @async
+   * @abstract
+   * @param {String} userId - the user id
+   * @returns {boolean} true iff the user exists
+   */
+  async hasUser() {
+    throw new Error('Not implemented!');
+  }
+
+   /**
+   * Adds a user.
+   * @async
+   * @param {String} userId -the  user id
+   * @returns {Promise.<Object>} the new user
+   */
+  async addUser() {
+    throw new Error('Not implemented!');
+  }
+
+  /**
+   * Gets a user.
+   * @async
+   * @param {String} userId - the user id
+   * @returns {Promise.<Object>} the user
+   */
+  async getUser() {
+    throw new Error('Not implemented!');
+  }
+
+  /**
    * Adds a conversation to a user.
    * @async
    * @param {String} userId - user id
@@ -96,9 +139,9 @@ class Brain {
   }
 
   /**
-   * Gets user last conversation
+   * Gets the last conversation of the user.
    * @async
-   * @param {String} userId - user id
+   * @param {String} userId - the user id
    * @returns {Promise.<Object>} the last conversation of the user
    */
   async getLastConversation(userId) {
@@ -110,7 +153,7 @@ class Brain {
   /**
    * Returns a boolean indicating if the last conversation of the user is still valid.
    * @async
-   * @param {String} userId - user id
+   * @param {String} userId - the user id
    * @returns {Boolean} a boolean indicating if the last conversation is valid
    */
   async isLastConversationValid(userId) {
@@ -123,7 +166,45 @@ class Brain {
   }
 
   /**
-   * Gets last conversation value for a given key
+   * Sets a value for a key within the scope of the user.
+   * @async
+   * @abstract
+   * @param {String} userId - the user id
+   * @param {String} key - the key
+   * @param {*} value - the value
+   * @returns {Promise.<Object>} the updated user
+   */
+  async userSet() {
+    throw new Error('Not implemented!');
+  }
+
+  /**
+   * Gets a value for a key within the scope of the user.
+   * @async
+   * @param {String} userId - the user id
+   * @param {String} key - the key
+   * @returns {Promise.<*>} the value
+   */
+  async userGet(userId, key) {
+    logger.debug('userGet', userId, key);
+    const user = await this.getUser(userId);
+    return user[key];
+  }
+
+  /**
+   * Sets a value for a key within the scope of the last conversation of a user.
+   * @async
+   * @param {String} userId - the user id
+   * @param {String} key - the key
+   * @param {*} value - the  value
+   * @returns {Promise.<Object>} the updated conversation
+   */
+  async conversationSet() {
+    throw new Error('Not implemented!');
+  }
+
+  /**
+   * Gets the value for a given key within the scope of the last conversation of a user.
    * @async
    * @param {String} userId - user id
    * @param {String} key - last conversation key
