@@ -2,7 +2,7 @@ const logger = require('logtown')('TestAdapter');
 const Adapter = require('./adapter');
 
 /**
- * Test adapter
+ * Adapter used for running tests.
  * @extends Adapter
  */
 class TestAdapter extends Adapter {
@@ -18,12 +18,7 @@ class TestAdapter extends Adapter {
     this.userId = 'USER_TEST';
   }
 
-  /**
-   * Plays user messages
-   * @async
-   * @param {Object[]} userMessages - the user messages
-   * @returns {Promise.<void>}
-   */
+  // eslint-disable-next-line require-jsdoc
   async play(userMessages) {
     await this.bot.brain.initUserIfNecessary(this.userId);
     for (const userMessage of userMessages) {
@@ -34,17 +29,9 @@ class TestAdapter extends Adapter {
     }
   }
 
-  /**
-   * Sends bot messages to the platform
-   * @async
-   * @param {Object[]} botMessages - the bot messages
-   * @returns {Promise.<void>}
-   */
-  async send(botMessages) {
-    logger.debug('send', botMessages);
-    for (const botMessage of botMessages) {
-      this.log.push(botMessage);
-    }
+  // eslint-disable-next-line require-jsdoc
+  async sendMessage(botMessage) {
+    this.log.push(botMessage);
   }
 }
 

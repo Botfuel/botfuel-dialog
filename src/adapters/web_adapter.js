@@ -5,15 +5,11 @@ const logger = require('logtown')('WebAdapter');
 const Adapter = require('./adapter');
 
 /**
- * Adapter that connect bot to a web platform
+ * Generic web adapter (to be subclassed).
  * @extends Adapter
  */
 class WebAdapter extends Adapter {
-  /**
-   * Runs the adapter
-   * @async
-   * @returns {Promise.<void>}
-   */
+  // eslint-disable-next-line require-jsdoc
   async run() {
     logger.debug('run');
     const app = express();
@@ -24,7 +20,7 @@ class WebAdapter extends Adapter {
   }
 
   /**
-   * Creates adapter routes
+   * Creates routes.
    * @param {Object} app - the express app
    * @returns {void}
    */
@@ -33,13 +29,23 @@ class WebAdapter extends Adapter {
   }
 
   /**
-   * Requests web platform to send response
+   * Webhook used for handling messages.
    * @async
-   * @param {Object} requestOptions - the request options
+   * @param {Object} req - the request object
+   * @param {Object} res - the response object
    * @returns {Promise.<void>}
    */
-  async postResponse(requestOptions) {
-    logger.debug('postResponse', requestOptions);
+  async handleMessage() {
+    throw new Error('Not implemented!');
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  async sendMessage(botMessage) {
+    const requestOptions = {
+      uri: this.getUri(botMessage),
+      qs: this.getQs(),
+      body: this.getBody(botMessage),
+    };
     const options = Object.assign({ method: 'POST', json: true }, requestOptions);
     try {
       const res = await rp(options);
