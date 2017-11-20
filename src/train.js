@@ -2,6 +2,7 @@
 require('babel-polyfill');
 
 const path = require('path');
+const logger = require('logtown')('Classifier');
 const Classifier = require('./classifier');
 
 const configPath = path.resolve(process.cwd(), process.argv[2]);
@@ -10,7 +11,7 @@ try {
   const config = require(configPath);
   (async () => {
     await new Classifier(config).train();
-    console.log('Traning done.');
+    logger.info('Training done.');
   })();
 } catch (e) {
   if (e.code === 'MODULE_NOT_FOUND') {
