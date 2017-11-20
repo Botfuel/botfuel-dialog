@@ -1,6 +1,7 @@
 const fs = require('fs');
 const logger = require('logtown')('DialogManager');
 const Dialog = require('./dialogs/dialog');
+const { DialogError } = require('./errors')
 
 /**
  * The dialog manager turns NLU output into a dialog stack.
@@ -54,7 +55,9 @@ class DialogManager {
     logger.debug('getDialog', dialog);
     const path = this.getDialogPath(dialog.label);
     if (path === null) {
-      return null;
+      throw new DialogError({
+        dialog,
+      });
     }
     const DialogConstructor = require(path);
     return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
@@ -173,7 +176,7 @@ class DialogManager {
     // eslint-disable-next-line no-await-in-loop
     const dialogInstance = await this.getDialog(dialog);
     const dialogResult = await dialogInstance
-          .execute(adapter, userId, dialog.entities || [], dialog.status);
+      .execute(adapter, userId, dialog.entities || [], dialog.status);
     logger.debug('execute: dialogResult', dialogResult);
     const status = dialogResult.status || Dialog.STATUS_COMPLETED;
     const isComplex = dialogInstance.maxComplexity > 1;
@@ -210,10 +213,24 @@ class DialogManager {
    */
   async executeIntents(adapter, userId, intents, entities) {
     logger.debug('execute', userId, intents, entities);
-    const dialogs = await this.getDialogs(userId);
-    this.updateWithIntents(userId, dialogs, intents, entities);
-    await this.execute(adapter, userId, dialogs);
-    return this.setDialogs(userId, dialogs);
+    try {
+      const dialogs = await this.getDialogs(userId);
+      this.updateWithIntents(userId, dialogs, intents, entities);
+      await this.execute(adapter, userId, dialogs);
+      return this.setDialogs(userId, dialogs);
+    } catch (error) {
+      logger.error('Could not execute intents');
+
+      if (error instanceof DialogError) {
+        const { dialog } = error;
+        logger.error(`Could not resolve '${dialog.label}' dialog`);
+        logger.error(`Make sure the '${dialog.label}' dialog file exists at ${process.cwd()}/src/dialogs/${dialog.label}.js`);
+
+        process.exit(1);
+      }
+
+      throw error;
+    }
   }
 
   /**

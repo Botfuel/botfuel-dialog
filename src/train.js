@@ -19,5 +19,7 @@ try {
     process.exit(1);
   }
 
+  logger.error(e);
+
   throw e;
 }
