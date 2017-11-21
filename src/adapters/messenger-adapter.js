@@ -1,6 +1,6 @@
 const logger = require('logtown')('MessengerAdapter');
 const { PostbackMessage, UserImageMessage, UserTextMessage } = require('../messages');
-const WebAdapter = require('./web_adapter');
+const WebAdapter = require('./web-adapter');
 
 /**
  * Adapter for the Facebook Messenger messaging platform.

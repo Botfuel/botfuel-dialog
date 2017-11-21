@@ -4,8 +4,8 @@ const Qna = require('botfuel-qna-sdk');
 const Spellchecking = require('botfuel-nlp-sdk').Spellchecking;
 const logger = require('logtown')('Nlu');
 const Classifier = require('./classifier');
-const BooleanExtractor = require('./extractors/boolean_extractor');
-const CompositeExtractor = require('./extractors/composite_extractor');
+const BooleanExtractor = require('./extractors/boolean-extractor');
+const CompositeExtractor = require('./extractors/composite-extractor');
 
 /**
  * A nlu module (could be replaced by an external one).
@@ -124,7 +124,7 @@ class Nlu {
     logger.debug('compute: qnas', qnas);
     const intents = [
       {
-        label: 'qnas_dialog',
+        label: 'qnas-dialog',
         value: 1.0,
       },
     ];

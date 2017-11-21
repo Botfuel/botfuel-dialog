@@ -1,5 +1,5 @@
 const logger = require('logtown')('Dialog');
-const ViewManager = require('../view_manager');
+const ViewManager = require('../view-manager');
 const { ViewError } = require('../errors');
 const { MissingImplementationError } = require('../errors');
 

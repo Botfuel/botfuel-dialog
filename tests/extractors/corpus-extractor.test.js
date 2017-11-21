@@ -2,7 +2,7 @@
 
 const expect = require('expect.js');
 const Corpus = require('../../src/corpora/corpus');
-const CorpusExtractor = require('../../src/extractors/corpus_extractor');
+const CorpusExtractor = require('../../src/extractors/corpus-extractor');
 
 const teams = new Corpus([
   ['Paris Saint-Germain', 'Paris SG', 'PSG'],
