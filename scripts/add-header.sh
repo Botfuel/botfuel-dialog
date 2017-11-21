@@ -28,11 +28,12 @@ fi
 clean_header() {
   file=$1
   # get the first 5 lines of the file
-  lines="$(sed -n '1,6p' < ${file})"
+  lines="$(sed -n '1,16p' < ${file})"
   # split lines to array
   IFS=$'\n' read -rd '' -a arr <<< "$lines"; unset IFS
   # verify header
   i=1
+  has_header_term=0
   for current_line in "${arr[@]}"
   do
     if [[ ${current_line} == "/**" ]]
