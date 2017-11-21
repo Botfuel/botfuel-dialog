@@ -12,6 +12,7 @@ class Dialog {
   static STATUS_DISCARDED = 'discarded';
   static STATUS_READY = 'ready';
   static STATUS_WAITING = 'waiting';
+  static STATUS_CANCELED = 'cancel';
 
   /**
    * Returns STATUS_BLOCKED.
@@ -33,6 +34,10 @@ class Dialog {
    * Returns STATUS_WAITING.
    */
   get STATUS_WAITING() { return Dialog.STATUS_WAITING; }
+  /**
+   * Returns STATUS_CANCELED.
+   */
+  get STATUS_CANCELED() { return Dialog.STATUS_CANCELED; }
 
   /**
    * @constructor
