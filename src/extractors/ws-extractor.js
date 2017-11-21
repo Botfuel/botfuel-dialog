@@ -1,16 +1,18 @@
 const _ = require('underscore');
 const nlp = require('botfuel-nlp-sdk');
 const logger = require('logtown')('WsExtractor');
+const Extractor = require('./extractor');
 
 /**
- * Extracts web service entities
+ * Entity extraction web service based extractor.
  */
-class WsExtractor {
+class WsExtractor extends Extractor {
   /**
    * @constructor
    * @param {Object} parameters - the extractor parameters
    */
   constructor(parameters) {
+    super();
     this.client = new nlp.EntityExtraction({
       appId: process.env.BOTFUEL_APP_ID,
       appKey: process.env.BOTFUEL_APP_KEY,
@@ -18,12 +20,7 @@ class WsExtractor {
     this.parameters = parameters;
   }
 
-  /**
-   * Computes entities from a sentence
-   * @async
-   * @param {String} sentence - the sentence
-   * @returns {Promise.<Object[]>} the entities
-   */
+  // eslint-disable-next-line require-jsdoc
   async compute(sentence) {
     logger.debug('compute', sentence);
     const query = _.clone(this.parameters);
