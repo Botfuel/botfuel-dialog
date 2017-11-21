@@ -2,47 +2,30 @@ const logger = require('logtown')('MemoryBrain');
 const Brain = require('./brain');
 
 /**
- * MemoryBrain
+ * Brain with in-memory storage.
  * @extends Brain
  */
 class MemoryBrain extends Brain {
-  /**
-   * @constructor
-   * @param {String} botId - the bot id
-   */
+  // eslint-disable-next-line require-jsdoc
   constructor(botId) {
     logger.debug('constructor', botId);
     super(botId);
     this.users = {};
   }
 
-  /**
-   * Cleans the brain
-   * @async
-   * @returns {Promise.<void>}
-   */
+  // eslint-disable-next-line require-jsdoc
   async clean() {
     logger.debug('clean');
     this.users = {};
   }
 
-  /**
-   * Checks if brain has user for a given userId
-   * @async
-   * @param {String} userId - user id
-   * @returns {boolean} the user exists
-   */
+  // eslint-disable-next-line require-jsdoc
   async hasUser(userId) {
     logger.debug('hasUser', userId);
     return this.users[userId] !== undefined;
   }
 
-  /**
-   * Adds an user
-   * @async
-   * @param {String} userId - user id
-   * @returns {Promise.<Object>} the new user
-   */
+  // eslint-disable-next-line require-jsdoc
   async addUser(userId) {
     logger.debug('addUser', userId);
     if (await this.hasUser(userId)) {
@@ -53,12 +36,7 @@ class MemoryBrain extends Brain {
     return newUser;
   }
 
-  /**
-   * Gets an user
-   * @async
-   * @param {String} userId - user id
-   * @returns {Promise.<Object>} the user
-   */
+  // eslint-disable-next-line require-jsdoc
   async getUser(userId) {
     logger.debug('getUser', userId);
     if (!await this.hasUser(userId)) {
@@ -67,14 +45,7 @@ class MemoryBrain extends Brain {
     return this.users[userId];
   }
 
-  /**
-   * Sets user key with the value
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - user key
-   * @param {*} value - key value
-   * @returns {Promise.<Object>} the updated user
-   */
+  // eslint-disable-next-line require-jsdoc
   async userSet(userId, key, value) {
     logger.debug('userSet', userId, key, value);
     const user = await this.getUser(userId);
@@ -82,27 +53,7 @@ class MemoryBrain extends Brain {
     return user;
   }
 
-  /**
-   * Gets user key
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - user key
-   * @returns {Promise.<*>} the user key value
-   */
-  async userGet(userId, key) {
-    logger.debug('userGet', userId, key);
-    const user = await this.getUser(userId);
-    return user[key];
-  }
-
-  /**
-   * Sets last conversation key with value
-   * @async
-   * @param {String} userId - user id
-   * @param {String} key - conversation key
-   * @param {*} value - key value
-   * @returns {Promise.<Object>} the updated conversation
-   */
+  // eslint-disable-next-line require-jsdoc
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
     const conversation = await this.getLastConversation(userId);
