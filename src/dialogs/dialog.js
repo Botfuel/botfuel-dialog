@@ -1,6 +1,7 @@
 const logger = require('logtown')('Dialog');
 const ViewManager = require('../view-manager');
 const { ViewError } = require('../errors');
+const { MissingImplementationError } = require('../errors');
 
 /**
  * Dialog generates messages.
@@ -93,7 +94,7 @@ class Dialog {
    * @returns {Promise.<void>}
    */
   async execute() {
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 }
 
