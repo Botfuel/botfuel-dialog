@@ -2,6 +2,7 @@ const express = require('express');
 const rp = require('request-promise');
 const bodyParser = require('body-parser');
 const logger = require('logtown')('WebAdapter');
+const { MissingImplementationError } = require('../errors');
 const Adapter = require('./adapter');
 
 /**
@@ -36,7 +37,7 @@ class WebAdapter extends Adapter {
    * @returns {Promise.<void>}
    */
   async handleMessage() {
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 
   // eslint-disable-next-line require-jsdoc

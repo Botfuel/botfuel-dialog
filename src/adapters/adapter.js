@@ -1,4 +1,5 @@
 const logger = require('logtown')('Adapter');
+const { MissingImplementationError } = require('../errors');
 
 /**
  * An adapter adapts the messages to the messaging platform.
@@ -26,7 +27,7 @@ class Adapter {
    */
   async play(userMessages) {
     logger.debug('play', userMessages);
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 
   /**
@@ -38,7 +39,7 @@ class Adapter {
    */
   async run() {
     logger.debug('run');
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 
   /**
@@ -63,7 +64,7 @@ class Adapter {
    * @returns {Promise.<void>}
    */
   async sendMessage() {
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 }
 
