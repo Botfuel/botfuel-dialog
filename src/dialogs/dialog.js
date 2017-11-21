@@ -1,6 +1,7 @@
 const logger = require('logtown')('Dialog');
-const ViewManager = require('../view_manager');
+const ViewManager = require('../view-manager');
 const { ViewError } = require('../errors');
+const { MissingImplementationError } = require('../errors');
 
 /**
  * A dialog is responsible for calling its associated view with the right parameters.
@@ -94,10 +95,6 @@ class Dialog {
       logger.error('Could not render view');
 
       if (error instanceof ViewError) {
-        const { view } = error;
-        logger.error(`Could not resolve '${view.name}' view`);
-        logger.error(`Make sure the '${view.name}' view file exists at ${process.cwd()}/src/views/${view.name}.js`);
-
         process.exit(1);
       }
 
@@ -114,7 +111,7 @@ class Dialog {
    * @returns {Promise.<void>}
    */
   async execute() {
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 }
 

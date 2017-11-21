@@ -1,21 +1,13 @@
 const logger = require('logtown')('MessengerAdapter');
 const { PostbackMessage, UserImageMessage, UserTextMessage } = require('../messages');
-const WebAdapter = require('./web_adapter');
-
-const uri = 'https://graph.facebook.com/v2.6/me/messages';
-const qs = { access_token: process.env.FB_PAGE_ACCESS_TOKEN || '' };
+const WebAdapter = require('./web-adapter');
 
 /**
  * Adapter for the Facebook Messenger messaging platform.
  * @extends WebAdapter
  */
 class MessengerAdapter extends WebAdapter {
-  /**
-   * Adds extra route for this adapter.
-   * @override
-   * @param {Object} app - the express app
-   * @returns {void}
-   */
+  // eslint-disable-next-line require-jsdoc
   createRoutes(app) {
     logger.debug('createRoutes');
     super.createRoutes(app);
@@ -23,8 +15,9 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Handles messenger validation webhook.
+   * Webhook used by Facebook Messenger to validate the bot.
    * @async
+   * @private
    * @param {Object} req - the request object
    * @param {Object} res - the response object
    * @returns {Promise.<void>}
@@ -40,13 +33,7 @@ class MessengerAdapter extends WebAdapter {
     }
   }
 
-  /**
-   * Handles messenger post request webhook.
-   * @async
-   * @param {Object} req - the request object
-   * @param {Object} res - the response object
-   * @returns {Promise.<void>}
-   */
+  // eslint-disable-next-line require-jsdoc
   async handleMessage(req, res) {
     logger.debug('handleMessage');
     const data = req.body;
@@ -62,7 +49,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Processes received event (message, postback, ...).
+   * Processes a received event (message, postback, ...).
    * @async
    * @param {Object} event - the messenger event
    * @returns {Promise.<void>}
@@ -90,28 +77,31 @@ class MessengerAdapter extends WebAdapter {
     await this.bot.respond(userMessage.toJson(this.bot.id, userId));
   }
 
-  /**
-   * Sends message to messenger for each bot message.
-   * @async
-   * @param {Object[]} botMessages - the bot messages
-   * @returns {Promise.<void>}
-   */
-  async send(botMessages) {
-    logger.debug('send', botMessages);
-    for (const botMessage of botMessages) {
-      const message = this.adapt(botMessage);
-      logger.debug('send: message', message);
-      // eslint-disable-next-line no-await-in-loop
-      await this.postResponse({
-        uri,
-        qs,
-        body: { recipient: { id: botMessage.user }, message },
-      });
-    }
+  // eslint-disable-next-line require-jsdoc
+  getUri() {
+    return 'https://graph.facebook.com/v2.6/me/messages';
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  getQs() {
+    return {
+      access_token: process.env.FB_PAGE_ACCESS_TOKEN,
+    };
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  getBody(botMessage) {
+    const message = this.adapt(botMessage);
+    return {
+      recipient: {
+        id: botMessage.user,
+      },
+      message,
+    };
   }
 
   /**
-   * Adapts payload to send text.
+   * @private
    * @param {Object} payload - the payload
    * @returns {Object} the text
    */
@@ -122,7 +112,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Adapts payload to send quickreplies.
+   * @private
    * @param {Object} payload - the payload
    * @returns {Object} the quickreplies
    */
@@ -138,7 +128,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Adapts payload to send an image
+   * @private
    * @param {Object} payload - the payload
    * @returns {Object} the image
    */
@@ -146,13 +136,15 @@ class MessengerAdapter extends WebAdapter {
     return {
       attachment: {
         type: 'image',
-        payload: { url: payload.value },
+        payload: {
+          url: payload.value,
+        },
       },
     };
   }
 
   /**
-   * Adapts payload to send actions
+   * @private
    * @param {Object} payload - the payload
    * @returns {Object} the actions
    */
@@ -163,13 +155,17 @@ class MessengerAdapter extends WebAdapter {
     return {
       attachment: {
         type: 'template',
-        payload: { template_type: 'button', text, buttons },
+        payload: {
+          template_type: 'button',
+          text,
+          buttons,
+        },
       },
     };
   }
 
   /**
-   * Adapts payload to send cards
+   * @private
    * @param {Object} payload - the payload
    * @returns {Object} the cards
    */
@@ -182,13 +178,17 @@ class MessengerAdapter extends WebAdapter {
     return {
       attachment: {
         type: 'template',
-        payload: { template_type: 'generic', elements },
+        payload: {
+          template_type: 'generic',
+          elements,
+        },
       },
     };
   }
 
   /**
-   * Adapts payload to send specific message type
+   * Adapts payload.
+   * @private
    * @param {Object} botMessage - the bot message
    * @returns {Object} the adapted message
    */
@@ -212,6 +212,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
+   * @private
    * @static
    * @param {Object} action - the action object
    * @returns {Object|null} the adapted action or null if action type is not valid

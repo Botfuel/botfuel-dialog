@@ -1,4 +1,5 @@
 const logger = require('logtown')('View');
+const { MissingImplementationError } = require('../errors');
 
 /**
  * Generic view, to be subclassed.
@@ -25,7 +26,7 @@ class View {
    */
   render(key, data) {
     logger.debug('render', key, data);
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 }
 

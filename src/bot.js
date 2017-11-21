@@ -1,17 +1,18 @@
 const Logger = require('logtown');
-const BotfuelAdapter = require('./adapters/botfuel_adapter');
-const DialogManager = require('./dialog_manager');
-const LoggerManager = require('./logger_manager');
-const MessengerAdapter = require('./adapters/messenger_adapter');
-const MemoryBrain = require('./brains/memory_brain');
+const BotfuelAdapter = require('./adapters/botfuel-adapter');
+const DialogManager = require('./dialog-manager');
+const LoggerManager = require('./logger-manager');
+const MessengerAdapter = require('./adapters/messenger-adapter');
+const MemoryBrain = require('./brains/memory-brain');
 const Nlu = require('./nlu');
-const ShellAdapter = require('./adapters/shell_adapter');
-const TestAdapter = require('./adapters/test_adapter');
+const ShellAdapter = require('./adapters/shell-adapter');
+const TestAdapter = require('./adapters/test-adapter');
 
 const logger = Logger.getLogger('Bot');
 
 /**
  * This is the bot main class.
+ *
  * A bot has :
  * - an {@link Adapter},
  * - a {@link Brain},
@@ -115,7 +116,7 @@ class Bot {
     } catch (error) {
       if (error.statusCode === 403) {
         logger.error('Botfuel API authentication failed!');
-        logger.error('Please check your app’s credentials, that it has access to both NLP & QnA and that its plan limits haven’t been reached.');
+        logger.error('Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io');
 
         process.exit(1);
       }

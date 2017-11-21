@@ -5,7 +5,6 @@ const { BotTextMessage, UserTextMessage } = require('../messages');
 const Adapter = require('./adapter');
 
 const DELIMITER = `${chalk.bold('> ')}`;
-const MESSAGE_JOIN = `\n${DELIMITER}`;
 
 /**
  * Shell adapter.
@@ -26,11 +25,7 @@ class ShellAdapter extends Adapter {
     });
   }
 
-  /**
-   * Runs the adapter
-   * @async
-   * @returns {Promise.<void>}
-   */
+  // eslint-disable-next-line require-jsdoc
   async run() {
     logger.debug('run');
     await this.bot.brain.initUserIfNecessary(this.userId);
@@ -42,8 +37,9 @@ class ShellAdapter extends Adapter {
   }
 
   /**
-   * Runs recursively for each user input
+   * Runs recursively for each user input.
    * @async
+   * @private
    * @param {Object} userInput - the user input
    * @returns {Promise.<void>}
    */
@@ -53,16 +49,10 @@ class ShellAdapter extends Adapter {
     await this.bot.respond(userMessage.toJson(this.bot.id, this.userId));
   }
 
-  /**
-   * Sends bot messages to the shell
-   * @async
-   * @param {Object[]} botMessages - the bot messages
-   * @returns {Promise} the prompt
-   */
-  async send(botMessages) {
-    logger.debug('send', botMessages);
-    const output = botMessages.map(botMessage => botMessage.payload.value).join(MESSAGE_JOIN);
-    console.log(chalk.hex('#16a085')(`${DELIMITER}${output}`)); // logs the bot message(s)
+  // eslint-disable-next-line require-jsdoc
+  async sendMessage(botMessage) {
+    // logs the bot message
+    console.log(chalk.hex('#16a085')(`${DELIMITER}${botMessage.payload.value}`));
   }
 }
 

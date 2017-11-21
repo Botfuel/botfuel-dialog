@@ -2,7 +2,7 @@
 /* eslint-disable quotes */
 
 const expect = require('expect.js');
-const MessengerAdapter = require('../../src/adapters/messenger_adapter');
+const MessengerAdapter = require('../../src/adapters/messenger-adapter');
 const { Card, CardsMessage, Link, Postback } = require('../../src/messages');
 
 describe('MessengerAdapter', function () {
