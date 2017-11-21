@@ -21,7 +21,7 @@ describe('DialogManager', function () {
   });
 
   it('when given a label, it should return the correct path', function () {
-    expect(dm.getDialogPath('test_dialog'))
+    expect(dm.getDialogPath('test-dialog'))
       .to
       .eql(`${__dirname}/src/dialogs/test-dialog`);
   });
@@ -39,28 +39,28 @@ describe('DialogManager', function () {
   });
 
   it('should keep on the stack a dialog which is waiting', async function () {
-    await dm.executeIntents(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
+    await dm.executeIntents(null, TEST_USER, [{ label: 'waiting-dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.stack.length).to.be(1);
   });
 
   it('should not stack the same dialog twice', async function () {
-    await dm.executeIntents(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
-    await dm.executeIntents(null, TEST_USER, [{ label: 'waiting_dialog', value: 1.0 }], []);
+    await dm.executeIntents(null, TEST_USER, [{ label: 'waiting-dialog', value: 1.0 }], []);
+    await dm.executeIntents(null, TEST_USER, [{ label: 'waiting-dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.stack.length).to.be(1);
   });
 
   it('should empty the stack (1)', async function () {
     const adapter = new TestAdapter({ id: TEST_BOT }, {});
-    await dm.executeIntents(adapter, TEST_USER, [{ label: 'default_dialog', value: 1.0 }], []);
+    await dm.executeIntents(adapter, TEST_USER, [{ label: 'default-dialog', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.stack.length).to.be(0);
   });
 
   it('should empty the stack (2)', async function () {
     const adapter = new TestAdapter({ id: TEST_BOT }, {});
-    await dm.executeDialogs(adapter, TEST_USER, [{ label: 'default_dialog' }]);
+    await dm.executeDialogs(adapter, TEST_USER, [{ label: 'default-dialog' }]);
     const user = await dm.brain.getUser(TEST_USER);
     expect(user.dialogs.stack.length).to.be(0);
   });
