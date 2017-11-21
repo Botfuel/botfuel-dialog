@@ -30,3 +30,7 @@ You can pass the scope argument to update one directory, or one js file, for exa
 ```
 sh scripts/add-header.sh src/bot.js
 ```
+
+## License
+
+See the [LICENSE](LICENSE.md) file.
