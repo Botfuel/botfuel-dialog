@@ -1,7 +1,7 @@
 const logger = require('logtown')('Adapter');
 
 /**
- * An adapter for a given messaging platform adapts the messages to the messaging platform.
+ * An adapter adapts the messages to the messaging platform.
  */
 class Adapter {
   /**
@@ -17,6 +17,9 @@ class Adapter {
 
   /**
    * Plays some user messages.
+   * This adapter is only implemented by the {@link TestAdapter}.
+   * This method is called by the {@link Bot}'s play method.
+   * @abstract
    * @async
    * @param {Object[]} userMessages - the user messages
    * @returns {Promise.<void>}
@@ -28,6 +31,8 @@ class Adapter {
 
   /**
    * Adapter's method for running the bot.
+   * This method is called by the {@link Bot}'s run method.
+   * @abtract
    * @async
    * @returns {Promise.<void>}
    */
@@ -37,13 +42,27 @@ class Adapter {
   }
 
   /**
-   * Sends the bot messages to the messaging platform.
+   * Iterates over the bot messages and send them to the messaging platform.
    * @async
    * @param {Object[]} botMessages - the bot messages
    * @returns {Promise.<void>}
    */
   async send(botMessages) {
     logger.debug('send', botMessages);
+    for (const botMessage of botMessages) {
+      // eslint-disable-next-line no-await-in-loop
+      await this.sendMessage(botMessage);
+    }
+  }
+
+  /**
+   * Sends a single bot message to the messaging platform.
+   * @abstract
+   * @async
+   * @param {Object} botMessage - the bot message
+   * @returns {Promise.<void>}
+   */
+  async sendMessage() {
     throw new Error('Not implemented!');
   }
 }
