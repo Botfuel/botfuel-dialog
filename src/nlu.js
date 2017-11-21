@@ -124,7 +124,7 @@ class Nlu {
     logger.debug('compute: qnas', qnas);
     const intents = [
       {
-        label: 'qnas_dialog',
+        label: 'qnas-dialog',
         value: 1.0,
       },
     ];
