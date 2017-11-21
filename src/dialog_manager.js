@@ -188,6 +188,9 @@ class DialogManager {
       if (isComplex) {
         dialogs.lastLabel = dialog.label;
       }
+    } else if (status === Dialog.STATUS_CANCELED) {
+      dialogs.stack = dialogs.stack.slice(0, -2);
+      dialogs.lastLabel = null;
     } else { // ready or waiting
       dialog.status = status;
       // we don't want to execute another dialog
