@@ -2,7 +2,9 @@ const logger = require('logtown')('QnasDialog');
 const Dialog = require('./dialog');
 
 /**
- * The qnas dialog answers the user's question or displays several alternatives.
+ * The qnas dialog
+ * either answers the user's question when there is a single answer
+ * or displays several alternatives otherwise.
  * @extends Dialog
  */
 class QnasDialog extends Dialog {

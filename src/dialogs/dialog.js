@@ -16,8 +16,10 @@ const { MissingImplementationError } = require('../errors');
  * For example,
  * a dialog that says 'Hello' has a complexity of 1
  * while a dialog that prompts the user to enter n entities has roughly a complexity of n.
+ * It is used by the {@link DialogManager} for scheduling the dialogs.
  */
 class Dialog {
+  // TODO: move some specific statuses out of this class
   static STATUS_BLOCKED = 'blocked';
   static STATUS_COMPLETED = 'completed';
   static STATUS_DISCARDED = 'discarded';
@@ -74,7 +76,7 @@ class Dialog {
   }
 
   /**
-   * Displays messages.
+   * Displays messages by resolving the view associated to the dialog.
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String} [key] - the dialog key is an optional parameter
@@ -84,7 +86,6 @@ class Dialog {
    */
   async display(adapter, userId, key, data) {
     logger.debug('display', userId, key, data);
-
     try {
       const botMessages = this
         .viewManager
@@ -93,11 +94,9 @@ class Dialog {
       return adapter.send(botMessages);
     } catch (error) {
       logger.error('Could not render view');
-
       if (error instanceof ViewError) {
         process.exit(1);
       }
-
       throw error;
     }
   }
