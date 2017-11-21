@@ -1,6 +1,6 @@
 module.exports = class SdkError extends Error {
   /**
-  * Basic error constructor that should be extended
+  * Basic error constructor that should be extended.
   * @constructor
   * @param {String} message - the error message
   */

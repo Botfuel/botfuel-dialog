@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const logger = require('logtown')('Brain');
+const { MissingImplementationError } = require('../errors');
 
 /**
  * A brain is a storage for user and conversation data.
@@ -33,7 +34,7 @@ class Brain {
    * @returns {Promise.<void>}
    */
   async clean() {
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 
   /**
@@ -97,20 +98,20 @@ class Brain {
    * @async
    * @abstract
    * @param {String} userId - the user id
-   * @returns {boolean} true iff the user exists
+   * @returns {boolean} true if the user exists, false otherwise
    */
   async hasUser() {
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 
    /**
    * Adds a user.
    * @async
-   * @param {String} userId -the  user id
+   * @param {String} userId - the  user id
    * @returns {Promise.<Object>} the new user
    */
   async addUser() {
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 
   /**
@@ -120,7 +121,7 @@ class Brain {
    * @returns {Promise.<Object>} the user
    */
   async getUser() {
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 
   /**
@@ -175,7 +176,7 @@ class Brain {
    * @returns {Promise.<Object>} the updated user
    */
   async userSet() {
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 
   /**
@@ -200,7 +201,7 @@ class Brain {
    * @returns {Promise.<Object>} the updated conversation
    */
   async conversationSet() {
-    throw new Error('Not implemented!');
+    throw new MissingImplementationError();
   }
 
   /**

@@ -30,7 +30,7 @@ class MongoBrain extends Brain {
   }
 
   /**
-   * Drops the database.
+   * Drops the database (used by tests).
    * @async
    * @returns {Promise.<void>}
    */
