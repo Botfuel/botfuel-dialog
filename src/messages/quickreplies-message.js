@@ -1,7 +1,7 @@
 const Message = require('./message');
 
 /**
- * Quickreplies message
+ * A message containing quick replies.
  * @extends Message
  */
 class QuickrepliesMessage extends Message {

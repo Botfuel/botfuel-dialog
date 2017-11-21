@@ -1,7 +1,7 @@
 const Message = require('./message');
 
 /**
- * Postback message
+ * A postback message.
  * @extends Message
  */
 class PostbackMessage extends Message {

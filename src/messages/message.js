@@ -1,5 +1,5 @@
 /**
- * Message
+ * An abstract message.
  */
 class Message {
   /**
@@ -7,7 +7,7 @@ class Message {
    * @param {String} type - the message type
    * @param {String} sender - the message sender, the bot or the user
    * @param {*} value - the message value
-   * @param {Object} [options] - the optional message options
+   * @param {Object} [options] - the message options
    */
   constructor(type, sender, value, options) {
     this.type = type;
@@ -17,7 +17,7 @@ class Message {
   }
 
   /**
-   * Converts a message to json
+   * Converts a message to json and adds to it the bot and user ids.
    * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @returns {Object} the json message
