@@ -5,20 +5,29 @@ const logger = require('logtown')('Corpus');
 /**
  * Class for handling corpora.
  *
- * A corpus is a matrix of words,
- * structured by grouping on a same line words with similar meanings.
+ * A corpus is a list of words.
+ * Within a corpus, we group together words sharing a common meaning.
+ * Within a subgroup, a specific word is distinguished.
  *
- * | main word | synonym          | other synonym          |
- * | :-------- | :--------------- | :--------------------- |
- * | word1     | synonym of word1 | other synonym of word1 |
- * | word2     | synonym of word2 | other synonym of word2 |
- * | word3     | synonym of word3 | other synonym of word3 |
+ * A corpus could then be represented by the following table where:
+ * - each row contains words sharing a common meaning,
+ * - the first word of each row is the distinguished word used to represent the subgroup.
  *
+ * | main word | synonym          | another synonym          | yet another synonym          |
+ * | :-------- | :--------------- | :----------------------- | :--------------------------- |
+ * | word1     | synonym of word1 |                          |                              |
+ * | word2     | synonym of word2 | another synonym of word2 | yet another synonym of word2 |
+ * | word3     | synonym of word3 | another synonym of word3 |                              |
+ *
+ * Two specific edge-cases:
+ * - a table with a single line is a set of synonyms,
+ * - a table with a single column is a set of words without synonyms.
  */
 class Corpus {
   /**
    * @constructor
-   * @param {String[][]} matrix - the corpus matrix
+   * @param {String[][]} matrix - the corpus matrix,
+   * a row of the matrix corresponds to words with common meaning
    */
   constructor(matrix) {
     logger.debug('constructor', matrix);
@@ -64,7 +73,7 @@ class Corpus {
 
   /**
    * Gets matching value for a key.
-   * @param {String} key - the
+   * @param {String} key - the key
    * @param {Object} options - the normalization options
    * @returns {String} the matching value
    */
