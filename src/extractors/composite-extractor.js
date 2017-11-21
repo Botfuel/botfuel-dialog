@@ -1,23 +1,21 @@
 const logger = require('logtown')('CompositeExtractor');
+const Extractor = require('./extractor');
 
 /**
- * Composite extractor
+ * Composite extractor used for combining extractors.
  */
-class CompositeExtractor {
+class CompositeExtractor extends Extractor {
   /**
    * @constructor
    * @param {Object[]} extractors - the extractors
    */
   constructor(extractors) {
     logger.debug('constructor', extractors);
+    super();
     this.extractors = extractors;
   }
 
-  /**
-   * Extracts the entities by applying extractors defined at the bot level.
-   * @param {String} sentence - the sentence
-   * @returns {Promise.<Object[]>}
-   */
+  // eslint-disable-next-line require-jsdoc
   async compute(sentence) {
     logger.debug('compute', sentence);
     let entities = [];

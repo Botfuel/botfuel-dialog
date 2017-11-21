@@ -2,7 +2,7 @@ const FileCorpus = require('../corpora/file-corpus');
 const CorpusExtractor = require('./corpus-extractor');
 
 /**
- * Extract boolean entities
+ * Extracts boolean entities.
  * @extends CorpusExtractor
  */
 class BooleanExtractor extends CorpusExtractor {
@@ -16,11 +16,7 @@ class BooleanExtractor extends CorpusExtractor {
     super(parameters);
   }
 
-  /**
-   * Gets entity
-   * @param {String} value - the entity value
-   * @returns {Object} the entity
-   */
+  // eslint-disable-next-line require-jsdoc
   getEntity(value) {
     return { value: value === '1', type: 'boolean' };
   }
