@@ -1,5 +1,5 @@
 const logger = require('logtown')('BotfuelAdapter');
-const WebAdapter = require('./web_adapter');
+const WebAdapter = require('./web-adapter');
 
 /**
  * Adapter for Botfuel's webchat.

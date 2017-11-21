@@ -1,7 +1,7 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const BooleanExtractor = require('../../src/extractors/boolean_extractor');
+const BooleanExtractor = require('../../src/extractors/boolean-extractor');
 
 const extractor = new BooleanExtractor({ locale: 'en' });
 

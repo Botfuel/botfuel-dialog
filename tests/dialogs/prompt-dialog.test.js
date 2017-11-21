@@ -1,9 +1,9 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const PromptDialog = require('../../src/dialogs/prompt_dialog');
-const MemoryBrain = require('../../src/brains/memory_brain');
-const TestAdapter = require('../../src/adapters/test_adapter');
+const PromptDialog = require('../../src/dialogs/prompt-dialog');
+const MemoryBrain = require('../../src/brains/memory-brain');
+const TestAdapter = require('../../src/adapters/test-adapter');
 const { BotTextMessage } = require('../../src/messages');
 
 const TEST_USER = '1';

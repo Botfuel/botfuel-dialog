@@ -1,4 +1,4 @@
-const TextDialog = require('./text_dialog');
+const TextDialog = require('./text-dialog');
 
 /**
  * The default dialog is used when the bot does not understand the user intent.

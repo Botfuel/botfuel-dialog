@@ -1,7 +1,7 @@
 const Fs = require('fs');
 const Natural = require('natural');
 const logger = require('logtown')('Classifier');
-const LoggerManager = require('./logger_manager');
+const LoggerManager = require('./logger-manager');
 
 const INTENT_SUFFIX = '.intent';
 

@@ -1,4 +1,4 @@
-const SdkError = require('./SdkError');
+const SdkError = require('./sdk-error');
 
 module.exports = class MissingImplementationError extends SdkError {
   /**
