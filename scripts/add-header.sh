@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # defaults variables
-LICENSE_TERMS_REGEX="(LICENSE|Copyright)"
 HEADER="header.txt"
 SCOPE="src"
 FILES=()
@@ -22,10 +21,33 @@ else
 fi
 
 # method to check if file have a header
-file_has_header() {
+clean_header() {
   file=$1
-  match=$(grep -E ${LICENSE_TERMS_REGEX} ${file})
-  if (($(echo ${#match}) > 0)); then echo 1; else echo 0; fi
+  # get the first 5 lines of the file
+  lines="$(sed -n '1,6p' < ${file})"
+  # split lines to array
+  IFS=$'\n' read -rd '' -a arr <<< "$lines"; unset IFS
+  # verify header
+  i=1
+  for current_line in "${arr[@]}"
+  do
+    if [[ ${current_line} == "/**" ]]
+    then
+      begin=${i}
+    elif [[ begin && ${current_line} == *"Copyright"* ]]
+    then
+      has_header_term=1
+    elif [[ begin && has_header_term && ${current_line} == " */" ]]
+    then
+      end=${i}
+    fi
+    ((i++))
+  done
+  # remove header + extra space if header is found
+  if [[ ${begin} && ${has_header_term} == 1 && ${end} ]]
+  then
+    sed -e "${begin},$((end + 1))d" ${file} > temp.txt; mv temp.txt ${file}
+  fi
 }
 
 # method to add a header to the beginning of a file
@@ -34,14 +56,9 @@ add_file_header() {
   echo "$(cat ${HEADER})\n" | cat - ${file} > temp.txt; mv temp.txt ${file}
 }
 
-# add header to files that have no header
+# clean files header and add the header to the file
 for current_file in "${FILES[@]}"
 do
-  if [[ "$(file_has_header ${current_file})" == "0" ]]
-  then
-    echo "${current_file} have no header, adding a header ..."
-    add_file_header ${current_file}
-  else
-    echo "${current_file} have header"
-  fi
+  clean_header ${current_file}
+  add_file_header ${current_file}
 done
