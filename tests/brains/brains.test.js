@@ -1,6 +1,6 @@
 /* eslint-disable prefer-arrow-callback */
 
-const brainTest = require('./brain_test');
+const brainTest = require('./brain-test');
 
 const MONGO_BRAIN_LABEL = 'mongo';
 const MEMORY_BRAIN_LABEL = 'memory';

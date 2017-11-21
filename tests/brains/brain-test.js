@@ -1,8 +1,8 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const MemoryBrain = require('../../src/brains/memory_brain');
-const MongoBrain = require('../../src/brains/mongo_brain');
+const MemoryBrain = require('../../src/brains/memory-brain');
+const MongoBrain = require('../../src/brains/mongo-brain');
 
 // db label
 const MEMORY_BRAIN_LABEL = 'memory';

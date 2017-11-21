@@ -43,7 +43,7 @@ class QnasView extends View {
     logger.debug('renderQuestions', qnas);
     const postbacks = qnas.map(qna => new Postback(
       qna.questions[0],
-      'qnas_dialog',
+      'qnas-dialog',
       [{
         dim: 'qnas',
         value: [{ answer: qna.answer }],

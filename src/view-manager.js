@@ -24,10 +24,10 @@ class ViewManager {
   getPath(name) {
     logger.debug('getPath');
     const paths = [
-      `${this.viewsPath}/${name}_view.${this.locale}.js`,
-      `${this.viewsPath}/${name}_view.js`,
-      `${__dirname}/views/${name}_view.${this.locale}.js`,
-      `${__dirname}/views/${name}_view.js`,
+      `${this.viewsPath}/${name}-view.${this.locale}.js`,
+      `${this.viewsPath}/${name}-view.js`,
+      `${__dirname}/views/${name}-view.${this.locale}.js`,
+      `${__dirname}/views/${name}-view.js`,
     ];
     for (const path of paths) {
       logger.debug('getPath: test path', path);
@@ -51,6 +51,9 @@ class ViewManager {
       const View = require(path);
       return new View();
     }
+
+    logger.error(`Could not resolve '${name}' view`);
+    logger.error(`Make sure the '${name}' view file exists at ${process.cwd()}/src/views/${name}.js`);
 
     throw new ViewError({
       view: {
