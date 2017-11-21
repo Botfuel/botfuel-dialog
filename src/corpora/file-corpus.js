@@ -3,13 +3,13 @@ const logger = require('logtown')('FileCorpus');
 const Corpus = require('./corpus');
 
 /**
- * Corpus from a file
+ * Class for generating a corpus from a file.
  */
 class FileCorpus extends Corpus {
   /**
    * @constructor
-   * @param {String} path - the corpus path
-   * @param {String} [separator=','] - the optional corpus row separator
+   * @param {String} path - the file path
+   * @param {String} [separator=','] - the optional row separator
    */
   constructor(path, separator = ',') {
     logger.debug('constructor', path, separator);
