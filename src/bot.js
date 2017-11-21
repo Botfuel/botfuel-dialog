@@ -115,7 +115,7 @@ class Bot {
     } catch (error) {
       if (error.statusCode === 403) {
         logger.error('Botfuel API authentication failed!');
-        logger.error('Please check your app’s credentials, that it has access to both NLP & QnA and that its plan limits haven’t been reached.');
+        logger.error('Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io');
 
         process.exit(1);
       }

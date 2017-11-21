@@ -78,10 +78,6 @@ class Dialog {
       logger.error('Could not render view');
 
       if (error instanceof ViewError) {
-        const { view } = error;
-        logger.error(`Could not resolve '${view.name}' view`);
-        logger.error(`Make sure the '${view.name}' view file exists at ${process.cwd()}/src/views/${view.name}.js`);
-
         process.exit(1);
       }
 

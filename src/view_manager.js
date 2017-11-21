@@ -52,6 +52,9 @@ class ViewManager {
       return new View();
     }
 
+    logger.error(`Could not resolve '${name}' view`);
+    logger.error(`Make sure the '${name}' view file exists at ${process.cwd()}/src/views/${name}.js`);
+
     throw new ViewError({
       view: {
         name,
