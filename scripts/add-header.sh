@@ -24,7 +24,7 @@ else
   exit
 fi
 
-# method to check if file have a header
+# method to check if file has a header
 clean_header() {
   file=$1
   # get the first 5 lines of the file
