@@ -1,4 +1,18 @@
 {
-  "presets": ["es2015", "stage-2"],
-  "plugins": ["transform-class-properties"]
+  "presets": [
+    "es2015",
+    "stage-2"
+  ],
+  "plugins": [
+    "transform-class-properties",
+    [
+      "babel-plugin-transform-builtin-extend",
+      {
+        "globals": [
+          "Error",
+          "Array"
+        ]
+      }
+    ]
+  ]
 }

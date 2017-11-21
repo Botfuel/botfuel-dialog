@@ -1,6 +1,7 @@
 const Fs = require('fs');
 const Natural = require('natural');
 const logger = require('logtown')('Classifier');
+const LoggerManager = require('./logger_manager');
 
 const INTENT_SUFFIX = '.intent';
 
@@ -13,6 +14,7 @@ class Classifier {
    * @param {Object} config - the bot config
    */
   constructor(config) {
+    LoggerManager.configure(config);
     logger.debug('constructor', config);
     this.locale = config.locale;
     this.modelFilename = `${config.path}/models/model.json`;

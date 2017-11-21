@@ -108,9 +108,20 @@ class Bot {
    */
   async respondWhenText(userMessage) {
     logger.debug('respondWhenText', userMessage);
-    const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
-    logger.debug('respondWhenText: intents, entities', intents, entities);
-    return this.dm.executeIntents(this.adapter, userMessage.user, intents, entities);
+    try {
+      const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
+      logger.debug('respondWhenText: intents, entities', intents, entities);
+      return this.dm.executeIntents(this.adapter, userMessage.user, intents, entities);
+    } catch (error) {
+      if (error.statusCode === 403) {
+        logger.error('Botfuel API authentication failed!');
+        logger.error('Please check your app’s credentials, that it has access to both NLP & QnA and that its plan limits haven’t been reached.');
+
+        process.exit(1);
+      }
+
+      throw error;
+    }
   }
 
   /**
