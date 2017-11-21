@@ -6,13 +6,7 @@ const WebAdapter = require('./web_adapter');
  * @extends WebAdapter
  */
 class BotfuelAdapter extends WebAdapter {
-  /**
-   * Handles webchat webhook post request.
-   * @async
-   * @param {Object} req - the request object
-   * @param {Object} res - the response object
-   * @returns {Promise.<void>}
-   */
+  // eslint-disable-next-line require-jsdoc
   async handleMessage(req, res) {
     logger.debug('handleMessage');
     res.sendStatus(200);
@@ -23,27 +17,19 @@ class BotfuelAdapter extends WebAdapter {
     await this.bot.respond(userMessage);
   }
 
-  /**
-   * Builds request url for a given bot message.
-   * @param {Object} botMessage - the bot message
-   * @returns {String} the webchat url for an user
-   */
-  getUrl(botMessage) {
+  // eslint-disable-next-line require-jsdoc
+  getUri(botMessage) {
     return `${process.env.CHAT_SERVER}/bots/${this.bot.id}/users/${botMessage.user}/conversation/messages`;
   }
 
-  /**
-   * Sends message to webchat for each bot message.
-   * @async
-   * @param {Object[]} botMessages - the bot messages
-   * @returns {Promise.<void>}
-   */
-  async send(botMessages) {
-    logger.debug('sendText', botMessages);
-    for (const botMessage of botMessages) {
-      // eslint-disable-next-line no-await-in-loop
-      await this.postResponse({ uri: this.getUrl(botMessage), body: botMessage });
-    }
+  // eslint-disable-next-line require-jsdoc
+  getQs() {
+    return {};
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  getBody(botMessage) {
+    return botMessage;
   }
 }
 

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const logger = require('logtown')('ViewManager');
+const { ViewError } = require('./errors');
 
 /**
  * The view manager resolves the view for a given dialog.
@@ -50,7 +51,15 @@ class ViewManager {
       const View = require(path);
       return new View();
     }
-    return null;
+
+    logger.error(`Could not resolve '${name}' view`);
+    logger.error(`Make sure the '${name}' view file exists at ${process.cwd()}/src/views/${name}.js`);
+
+    throw new ViewError({
+      view: {
+        name,
+      },
+    });
   }
 }
 
