@@ -1,13 +1,13 @@
 const Link = require('./link');
-const ActionsMessage = require('./actions_message');
-const BotTextMessage = require('./bot_text_message');
+const ActionsMessage = require('./actions-message');
+const BotTextMessage = require('./bot-text-message');
 const Card = require('./card');
-const CardsMessage = require('./cards_message');
+const CardsMessage = require('./cards-message');
 const Postback = require('./postback');
-const PostbackMessage = require('./postback_message');
-const QuickrepliesMessage = require('./quickreplies_message');
-const UserImageMessage = require('./user_image_message');
-const UserTextMessage = require('./user_text_message');
+const PostbackMessage = require('./postback-message');
+const QuickrepliesMessage = require('./quickreplies-message');
+const UserImageMessage = require('./user-image-message');
+const UserTextMessage = require('./user-text-message');
 
 module.exports = {
   Link,

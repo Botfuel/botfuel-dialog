@@ -1,5 +1,5 @@
 const logger = require('logtown')('DefaultView.en');
-const TextView = require('./text_view');
+const TextView = require('./text-view');
 
 /**
  * Default text view for english.

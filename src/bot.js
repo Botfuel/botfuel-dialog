@@ -1,12 +1,12 @@
 const Logger = require('logtown');
-const BotfuelAdapter = require('./adapters/botfuel_adapter');
-const DialogManager = require('./dialog_manager');
-const LoggerManager = require('./logger_manager');
-const MessengerAdapter = require('./adapters/messenger_adapter');
-const MemoryBrain = require('./brains/memory_brain');
+const BotfuelAdapter = require('./adapters/botfuel-adapter');
+const DialogManager = require('./dialog-manager');
+const LoggerManager = require('./logger-manager');
+const MessengerAdapter = require('./adapters/messenger-adapter');
+const MemoryBrain = require('./brains/memory-brain');
 const Nlu = require('./nlu');
-const ShellAdapter = require('./adapters/shell_adapter');
-const TestAdapter = require('./adapters/test_adapter');
+const ShellAdapter = require('./adapters/shell-adapter');
+const TestAdapter = require('./adapters/test-adapter');
 
 const logger = Logger.getLogger('Bot');
 

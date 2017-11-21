@@ -1,6 +1,6 @@
 module.exports = {
-  SdkError: require('./SdkError'),
+  SdkError: require('./sdk-error'),
 
-  DialogError: require('./DialogError'),
-  ViewError: require('./ViewError'),
+  DialogError: require('./dialog-error'),
+  ViewError: require('./view-error'),
 };

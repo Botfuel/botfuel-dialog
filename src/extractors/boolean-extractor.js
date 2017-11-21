@@ -1,5 +1,5 @@
-const FileCorpus = require('../corpora/file_corpus');
-const CorpusExtractor = require('./corpus_extractor');
+const FileCorpus = require('../corpora/file-corpus');
+const CorpusExtractor = require('./corpus-extractor');
 
 /**
  * Extract boolean entities

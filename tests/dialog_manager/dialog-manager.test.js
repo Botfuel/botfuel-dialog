@@ -1,9 +1,9 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const DialogManager = require('../../src/dialog_manager');
-const MemoryBrain = require('../../src/brains/memory_brain');
-const TestAdapter = require('../../src/adapters/test_adapter');
+const DialogManager = require('../../src/dialog-manager');
+const MemoryBrain = require('../../src/brains/memory-brain');
+const TestAdapter = require('../../src/adapters/test-adapter');
 const { BotTextMessage } = require('../../src/messages');
 
 const TEST_USER = '1';
@@ -23,7 +23,7 @@ describe('DialogManager', function () {
   it('when given a label, it should return the correct path', function () {
     expect(dm.getDialogPath('test_dialog'))
       .to
-      .eql(`${__dirname}/src/dialogs/test_dialog`);
+      .eql(`${__dirname}/src/dialogs/test-dialog`);
   });
 
   it('when given an unknown label, it should return null', function () {
