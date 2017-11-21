@@ -1,5 +1,6 @@
 const logger = require('logtown')('Dialog');
 const ViewManager = require('../view_manager');
+const { ViewError } = require('../errors');
 
 /**
  * Dialog generates messages.
@@ -66,11 +67,22 @@ class Dialog {
    */
   async display(adapter, userId, key, data) {
     logger.debug('display', userId, key, data);
-    const botMessages = this
-          .viewManager
-          .resolve(this.name)
-          .renderAsJson(adapter.bot.id, userId, key, data);
-    return adapter.send(botMessages);
+
+    try {
+      const botMessages = this
+        .viewManager
+        .resolve(this.name)
+        .renderAsJson(adapter.bot.id, userId, key, data);
+      return adapter.send(botMessages);
+    } catch (error) {
+      logger.error('Could not render view');
+
+      if (error instanceof ViewError) {
+        process.exit(1);
+      }
+
+      throw error;
+    }
   }
 
   /**

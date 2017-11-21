@@ -1,9 +1,15 @@
 #!/usr/bin/env node
+require('babel-polyfill');
 
-require("babel-polyfill");
-
-const configFile = process.argv[2];
-const config = require(`${configFile}`);
+const logger = require('logtown')('Bot');
 const Bot = require('./bot');
+const { resolveConfigFile } = require('./config');
 
-new Bot(config).run();
+(async () => {
+  try {
+    const config = resolveConfigFile(process.argv[2]);
+    await new Bot(config).run();
+  } catch (e) {
+    logger.error(e);
+  }
+})();
