@@ -3,6 +3,8 @@ const Dialog = require('./dialog');
 
 /**
  * The void dialog does nothing.
+ *
+ * It is used for testing purposes.
  * @extends Dialog
  */
 class VoidDialog extends Dialog {

@@ -4,9 +4,22 @@ const { ViewError } = require('../errors');
 const { MissingImplementationError } = require('../errors');
 
 /**
- * Dialog generates messages.
+ * A dialog is responsible for calling its associated view with the right parameters.
+ *
+ * The dialog and its associated view share the same name.
+ * The dialog optionally accesses the brain and
+ * then calls the view with the right parameters for the rendering.
+ * At the end of the execution, an object is returned which contains
+ * either the new status of the dialog or or a new dialog to execute.
+ *
+ * The complexity of a dialog is expected number of turns in the conversation.
+ * For example,
+ * a dialog that says 'Hello' has a complexity of 1
+ * while a dialog that prompts the user to enter n entities has roughly a complexity of n.
+ * It is used by the {@link DialogManager} for scheduling the dialogs.
  */
 class Dialog {
+  // TODO: move some specific statuses out of this class
   static STATUS_BLOCKED = 'blocked';
   static STATUS_COMPLETED = 'completed';
   static STATUS_DISCARDED = 'discarded';
@@ -14,23 +27,27 @@ class Dialog {
   static STATUS_WAITING = 'waiting';
 
   /**
-   * Returns STATUS_BLOCKED.
+   * Indicates that this dialog cannot be processed.
    */
   get STATUS_BLOCKED() { return Dialog.STATUS_BLOCKED; }
+
   /**
-   * Returns STATUS_COMPLETED.
+   * Indicates that this dialog has been processed successfully.
    */
   get STATUS_COMPLETED() { return Dialog.STATUS_COMPLETED; }
+
   /**
-   * Returns STATUS_DISCARDED.
+   * Indicates that this dialog has been discarded by the user.
    */
   get STATUS_DISCARDED() { return Dialog.STATUS_DISCARDED; }
+
   /**
-   * Returns STATUS_READY.
+   * Indicates that this dialog is ready to be processed.
    */
   get STATUS_READY() { return Dialog.STATUS_READY; }
+
   /**
-   * Returns STATUS_WAITING.
+   * Indicates that this dialog is waiting for a user confirmation to be unblocked.
    */
   get STATUS_WAITING() { return Dialog.STATUS_WAITING; }
 
@@ -59,16 +76,16 @@ class Dialog {
   }
 
   /**
-   * Displays a message to user
+   * Displays messages by resolving the view associated to the dialog.
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {String} key - the dialog key
+   * @param {String} [key] - the dialog key is an optional parameter
+   * used by the view to customize its behaviour
    * @param {Object} [data] - data used at display time
    * @returns {Promise.<void>}
    */
   async display(adapter, userId, key, data) {
     logger.debug('display', userId, key, data);
-
     try {
       const botMessages = this
         .viewManager
@@ -77,17 +94,16 @@ class Dialog {
       return adapter.send(botMessages);
     } catch (error) {
       logger.error('Could not render view');
-
       if (error instanceof ViewError) {
         process.exit(1);
       }
-
       throw error;
     }
   }
 
   /**
    * Executes the dialog.
+   * @abstract
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String[]} messageEntities - the message entities
