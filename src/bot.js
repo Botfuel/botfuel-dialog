@@ -12,6 +12,7 @@ const logger = Logger.getLogger('Bot');
 
 /**
  * This is the bot main class.
+ *
  * A bot has :
  * - an {@link Adapter},
  * - a {@link Brain},
