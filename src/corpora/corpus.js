@@ -9,7 +9,7 @@ const logger = require('logtown')('Corpus');
  * Within a corpus, we group together words sharing a common meaning.
  * Within a subgroup, a specific word is distinguished.
  *
- * A corpus could then be represented by the following table where:
+ * A corpus could then be represented by the following table (or matrix) where:
  * - each row contains words sharing a common meaning,
  * - the first word of each row is the distinguished word used to represent the subgroup.
  *
