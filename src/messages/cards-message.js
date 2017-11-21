@@ -1,23 +1,20 @@
 const Message = require('./message');
 
 /**
- * Cards message
+ * A message containing cards.
  * @extends Message
  */
 class CardsMessage extends Message {
   /**
    * @constructor
    * @param {Object[]} cards - the cards array
-   * @param {Object} [options] - the optional message options
+   * @param {Object} [options] - the message options
    */
   constructor(cards, options) {
     super('cards', 'bot', cards, options);
   }
 
-  /**
-   * Renders json cards
-   * @returns {Object[]} the json cards
-   */
+  // eslint-disable-next-line require-jsdoc
   valueAsJson() {
     return this.value.map(card => card.toJson());
   }

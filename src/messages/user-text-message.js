@@ -1,7 +1,7 @@
 const Message = require('./message');
 
 /**
- * User text message
+ * A text message send by the user to the bot.
  * @extends Message
  */
 class UserTextMessage extends Message {

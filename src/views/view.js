@@ -24,8 +24,7 @@ class View {
    * @param {Object} [data] - data used at display time
    * @returns {Object[]} an array of bot messages
    */
-  render(key, data) {
-    logger.debug('render', key, data);
+  render() {
     throw new MissingImplementationError();
   }
 }

@@ -1,23 +1,20 @@
 const Message = require('./message');
 
 /**
- * Actions message
+ * A message made of actions.
  * @extends Message
  */
 class ActionsMessage extends Message {
   /**
    * @constructor
-   * @param {Object[]} actions - the actions array
+   * @param {Object[]} actions - the actions
    * @param {Object} options - the message options
    */
   constructor(actions, options) {
     super('actions', 'bot', actions, options);
   }
 
-  /**
-   * Renders json actions
-   * @returns {Object[]} the json actions
-   */
+  // eslint-disable-next-line require-jsdoc
   valueAsJson() {
     return this.value.map(action => action.toJson());
   }

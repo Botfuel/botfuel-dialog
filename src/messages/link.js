@@ -1,7 +1,7 @@
 const Action = require('./action');
 
 /**
- * Link action
+ * A link action.
  * @extends Action
  */
 class Link extends Action {

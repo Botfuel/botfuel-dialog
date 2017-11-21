@@ -1,24 +1,24 @@
+const Part = require('./part');
+
 /**
- * Card message type
+ * A card part.
  */
-class Card {
+class Card extends Part {
   /**
    * @constructor
-   * @param {String} title - the card title
-   * @param {String} imageUrl - the card image url
-   * @param {Object[]} buttons - an array of actions buttons
+   * @param {String} title - the title
+   * @param {String} imageUrl - the image url
+   * @param {Object[]} buttons - an array of buttons
    */
   constructor(title, imageUrl, buttons) {
+    super();
     // TODO : this is very Messenger specific, let's generalize it!
     this.title = title;
     this.imageUrl = imageUrl;
     this.buttons = buttons;
   }
 
-  /**
-   * Converts the card to json
-   * @returns {Object} the json card
-   */
+  // eslint-disable-next-line require-jsdoc
   toJson() {
     return {
       title: this.title,

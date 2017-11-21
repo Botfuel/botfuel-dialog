@@ -1,7 +1,9 @@
+const Part = require('./part');
+
 /**
- * Action message type
+ * An action is a message part abstracting links and buttons.
  */
-class Action {
+class Action extends Part {
   /**
    * @constructor
    * @param {String} type - the action type
@@ -9,15 +11,13 @@ class Action {
    * @param {Object|*} value - the value
    */
   constructor(type, text, value) {
+    super();
     this.type = type;
     this.text = text;
     this.value = value;
   }
 
-  /**
-   * Converts action to json
-   * @returns {Object} the json action
-   */
+  // eslint-disable-next-line require-jsdoc
   toJson() {
     return {
       type: this.type,

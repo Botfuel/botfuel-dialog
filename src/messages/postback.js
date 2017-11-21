@@ -1,7 +1,7 @@
 const Action = require('./action');
 
 /**
- * Postback action
+ * A postback action.
  * @extends Action
  */
 class Postback extends Action {

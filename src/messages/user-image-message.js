@@ -1,7 +1,7 @@
 const Message = require('./message');
 
 /**
- * User image message
+ * A user message containing an image.
  * @extends Message
  */
 class UserImageMessage extends Message {
