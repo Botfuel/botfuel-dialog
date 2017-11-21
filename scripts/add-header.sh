@@ -14,7 +14,11 @@ fi
 if [ -d ${SCOPE} ]; then
   FILES=($(find ${SCOPE} -type f -name "*.js"))
 elif [ -f ${SCOPE} ]; then
-  FILES+=(${SCOPE})
+  if [ ${SCOPE: -3} == ".js" ]; then
+    FILES+=(${SCOPE})
+  else
+    echo ${SCOPE} "is not a valid file, only js files are allowed"
+  fi
 else
   echo ${SCOPE} "is not valid"
   exit
