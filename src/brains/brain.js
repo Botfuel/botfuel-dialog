@@ -76,9 +76,7 @@ class Brain {
    */
   getConversationInitValue() {
     return {
-      conversations: {
-        createdAt: Date.now(),
-      },
+      createdAt: Date.now(),
     };
   }
 
@@ -177,7 +175,8 @@ class Brain {
    * @returns {Boolean} a boolean indicating if the last conversation is valid
    */
   async isLastConversationValid(userId) {
-    const conversation = await this.getLastConversation(userId);
+    const user = await this.getUser(userId);
+    const conversation = _.last(user.conversations);
     if (!conversation) {
       return false;
     }
