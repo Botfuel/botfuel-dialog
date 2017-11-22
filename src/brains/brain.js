@@ -92,7 +92,6 @@ class Brain {
     if (!userExists) {
       await this.addUser(userId);
     }
-    await this.initLastConversationIfNecessary(userId);
   }
 
   /**
