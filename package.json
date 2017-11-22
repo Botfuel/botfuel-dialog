@@ -4,6 +4,7 @@
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel SDK2",
+  "license": "Apache-2.0",
   "files": [
     "build"
   ],
