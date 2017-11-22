@@ -41,6 +41,7 @@ class Brain {
    */
   async init() {
     logger.debug('init');
+    throw new MissingImplementationError();
   }
 
   /**
@@ -50,6 +51,7 @@ class Brain {
    * @returns {Promise.<void>}
    */
   async clean() {
+    logger.debug('clean');
     throw new MissingImplementationError();
   }
 
@@ -163,6 +165,7 @@ class Brain {
    */
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
+    await this.initLastConversationIfNecessary(userId);
     const user = await this.getUser(userId);
     return _.last(user.conversations);
   }
