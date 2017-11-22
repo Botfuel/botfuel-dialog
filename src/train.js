@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Copyright (c) 2017 - present, Botfuel (https://www.botfuel.io).
  *
@@ -14,7 +15,6 @@
  * limitations under the License.
  */
 
-#!/usr/bin/env node
 require('babel-polyfill');
 
 const logger = require('logtown')('Train');
