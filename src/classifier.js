@@ -47,6 +47,8 @@ class Classifier {
     switch (this.locale) {
       case 'fr':
         return Natural.PorterStemmerFr;
+      case 'es':
+        return Natural.PorterStemmerEs;
       case 'en':
       default:
         return Natural.PorterStemmer;
