@@ -33,25 +33,16 @@ class MongoBrain extends Brain {
   }
 
   // eslint-disable-next-line require-jsdoc
-  async clean() {
-    logger.debug('clean');
-    return this.users.deleteMany({ botId: this.botId });
-  }
-
-  // eslint-disable-next-line require-jsdoc
   async init() {
     logger.debug('init');
     this.db = await MongoClient.connect(mongoUri);
     this.users = this.db.collection('users');
   }
 
-  /**
-   * Drops the database (used by tests).
-   * @async
-   * @returns {Promise.<void>}
-   */
-  async dropDatabase() {
-    await this.db.dropDatabase();
+  // eslint-disable-next-line require-jsdoc
+  async clean() {
+    logger.debug('clean');
+    return this.users.deleteMany({ botId: this.botId });
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -99,6 +90,15 @@ class MongoBrain extends Brain {
       { returnOriginal: false },
     );
     return _.last(result.value.conversations);
+  }
+
+  /**
+   * Drops the database (used by tests).
+   * @async
+   * @returns {Promise.<void>}
+   */
+  async dropDatabase() {
+    await this.db.dropDatabase();
   }
 }
 
