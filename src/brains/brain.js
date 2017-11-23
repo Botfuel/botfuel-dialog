@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-const _ = require('lodash');
 const logger = require('logtown')('Brain');
 const { MissingImplementationError } = require('../errors');
 
@@ -62,7 +61,7 @@ class Brain {
     return {
       botId: this.botId,
       userId,
-      conversations: [],
+      conversations: [this.getConversationInitValue()],
       dialogs: { stack: [], lastLabel: null },
       createdAt: Date.now(),
     };
@@ -129,13 +128,8 @@ class Brain {
    * @param {String} userId - user id
    * @returns {Promise.<Object>} the last conversation added
    */
-  async addConversation(userId) {
-    logger.debug('addConversation', userId);
-    const conversations = await this.userGet(userId, 'conversations');
-    const conversation = this.getConversationInitValue();
-    conversations.push(conversation);
-    await this.userSet(userId, 'conversations', conversations);
-    return conversation;
+  async addConversation() {
+    throw new MissingImplementationError();
   }
 
   /**
@@ -144,16 +138,8 @@ class Brain {
    * @param {String} userId - the user id
    * @returns {Promise.<Object>} the last conversation of the user
    */
-  async getLastConversation(userId) {
-    logger.debug('getLastConversation', userId);
-    // get user last conversation
-    const user = await this.getUser(userId);
-    const lastConversation = _.last(user.conversations);
-    // check last conversation validity
-    if (!lastConversation || (Date.now() - lastConversation.createdAt) > this.dayInMs) {
-      return this.addConversation(userId);
-    }
-    return lastConversation;
+  async getLastConversation() {
+    throw new MissingImplementationError();
   }
 
   /**
@@ -205,6 +191,15 @@ class Brain {
     logger.debug('conversationGet', userId, key);
     const conversation = await this.getLastConversation(userId);
     return conversation[key];
+  }
+
+  /**
+   * Validates the last conversation of an user
+   * @param {Object} conversation - the conversation
+   * @returns {Boolean}
+   */
+  isConversationValid(conversation) {
+    return conversation !== undefined && (Date.now() - conversation.createdAt) < this.dayInMs;
   }
 }
 
