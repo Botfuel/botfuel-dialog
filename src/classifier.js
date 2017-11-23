@@ -15,9 +15,12 @@
  */
 
 const Fs = require('fs');
+const util = require('util');
 const Natural = require('natural');
 const logger = require('logtown')('Classifier');
 const LoggerManager = require('./logger-manager');
+
+const fsStat = util.promisify(Fs.stat);
 
 const INTENT_SUFFIX = '.intent';
 
@@ -62,6 +65,14 @@ class Classifier {
    */
   async init() {
     logger.debug('init');
+
+    const isModelUpToDate = await this.isModelUpToDate(this.modelFilename, this.intentDirname);
+
+    if (!isModelUpToDate) {
+      logger.warn('Your model is not up-to-date.');
+      logger.warn('Train it by running: ./node_modules/.bin/botfuel-train <CONFIG_FILE>');
+    }
+
     return new Promise((resolve, reject) => {
       Natural
         .LogisticRegressionClassifier
@@ -73,6 +84,29 @@ class Classifier {
           return resolve();
         });
     });
+  }
+
+  /**
+   * Checks if the model is up-to-date: is the model fresher than the intents?
+   * @param {String} modelFilePath - the model file path
+   * @param {String} intentsDirPath - the intents dir path
+   * @returns {Boolean} true if the model is uptodate, false if not
+   */
+  async isModelUpToDate(modelFilePath, intentsDirPath) {
+    logger.debug('isModelUpToDate');
+
+    const intentFiles = Fs.readdirSync(intentsDirPath, 'utf8');
+    const filteredIntents = intentFiles.filter(
+      file => file.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX,
+    );
+    const [{ mtimeMs: modelLastModifiedTime }, ...fileStats] = await Promise.all([
+      fsStat(modelFilePath),
+      ...filteredIntents.map(intentFile => fsStat(`${intentsDirPath}/${intentFile}`)),
+    ]);
+
+    return fileStats
+      .map(file => file.mtimeMs)
+      .every(timestamp => timestamp < modelLastModifiedTime);
   }
 
   /**
