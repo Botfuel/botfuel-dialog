@@ -54,7 +54,7 @@ class MongoBrain extends Brain {
   // eslint-disable-next-line require-jsdoc
   async addUser(userId) {
     logger.debug('addUser', userId);
-    const result = await this.users.insertOne(this.getUserModel(userId));
+    const result = await this.users.insertOne(this.getUserInitValue(userId));
     return result.ops[0];
   }
 
@@ -91,7 +91,7 @@ class MongoBrain extends Brain {
     logger.debug('addConversation', userId);
     const result = await this.users.findOneAndUpdate(
       { botId: this.botId, userId },
-      { $push: { conversations: this.getConversationModel() } },
+      { $push: { conversations: this.getConversationInitValue() } },
       { returnOriginal: false },
     );
     return result.value.conversations[0];

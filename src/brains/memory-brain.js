@@ -48,7 +48,7 @@ class MemoryBrain extends Brain {
     if (await this.hasUser(userId)) {
       throw new Error('An user with this id for this bot already exists');
     }
-    const newUser = this.getUserModel(userId);
+    const newUser = this.getUserInitValue(userId);
     this.users[userId] = newUser;
     return newUser;
   }
@@ -80,7 +80,7 @@ class MemoryBrain extends Brain {
   // eslint-disable-next-line require-jsdoc
   async addConversation(userId) {
     logger.debug('addConversation', userId);
-    const conversation = this.getConversationModel();
+    const conversation = this.getConversationInitValue();
     this.users[userId].conversations.push(conversation);
     return conversation;
   }

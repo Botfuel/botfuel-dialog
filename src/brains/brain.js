@@ -57,7 +57,7 @@ class Brain {
    * @param {String} userId - the user id
    * @returns {Object}
    */
-  getUserModel(userId) {
+  getUserInitValue(userId) {
     return {
       botId: this.botId,
       userId,
@@ -71,7 +71,7 @@ class Brain {
    * Gets the init value for creating a new conversation.
    * @returns {Object}
    */
-  getConversationModel() {
+  getConversationInitValue() {
     return {
       createdAt: Date.now(),
     };
