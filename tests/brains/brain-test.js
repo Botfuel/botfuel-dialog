@@ -57,14 +57,14 @@ const brainTest = (brainLabel) => {
     await brain.addUser(USER_ID);
     const user = await brain.userSet(USER_ID, 'name', 'test');
     expect(user).to.have.property('name');
-    expect(user.name).to.be('test');
+    expect(user.name).to.eql('test');
   });
 
   it('gets user value', async function () {
     await brain.addUser(USER_ID);
     await brain.userSet(USER_ID, 'name', 'test');
     const name = await brain.userGet(USER_ID, 'name');
-    expect(name).to.be('test');
+    expect(name).to.eql('test');
   });
 
   it('add conversation to user', async function () {
@@ -90,7 +90,28 @@ const brainTest = (brainLabel) => {
     await brain.addUser(USER_ID);
     await brain.conversationSet(USER_ID, 'city', 'Paris');
     const city = await brain.conversationGet(USER_ID, 'city');
-    expect(city).to.be('Paris');
+    expect(city).to.eql('Paris');
+  });
+
+  it('get user last conversation values when many conversations', async function () {
+    await brain.addUser(USER_ID);
+    await brain.addConversation(USER_ID);
+    await brain.addConversation(USER_ID);
+    await brain.conversationSet(USER_ID, 'foo', 'bar');
+    const value = await brain.conversationGet(USER_ID, 'foo');
+    expect(value).to.eql('bar');
+  });
+
+  it('don\'t get user last conversation values from previous conversation', async function () {
+    await brain.addUser(USER_ID);
+    await brain.addConversation(USER_ID);
+    await brain.conversationSet(USER_ID, 'previous', 'before');
+    await brain.addConversation(USER_ID);
+    await brain.conversationSet(USER_ID, 'current', 'now');
+    const previous = await brain.conversationGet(USER_ID, 'previous');
+    const current = await brain.conversationGet(USER_ID, 'current');
+    expect(previous).to.be(undefined);
+    expect(current).to.eql('now');
   });
 
   it('clean the brain', async function () {
