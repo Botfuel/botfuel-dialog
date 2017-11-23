@@ -28,67 +28,146 @@ const TEST_BOT = process.env.BOT_ID;
 // require('../../src/logger_manager').configure({ logger: 'botfuel'});
 
 describe('PromptDialog', function () {
-  const brain = new MemoryBrain(TEST_BOT);
-  const prompt = new PromptDialog(
-    { path: __dirname, locale: 'en' },
-    brain,
-    { namespace: 'testdialog', entities: { dim1: null, dim2: null } },
-  );
+  describe('Simple entities', () => {
+    const brain = new MemoryBrain(TEST_BOT);
+    const prompt = new PromptDialog({ path: __dirname, locale: 'en' }, brain, {
+      namespace: 'testdialog',
+      entities: {
+        myDim1: {
+          dim: 'dim1',
+        },
+        myDim2: {
+          dim: 'dim2',
+        },
+      },
+    });
 
-  beforeEach(async function () {
-    await brain.clean();
-    await brain.initUserIfNecessary(TEST_USER);
+    beforeEach(async function () {
+      await brain.clean();
+      await brain.initUserIfNecessary(TEST_USER);
+    });
+
+    it('should list both and ask for one when given no entity', async function () {
+      const adapter = new TestAdapter({ id: TEST_BOT }, {});
+      await prompt.execute(adapter, TEST_USER, []);
+      expect(adapter.log).to.eql([
+        new BotTextMessage('Entities needed: myDim1, myDim2').toJson(TEST_BOT, TEST_USER),
+        new BotTextMessage('Which myDim1?').toJson(TEST_BOT, TEST_USER),
+      ]);
+      const user = await brain.getUser(TEST_USER);
+      expect(user.conversations.length).to.be(1);
+      expect(user.conversations[0].testdialog.dim1).to.be(undefined);
+      expect(user.conversations[0].testdialog.dim2).to.be(undefined);
+    });
+
+    it('should list both and ask for the second one when given a first entity', async function () {
+      const adapter = new TestAdapter({ id: TEST_BOT }, {});
+      await prompt.execute(adapter, TEST_USER, [{ name: 'myDim1', dim: 'dim1', body: 'dim1' }]);
+      expect(adapter.log).to.eql([
+        new BotTextMessage('Entities defined: dim1').toJson(TEST_BOT, TEST_USER),
+        new BotTextMessage('Entities needed: myDim2').toJson(TEST_BOT, TEST_USER),
+        new BotTextMessage('Which myDim2?').toJson(TEST_BOT, TEST_USER),
+      ]);
+      const user = await brain.getUser(TEST_USER);
+      expect(user.conversations.length).to.be(1);
+      expect(user.conversations[0].testdialog.myDim1).to.eql([
+        { name: 'myDim1', dim: 'dim1', body: 'dim1' },
+      ]);
+      expect(user.conversations[0].testdialog.myDim2).to.be(undefined);
+    });
+
+    it('should ask none when given both entity', async function () {
+      const adapter = new TestAdapter({ id: TEST_BOT }, {});
+      await prompt.execute(
+        adapter,
+        TEST_USER,
+        [
+          { name: 'myDim1', dim: 'dim1', body: 'dim1' },
+          { name: 'myDim2', dim: 'dim2', body: 'dim2' },
+        ],
+        PromptDialog.STATUS_READY,
+      );
+      expect(adapter.log).to.eql([
+        new BotTextMessage('Entities defined: dim1, dim2').toJson(TEST_BOT, TEST_USER),
+      ]);
+      const user = await brain.getUser(TEST_USER);
+      expect(user.conversations.length).to.be(1);
+      expect(user.conversations[0].testdialog.myDim1).to.eql([
+        { name: 'myDim1', dim: 'dim1', body: 'dim1' },
+      ]);
+      expect(user.conversations[0].testdialog.myDim2).to.eql([
+        { name: 'myDim2', dim: 'dim2', body: 'dim2' },
+      ]);
+    });
   });
 
-  it('when given no entity, should list both and ask for one', async function () {
-    const adapter = new TestAdapter({ id: TEST_BOT }, {});
-    await prompt.execute(
-      adapter,
-      TEST_USER,
-      [],
-    );
-    expect(adapter.log).to.eql([
-      new BotTextMessage('Entities needed: dim1, dim2').toJson(TEST_BOT, TEST_USER),
-      new BotTextMessage('Which dim1?').toJson(TEST_BOT, TEST_USER),
-    ]);
-    const user = await brain.getUser(TEST_USER);
-    expect(user.conversations.length).to.be(1);
-    expect(user.conversations[0].testdialog.dim1).to.be(undefined);
-    expect(user.conversations[0].testdialog.dim2).to.be(undefined);
-  });
+  describe('List of entities', () => {
+    const brain = new MemoryBrain(TEST_BOT);
+    const prompt = new PromptDialog({ path: __dirname, locale: 'en' }, brain, {
+      namespace: 'testdialog',
+      entities: {
+        cities: {
+          dim: 'city',
+          isFulfilled: cities => cities.length === 5,
+          reducer: (oldCities, newCities) => [...oldCities, ...newCities],
+        },
+      },
+    });
 
-  it('when given a first entity, should list both and ask for the second one', async function () {
-    const adapter = new TestAdapter({ id: TEST_BOT }, {});
-    await prompt.execute(
-      adapter,
-      TEST_USER,
-      [{ dim: 'dim1', body: 'dim1' }],
-    );
-    expect(adapter.log).to.eql([
-      new BotTextMessage('Entities defined: dim1').toJson(TEST_BOT, TEST_USER),
-      new BotTextMessage('Entities needed: dim2').toJson(TEST_BOT, TEST_USER),
-      new BotTextMessage('Which dim2?').toJson(TEST_BOT, TEST_USER),
-    ]);
-    const user = await brain.getUser(TEST_USER);
-    expect(user.conversations.length).to.be(1);
-    expect(user.conversations[0].testdialog.dim1.dim).to.be('dim1');
-    expect(user.conversations[0].testdialog.dim2).to.be(undefined);
-  });
+    beforeEach(async function () {
+      await brain.clean();
+      await brain.initUserIfNecessary(TEST_USER);
+    });
 
-  it('when given both entity, should ask none', async function () {
-    const adapter = new TestAdapter({ id: TEST_BOT }, {});
-    await prompt.execute(
-      adapter,
-      TEST_USER,
-      [{ dim: 'dim1', body: 'dim1' }, { dim: 'dim2', body: 'dim2' }],
-      PromptDialog.STATUS_READY,
-    );
-    expect(adapter.log).to.eql([
-      new BotTextMessage('Entities defined: dim1, dim2').toJson(TEST_BOT, TEST_USER),
-    ]);
-    const user = await brain.getUser(TEST_USER);
-    expect(user.conversations.length).to.be(1);
-    expect(user.conversations[0].testdialog.dim1.dim).to.be('dim1');
-    expect(user.conversations[0].testdialog.dim2.dim).to.be('dim2');
+    it('should keep prompting for entities if fulfill condition is not met', async function () {
+      const adapter = new TestAdapter({ id: TEST_BOT }, {});
+      await prompt.execute(
+        adapter,
+        TEST_USER,
+        [
+          { name: 'cities', dim: 'city', body: 'Paris' },
+          { name: 'cities', dim: 'city', body: 'Paris' },
+          { name: 'cities', dim: 'city', body: 'Paris' },
+          { name: 'cities', dim: 'city', body: 'Paris' },
+        ],
+        PromptDialog.STATUS_READY,
+      );
+      expect(adapter.log).to.eql([
+        new BotTextMessage('Entities defined: Paris, Paris, Paris, Paris').toJson(
+          TEST_BOT,
+          TEST_USER,
+        ),
+        new BotTextMessage('Entities needed: cities').toJson(TEST_BOT, TEST_USER),
+        new BotTextMessage('Which cities?').toJson(TEST_BOT, TEST_USER),
+      ]);
+      const user = await brain.getUser(TEST_USER);
+      expect(user.conversations.length).to.be(1);
+      expect(user.conversations[0].testdialog.cities).to.have.length(4);
+    });
+
+    it('should be satisfied if the fulfilled condition is met', async function () {
+      const adapter = new TestAdapter({ id: TEST_BOT }, {});
+      await prompt.execute(
+        adapter,
+        TEST_USER,
+        [
+          { name: 'cities', dim: 'city', body: 'Paris' },
+          { name: 'cities', dim: 'city', body: 'Paris' },
+          { name: 'cities', dim: 'city', body: 'Paris' },
+          { name: 'cities', dim: 'city', body: 'Paris' },
+          { name: 'cities', dim: 'city', body: 'Paris' },
+        ],
+        PromptDialog.STATUS_READY,
+      );
+      expect(adapter.log).to.eql([
+        new BotTextMessage('Entities defined: Paris, Paris, Paris, Paris, Paris').toJson(
+          TEST_BOT,
+          TEST_USER,
+        ),
+      ]);
+      const user = await brain.getUser(TEST_USER);
+      expect(user.conversations.length).to.be(1);
+      expect(user.conversations[0].testdialog.cities).to.have.length(5);
+    });
   });
 });
