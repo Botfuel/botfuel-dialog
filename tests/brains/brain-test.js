@@ -49,7 +49,7 @@ const brainTest = (brainLabel) => {
     expect(user).to.include.keys('botId', 'userId', 'conversations', 'dialogs', 'createdAt');
     expect(user.userId).to.be(USER_ID);
     expect(user.botId).to.be(BOT_ID);
-    expect(user.conversations).to.empty();
+    expect(user.conversations.length).to.be(1);
     expect(user.dialogs.stack).to.empty();
   });
 
@@ -71,26 +71,23 @@ const brainTest = (brainLabel) => {
     await brain.addUser(USER_ID);
     await brain.addConversation(USER_ID);
     const user = await brain.getUser(USER_ID);
-    expect(user.conversations).to.have.length(1);
+    expect(user.conversations).to.have.length(2);
   });
 
   it('get last user conversation', async function () {
     await brain.addUser(USER_ID);
-    await brain.addConversation(USER_ID);
     const conversation = await brain.getLastConversation(USER_ID);
     expect(conversation).not.to.be(null);
   });
 
   it('set user last conversation key', async function () {
     await brain.addUser(USER_ID);
-    await brain.addConversation(USER_ID);
     const conversation = await brain.conversationSet(USER_ID, 'city', 'Paris');
     expect(conversation).to.have.property('city', 'Paris');
   });
 
   it('get user last conversation key', async function () {
     await brain.addUser(USER_ID);
-    await brain.addConversation(USER_ID);
     await brain.conversationSet(USER_ID, 'city', 'Paris');
     const city = await brain.conversationGet(USER_ID, 'city');
     expect(city).to.be('Paris');
