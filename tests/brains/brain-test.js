@@ -49,7 +49,7 @@ const brainTest = (brainLabel) => {
     expect(user).to.include.keys('botId', 'userId', 'conversations', 'dialogs', 'createdAt');
     expect(user.userId).to.be(USER_ID);
     expect(user.botId).to.be(BOT_ID);
-    expect(user.conversations.length).to.be(1);
+    expect(user.conversations.length).to.be(0);
     expect(user.dialogs.stack).to.empty();
   });
 
@@ -71,7 +71,7 @@ const brainTest = (brainLabel) => {
     await brain.addUser(USER_ID);
     await brain.addConversation(USER_ID);
     const user = await brain.getUser(USER_ID);
-    expect(user.conversations).to.have.length(2);
+    expect(user.conversations).to.have.length(1);
   });
 
   it('get last user conversation', async function () {
