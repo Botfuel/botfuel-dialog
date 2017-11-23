@@ -43,7 +43,23 @@ class PromptDialog extends Dialog {
    */
   async computeMissingEntities(userId, messageEntities) {
     logger.debug('computeMissingEntities', userId, messageEntities);
-    const { namespace, entities } = this.parameters;
+    const { namespace } = this.parameters;
+    // Setup default values for entities
+    const entities = Object.keys(this.parameters.entities).reduce(
+      (allEntities, key) => ({
+        ...allEntities,
+        [key]: {
+          // If the reducer function is not defined, we replace the old entities by the new ones
+          reducer: (oldEntities, newEntities) => newEntities,
+          // If the fulfilled function is not defined, we consider that the fulfilled condition
+          // is met if the entity simply exists.
+          isFulfilled: entity => entity !== undefined,
+          priority: 0,
+          ...this.parameters.entities[key],
+        },
+      }),
+      {},
+    );
 
     const dialogEntities = (await this.brain.conversationGet(userId, namespace)) || {};
     // Map of the unique entity names detected in the message
@@ -51,35 +67,27 @@ class PromptDialog extends Dialog {
 
     // Compute the new dialog entities
     Object.keys(detectedEntities).forEach((entityName) => {
-      const entityParameter = entities.get(entityName);
+      const entityParameter = entities[entityName];
 
-      // If the reducer function is not defined, we replace the old entity by the new one
-      dialogEntities[entityName] = entityParameter.reducer
-        ? entityParameter.reducer(
-          dialogEntities[entityName] || [],
-          messageEntities.filter(e => e.name === entityName),
-        )
-        : messageEntities.filter(e => e.name === entityName);
+      dialogEntities[entityName] = entityParameter.reducer(
+        dialogEntities[entityName] || [],
+        messageEntities.filter(e => e.name === entityName),
+      );
     });
 
     logger.debug('computeMissingEntities: dialogEntities', dialogEntities);
 
     await this.brain.conversationSet(userId, namespace, dialogEntities);
 
-    const missingEntities = Array.from(entities.keys()).filter(
-      (entityName) => {
-        if (entities.get(entityName).isFulfilled) {
-          return !entities.get(entityName).isFulfilled(
-            dialogEntities[entityName],
-            { dialogEntities },
-          );
-        }
-
-        // If the fulfilled function is not defined, we consider that the fulfilled condition
-        // is met if the entity simply exists.
-        return dialogEntities[entityName] === undefined;
-      },
-    );
+    const missingEntities = Object.keys(entities)
+      .filter(
+        entityName =>
+          !entities[entityName].isFulfilled(dialogEntities[entityName], { dialogEntities }),
+      )
+      .sort(
+        (entityNameA, entityNameB) =>
+          entities[entityNameB].priority - entities[entityNameA].priority,
+      );
 
     logger.debug('computeMissingEntities: missingEntities', missingEntities);
 
@@ -140,7 +148,7 @@ class PromptDialog extends Dialog {
     logger.debug('executeWhenReady', userId, messageEntities);
     // Keep entities defined in the dialog
     messageEntities = messageEntities.filter(
-      entity => this.parameters.entities.get(entity.name) !== undefined,
+      entity => this.parameters.entities[entity.name] !== undefined,
     );
 
     // Get missing entities

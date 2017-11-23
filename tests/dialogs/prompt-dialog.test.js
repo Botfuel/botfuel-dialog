@@ -32,14 +32,14 @@ describe('PromptDialog', function () {
     const brain = new MemoryBrain(TEST_BOT);
     const prompt = new PromptDialog({ path: __dirname, locale: 'en' }, brain, {
       namespace: 'testdialog',
-      entities: new Map([
-        ['myDim1', {
+      entities: {
+        myDim1: {
           dim: 'dim1',
-        }],
-        ['myDim2', {
+        },
+        myDim2: {
           dim: 'dim2',
-        }],
-      ]),
+        },
+      },
     });
 
     beforeEach(async function () {
@@ -105,13 +105,13 @@ describe('PromptDialog', function () {
     const brain = new MemoryBrain(TEST_BOT);
     const prompt = new PromptDialog({ path: __dirname, locale: 'en' }, brain, {
       namespace: 'testdialog',
-      entities: new Map([
-        ['cities', {
+      entities: {
+        cities: {
           dim: 'city',
           isFulfilled: cities => cities.length === 5,
           reducer: (oldCities, newCities) => [...oldCities, ...newCities],
-        }],
-      ]),
+        },
+      },
     });
 
     beforeEach(async function () {
@@ -171,20 +171,58 @@ describe('PromptDialog', function () {
     });
   });
 
+  describe('Priority', () => {
+    const brain = new MemoryBrain(TEST_BOT);
+    const prompt = new PromptDialog({ path: __dirname, locale: 'en' }, brain, {
+      namespace: 'testdialog',
+      entities: {
+        arrivalCity: {
+          dim: 'city',
+        },
+        departureCity: {
+          dim: 'city',
+          priority: 1,
+        },
+      },
+    });
+
+    beforeEach(async function () {
+      await brain.clean();
+      await brain.initUserIfNecessary(TEST_USER);
+    });
+
+    it('should prompt entities in an order that’s based on priority', async function () {
+      const adapter = new TestAdapter({ id: TEST_BOT }, {});
+      await prompt.execute(adapter, TEST_USER, [], PromptDialog.STATUS_READY);
+      expect(adapter.log).to.eql([
+        new BotTextMessage('Entities needed: departureCity, arrivalCity').toJson(
+          TEST_BOT,
+          TEST_USER,
+        ),
+        new BotTextMessage('Which departureCity?').toJson(TEST_BOT, TEST_USER),
+      ]);
+      const user = await brain.getUser(TEST_USER);
+      expect(user.conversations.length).to.be(1);
+    });
+  });
+
   describe('Complex fulfillment condition', () => {
     const brain = new MemoryBrain(TEST_BOT);
     const prompt = new PromptDialog({ path: __dirname, locale: 'en' }, brain, {
       namespace: 'testdialog',
-      entities: new Map([
-        ['departureCity', {
+      entities: {
+        arrivalCity: {
           dim: 'city',
-        }],
-        ['arrivalCity', {
+          isFulfilled: (arrivalCity, { dialogEntities }) =>
+            !!dialogEntities.departureCity &&
+            arrivalCity &&
+            arrivalCity[0].body !== dialogEntities.departureCity[0].body,
+        },
+        departureCity: {
           dim: 'city',
-          isFulfilled: (arrivalCity, { dialogEntities }) => !!dialogEntities.departureCity &&
-            arrivalCity && arrivalCity[0].body !== dialogEntities.departureCity[0].body,
-        }],
-      ]),
+          priority: 1,
+        },
+      },
     });
 
     beforeEach(async function () {
@@ -204,10 +242,7 @@ describe('PromptDialog', function () {
         PromptDialog.STATUS_READY,
       );
       expect(adapter.log).to.eql([
-        new BotTextMessage('Entities defined: Paris, Paris').toJson(
-          TEST_BOT,
-          TEST_USER,
-        ),
+        new BotTextMessage('Entities defined: Paris, Paris').toJson(TEST_BOT, TEST_USER),
         new BotTextMessage('Entities needed: arrivalCity').toJson(TEST_BOT, TEST_USER),
         new BotTextMessage('Which arrivalCity?').toJson(TEST_BOT, TEST_USER),
       ]);
