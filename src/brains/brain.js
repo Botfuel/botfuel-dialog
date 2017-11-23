@@ -41,7 +41,6 @@ class Brain {
    */
   async init() {
     logger.debug('init');
-    throw new MissingImplementationError();
   }
 
   /**
@@ -51,7 +50,6 @@ class Brain {
    * @returns {Promise.<void>}
    */
   async clean() {
-    logger.debug('clean');
     throw new MissingImplementationError();
   }
 
