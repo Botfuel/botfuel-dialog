@@ -51,7 +51,7 @@ class PromptDialog extends Dialog {
 
     // Compute the new dialog entities
     Object.keys(detectedEntities).forEach((entityName) => {
-      const entityParameter = entities[entityName];
+      const entityParameter = entities.get(entityName);
 
       // If the reducer function is not defined, we replace the old entity by the new one
       dialogEntities[entityName] = entityParameter.reducer
@@ -66,10 +66,13 @@ class PromptDialog extends Dialog {
 
     await this.brain.conversationSet(userId, namespace, dialogEntities);
 
-    const missingEntities = Object.keys(entities).filter(
+    const missingEntities = Array.from(entities.keys()).filter(
       (entityName) => {
-        if (entities[entityName].isFulfilled) {
-          return !entities[entityName].isFulfilled(dialogEntities[entityName]);
+        if (entities.get(entityName).isFulfilled) {
+          return !entities.get(entityName).isFulfilled(
+            dialogEntities[entityName],
+            { dialogEntities },
+          );
         }
 
         // If the fulfilled function is not defined, we consider that the fulfilled condition
@@ -137,7 +140,7 @@ class PromptDialog extends Dialog {
     logger.debug('executeWhenReady', userId, messageEntities);
     // Keep entities defined in the dialog
     messageEntities = messageEntities.filter(
-      entity => this.parameters.entities[entity.name] !== undefined,
+      entity => this.parameters.entities.get(entity.name) !== undefined,
     );
 
     // Get missing entities

@@ -32,14 +32,14 @@ describe('PromptDialog', function () {
     const brain = new MemoryBrain(TEST_BOT);
     const prompt = new PromptDialog({ path: __dirname, locale: 'en' }, brain, {
       namespace: 'testdialog',
-      entities: {
-        myDim1: {
+      entities: new Map([
+        ['myDim1', {
           dim: 'dim1',
-        },
-        myDim2: {
+        }],
+        ['myDim2', {
           dim: 'dim2',
-        },
-      },
+        }],
+      ]),
     });
 
     beforeEach(async function () {
@@ -105,13 +105,13 @@ describe('PromptDialog', function () {
     const brain = new MemoryBrain(TEST_BOT);
     const prompt = new PromptDialog({ path: __dirname, locale: 'en' }, brain, {
       namespace: 'testdialog',
-      entities: {
-        cities: {
+      entities: new Map([
+        ['cities', {
           dim: 'city',
           isFulfilled: cities => cities.length === 5,
           reducer: (oldCities, newCities) => [...oldCities, ...newCities],
-        },
-      },
+        }],
+      ]),
     });
 
     beforeEach(async function () {
@@ -168,6 +168,51 @@ describe('PromptDialog', function () {
       const user = await brain.getUser(TEST_USER);
       expect(user.conversations.length).to.be(1);
       expect(user.conversations[0].testdialog.cities).to.have.length(5);
+    });
+  });
+
+  describe('Complex fulfillment condition', () => {
+    const brain = new MemoryBrain(TEST_BOT);
+    const prompt = new PromptDialog({ path: __dirname, locale: 'en' }, brain, {
+      namespace: 'testdialog',
+      entities: new Map([
+        ['departureCity', {
+          dim: 'city',
+        }],
+        ['arrivalCity', {
+          dim: 'city',
+          isFulfilled: (arrivalCity, { dialogEntities }) => !!dialogEntities.departureCity &&
+            arrivalCity && arrivalCity[0].body !== dialogEntities.departureCity[0].body,
+        }],
+      ]),
+    });
+
+    beforeEach(async function () {
+      await brain.clean();
+      await brain.initUserIfNecessary(TEST_USER);
+    });
+
+    it('should keep prompting for an entity if its fulfill condition is not met', async function () {
+      const adapter = new TestAdapter({ id: TEST_BOT }, {});
+      await prompt.execute(
+        adapter,
+        TEST_USER,
+        [
+          { name: 'departureCity', dim: 'city', body: 'Paris' },
+          { name: 'arrivalCity', dim: 'city', body: 'Paris' },
+        ],
+        PromptDialog.STATUS_READY,
+      );
+      expect(adapter.log).to.eql([
+        new BotTextMessage('Entities defined: Paris, Paris').toJson(
+          TEST_BOT,
+          TEST_USER,
+        ),
+        new BotTextMessage('Entities needed: arrivalCity').toJson(TEST_BOT, TEST_USER),
+        new BotTextMessage('Which arrivalCity?').toJson(TEST_BOT, TEST_USER),
+      ]);
+      const user = await brain.getUser(TEST_USER);
+      expect(user.conversations.length).to.be(1);
     });
   });
 });
