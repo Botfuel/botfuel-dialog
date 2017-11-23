@@ -93,20 +93,6 @@ class Brain {
   }
 
   /**
-   * Inits the last conversation of a user if necessary (if it does not exist).
-   * @async
-   * @param {String} userId - the user id
-   * @returns {Promise.<void>}
-   */
-  async initLastConversationIfNecessary(userId) {
-    logger.debug('initLastConversationIfNecessary', userId);
-    const lastConversationValid = await this.isLastConversationValid(userId);
-    if (!lastConversationValid) {
-      await this.addConversation(userId);
-    }
-  }
-
-  /**
    * Checks if there is a user for a given id.
    * @async
    * @abstract
@@ -160,25 +146,14 @@ class Brain {
    */
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
-    await this.initLastConversationIfNecessary(userId);
+    // get user last conversation
     const user = await this.getUser(userId);
-    return _.last(user.conversations);
-  }
-
-  /**
-   * Returns a boolean indicating if the last conversation of the user is still valid.
-   * @async
-   * @param {String} userId - the user id
-   * @returns {Boolean} a boolean indicating if the last conversation is valid
-   */
-  async isLastConversationValid(userId) {
-    const user = await this.getUser(userId);
-    const conversation = _.last(user.conversations);
-    if (!conversation) {
-      return false;
+    const lastConversation = _.last(user.conversations);
+    // check last conversation validity
+    if (!lastConversation || (Date.now() - lastConversation.createdAt) > this.dayInMs) {
+      return this.addConversation(userId);
     }
-    // return true if last conversation time diff with now is less than one day
-    return (Date.now() - conversation.createdAt) < this.dayInMs;
+    return lastConversation;
   }
 
   /**
