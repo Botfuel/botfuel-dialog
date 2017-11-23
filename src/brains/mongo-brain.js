@@ -24,47 +24,47 @@ const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';
  * Brain with MongoDB storage.
  */
 class MongoBrain extends Brain {
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   constructor(botId) {
     logger.debug('constructor', botId);
     super(botId);
     this.users = null;
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async init() {
     logger.debug('init');
     this.db = await MongoClient.connect(mongoUri);
     this.users = this.db.collection('users');
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async clean() {
     logger.debug('clean');
     return this.users.deleteMany({ botId: this.botId });
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async hasUser(userId) {
     logger.debug('hasUser', userId);
     const user = await this.users.findOne({ botId: this.botId, userId });
     return user !== null;
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async addUser(userId) {
     logger.debug('addUser', userId);
     const result = await this.users.insertOne(this.getUserInitValue(userId));
     return result.ops[0];
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async getUser(userId) {
     logger.debug('getUser', userId);
     return this.users.findOne({ botId: this.botId, userId });
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async userSet(userId, key, value) {
     logger.debug('userSet', userId, key, value);
     const result = await this.users.findOneAndUpdate(
@@ -75,7 +75,7 @@ class MongoBrain extends Brain {
     return result.value;
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
     const user = await this.users.findOne(
@@ -86,7 +86,7 @@ class MongoBrain extends Brain {
     return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async addConversation(userId) {
     logger.debug('addConversation', userId);
     const result = await this.users.findOneAndUpdate(
@@ -97,7 +97,7 @@ class MongoBrain extends Brain {
     return result.value.conversations[0];
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
     const lastConversation = await this.getLastConversation(userId);

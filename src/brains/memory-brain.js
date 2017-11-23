@@ -23,26 +23,26 @@ const Brain = require('./brain');
  * @extends Brain
  */
 class MemoryBrain extends Brain {
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   constructor(botId) {
     logger.debug('constructor', botId);
     super(botId);
     this.users = {};
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async clean() {
     logger.debug('clean');
     this.users = {};
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async hasUser(userId) {
     logger.debug('hasUser', userId);
     return this.users[userId] !== undefined;
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async addUser(userId) {
     logger.debug('addUser', userId);
     if (await this.hasUser(userId)) {
@@ -53,7 +53,7 @@ class MemoryBrain extends Brain {
     return newUser;
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async getUser(userId) {
     logger.debug('getUser', userId);
     if (!await this.hasUser(userId)) {
@@ -62,7 +62,7 @@ class MemoryBrain extends Brain {
     return this.users[userId];
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async userSet(userId, key, value) {
     logger.debug('userSet', userId, key, value);
     const user = await this.getUser(userId);
@@ -70,14 +70,14 @@ class MemoryBrain extends Brain {
     return user;
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
     const conversation = _.last(this.users[userId].conversations);
     return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async addConversation(userId) {
     logger.debug('addConversation', userId);
     const conversation = this.getConversationInitValue();
@@ -85,7 +85,7 @@ class MemoryBrain extends Brain {
     return conversation;
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
     const conversation = await this.getLastConversation(userId);
