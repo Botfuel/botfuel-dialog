@@ -61,7 +61,7 @@ class Brain {
     return {
       botId: this.botId,
       userId,
-      conversations: [],
+      conversations: [this.getConversationModel()],
       dialogs: { stack: [], lastLabel: null },
       createdAt: Date.now(),
     };
