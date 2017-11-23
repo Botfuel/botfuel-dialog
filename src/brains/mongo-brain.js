@@ -77,7 +77,7 @@ class MongoBrain extends Brain {
 
   // eslint-disable-next-line require-jsdoc
   async getLastConversation(userId) {
-    console.log('getLastConversation', userId);
+    logger.debug('getLastConversation', userId);
     const user = await this.users.findOne(
       { botId: this.botId, userId },
       { conversations: { $slice: -1 } },
@@ -115,6 +115,7 @@ class MongoBrain extends Brain {
    * @returns {Promise.<void>}
    */
   async dropDatabase() {
+    logger.debug('dropDatabase');
     await this.db.dropDatabase();
   }
 }
