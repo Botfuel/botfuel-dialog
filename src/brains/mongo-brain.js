@@ -91,7 +91,7 @@ class MongoBrain extends Brain {
     logger.debug('addConversation', userId);
     const result = await this.users.findOneAndUpdate(
       { botId: this.botId, userId },
-      { $push: { conversations: { $each: [this.getConversationModel()], $position: 0 } } },
+      { $push: { conversations: this.getConversationModel() } },
       { returnOriginal: false },
     );
     return result.value.conversations[0];
