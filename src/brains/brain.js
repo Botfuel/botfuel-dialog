@@ -61,7 +61,7 @@ class Brain {
     return {
       botId: this.botId,
       userId,
-      conversations: [this.getConversationModel()],
+      conversations: [],
       dialogs: { stack: [], lastLabel: null },
       createdAt: Date.now(),
     };
@@ -98,7 +98,7 @@ class Brain {
    * @param {String} userId - the user id
    * @returns {boolean} true if the user exists, false otherwise
    */
-  async hasUser(userId) {
+  async hasUser() {
     throw new MissingImplementationError();
   }
 
@@ -108,7 +108,7 @@ class Brain {
    * @param {String} userId - the  user id
    * @returns {Promise.<Object>} the new user
    */
-  async addUser(userId) {
+  async addUser() {
     throw new MissingImplementationError();
   }
 
@@ -118,7 +118,7 @@ class Brain {
    * @param {String} userId - the user id
    * @returns {Promise.<Object>} the user
    */
-  async getUser(userId) {
+  async getUser() {
     throw new MissingImplementationError();
   }
 
@@ -128,8 +128,7 @@ class Brain {
    * @param {String} userId - user id
    * @returns {Promise.<Object>} the last conversation added
    */
-  async addConversation(userId) {
-    logger.debug('addConversation', userId);
+  async addConversation() {
     throw new MissingImplementationError();
   }
 
@@ -139,8 +138,7 @@ class Brain {
    * @param {String} userId - the user id
    * @returns {Promise.<Object>} the last conversation of the user
    */
-  async getLastConversation(userId) {
-    logger.debug('getLastConversation', userId);
+  async getLastConversation() {
     throw new MissingImplementationError();
   }
 
@@ -153,7 +151,7 @@ class Brain {
    * @param {*} value - the value
    * @returns {Promise.<Object>} the updated user
    */
-  async userSet(userId, key, value) {
+  async userSet() {
     throw new MissingImplementationError();
   }
 
@@ -178,7 +176,7 @@ class Brain {
    * @param {*} value - the  value
    * @returns {Promise.<Object>} the updated conversation
    */
-  async conversationSet(userId, key, value) {
+  async conversationSet() {
     throw new MissingImplementationError();
   }
 
