@@ -15,6 +15,7 @@
  */
 
 const logger = require('logtown')('MemoryBrain');
+const _ = require('lodash');
 const Brain = require('./brain');
 
 /**
@@ -47,7 +48,7 @@ class MemoryBrain extends Brain {
     if (await this.hasUser(userId)) {
       throw new Error('An user with this id for this bot already exists');
     }
-    const newUser = this.getUserInitValue(userId);
+    const newUser = this.getUserModel(userId);
     this.users[userId] = newUser;
     return newUser;
   }
@@ -67,6 +68,21 @@ class MemoryBrain extends Brain {
     const user = await this.getUser(userId);
     user[key] = value;
     return user;
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  async getLastConversation(userId) {
+    logger.debug('getLastConversation', userId);
+    const conversation = _.last(this.users[userId].conversations);
+    return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  async addConversation(userId) {
+    logger.debug('addConversation', userId);
+    const conversation = this.getConversationModel();
+    this.users[userId].conversations.push(conversation);
+    return conversation;
   }
 
   // eslint-disable-next-line require-jsdoc

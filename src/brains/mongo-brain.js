@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-const _ = require('lodash');
 const MongoClient = require('mongodb').MongoClient;
 const logger = require('logtown')('MongoBrain');
 const Brain = require('./brain');
@@ -55,7 +54,7 @@ class MongoBrain extends Brain {
   // eslint-disable-next-line require-jsdoc
   async addUser(userId) {
     logger.debug('addUser', userId);
-    const result = await this.users.insertOne(this.getUserInitValue(userId));
+    const result = await this.users.insertOne(this.getUserModel(userId));
     return result.ops[0];
   }
 
@@ -68,28 +67,46 @@ class MongoBrain extends Brain {
   // eslint-disable-next-line require-jsdoc
   async userSet(userId, key, value) {
     logger.debug('userSet', userId, key, value);
-    const set = {};
-    set[key] = value;
     const result = await this.users.findOneAndUpdate(
       { botId: this.botId, userId },
-      { $set: set },
+      { $set: { [key]: value } },
       { returnOriginal: false },
     );
     return result.value;
   }
 
   // eslint-disable-next-line require-jsdoc
+  async getLastConversation(userId) {
+    console.log('getLastConversation', userId);
+    const user = await this.users.findOne(
+      { botId: this.botId, userId },
+      { conversations: { $slice: -1 } },
+    );
+    const conversation = user.conversations[0];
+    return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  async addConversation(userId) {
+    logger.debug('addConversation', userId);
+    const result = await this.users.findOneAndUpdate(
+      { botId: this.botId, userId },
+      { $push: { conversations: { $each: [this.getConversationModel()], $position: 0 } } },
+      { returnOriginal: false },
+    );
+    return result.value.conversations[0];
+  }
+
+  // eslint-disable-next-line require-jsdoc
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
     const lastConversation = await this.getLastConversation(userId);
-    const set = {};
-    set[`conversations.$.${key}`] = value;
     const result = await this.users.findOneAndUpdate(
       { botId: this.botId, userId, 'conversations.createdAt': lastConversation.createdAt },
-      { $set: set },
+      { $set: { [`conversations.$.${key}`]: value } },
       { returnOriginal: false },
     );
-    return _.last(result.value.conversations);
+    return result.value.conversations[0];
   }
 
   /**

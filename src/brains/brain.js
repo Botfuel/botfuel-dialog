@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-const _ = require('lodash');
 const logger = require('logtown')('Brain');
 const { MissingImplementationError } = require('../errors');
 
@@ -58,7 +57,7 @@ class Brain {
    * @param {String} userId - the user id
    * @returns {Object}
    */
-  getUserInitValue(userId) {
+  getUserModel(userId) {
     return {
       botId: this.botId,
       userId,
@@ -72,7 +71,7 @@ class Brain {
    * Gets the init value for creating a new conversation.
    * @returns {Object}
    */
-  getConversationInitValue() {
+  getConversationModel() {
     return {
       createdAt: Date.now(),
     };
@@ -99,7 +98,7 @@ class Brain {
    * @param {String} userId - the user id
    * @returns {boolean} true if the user exists, false otherwise
    */
-  async hasUser() {
+  async hasUser(userId) {
     throw new MissingImplementationError();
   }
 
@@ -109,7 +108,7 @@ class Brain {
    * @param {String} userId - the  user id
    * @returns {Promise.<Object>} the new user
    */
-  async addUser() {
+  async addUser(userId) {
     throw new MissingImplementationError();
   }
 
@@ -119,7 +118,7 @@ class Brain {
    * @param {String} userId - the user id
    * @returns {Promise.<Object>} the user
    */
-  async getUser() {
+  async getUser(userId) {
     throw new MissingImplementationError();
   }
 
@@ -131,11 +130,7 @@ class Brain {
    */
   async addConversation(userId) {
     logger.debug('addConversation', userId);
-    const conversations = await this.userGet(userId, 'conversations');
-    const conversation = this.getConversationInitValue();
-    conversations.push(conversation);
-    await this.userSet(userId, 'conversations', conversations);
-    return conversation;
+    throw new MissingImplementationError();
   }
 
   /**
@@ -146,14 +141,7 @@ class Brain {
    */
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
-    // get user last conversation
-    const user = await this.getUser(userId);
-    const lastConversation = _.last(user.conversations);
-    // check last conversation validity
-    if (!lastConversation || (Date.now() - lastConversation.createdAt) > this.dayInMs) {
-      return this.addConversation(userId);
-    }
-    return lastConversation;
+    throw new MissingImplementationError();
   }
 
   /**
@@ -165,7 +153,7 @@ class Brain {
    * @param {*} value - the value
    * @returns {Promise.<Object>} the updated user
    */
-  async userSet() {
+  async userSet(userId, key, value) {
     throw new MissingImplementationError();
   }
 
@@ -190,7 +178,7 @@ class Brain {
    * @param {*} value - the  value
    * @returns {Promise.<Object>} the updated conversation
    */
-  async conversationSet() {
+  async conversationSet(userId, key, value) {
     throw new MissingImplementationError();
   }
 
@@ -205,6 +193,15 @@ class Brain {
     logger.debug('conversationGet', userId, key);
     const conversation = await this.getLastConversation(userId);
     return conversation[key];
+  }
+
+  /**
+   * Validates the last conversation of an user
+   * @param {Object} conversation - the conversation
+   * @returns {Boolean}
+   */
+  isConversationValid(conversation) {
+    return conversation !== undefined && (Date.now() - conversation.createdAt) < this.dayInMs;
   }
 }
 
