@@ -17,6 +17,7 @@
 const _ = require('underscore');
 const nlp = require('botfuel-nlp-sdk');
 const logger = require('logtown')('WsExtractor');
+const { AuthenticationError } = require('../errors');
 const Extractor = require('./extractor');
 
 /**
@@ -38,10 +39,18 @@ class WsExtractor extends Extractor {
 
   // eslint-disable-next-line require-jsdoc
   async compute(sentence) {
-    logger.debug('compute', sentence);
-    const query = _.clone(this.parameters);
-    _.extend(query, { sentence });
-    return this.client.compute(query);
+    try {
+      logger.debug('compute', sentence);
+      const query = _.clone(this.parameters);
+      _.extend(query, { sentence });
+      return this.client.compute(query);
+    } catch (error) {
+      logger.error('Could not extract the entities!');
+      if (error.statusCode === 403) {
+        throw new AuthenticationError();
+      }
+      throw error;
+    }
   }
 }
 

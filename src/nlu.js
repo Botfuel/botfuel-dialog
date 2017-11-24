@@ -19,6 +19,7 @@ const dir = require('node-dir');
 const Qna = require('botfuel-qna-sdk');
 const Spellchecking = require('botfuel-nlp-sdk').Spellchecking;
 const logger = require('logtown')('Nlu');
+const { AuthenticationError } = require('./errors');
 const Classifier = require('./classifier');
 const BooleanExtractor = require('./extractors/boolean-extractor');
 const CompositeExtractor = require('./extractors/composite-extractor');
@@ -136,34 +137,50 @@ class Nlu {
    */
   async qnaCompute(sentence) {
     logger.debug('qnaCompute', sentence);
-    const qnas = await this.qna.getMatchingQnas({ sentence });
-    logger.debug('compute: qnas', qnas);
-    const intents = [
-      {
-        label: 'qnas-dialog',
-        value: 1.0,
-      },
-    ];
-    const entities = [
-      {
-        dim: 'qnas',
-        value: qnas,
-      },
-    ];
-    return { intents, entities };
+    try {
+      const qnas = await this.qna.getMatchingQnas({ sentence });
+      logger.debug('compute: qnas', qnas);
+      const intents = [
+        {
+          label: 'qnas-dialog',
+          value: 1.0,
+        },
+      ];
+      const entities = [
+        {
+          dim: 'qnas',
+          value: qnas,
+        },
+      ];
+      return { intents, entities };
+    } catch (error) {
+      logger.error('Could not classify with QnA!');
+      if (error.statusCode === 403) {
+        throw new AuthenticationError();
+      }
+      throw error;
+    }
   }
 
-    /**
+  /**
    * Spellchecks a sentence.
    * @param {String} sentence - a sentence
    * @param {String} key - a dictionary key
    * @returns {Object} the spellchecking result
    */
   async spellcheck(sentence, key) {
-    logger.debug('spellcheck', sentence, key);
-    const result = await this.spellchecking.compute({ sentence, key });
-    logger.debug('spellcheck: result', result);
-    return result;
+    try {
+      logger.debug('spellcheck', sentence, key);
+      const result = await this.spellchecking.compute({ sentence, key });
+      logger.debug('spellcheck: result', result);
+      return result;
+    } catch (error) {
+      logger.error('Could not spellcheck!');
+      if (error.statusCode === 403) {
+        throw new AuthenticationError();
+      }
+      throw error;
+    }
   }
 }
 

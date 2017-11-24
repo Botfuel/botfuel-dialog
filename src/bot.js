@@ -23,6 +23,7 @@ const MemoryBrain = require('./brains/memory-brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
+const { AuthenticationError, DialogError, ViewError } = require('./errors');
 
 const logger = Logger.getLogger('Bot');
 
@@ -75,14 +76,36 @@ class Bot {
   }
 
   /**
+   * Handles errors.
+   * @param {Object} error - the error
+   * @returns {void}
+   */
+  handleError(error) {
+    if (error instanceof AuthenticationError) {
+      logger.error('Botfuel API authentication failed!');
+      logger.error('Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io');
+    } else if (error instanceof ViewError) {
+      const { view } = error;
+      logger.error(`Could not render view '${view}'`);
+    } else if (error instanceof DialogError) {
+      const { dialog } = error;
+      logger.error(`Could not execute dialog '${dialog}'`);
+    }
+    throw error;
+  }
+  /**
    * Runs the bot.
    * @async
    * @returns {Promise.<void>}
    */
   async run() {
     logger.debug('run');
-    await this.init();
-    await this.adapter.run();
+    try {
+      await this.init();
+      await this.adapter.run();
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   /**
@@ -93,8 +116,12 @@ class Bot {
    */
   async play(userMessages) {
     logger.debug('play', userMessages);
-    await this.init();
-    await this.adapter.play(userMessages);
+    try {
+      await this.init();
+      await this.adapter.play(userMessages);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   /**
@@ -125,20 +152,9 @@ class Bot {
    */
   async respondWhenText(userMessage) {
     logger.debug('respondWhenText', userMessage);
-    try {
-      const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
-      logger.debug('respondWhenText: intents, entities', intents, entities);
-      return this.dm.executeIntents(this.adapter, userMessage.user, intents, entities);
-    } catch (error) {
-      if (error.statusCode === 403) {
-        logger.error('Botfuel API authentication failed!');
-        logger.error('Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io');
-
-        process.exit(1);
-      }
-
-      throw error;
-    }
+    const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
+    logger.debug('respondWhenText: intents, entities', intents, entities);
+    return this.dm.executeIntents(this.adapter, userMessage.user, intents, entities);
   }
 
   /**
