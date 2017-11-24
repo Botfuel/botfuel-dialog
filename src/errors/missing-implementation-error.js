@@ -22,5 +22,6 @@ module.exports = class MissingImplementationError extends SdkError {
    */
   constructor() {
     super('Not implemented!');
+    Error.captureStackTrace(this, this.constructor);
   }
 };

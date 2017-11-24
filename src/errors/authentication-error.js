@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-module.exports = {
-  AuthenticationError: require('./authentication-error'),
-  DialogError: require('./dialog-error'),
-  MissingImplementationError: require('./missing-implementation-error'),
-  SdkError: require('./sdk-error'),
-  ViewError: require('./view-error'),
+module.exports = class AuthenticationError extends Error {
+  /**
+  * @constructor
+  */
+  constructor() {
+    super('Could not authenticate!');
+    Error.captureStackTrace(this, this.constructor);
+  }
 };

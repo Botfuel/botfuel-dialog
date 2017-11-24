@@ -23,7 +23,7 @@ const MemoryBrain = require('./brains/memory-brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
-const { DialogError, ViewError } = require('./errors');
+const { AuthenticationError, DialogError, ViewError } = require('./errors');
 
 const logger = Logger.getLogger('Bot');
 
@@ -81,15 +81,13 @@ class Bot {
    * @returns {void}
    */
   handleError(error) {
-    if (error.statusCode === 403) {
+    if (error instanceof AuthenticationError) {
       logger.error('Botfuel API authentication failed!');
       logger.error('Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io');
-    }
-    if (error instanceof ViewError) {
+    } else if (error instanceof ViewError) {
       const { view } = error;
       logger.error(`Could not render view '${view}'`);
-    }
-    if (error instanceof DialogError) {
+    } else if (error instanceof DialogError) {
       const { dialog } = error;
       logger.error(`Could not execute dialog '${dialog}'`);
     }
