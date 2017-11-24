@@ -72,6 +72,7 @@ class WebAdapter extends Adapter {
         logger.debug('postResponse: OK');
       }
     } catch (error) {
+      // TODO: is this what we want?
       logger.error('postResponse: catch KO', error.message || error.error || error);
     }
   }

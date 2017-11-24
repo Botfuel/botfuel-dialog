@@ -23,6 +23,7 @@ const MemoryBrain = require('./brains/memory-brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
+const { DialogError, ViewError } = require('./errors');
 
 const logger = Logger.getLogger('Bot');
 
@@ -75,14 +76,38 @@ class Bot {
   }
 
   /**
+   * Handles errors.
+   * @param {Object} error - the error
+   * @returns {void}
+   */
+  handleError(error) {
+    if (error.statusCode === 403) {
+      logger.error('Botfuel API authentication failed!');
+      logger.error('Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io');
+    }
+    if (error instanceof ViewError) {
+      const { view } = error;
+      logger.error(`Could not render view '${view}'`);
+    }
+    if (error instanceof DialogError) {
+      const { dialog } = error;
+      logger.error(`Could not execute dialog '${dialog}'`);
+    }
+    process.exit(1);
+  }
+  /**
    * Runs the bot.
    * @async
    * @returns {Promise.<void>}
    */
   async run() {
     logger.debug('run');
-    await this.init();
-    await this.adapter.run();
+    try {
+      await this.init();
+      await this.adapter.run();
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   /**
@@ -93,8 +118,12 @@ class Bot {
    */
   async play(userMessages) {
     logger.debug('play', userMessages);
-    await this.init();
-    await this.adapter.play(userMessages);
+    try {
+      await this.init();
+      await this.adapter.play(userMessages);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   /**
@@ -105,29 +134,14 @@ class Bot {
    */
   async respond(userMessage) {
     logger.debug('respond', userMessage);
-    try {
-      switch (userMessage.type) {
-        case 'postback':
-          return this.respondWhenPostback(userMessage);
-        case 'image':
-          return this.respondWhenImage(userMessage);
-        case 'text':
-        default:
-          return this.respondWhenText(userMessage);
-      }
-    } catch (error) {
-      if (error.statusCode === 403) {
-        logger.error('Botfuel API authentication failed!');
-        logger.error('Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io');
-        process.exit(1);
-      }
-      if (error instanceof DialogError) {
-        const { dialog } = error;
-        logger.error(`Could not resolve '${dialog.label}' dialog`);
-        logger.error(`Make sure the '${dialog.label}' dialog file exists at ${process.cwd()}/src/dialogs/${dialog.label}.js`);
-        process.exit(1);
-      }
-      throw error;
+    switch (userMessage.type) {
+      case 'postback':
+        return this.respondWhenPostback(userMessage);
+      case 'image':
+        return this.respondWhenImage(userMessage);
+      case 'text':
+      default:
+        return this.respondWhenText(userMessage);
     }
   }
 

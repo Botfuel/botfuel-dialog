@@ -70,13 +70,13 @@ class DialogManager {
   getDialog(dialog) {
     logger.debug('getDialog', dialog);
     const path = this.getDialogPath(dialog.label);
-    if (path === null) {
-      throw new DialogError({
-        dialog,
-      });
+    if (path) {
+      const DialogConstructor = require(path);
+      return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
     }
-    const DialogConstructor = require(path);
-    return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
+    logger.error(`Could not resolve '${dialog.label}' dialog`);
+    logger.error(`Make sure the '${dialog.label}' dialog file exists at ${process.cwd()}/src/dialogs/${dialog.label}.js`);
+    throw new DialogError({ dialog });
   }
 
   /**

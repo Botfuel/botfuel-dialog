@@ -16,7 +16,6 @@
 
 const logger = require('logtown')('Dialog');
 const ViewManager = require('../view-manager');
-const { ViewError } = require('../errors');
 const { MissingImplementationError } = require('../errors');
 
 /**
@@ -103,19 +102,11 @@ class Dialog {
    */
   async display(adapter, userId, key, data) {
     logger.debug('display', userId, key, data);
-    try {
-      const botMessages = this
-        .viewManager
-        .resolve(this.name)
-        .renderAsJson(adapter.bot.id, userId, key, data);
-      return adapter.send(botMessages);
-    } catch (error) {
-      logger.error('Could not render view');
-      if (error instanceof ViewError) {
-        process.exit(1);
-      }
-      throw error;
-    }
+    const botMessages = this
+          .viewManager
+          .resolve(this.name)
+          .renderAsJson(adapter.bot.id, userId, key, data);
+    return adapter.send(botMessages);
   }
 
   /**
