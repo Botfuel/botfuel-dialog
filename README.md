@@ -1,5 +1,7 @@
 # Bot SDK 2
 
+[![Build Status](https://travis-ci.com/Botfuel/bot-sdk2.svg?token=DzdpA2xzqKcvBPt7ExGD&branch=master)](https://travis-ci.com/Botfuel/bot-sdk2)
+
 ## Test samples
 
 ```
