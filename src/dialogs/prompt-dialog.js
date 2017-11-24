@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-const keyBy = require('lodash/keyBy');
+const omit = require('lodash/omit');
 const logger = require('logtown')('PromptDialog');
 const Dialog = require('./dialog');
+
+// Helper functions
+const areEntitiesPositionsEqual = (entityA, entityB) =>
+  entityA.start === entityB.start && entityA.end === entityB.end;
+
+const filterSamePositionEntities = (entities, entity) =>
+  entities.filter(e => !areEntitiesPositionsEqual(e, entity));
 
 /**
  * The prompt dialog prompts the user for a number of entities.
@@ -35,17 +42,24 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * Computes the missing entities.
-   * @async
-   * @param {String} userId - the user id
-   * @param {Object[]} messageEntities - the message entities
-   * @returns {Promise.<String[]>}
+   * @param {Array.<Object>} messageEntities - array of candidates entities given by the extractor
+   * @param {Object} expectedEntities - map of entities expected by the dialog: {
+   *   <entityName>: {
+   *     dim: String,
+   *     priority: Number or Function,
+   *     isFulfilled: Function()
+   *     reducer: Function(),
+   *   }
+   * }
+   * @param {Object} dialogEntities - a map of the entities already matched for this dialog: {
+   *   <entityName>: <messageEntity>
+   * }
+   * @returns {Object} object containing missingEntities(subset of expectedEntities) and
+   *  matchedEntities (same structure as dialogEntities)
    */
-  async computeMissingEntities(userId, messageEntities) {
-    logger.debug('computeMissingEntities', userId, messageEntities);
-    const { namespace } = this.parameters;
+  computeEntities(messageEntities, expectedEntities, dialogEntities = {}) {
     // Setup default values for entities
-    const entities = Object.keys(this.parameters.entities).reduce(
+    const entities = Object.keys(expectedEntities).reduce(
       (allEntities, key) => ({
         ...allEntities,
         [key]: {
@@ -55,43 +69,91 @@ class PromptDialog extends Dialog {
           // is met if the entity simply exists.
           isFulfilled: entity => entity !== undefined,
           priority: 0,
-          ...this.parameters.entities[key],
+          ...expectedEntities[key],
         },
       }),
       {},
     );
 
-    const dialogEntities = (await this.brain.conversationGet(userId, namespace)) || {};
-    // Map of the unique entity names detected in the message
-    const detectedEntities = keyBy(messageEntities, 'name');
-
-    // Compute the new dialog entities
-    Object.keys(detectedEntities).forEach((entityName) => {
-      const entityParameter = entities[entityName];
-
-      dialogEntities[entityName] = entityParameter.reducer(
-        dialogEntities[entityName] || [],
-        messageEntities.filter(e => e.name === entityName),
-      );
-    });
-
-    logger.debug('computeMissingEntities: dialogEntities', dialogEntities);
-
-    await this.brain.conversationSet(userId, namespace, dialogEntities);
-
-    const missingEntities = Object.keys(entities)
+    const result = Object.keys(entities)
+      // We do not look for entities that are already fulfilled
       .filter(
         entityName =>
           !entities[entityName].isFulfilled(dialogEntities[entityName], { dialogEntities }),
       )
-      .sort(
-        (entityNameA, entityNameB) =>
-          entities[entityNameB].priority - entities[entityNameA].priority,
+      // Sort expected entities by priority descending (highest priority first)
+      .sort((entityNameA, entityNameB) => {
+        const entityAPriority =
+          typeof entities[entityNameA].priority === 'function'
+            ? entities[entityNameA].priority()
+            : entities[entityNameA].priority;
+        const entityBPriority =
+          typeof entities[entityNameB].priority === 'function'
+            ? entities[entityNameB].priority()
+            : entities[entityNameB].priority;
+
+        return entityBPriority - entityAPriority;
+      })
+      .reduce(
+        (acc, entityName) => {
+          // Candidates are message entities with the dimension we are looking for
+          const candidates = acc.messageEntities.filter(
+            entity => entity.dim === entities[entityName].dim,
+          );
+
+          // Store remaining message entities
+          let remainingMessageEntities = acc.messageEntities;
+          // Get the previous value for this entity if any
+          let entityNewValue = acc.matchedEntities[entityName];
+          let i = 0;
+
+          // Loop on candidates until the condition is fulfilled or we run out of candidates
+          if (candidates.length) {
+            while (!entities[entityName].isFulfilled(entityNewValue, { dialogEntities })) {
+              // Apply reducer to get entity's new value
+              entityNewValue = entities[entityName].reducer(entityNewValue, candidates[i]);
+
+              // Remove the candidate and all candidates at the same position
+              // from the remaining message entities
+              remainingMessageEntities = filterSamePositionEntities(
+                remainingMessageEntities,
+                candidates[i],
+              );
+              i++;
+
+              // The condition is not fulfilled but we used all candidates, exit
+              if (i === candidates.length) {
+                break;
+              }
+            }
+          }
+
+          return {
+            // Store the found entities here as a { <entityName>: <entity> } map
+            matchedEntities: {
+              ...acc.matchedEntities,
+              [entityName]: entityNewValue,
+            },
+            messageEntities: remainingMessageEntities,
+            // If an entity matching the one we are expecting was found,
+            // remove it from missing entities
+            // If it was not found, keep missing entities intact
+            missingEntities: entities[entityName].isFulfilled(entityNewValue, { dialogEntities })
+              ? omit(acc.missingEntities, [entityName])
+              : acc.missingEntities,
+          };
+        },
+      {
+        matchedEntities: dialogEntities,
+        messageEntities,
+        missingEntities: expectedEntities,
+      },
       );
 
-    logger.debug('computeMissingEntities: missingEntities', missingEntities);
-
-    return missingEntities;
+    return {
+      matchedEntities: result.matchedEntities,
+      missingEntities: result.missingEntities,
+    };
   }
 
   /**
@@ -151,8 +213,17 @@ class PromptDialog extends Dialog {
       entity => this.parameters.entities[entity.name] !== undefined,
     );
 
-    // Get missing entities
-    const missingEntities = await this.computeMissingEntities(userId, messageEntities);
+    const dialogEntities =
+      (await this.brain.conversationGet(userId, this.parameters.namespace)) || {};
+    // Get missing entities and matched entities
+    const { missingEntities, matchedEntities } = this.computeEntities(
+      messageEntities,
+      this.parameters.entities,
+      dialogEntities,
+    );
+
+    await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
+
     await this.display(adapter, userId, 'entities', { messageEntities, missingEntities });
     if (missingEntities.length === 0) {
       return this.executeWhenCompleted(adapter, userId, messageEntities);

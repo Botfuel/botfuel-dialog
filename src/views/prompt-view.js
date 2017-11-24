@@ -48,9 +48,7 @@ class PromptView extends View {
    * @returns {Object[]} the bot messages
    */
   renderAsk() {
-    return [
-      new BotTextMessage('continue dialog?'),
-    ];
+    return [new BotTextMessage('continue dialog?')];
   }
 
   /**
@@ -59,9 +57,7 @@ class PromptView extends View {
    * @returns {Object[]} the bot messages
    */
   renderConfirm() {
-    return [
-      new BotTextMessage('dialog confirmed.'),
-    ];
+    return [new BotTextMessage('dialog confirmed.')];
   }
 
   /**
@@ -70,9 +66,7 @@ class PromptView extends View {
    * @returns {Object[]} the bot messages
    */
   renderDiscard() {
-    return [
-      new BotTextMessage('dialog discarded.'),
-    ];
+    return [new BotTextMessage('dialog discarded.')];
   }
 
   /**
@@ -85,13 +79,17 @@ class PromptView extends View {
   renderEntities(messageEntities, missingEntities) {
     const messages = [];
     if (messageEntities.length !== 0) {
-      messages.push(new BotTextMessage(
-        `Entities defined: ${messageEntities.map(entity => entity.body).join(', ')}`,
-      ));
+      messages.push(
+        new BotTextMessage(
+          `Entities defined: ${messageEntities.map(entity => entity.body).join(', ')}`,
+        ),
+      );
     }
     if (missingEntities.length !== 0) {
-      messages.push(new BotTextMessage(`Entities needed: ${missingEntities.join(', ')}`));
-      messages.push(new BotTextMessage(`Which ${missingEntities[0]}?`));
+      messages.push(
+        new BotTextMessage(`Entities needed: ${Object.keys(missingEntities).join(', ')}`),
+      );
+      messages.push(new BotTextMessage(`Which ${Object.keys(missingEntities)[0]}?`));
     }
     return messages;
   }
