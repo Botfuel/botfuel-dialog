@@ -276,46 +276,23 @@ describe('PromptDialog', function () {
       });
     });
 
-    // todo
     describe('isFulfilled condition', () => {
-      it('should remove candidate entities when an expected entity already matched with them', () => {
-        const weightEntity1 = {
-          dim: 'weight',
+      it('should set entity as missing if the isFulfilled condition is not met', () => {
+        const numberEntity = {
+          dim: 'number',
           start: 0,
-          end: 4,
-          values: [{ value: '88', type: 'integer' }],
-          body: '88 kg',
-        };
-        const itemCountEntity1 = {
-          dim: 'item-count',
-          start: 0,
-          end: 4,
-          values: [{ value: '88', type: 'integer' }],
-          body: '88 kg',
-        };
-        const weightEntity2 = {
-          dim: 'weight',
-          start: 10,
-          end: 14,
-          values: [{ value: '35', type: 'integer' }],
-          body: '35 kg',
-        };
-        const itemCountEntity2 = {
-          dim: 'item-count',
-          start: 10,
-          end: 14,
-          values: [{ value: '35', type: 'integer' }],
-          body: '35 kg',
+          end: 2,
+          values: [{ value: 50, type: 'integer' }],
+          body: '50',
         };
 
-        const messageEntities = [weightEntity1, itemCountEntity1, weightEntity2, itemCountEntity2];
+        const messageEntities = [numberEntity];
 
         const expectedEntities = {
-          weight: {
-            dim: 'weight',
-          },
-          itemCount: {
-            dim: 'item-count',
+          myNumber: {
+            dim: 'number',
+            isFulfilled: newValue =>
+              newValue && newValue.values && newValue.values[0] && newValue.values[0].value > 60,
           },
         };
 
@@ -325,12 +302,39 @@ describe('PromptDialog', function () {
           {},
         );
 
-        expect(matchedEntities).to.have.property('weight');
-        expect(matchedEntities.weight).to.eql(weightEntity1);
+        expect(matchedEntities.myNumber).to.be(undefined);
+        expect(Object.keys(missingEntities)).to.have.length(1);
+        expect(missingEntities).to.have.property('myNumber');
+      });
 
-        expect(matchedEntities).to.have.property('itemCount');
-        expect(matchedEntities.itemCount).to.eql(itemCountEntity2);
+      it('should set entity as matched if the isFulfilled condition is met', () => {
+        const numberEntity = {
+          dim: 'number',
+          start: 0,
+          end: 2,
+          values: [{ value: 80, type: 'integer' }],
+          body: '50',
+        };
 
+        const messageEntities = [numberEntity];
+
+        const expectedEntities = {
+          myNumber: {
+            dim: 'number',
+            isFulfilled: newValue =>
+              newValue && newValue.values && newValue.values[0] && newValue.values[0].value > 60,
+          },
+        };
+
+        const { matchedEntities, missingEntities } = prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {},
+        );
+
+        console.log({ matchedEntities, missingEntities });
+
+        expect(matchedEntities.myNumber).to.eql(numberEntity);
         expect(Object.keys(missingEntities)).to.have.length(0);
       });
     });

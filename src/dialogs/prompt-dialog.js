@@ -132,7 +132,9 @@ class PromptDialog extends Dialog {
             // Store the found entities here as a { <entityName>: <entity> } map
             matchedEntities: {
               ...acc.matchedEntities,
-              [entityName]: entityNewValue,
+              [entityName]: entities[entityName].isFulfilled(entityNewValue, { dialogEntities })
+                ? entityNewValue
+                : acc.matchedEntities[entityName],
             },
             messageEntities: remainingMessageEntities,
             // If an entity matching the one we are expecting was found,
