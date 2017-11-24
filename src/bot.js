@@ -20,6 +20,7 @@ const DialogManager = require('./dialog-manager');
 const LoggerManager = require('./logger-manager');
 const MessengerAdapter = require('./adapters/messenger-adapter');
 const MemoryBrain = require('./brains/memory-brain');
+const MongoBrain = require('./brains/mongo-brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
@@ -59,7 +60,14 @@ class Bot {
       default:
         this.adapter = new ShellAdapter(this, config);
     }
-    this.brain = new MemoryBrain(this.id);
+    switch (config.brain) {
+      case 'mongo':
+        this.brain = new MongoBrain(this.id);
+        break;
+      case 'memory':
+      default:
+        this.brain = new MemoryBrain(this.id);
+    }
     this.nlu = new Nlu(config);
     this.dm = new DialogManager(this.brain, config);
   }
