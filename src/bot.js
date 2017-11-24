@@ -91,7 +91,7 @@ class Bot {
       const { dialog } = error;
       logger.error(`Could not execute dialog '${dialog}'`);
     }
-    process.exit(1);
+    throw error;
   }
   /**
    * Runs the bot.
