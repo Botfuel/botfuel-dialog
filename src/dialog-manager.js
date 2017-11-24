@@ -189,10 +189,9 @@ class DialogManager {
       return dialogs;
     }
     const dialog = dialogs.stack[dialogs.stack.length - 1];
-    // eslint-disable-next-line no-await-in-loop
     const dialogInstance = await this.getDialog(dialog);
     const dialogResult = await dialogInstance
-      .execute(adapter, userId, dialog.entities || [], dialog.status);
+      .execute(adapter, userId, dialog.entities, dialog.status);
     logger.debug('execute: dialogResult', dialogResult);
     const status = dialogResult.status || Dialog.STATUS_COMPLETED;
     const isComplex = dialogInstance.maxComplexity > 1;
@@ -229,24 +228,10 @@ class DialogManager {
    */
   async executeIntents(adapter, userId, intents, entities) {
     logger.debug('execute', userId, intents, entities);
-    try {
-      const dialogs = await this.getDialogs(userId);
-      this.updateWithIntents(userId, dialogs, intents, entities);
-      await this.execute(adapter, userId, dialogs);
-      return this.setDialogs(userId, dialogs);
-    } catch (error) {
-      logger.error('Could not execute intents');
-
-      if (error instanceof DialogError) {
-        const { dialog } = error;
-        logger.error(`Could not resolve '${dialog.label}' dialog`);
-        logger.error(`Make sure the '${dialog.label}' dialog file exists at ${process.cwd()}/src/dialogs/${dialog.label}.js`);
-
-        process.exit(1);
-      }
-
-      throw error;
-    }
+    const dialogs = await this.getDialogs(userId);
+    this.updateWithIntents(userId, dialogs, intents, entities);
+    await this.execute(adapter, userId, dialogs);
+    return this.setDialogs(userId, dialogs);
   }
 
   /**

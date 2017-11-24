@@ -105,14 +105,29 @@ class Bot {
    */
   async respond(userMessage) {
     logger.debug('respond', userMessage);
-    switch (userMessage.type) {
-      case 'postback':
-        return this.respondWhenPostback(userMessage);
-      case 'image':
-        return this.respondWhenImage(userMessage);
-      case 'text':
-      default:
-        return this.respondWhenText(userMessage);
+    try {
+      switch (userMessage.type) {
+        case 'postback':
+          return this.respondWhenPostback(userMessage);
+        case 'image':
+          return this.respondWhenImage(userMessage);
+        case 'text':
+        default:
+          return this.respondWhenText(userMessage);
+      }
+    } catch (error) {
+      if (error.statusCode === 403) {
+        logger.error('Botfuel API authentication failed!');
+        logger.error('Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io');
+        process.exit(1);
+      }
+      if (error instanceof DialogError) {
+        const { dialog } = error;
+        logger.error(`Could not resolve '${dialog.label}' dialog`);
+        logger.error(`Make sure the '${dialog.label}' dialog file exists at ${process.cwd()}/src/dialogs/${dialog.label}.js`);
+        process.exit(1);
+      }
+      throw error;
     }
   }
 
@@ -125,20 +140,9 @@ class Bot {
    */
   async respondWhenText(userMessage) {
     logger.debug('respondWhenText', userMessage);
-    try {
-      const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
-      logger.debug('respondWhenText: intents, entities', intents, entities);
-      return this.dm.executeIntents(this.adapter, userMessage.user, intents, entities);
-    } catch (error) {
-      if (error.statusCode === 403) {
-        logger.error('Botfuel API authentication failed!');
-        logger.error('Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io');
-
-        process.exit(1);
-      }
-
-      throw error;
-    }
+    const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
+    logger.debug('respondWhenText: intents, entities', intents, entities);
+    return this.dm.executeIntents(this.adapter, userMessage.user, intents, entities);
   }
 
   /**

@@ -93,6 +93,7 @@ class Dialog {
 
   /**
    * Displays messages by resolving the view associated to the dialog.
+   * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String} [key] - the dialog key is an optional parameter
@@ -120,6 +121,7 @@ class Dialog {
   /**
    * Executes the dialog.
    * @abstract
+   * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String[]} messageEntities - the message entities
