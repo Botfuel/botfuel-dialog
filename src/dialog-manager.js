@@ -97,7 +97,23 @@ class DialogManager {
   }
 
   /**
-   * Returns the dialogs data (stack and label of last dialog).
+   * Returns the last dialog to execute if no other dialog is found.
+   * @param {Object[]} previousDialogs - the previous dialogs
+   * @returns {String} a dialog label
+   */
+  getLastDialog(previousDialogs) {
+    for (let i = previousDialogs.length - 1; i >= 0; i--) {
+      const dialog = previousDialogs[i];
+      if ((dialog.status === Dialog.STATUS_BLOCKED || dialog.status === Dialog.STATUS_READY)
+          && dialog.isComplex) {
+        return dialog.label;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Returns the dialogs data (stack and previous dialogs).
    * @param {String} userId - the user id
    * @returns {Promise.<Object[]>} the data
    */
@@ -107,7 +123,7 @@ class DialogManager {
   }
 
   /**
-   * Sets the dialogs data (stack and label of last dialog).
+   * Sets the dialogs data (stack and previous dialogs).
    * @param {String} userId - the user id
    * @param {Object} dialogs - the dialogs data
    * @returns {void}
@@ -165,7 +181,7 @@ class DialogManager {
     }
     if (dialogs.stack.length === 0) { // no intent detected
       dialogs.stack.push({
-        label: dialogs.lastLabel || 'default-dialog',
+        label: this.getLastDialog(dialogs.previous) || 'default-dialog',
         entities: entities || [],
         status: Dialog.STATUS_READY,
       });
@@ -194,15 +210,14 @@ class DialogManager {
       .execute(adapter, userId, dialog.entities, dialog.status);
     logger.debug('execute: dialogResult', dialogResult);
     const status = dialogResult.status || Dialog.STATUS_COMPLETED;
-    const isComplex = dialogInstance.maxComplexity > 1;
-    if (status === Dialog.STATUS_DISCARDED) {
+    if (status === Dialog.STATUS_DISCARDED || status === Dialog.STATUS_COMPLETED) {
       dialogs.stack = dialogs.stack.slice(0, -1);
-      dialogs.lastLabel = null;
-    } else if (status === Dialog.STATUS_COMPLETED) {
-      dialogs.stack = dialogs.stack.slice(0, -1);
-      if (isComplex) {
-        dialogs.lastLabel = dialog.label;
-      }
+      dialogs.previous.push({
+        label: dialog.label,
+        status: dialog.status,
+        isComplex: dialogInstance.maxComplexity > 1,
+        date: Date.now(),
+      });
     } else { // ready or waiting
       dialog.status = status;
       // we don't want to execute another dialog
