@@ -80,7 +80,7 @@ class MongoBrain extends Brain {
     logger.debug('getLastConversation', userId);
     const user = await this.users.findOne(
       { botId: this.botId, userId },
-      { conversations: { $slice: -1 } },
+      { conversations: { $slice: 1 } },
     );
     const conversation = user.conversations[0];
     return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
@@ -91,7 +91,7 @@ class MongoBrain extends Brain {
     logger.debug('addConversation', userId);
     const result = await this.users.findOneAndUpdate(
       { botId: this.botId, userId },
-      { $push: { conversations: this.getConversationInitValue() } },
+      { $push: { conversations: { $each: [this.getConversationInitValue()], $position: 0 } } },
       { returnOriginal: false },
     );
     return result.value.conversations[0];
@@ -103,8 +103,8 @@ class MongoBrain extends Brain {
     const lastConversation = await this.getLastConversation(userId);
     const result = await this.users.findOneAndUpdate(
       { botId: this.botId, userId, 'conversations.createdAt': lastConversation.createdAt },
-      { $set: { [`conversations.$.${key}`]: value } },
-      { returnOriginal: false },
+      { $set: { [`conversations.0.${key}`]: value } },
+      { returnOriginal: false, sort: { 'conversations.createdAt': -1 } },
     );
     return result.value.conversations[0];
   }
