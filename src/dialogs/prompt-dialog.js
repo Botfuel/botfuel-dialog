@@ -27,19 +27,18 @@ const filterSamePositionEntities = (entities, entity) =>
 
 /**
  * The prompt dialog prompts the user for a number of entities.
- * parameters is an Object containing:
+ * The dialog parameters is an Object containing:
  *   - a namespace String representing the label of the dialog
- *   - an entities parameters Object, map of entities expected by the dialog:
+ *   - an entities Object of the form:
  * ```
- *     <name>: {
+ *     <entity name>: {
  *         dim: String,
- *         priority: Number or Function that returns a Number: entities parameters
- *             will be matched with potential raw entities
- *             in order or priority (highest first)
- *         isFulfilled: Function: Function returning a boolean that determines
+ *         priority: Number or Function that returns a Number; entities parameters
+ *             will be matched with potential raw entities in order or priority
+ *             (highest first)
+ *         isFulfilled: Function returning a boolean that determines
  *             when to stop (true) or continue (false)
- *             extracting for a given entity parameter
- *         reducer: Function: Function that determines what to do each time a raw entity
+ *         reducer: Function that determines what to do each time a raw entity
  *             matches with an entity parameter: replace the previously matched entity, append it...
  *     }
  * ```
@@ -93,8 +92,8 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * @param {Array.<Object>} messageCandidates
-   *  - array of raw entities given by the extractor. They are candidates for the entity parameters
+   * @param {Array.<Object>} candidates -
+   * array of raw entities given by the extractor. They are candidates for the entity parameters
    * @param {Object} dialogParameters - map of entities expected by the dialog: {
    *   <entityName>: {
    *     dim: String,
@@ -107,12 +106,12 @@ class PromptDialog extends Dialog {
    *   <entityName>: <messageEntity>
    * }
    * @returns {Object} object containing missingEntities(subset of expectedEntities) and
-   *  matchedEntities (same structure as dialogEntities)
+   * matchedEntities (same structure as dialogEntities)
    */
-  computeEntities(messageCandidates, dialogParameters, dialogEntities = {}) {
-    logger.debug('computeEntities', { messageCandidates, dialogParameters, dialogEntities });
+  computeEntities(candidates, dialogParameters, dialogEntities = {}) {
+    logger.debug('computeEntities', { candidates, dialogParameters, dialogEntities });
     // Setup default values for entities
-    const entityParameters = Object.keys(dialogParameters).reduce(
+    const parameters = Object.keys(dialogParameters).reduce(
       (allEntities, name) => ({
         ...allEntities,
         [name]: {
@@ -127,73 +126,44 @@ class PromptDialog extends Dialog {
       }),
       {},
     );
-    const result = Object.keys(entityParameters)
+    const result = Object.keys(parameters)
       // We do not look for entities that are already fulfilled
-      .filter(
-      entityParameterName =>
-        !entityParameters[entityParameterName].isFulfilled(
-          dialogEntities[entityParameters],
-          { dialogEntities },
-        ),
-    )
+      .filter(name => !parameters[name].isFulfilled(dialogEntities[parameters], { dialogEntities }))
       // Sort expected entities by priority descending (highest priority first)
-      .sort((entityParameterNameA, entityParameterNameB) => {
-        const priorityA = entityParameters[entityParameterNameA].priority;
-        const priorityB = entityParameters[entityParameterNameB].priority;
-        const entityAPriority =
-          typeof priorityA === 'function'
-            ? priorityA()
-            : priorityA;
-        const entityBPriority =
-          typeof priorityB === 'function'
-            ? priorityB()
-            : priorityB;
-
-        return entityBPriority - entityAPriority;
+      .sort((nameA, nameB) => {
+        const priorityA = parameters[nameA].priority;
+        const priorityB = parameters[nameB].priority;
+        const valueA = typeof priorityA === 'function' ? priorityA() : priorityA;
+        const valueB = typeof priorityB === 'function' ? priorityB() : priorityB;
+        return valueB - valueA;
       })
-      .reduce(
-      ({
-        matchedEntities,
-        remainingCandidates,
-        missingEntities,
-      }, name) => {
-        const entityParameter = entityParameters[name];
-        const { newValue, remainingCandidates: newRemainingMessageCandidates } = this
-          .matchParameterWithCandidates({
-            parameter: entityParameter,
-            candidates: remainingCandidates,
-            initialValue: dialogEntities[name],
-          });
+      .reduce(({ matchedEntities, remainingCandidates, missingEntities }, name) => {
+        const parameter = parameters[name];
+        const { newValue, remainingCandidates: newRemainingCandidates } = this
+              .matchParameterWithCandidates({
+                parameter,
+                candidates: remainingCandidates,
+                initialValue: dialogEntities[name],
+              });
         logger.debug('computeEntities', { newValue, remainingCandidates });
-
-        const isFulfilled = entityParameter.isFulfilled(newValue, { dialogEntities });
-
+        const isFulfilled = parameter.isFulfilled(newValue, { dialogEntities });
         return {
           // Store the found entities here as a { <entityName>: <entity> } map
-          matchedEntities: {
-            ...matchedEntities,
-            [name]: newValue,
-          },
-          remainingCandidates: newRemainingMessageCandidates,
+          matchedEntities: { ...matchedEntities, [name]: newValue },
+          remainingCandidates: newRemainingCandidates,
           // If an entity matching the one we are expecting was found,
           // remove it from missing entities
           // If it was not found, keep missing entities intact
-          missingEntities: isFulfilled
-            ? omit(missingEntities, [name])
-            : missingEntities,
+          missingEntities: isFulfilled ? omit(missingEntities, [name]) : missingEntities,
         };
       },
       {
         matchedEntities: dialogEntities,
-        remainingCandidates: messageCandidates,
-        missingEntities: entityParameters,
+        remainingCandidates: candidates,
+        missingEntities: parameters,
       },
     );
-
-    return {
-      matchedEntities: result.matchedEntities,
-      missingEntities: result.missingEntities,
-    };
+    return { matchedEntities: result.matchedEntities, missingEntities: result.missingEntities };
   }
 
   /**
