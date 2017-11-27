@@ -30,8 +30,7 @@ class QnasDialog extends Dialog {
    * @param {class} brain - the bot brain
    */
   constructor(config, brain) {
-    // TODO: this is a hack for avoiding recording this dialog in lastDialog
-    super(config, brain, 1);
+    super(config, brain, { reentrant: false });
   }
 
   // eslint-disable-next-line require-jsdoc

@@ -92,7 +92,15 @@ class DialogManager {
       .sort((intent1, intent2) => {
         const dialog1 = this.getDialog(intent1);
         const dialog2 = this.getDialog(intent2);
-        return dialog1.maxComplexity - dialog2.maxComplexity;
+        const reentrant1 = dialog1.characteristics.reentrant;
+        const reentrant2 = dialog2.characteristics.reentrant;
+        if (reentrant1 && !reentrant2) {
+          return 1;
+        }
+        if (!reentrant1 && reentrant2) {
+          return -1;
+        }
+        return 0;
       });
   }
 
@@ -104,7 +112,7 @@ class DialogManager {
   getLastDialog(previousDialogs) {
     for (let i = previousDialogs.length - 1; i >= 0; i--) {
       const dialog = previousDialogs[i];
-      if ((dialog.status === Dialog.STATUS_COMPLETED) && dialog.isComplex) {
+      if ((dialog.status === Dialog.STATUS_COMPLETED) && dialog.characteristics.reentrant) {
         return dialog.label;
       }
     }
@@ -144,14 +152,15 @@ class DialogManager {
     logger.debug('updateWithIntents', userId, dialogs, intents, entities);
     intents = this.filterIntents(intents);
     logger.debug('updateWithIntents: intents', intents);
-    let nbComplex = 0;
+    let nb = 0;
     const newDialogs = [];
     for (let i = 0; i < intents.length; i++) {
-      if (this.getDialog(intents[i]).maxComplexity > 1) {
-        nbComplex++;
+      const intent = intents[i];
+      if (this.getDialog(intent).characteristics.reentrant) {
+        nb++;
       }
-      const status = nbComplex > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
-      const label = intents[i].label;
+      const status = nb > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
+      const label = intent.label;
       newDialogs.push({ label, entities, status });
     }
     this.updateWithDialogs(userId, dialogs, newDialogs, entities);
@@ -167,16 +176,16 @@ class DialogManager {
    */
   updateWithDialogs(userId, dialogs, newDialogs, entities) {
     logger.debug('updateWithDialogs', userId, dialogs, newDialogs, entities);
-    while (newDialogs.length > 0) {
-      const newDialog = newDialogs[newDialogs.length - 1];
-      const length = dialogs.stack.length;
-      if (length > 0 && dialogs.stack[length - 1].label === newDialog.label) {
-        dialogs.stack[length - 1].entities = newDialog.entities;
-        dialogs.stack[length - 1].status = newDialog.status || Dialog.STATUS_READY;
+    for (let i = newDialogs.length - 1; i >= 0; i--) {
+      const newDialog = newDialogs[i];
+      const lastIndex = dialogs.stack.length - 1;
+      const lastDialog = lastIndex >= 0 ? dialogs.stack[lastIndex] : null;
+      if (lastDialog && lastDialog.label === newDialog.label) {
+        lastDialog.entities = newDialog.entities;
+        lastDialog.status = newDialog.status || Dialog.STATUS_READY;
       } else {
         dialogs.stack.push(newDialog);
       }
-      newDialogs = newDialogs.slice(0, -1);
     }
     if (dialogs.stack.length === 0) { // no intent detected
       dialogs.stack.push({
@@ -214,7 +223,7 @@ class DialogManager {
       dialogs.previous.push({
         label: dialog.label,
         status: dialog.status,
-        isComplex: dialogInstance.maxComplexity > 1,
+        characteristics: dialogInstance.characteristics,
         date: Date.now(),
       });
     } else { // ready or waiting

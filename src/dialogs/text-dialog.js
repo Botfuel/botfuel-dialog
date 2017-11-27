@@ -28,7 +28,7 @@ class TextDialog extends Dialog {
    * @param {class} brain - the bot brain
    */
   constructor(config, brain) {
-    super(config, brain, 1);
+    super(config, brain, { reentrant: false });
   }
 
   // eslint-disable-next-line require-jsdoc

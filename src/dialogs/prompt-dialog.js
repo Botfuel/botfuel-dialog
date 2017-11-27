@@ -30,7 +30,7 @@ class PromptDialog extends Dialog {
    * parameters.entities is a map mapping entities to optional parameters
    */
   constructor(config, brain, parameters) {
-    super(config, brain, Object.keys(parameters.entities).length + 1, parameters);
+    super(config, brain, { reentrant: true }, parameters);
   }
 
   /**

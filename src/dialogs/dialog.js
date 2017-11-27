@@ -26,12 +26,6 @@ const { MissingImplementationError } = require('../errors');
  * then calls the view with the right parameters for the rendering.
  * At the end of the execution, an object is returned which contains
  * either the new status of the dialog or or a new dialog to execute.
- *
- * The complexity of a dialog is expected number of turns in the conversation.
- * For example,
- * a dialog that says 'Hello' has a complexity of 1
- * while a dialog that prompts the user to enter n entities has roughly a complexity of n.
- * It is used by the {@link DialogManager} for scheduling the dialogs.
  */
 class Dialog {
   // TODO: move some specific statuses out of this class
@@ -70,14 +64,14 @@ class Dialog {
    * @constructor
    * @param {Object} config - the bot config
    * @param {class} brain - the bot brain
-   * @param {number} [maxComplexity=Number.MAX_SAFE_INTEGER] - the optional dialog max complexity
+   * @param {Object} characteristics - the characteristics of the dialog
    * @param {Object} [parameters={}] - the optional dialog parameters
    */
-  constructor(config, brain, maxComplexity = Number.MAX_SAFE_INTEGER, parameters = {}) {
+  constructor(config, brain, characteristics = { reentrant: false }, parameters = {}) {
     logger.debug('constructor', parameters);
     this.brain = brain;
+    this.characteristics = characteristics;
     this.parameters = parameters;
-    this.maxComplexity = maxComplexity;
     this.viewManager = new ViewManager(config);
     this.name = this.getName();
   }
