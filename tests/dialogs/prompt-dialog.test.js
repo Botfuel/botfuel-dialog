@@ -296,13 +296,12 @@ describe('PromptDialog', function () {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { missingEntities } = prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {},
         );
 
-        expect(matchedEntities.myNumber).to.be(undefined);
         expect(Object.keys(missingEntities)).to.have.length(1);
         expect(missingEntities).to.have.property('myNumber');
       });

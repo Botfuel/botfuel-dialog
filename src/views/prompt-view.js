@@ -34,8 +34,8 @@ class PromptView extends View {
       case 'discard':
         return this.renderDiscard();
       case 'entities': {
-        const { messageEntities, missingEntities } = data;
-        return this.renderEntities(messageEntities, missingEntities);
+        const { matchedEntities, missingEntities } = data;
+        return this.renderEntities(matchedEntities, missingEntities);
       }
       default:
         return null;
@@ -72,20 +72,20 @@ class PromptView extends View {
   /**
    * Confirms the defined entities and asks for the needed ones.
    * @private
-   * @param {Object[]} messageEntities - the defined entities
+   * @param {Object[]} matchedEntities - the defined entities
    * @param {String[]} missingEntities - the needed entities
    * @returns {Object[]} the bot messages
    */
-  renderEntities(messageEntities, missingEntities) {
+  renderEntities(matchedEntities, missingEntities) {
     const messages = [];
-    if (messageEntities.length !== 0) {
+    if (Object.keys(matchedEntities).length !== 0) {
       messages.push(
         new BotTextMessage(
-          `Entities defined: ${messageEntities.map(entity => entity.body).join(', ')}`,
+          `Entities defined: ${Object.keys(matchedEntities).filter(e => !!e).join(', ')}`,
         ),
       );
     }
-    if (missingEntities.length !== 0) {
+    if (Object.keys(missingEntities).length !== 0) {
       messages.push(
         new BotTextMessage(`Entities needed: ${Object.keys(missingEntities).join(', ')}`),
       );
