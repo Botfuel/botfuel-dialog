@@ -104,8 +104,7 @@ class DialogManager {
   getLastDialog(previousDialogs) {
     for (let i = previousDialogs.length - 1; i >= 0; i--) {
       const dialog = previousDialogs[i];
-      if ((dialog.status === Dialog.STATUS_BLOCKED || dialog.status === Dialog.STATUS_READY)
-          && dialog.isComplex) {
+      if ((dialog.status === Dialog.STATUS_COMPLETED) && dialog.isComplex) {
         return dialog.label;
       }
     }
