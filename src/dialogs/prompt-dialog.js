@@ -78,7 +78,7 @@ class PromptDialog extends Dialog {
   matchParameterWithCandidates({ parameter, candidates, initialValue }) {
     return candidates
       .filter(candidate => candidate.dim === parameter.dim)
-      .reduce(({ newValue, remainingCandidates}, candidate) => {
+      .reduce(({ newValue, remainingCandidates }, candidate) => {
         if (parameter.isFulfilled(newValue)) {
           return { remainingCandidates, newValue };
         }
@@ -127,7 +127,6 @@ class PromptDialog extends Dialog {
       }),
       {},
     );
-
     const result = Object.keys(entityParameters)
       // We do not look for entities that are already fulfilled
       .filter(
@@ -202,11 +201,11 @@ class PromptDialog extends Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} [messageEntityCandidates] - the message entities extracted from the message
+   * @param {Object[]} [candidates] - the message entities extracted from the message
    * @returns {Promise.<String>} the new dialog status
    */
-  async executeWhenBlocked(adapter, userId, messageEntityCandidates) {
-    logger.debug('executeWhenBlocked', userId, messageEntityCandidates);
+  async executeWhenBlocked(adapter, userId, candidates) {
+    logger.debug('executeWhenBlocked', userId, candidates);
     await this.display(adapter, userId, 'ask');
     return { status: this.STATUS_WAITING };
   }
@@ -216,19 +215,19 @@ class PromptDialog extends Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} messageEntityCandidates - the message entities extracted from the message
+   * @param {Object[]} candidates - the message entities extracted from the message
    * @returns {Promise.<String>} the new dialog status
    */
-  async executeWhenWaiting(adapter, userId, messageEntityCandidates) {
-    logger.debug('executeWhenWaiting', userId, messageEntityCandidates);
-    for (const messageEntity of messageEntityCandidates) {
-      if (messageEntity.dim === 'system:boolean') {
-        const booleanValue = messageEntity.values[0].value;
+  async executeWhenWaiting(adapter, userId, candidates) {
+    logger.debug('executeWhenWaiting', userId, candidates);
+    for (const candidate of candidates) {
+      if (candidate.dim === 'system:boolean') {
+        const booleanValue = candidate.values[0].value;
         logger.debug('execute: system:boolean', booleanValue);
         if (booleanValue) {
           // eslint-disable-next-line no-await-in-loop
           await this.display(adapter, userId, 'confirm');
-          return this.executeWhenReady(adapter, userId, messageEntityCandidates);
+          return this.executeWhenReady(adapter, userId, candidates);
         }
         // if not confirmed, then discard dialog
         // eslint-disable-next-line no-await-in-loop
@@ -244,30 +243,23 @@ class PromptDialog extends Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} messageCandidates - the message entities extracted from the message
+   * @param {Object[]} candidates - the message entities extracted from the message
    * @returns {Promise.<string>} the new dialog status
    */
-  async executeWhenReady(adapter, userId, messageCandidates) {
-    logger.debug('executeWhenReady', userId, messageCandidates);
-
+  async executeWhenReady(adapter, userId, candidates) {
+    logger.debug('executeWhenReady', userId, candidates);
     const dialogEntities =
-    (await this.brain.conversationGet(userId, this.parameters.namespace)) || {};
+          (await this.brain.conversationGet(userId, this.parameters.namespace)) || {};
+    logger.debug('executeWhenReady: dialogEntities', dialogEntities);
     // Get missing entities and matched entities
-    const { missingEntities, matchedEntities } = this.computeEntities(
-      messageCandidates,
-      this.parameters.entities,
-      dialogEntities,
-    );
-    logger.debug('executeWhenReady dialogEntities', dialogEntities);
+    const { missingEntities, matchedEntities } =
+          this.computeEntities(candidates, this.parameters.entities, dialogEntities);
     logger.debug('executeWhenReady', { missingEntities, matchedEntities });
-
     await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
-
     await this.display(adapter, userId, 'entities', { matchedEntities, missingEntities });
     if (missingEntities.length === 0) {
       return this.executeWhenCompleted(adapter, userId, matchedEntities);
     }
-
     return { status: this.STATUS_READY };
   }
 
@@ -285,15 +277,15 @@ class PromptDialog extends Dialog {
   }
 
   // eslint-disable-next-line require-jsdoc
-  async execute(adapter, userId, messageEntityCandidates, status) {
-    logger.debug('execute', userId, messageEntityCandidates, status);
+  async execute(adapter, userId, candidates, status) {
+    logger.debug('execute', userId, candidates, status);
     switch (status) {
       case this.STATUS_BLOCKED:
-        return this.executeWhenBlocked(adapter, userId, messageEntityCandidates);
+        return this.executeWhenBlocked(adapter, userId, candidates);
       case this.STATUS_WAITING:
-        return this.executeWhenWaiting(adapter, userId, messageEntityCandidates);
+        return this.executeWhenWaiting(adapter, userId, candidates);
       default:
-        return this.executeWhenReady(adapter, userId, messageEntityCandidates);
+        return this.executeWhenReady(adapter, userId, candidates);
     }
   }
 }
