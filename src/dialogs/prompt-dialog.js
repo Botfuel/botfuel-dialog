@@ -27,6 +27,22 @@ const filterSamePositionEntities = (entities, entity) =>
 
 /**
  * The prompt dialog prompts the user for a number of entities.
+ * parameters is an Object containing:
+ * a namespace String representing the label of the dialog
+ * a entities parameters Object:
+ * map of entities expected by the dialog: {
+ *   <entityName>: {
+ *     dim: String,
+ *     priority: Number or Function that returns a Number: entities parameters
+ *       will be matched with potential raw entities
+ *        in order or priority (highest first)
+ *     isFulfilled: Function: Function returning a boolean that determines
+ *       when to stop (true) or continue (false)
+ *       extracting for a given entity parameter
+ *     reducer: Function: Function that determines what to do each time a raw entity
+ *       matches with an entity parameter: replace the previously matched entity, append it...
+ *   }
+ * }
  * @extends Dialog
  */
 class PromptDialog extends Dialog {
@@ -42,8 +58,61 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * @param {Array.<Object>} messageEntities - array of candidates entities given by the extractor
-   * @param {Object} expectedEntities - map of entities expected by the dialog: {
+   * Attempt to match an entity parameter with raw entities candidates extracted from a message.
+   * We apply the reducer function to a raw entity candidate until we run out of candidates or
+   * if the isFulfilled condition is met.
+   * @param {Object} entityParameter - entity parameter we want to match with
+   * one or more raw entities.
+   * @param {Array<Object>} messageEntityCandidates - array of raw entities extracted
+   * from a message: {
+   *     dim: String,
+   *     body: String,
+   *     start: Number,
+   *     end: Number,
+   *     values: Array<Object>
+   * }
+   * @param {Object} initialEntityValue - initial value of the entity we want to match
+   * @returns {Object} object containing
+   *   remainingMessageEntities (messageEntityCandidates minus candidates used) and
+   *   entityNewValue (value we matched with the entityParameter)
+   */
+  matchEntityParameterWithCandidates({
+    entityParameter,
+    messageEntityCandidates,
+    initialEntityValue,
+  }) {
+    const candidates = messageEntityCandidates.filter(
+      candidate => candidate.dim === entityParameter.dim,
+    );
+
+    return candidates.reduce(({
+      entityNewValue,
+      remainingMessageEntities,
+  }, candidate) => {
+      if (entityParameter.isFulfilled(entityNewValue)) {
+        return {
+          remainingMessageEntities,
+          entityNewValue,
+        };
+      }
+
+      return {
+        remainingMessageEntities: filterSamePositionEntities(
+          remainingMessageEntities,
+          candidate,
+        ),
+        entityNewValue: entityParameter.reducer(entityNewValue, candidate),
+      };
+    }, {
+      remainingMessageEntities: messageEntityCandidates,
+      entityNewValue: initialEntityValue,
+    });
+  }
+
+  /**
+   * @param {Array.<Object>} messageEntityCandidates
+   *  - array of raw entities given by the extractor. They are candidates for the entity parameters
+   * @param {Object} entitiesDialogParameters - map of entities expected by the dialog: {
    *   <entityName>: {
    *     dim: String,
    *     priority: Number or Function,
@@ -57,100 +126,83 @@ class PromptDialog extends Dialog {
    * @returns {Object} object containing missingEntities(subset of expectedEntities) and
    *  matchedEntities (same structure as dialogEntities)
    */
-  computeEntities(messageEntities, expectedEntities, dialogEntities = {}) {
+  computeEntities(messageEntityCandidates, entitiesDialogParameters, dialogEntities = {}) {
     // Setup default values for entities
-    const entities = Object.keys(expectedEntities).reduce(
-      (allEntities, key) => ({
+    const entityParameters = Object.keys(entitiesDialogParameters).reduce(
+      (allEntities, entityParameterName) => ({
         ...allEntities,
-        [key]: {
+        [entityParameterName]: {
           // If the reducer function is not defined, we replace the old entities by the new ones
           reducer: (oldEntities, newEntities) => newEntities,
           // If the fulfilled function is not defined, we consider that the fulfilled condition
           // is met if the entity simply exists.
           isFulfilled: entity => entity !== undefined,
           priority: 0,
-          ...expectedEntities[key],
+          ...entitiesDialogParameters[entityParameterName],
         },
       }),
       {},
     );
 
-    const result = Object.keys(entities)
+    const result = Object.keys(entityParameters)
       // We do not look for entities that are already fulfilled
       .filter(
-        entityName =>
-          !entities[entityName].isFulfilled(dialogEntities[entityName], { dialogEntities }),
-      )
+      entityParameterName =>
+        !entityParameters[entityParameterName].isFulfilled(
+          dialogEntities[entityParameters],
+          { dialogEntities },
+        ),
+    )
       // Sort expected entities by priority descending (highest priority first)
-      .sort((entityNameA, entityNameB) => {
+      .sort((entityParameterNameA, entityParameterNameB) => {
+        const priorityA = entityParameters[entityParameterNameA].priority;
+        const priorityB = entityParameters[entityParameterNameB].priority;
         const entityAPriority =
-          typeof entities[entityNameA].priority === 'function'
-            ? entities[entityNameA].priority()
-            : entities[entityNameA].priority;
+          typeof priorityA === 'function'
+            ? priorityA()
+            : priorityA;
         const entityBPriority =
-          typeof entities[entityNameB].priority === 'function'
-            ? entities[entityNameB].priority()
-            : entities[entityNameB].priority;
+          typeof priorityB === 'function'
+            ? priorityB()
+            : priorityB;
 
         return entityBPriority - entityAPriority;
       })
       .reduce(
-        (acc, entityName) => {
-          // Candidates are message entities with the dimension we are looking for
-          const candidates = acc.messageEntities.filter(
-            entity => entity.dim === entities[entityName].dim,
-          );
+      (previous, entityParameterName) => {
+        const entityParameter = entityParameters[entityParameterName];
+        const { entityNewValue, remainingMessageEntities } = this
+          .matchEntityParameterWithCandidates({
+            entityParameter: entityParameters[entityParameterName],
+            messageEntityCandidates: previous.remainingMessageEntityCandidates,
+            initialEntityValue: dialogEntities[entityParameterName],
+          });
 
-          // Store remaining message entities
-          let remainingMessageEntities = acc.messageEntities;
-          // Get the previous value for this entity if any
-          let entityNewValue = acc.matchedEntities[entityName];
-          let i = 0;
+        const isFulfilled = entityParameter.isFulfilled(entityNewValue, { dialogEntities });
 
-          // Loop on candidates until the condition is fulfilled or we run out of candidates
-          if (candidates.length) {
-            while (!entities[entityName].isFulfilled(entityNewValue, { dialogEntities })) {
-              // Apply reducer to get entity's new value
-              entityNewValue = entities[entityName].reducer(entityNewValue, candidates[i]);
-
-              // Remove the candidate and all candidates at the same position
-              // from the remaining message entities
-              remainingMessageEntities = filterSamePositionEntities(
-                remainingMessageEntities,
-                candidates[i],
-              );
-              i++;
-
-              // The condition is not fulfilled but we used all candidates, exit
-              if (i === candidates.length) {
-                break;
-              }
-            }
-          }
-
-          return {
-            // Store the found entities here as a { <entityName>: <entity> } map
-            matchedEntities: {
-              ...acc.matchedEntities,
-              [entityName]: entities[entityName].isFulfilled(entityNewValue, { dialogEntities })
-                ? entityNewValue
-                : acc.matchedEntities[entityName],
-            },
-            messageEntities: remainingMessageEntities,
-            // If an entity matching the one we are expecting was found,
-            // remove it from missing entities
-            // If it was not found, keep missing entities intact
-            missingEntities: entities[entityName].isFulfilled(entityNewValue, { dialogEntities })
-              ? omit(acc.missingEntities, [entityName])
-              : acc.missingEntities,
-          };
-        },
+        return {
+          // Store the found entities here as a { <entityName>: <entity> } map
+          matchedEntities: {
+            ...previous.matchedEntities,
+            [entityParameterName]: isFulfilled
+              ? entityNewValue
+              : previous.matchedEntities[entityParameterName],
+          },
+          remainingMessageEntityCandidates: remainingMessageEntities,
+          // If an entity matching the one we are expecting was found,
+          // remove it from missing entities
+          // If it was not found, keep missing entities intact
+          missingEntities: isFulfilled
+            ? omit(previous.missingEntities, [entityParameterName])
+            : previous.missingEntities,
+        };
+      },
       {
         matchedEntities: dialogEntities,
-        messageEntities,
-        missingEntities: expectedEntities,
+        remainingMessageEntityCandidates: messageEntityCandidates,
+        missingEntities: entityParameters,
       },
-      );
+    );
 
     return {
       matchedEntities: result.matchedEntities,
@@ -163,11 +215,11 @@ class PromptDialog extends Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} [messageEntities] - the message entities
+   * @param {Object[]} [messageEntityCandidates] - the message entities extracted from the message
    * @returns {Promise.<String>} the new dialog status
    */
-  async executeWhenBlocked(adapter, userId, messageEntities) {
-    logger.debug('executeWhenBlocked', userId, messageEntities);
+  async executeWhenBlocked(adapter, userId, messageEntityCandidates) {
+    logger.debug('executeWhenBlocked', userId, messageEntityCandidates);
     await this.display(adapter, userId, 'ask');
     return { status: this.STATUS_WAITING };
   }
@@ -177,19 +229,19 @@ class PromptDialog extends Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} messageEntities - the message entities
+   * @param {Object[]} messageEntityCandidates - the message entities extracted from the message
    * @returns {Promise.<String>} the new dialog status
    */
-  async executeWhenWaiting(adapter, userId, messageEntities) {
-    logger.debug('executeWhenWaiting', userId, messageEntities);
-    for (const messageEntity of messageEntities) {
+  async executeWhenWaiting(adapter, userId, messageEntityCandidates) {
+    logger.debug('executeWhenWaiting', userId, messageEntityCandidates);
+    for (const messageEntity of messageEntityCandidates) {
       if (messageEntity.dim === 'system:boolean') {
         const booleanValue = messageEntity.values[0].value;
         logger.debug('execute: system:boolean', booleanValue);
         if (booleanValue) {
           // eslint-disable-next-line no-await-in-loop
           await this.display(adapter, userId, 'confirm');
-          return this.executeWhenReady(adapter, userId, messageEntities);
+          return this.executeWhenReady(adapter, userId, messageEntityCandidates);
         }
         // if not confirmed, then discard dialog
         // eslint-disable-next-line no-await-in-loop
@@ -205,13 +257,13 @@ class PromptDialog extends Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} messageEntities - the message entities
+   * @param {Object[]} messageEntityCandidates - the message entities extracted from the message
    * @returns {Promise.<string>} the new dialog status
    */
-  async executeWhenReady(adapter, userId, messageEntities) {
-    logger.debug('executeWhenReady', userId, messageEntities);
+  async executeWhenReady(adapter, userId, messageEntityCandidates) {
+    logger.debug('executeWhenReady', userId, messageEntityCandidates);
     // Keep entities defined in the dialog
-    messageEntities = messageEntities.filter(
+    messageEntityCandidates = messageEntityCandidates.filter(
       entity => this.parameters.entities[entity.name] !== undefined,
     );
 
@@ -219,16 +271,16 @@ class PromptDialog extends Dialog {
       (await this.brain.conversationGet(userId, this.parameters.namespace)) || {};
     // Get missing entities and matched entities
     const { missingEntities, matchedEntities } = this.computeEntities(
-      messageEntities,
+      messageEntityCandidates,
       this.parameters.entities,
       dialogEntities,
     );
 
     await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
 
-    await this.display(adapter, userId, 'entities', { messageEntities, missingEntities });
+    await this.display(adapter, userId, 'entities', { messageEntityCandidates, missingEntities });
     if (missingEntities.length === 0) {
-      return this.executeWhenCompleted(adapter, userId, messageEntities);
+      return this.executeWhenCompleted(adapter, userId, messageEntityCandidates);
     }
 
     return { status: this.STATUS_READY };
@@ -248,15 +300,15 @@ class PromptDialog extends Dialog {
   }
 
   // eslint-disable-next-line require-jsdoc
-  async execute(adapter, userId, messageEntities, status) {
-    logger.debug('execute', userId, messageEntities, status);
+  async execute(adapter, userId, messageEntityCandidates, status) {
+    logger.debug('execute', userId, messageEntityCandidates, status);
     switch (status) {
       case this.STATUS_BLOCKED:
-        return this.executeWhenBlocked(adapter, userId, messageEntities);
+        return this.executeWhenBlocked(adapter, userId, messageEntityCandidates);
       case this.STATUS_WAITING:
-        return this.executeWhenWaiting(adapter, userId, messageEntities);
+        return this.executeWhenWaiting(adapter, userId, messageEntityCandidates);
       default:
-        return this.executeWhenReady(adapter, userId, messageEntities);
+        return this.executeWhenReady(adapter, userId, messageEntityCandidates);
     }
   }
 }
