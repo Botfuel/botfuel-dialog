@@ -29,10 +29,9 @@ const filterSamePositionEntities = (entities, entity) =>
  * The prompt dialog prompts the user for a number of entities.
  * parameters is an Object containing:
  *   - a namespace String representing the label of the dialog
- *   - an entities parameters Object:
- * map of entities expected by the dialog:
+ *   - an entities parameters Object, map of entities expected by the dialog:
  * ```
- *     <entityName>: {
+ *     <name>: {
  *         dim: String,
  *         priority: Number or Function that returns a Number: entities parameters
  *             will be matched with potential raw entities
@@ -62,9 +61,8 @@ class PromptDialog extends Dialog {
    * Attempt to match an entity parameter with raw entities candidates extracted from a message.
    * We apply the reducer function to a raw entity candidate until we run out of candidates or
    * if the isFulfilled condition is met.
-   * @param {Object} parameter - entity parameter we want to match with
-   * one or more raw entities.
-   * @param {Array<Object>} messageCandidates - array of raw entities extracted
+   * @param {Object} parameter - entity parameter we want to match with one or more raw entities
+   * @param {Array<Object>} candidates - array of raw entities extracted
    * from a message: {
    *     dim: String,
    *     body: String,
@@ -72,42 +70,26 @@ class PromptDialog extends Dialog {
    *     end: Number,
    *     values: Array<Object>
    * }
-   * @param {Object} initialEntityValue - initial value of the entity we want to match
+   * @param {Object} initialValue - initial value of the entity we want to match
    * @returns {Object} object containing
-   *   remainingMessageEntities (messageEntityCandidates minus candidates used) and
-   *   entityNewValue (value we matched with the entityParameter)
+   * remainingCandidates (candidates minus candidates used) and
+   * newValue (value we matched with the parameter)
    */
-  matchEntityParameterWithCandidates({
-    parameter,
-    messageCandidates,
-    initialEntityValue,
-  }) {
-    const candidates = messageCandidates.filter(
-      candidate => candidate.dim === parameter.dim,
-    );
-
-    return candidates.reduce(({
-      entityNewValue,
-      remainingMessageCandidates,
-  }, candidate) => {
-      if (parameter.isFulfilled(entityNewValue)) {
+  matchParameterWithCandidates({ parameter, candidates, initialValue }) {
+    return candidates
+      .filter(candidate => candidate.dim === parameter.dim)
+      .reduce(({ newValue, remainingCandidates}, candidate) => {
+        if (parameter.isFulfilled(newValue)) {
+          return { remainingCandidates, newValue };
+        }
         return {
-          remainingMessageCandidates,
-          entityNewValue,
+          remainingCandidates: filterSamePositionEntities(remainingCandidates, candidate),
+          newValue: parameter.reducer(newValue, candidate),
         };
-      }
-
-      return {
-        remainingMessageCandidates: filterSamePositionEntities(
-          remainingMessageCandidates,
-          candidate,
-        ),
-        entityNewValue: parameter.reducer(entityNewValue, candidate),
-      };
-    }, {
-      remainingMessageCandidates: messageCandidates,
-      entityNewValue: initialEntityValue,
-    });
+      }, {
+        remainingCandidates: candidates,
+        newValue: initialValue,
+      });
   }
 
   /**
@@ -173,27 +155,27 @@ class PromptDialog extends Dialog {
       .reduce(
       ({
         matchedEntities,
-        remainingMessageCandidates,
+        remainingCandidates,
         missingEntities,
       }, name) => {
         const entityParameter = entityParameters[name];
-        const { entityNewValue, remainingMessageCandidates: newRemainingMessageCandidates } = this
-          .matchEntityParameterWithCandidates({
+        const { newValue, remainingCandidates: newRemainingMessageCandidates } = this
+          .matchParameterWithCandidates({
             parameter: entityParameter,
-            messageCandidates: remainingMessageCandidates,
-            initialEntityValue: dialogEntities[name],
+            candidates: remainingCandidates,
+            initialValue: dialogEntities[name],
           });
-        logger.debug('computeEntities', { entityNewValue, remainingMessageCandidates });
+        logger.debug('computeEntities', { newValue, remainingCandidates });
 
-        const isFulfilled = entityParameter.isFulfilled(entityNewValue, { dialogEntities });
+        const isFulfilled = entityParameter.isFulfilled(newValue, { dialogEntities });
 
         return {
           // Store the found entities here as a { <entityName>: <entity> } map
           matchedEntities: {
             ...matchedEntities,
-            [name]: entityNewValue,
+            [name]: newValue,
           },
-          remainingMessageCandidates: newRemainingMessageCandidates,
+          remainingCandidates: newRemainingMessageCandidates,
           // If an entity matching the one we are expecting was found,
           // remove it from missing entities
           // If it was not found, keep missing entities intact
@@ -204,7 +186,7 @@ class PromptDialog extends Dialog {
       },
       {
         matchedEntities: dialogEntities,
-        remainingMessageCandidates: messageCandidates,
+        remainingCandidates: messageCandidates,
         missingEntities: entityParameters,
       },
     );
