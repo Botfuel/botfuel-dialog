@@ -10,3 +10,4 @@ notifications:
 script:
   - npm run style
   - npm test
+  - npm run test-samples
