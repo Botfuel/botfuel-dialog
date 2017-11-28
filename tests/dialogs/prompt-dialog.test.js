@@ -475,7 +475,7 @@ describe('PromptDialog', function () {
             values: [{ value: '88', type: 'integer' }],
             start: 6,
             end: 8,
-            body: '99',
+            body: '88',
           },
         ];
 

@@ -74,22 +74,21 @@ class PromptDialog extends Dialog {
    * remainingCandidates (candidates minus candidates used) and
    * newValue (value we matched with the parameter)
    */
-  matchParameterWithCandidates({ parameter, candidates, initialValue }) {
-    const sameDimCandidates = candidates.filter(candidate => candidate.dim === parameter.dim);
+  matchParameterWithCandidates({ dialogParameter, candidates, initialValue }) {
+    const sameDimCandidates = candidates.filter(candidate => candidate.dim === dialogParameter.dim);
 
     // If parameter is already fulfilled and has a candidate, replace it
-    if (parameter.isFulfilled(initialValue) && sameDimCandidates.length) {
+    if (dialogParameter.isFulfilled(initialValue) && sameDimCandidates.length) {
       initialValue = Array.isArray(initialValue) ? [] : null;
     }
 
     return sameDimCandidates
-      .filter(candidate => candidate.dim === parameter.dim)
       .reduce(({ newValue, remainingCandidates }, candidate) => {
-        if (parameter.isFulfilled(newValue)) {
+        if (dialogParameter.isFulfilled(newValue)) {
           return { remainingCandidates, newValue };
         }
 
-        const reducedValue = parameter.reducer(newValue, candidate);
+        const reducedValue = dialogParameter.reducer(newValue, candidate);
 
         return {
           remainingCandidates: filterSamePositionEntities(candidates, candidate),
@@ -104,7 +103,7 @@ class PromptDialog extends Dialog {
   /**
    * @param {Array.<Object>} candidates -
    * array of raw entities given by the extractor. They are candidates for the entity parameters
-   * @param {Object} dialogParameters - map of entities expected by the dialog: {
+   * @param {Object} parameters - map of entities expected by the dialog: {
    *   <entityName>: {
    *     dim: String,
    *     priority: Number or Function,
@@ -118,62 +117,55 @@ class PromptDialog extends Dialog {
    * @returns {Object} object containing missingEntities(subset of expectedEntities) and
    * matchedEntities (same structure as dialogEntities)
    */
-  computeEntities(candidates, dialogParameters, dialogEntities = {}) {
-    logger.debug('computeEntities', { candidates, dialogParameters, dialogEntities });
+  computeEntities(candidates, parameters, dialogEntities = {}) {
+    logger.debug('computeEntities', { candidates, parameters, dialogEntities });
     // Setup default values for entities
-    const parameters = Object.keys(dialogParameters)
+    const dialogParameters = Object.keys(parameters)
       .reduce(
-        (allEntities, name) => ({
-          ...allEntities,
-          [name]: {
-            // If the reducer function is not defined, we replace the old entities by the new ones
-            reducer: (oldEntities, newEntities) => newEntities,
-            // If the fulfilled function is not defined, we consider that the fulfilled condition
-            // is met if the entity simply exists (not null or undefined)
-            isFulfilled: entity => entity != null,
-            priority: 0,
-            ...dialogParameters[name],
-          },
-        }),
-        {},
-      );
+        (allEntities, name) => {
+          const dialogParameter = parameters[name];
+          // If the fulfilled function is not defined, we consider that the fulfilled condition
+          // is met if the entity simply exists (not null or undefined)
+          const isFulfilled = dialogParameter.isFulfilled || (entity => entity != null);
 
-    // We need to do this in an additional step because we need isFulfilled to be defined
-    // Here we set fulfilled parameters’s priority to the lowest value possible
-    // Because we need to to be able to override them but we want unfulfilled parameters
-    // To have priority over them
-    const adjustedParameters = Object.keys(parameters)
-      .reduce(
-      (allEntities, name) => ({
-        ...allEntities,
-        [name]: {
-          ...parameters[name],
-          priority: parameters[name].isFulfilled(dialogEntities[name], { dialogEntities }) ?
-            Number.NEGATIVE_INFINITY : parameters[name].priority,
+          return {
+            ...allEntities,
+            [name]: {
+              dim: dialogParameter.dim,
+              // If the reducer function is not defined, we replace the old entities by the new ones
+              reducer: dialogParameter.reducer ||
+                ((oldEntities, newEntities) => newEntities),
+              isFulfilled,
+              // Here we set fulfilled parameters’s priority to the lowest value possible
+              // Because we need to to be able to override them but we want unfulfilled parameters
+              // To have priority over them
+              priority: isFulfilled(dialogEntities[name], { dialogEntities }) ?
+                Number.NEGATIVE_INFINITY : dialogParameter.priority || 0,
+            },
+          };
         },
-      }),
-      {},
+        {},
     );
 
-    const result = Object.keys(adjustedParameters)
+    const result = Object.keys(dialogParameters)
       // Sort expected entities by priority descending (highest priority first)
       .sort((nameA, nameB) => {
-        const priorityA = adjustedParameters[nameA].priority;
-        const priorityB = adjustedParameters[nameB].priority;
+        const priorityA = dialogParameters[nameA].priority;
+        const priorityB = dialogParameters[nameB].priority;
         const valueA = typeof priorityA === 'function' ? priorityA() : priorityA;
         const valueB = typeof priorityB === 'function' ? priorityB() : priorityB;
         return valueB - valueA;
       })
       .reduce(({ matchedEntities, remainingCandidates, missingEntities }, name) => {
-        const parameter = adjustedParameters[name];
+        const dialogParameter = dialogParameters[name];
         const { newValue, remainingCandidates: newRemainingCandidates } = this
           .matchParameterWithCandidates({
-            parameter,
+            dialogParameter,
             candidates: remainingCandidates,
             initialValue: dialogEntities[name],
           });
         logger.debug('computeEntities', { newValue, remainingCandidates });
-        const isFulfilled = parameter.isFulfilled(newValue, { dialogEntities });
+        const isFulfilled = dialogParameter.isFulfilled(newValue, { dialogEntities });
         return {
           // Store the found entities here as a { <entityName>: <entity> } map
           matchedEntities: { ...matchedEntities, [name]: newValue },
@@ -187,7 +179,7 @@ class PromptDialog extends Dialog {
       {
         matchedEntities: dialogEntities,
         remainingCandidates: candidates,
-        missingEntities: adjustedParameters,
+        missingEntities: dialogParameters,
       },
     );
     return { matchedEntities: result.matchedEntities, missingEntities: result.missingEntities };
