@@ -404,5 +404,127 @@ describe('PromptDialog', function () {
         expect(Object.keys(missingEntities)).to.have.length(0);
       });
     });
+
+    describe('replacing fulfilled entities', () => {
+      it('should replace a fulfilled entity if a new message is sent', () => {
+        const numbers = [
+          {
+            dim: 'number',
+            values: [{ value: '55', type: 'integer' }],
+            start: 0,
+            end: 2,
+            body: '55',
+          },
+          {
+            dim: 'number',
+            values: [{ value: '66', type: 'integer' }],
+            start: 3,
+            end: 5,
+            body: '66',
+          },
+        ];
+
+        const messageEntities = [
+          {
+            dim: 'number',
+            values: [{ value: '77', type: 'integer' }],
+            start: 0,
+            end: 2,
+            body: '77',
+          },
+          {
+            dim: 'number',
+            values: [{ value: '88', type: 'integer' }],
+            start: 3,
+            end: 5,
+            body: '88',
+          },
+          {
+            dim: 'number',
+            values: [{ value: '88', type: 'integer' }],
+            start: 6,
+            end: 8,
+            body: '99',
+          },
+        ];
+
+        const expectedEntities = {
+          favoriteNumbers: {
+            dim: 'number',
+            isFulfilled: entity => entity && entity.length === 2,
+            reducer: (oldEntities, newEntity) => [...(oldEntities || []), newEntity],
+          },
+        };
+
+        const { matchedEntities, missingEntities } = prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {
+            favoriteNumbers: numbers,
+          },
+        );
+
+        expect(matchedEntities).to.have.property('favoriteNumbers');
+        expect(matchedEntities.favoriteNumbers).to.eql([
+          ...messageEntities.slice(0, 2),
+        ]);
+
+        expect(Object.keys(missingEntities)).to.have.length(0);
+      });
+
+      it('should not replace a fulfilled entity if extracting from a new message', () => {
+        const numbers = [
+          {
+            dim: 'number',
+            values: [{ value: '55', type: 'integer' }],
+            start: 0,
+            end: 2,
+            body: '55',
+          },
+          {
+            dim: 'number',
+            values: [{ value: '66', type: 'integer' }],
+            start: 3,
+            end: 5,
+            body: '66',
+          },
+        ];
+
+        const messageEntities = [
+          {
+            dim: 'number',
+            values: [{ value: '77', type: 'integer' }],
+            start: 0,
+            end: 2,
+            body: '77',
+          },
+        ];
+
+        const expectedEntities = {
+          favoriteNumbers: {
+            dim: 'number',
+            isFulfilled: entity => entity && entity.length === 2,
+            reducer: (oldEntities, newEntity) => [...(oldEntities || []), newEntity],
+          },
+          age: {
+            dim: 'number',
+          },
+        };
+
+        const { matchedEntities, missingEntities } = prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {
+            favoriteNumbers: numbers,
+          },
+        );
+
+        expect(matchedEntities).to.have.property('favoriteNumbers');
+        expect(matchedEntities.favoriteNumbers).to.eql(numbers);
+        expect(matchedEntities.age).to.eql(messageEntities[0]);
+
+        expect(Object.keys(missingEntities)).to.have.length(0);
+      });
+    });
   });
 });
