@@ -96,7 +96,7 @@ class PromptDialog extends Dialog {
           newValue: reducedValue === undefined ? null : reducedValue,
         };
       }, {
-        remainingCandidates: sameDimCandidates,
+        remainingCandidates: candidates,
         newValue: initialValue,
       });
   }

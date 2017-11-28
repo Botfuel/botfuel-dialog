@@ -31,7 +31,38 @@ describe('PromptDialog', function () {
     });
 
     describe('simple matching', () => {
-      it('should message entities with expected entities in a simple case', function () {
+      it('should message entities with expected entities in a simple case (one entity)', function () {
+        const cityEntity = {
+          dim: 'city',
+          start: 0,
+          end: 5,
+          values: [{ value: 'Paris', type: 'string' }],
+          body: 'Paris',
+        };
+
+        const messageEntities = [cityEntity];
+
+        const expectedEntities = {
+          age: {
+            dim: 'number',
+          },
+          city: {
+            dim: 'city',
+          },
+        };
+
+        const { matchedEntities, missingEntities } = prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {},
+        );
+
+        expect(matchedEntities).to.have.property('city');
+        expect(matchedEntities.city).to.eql(cityEntity);
+        expect(Object.keys(missingEntities)).to.have.length(1);
+      });
+
+      it('should message entities with expected entities in a simple case (two entities)', function () {
         const ageEntity = {
           dim: 'number',
           start: 0,
