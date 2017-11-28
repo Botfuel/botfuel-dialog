@@ -89,9 +89,11 @@ class PromptDialog extends Dialog {
           return { remainingCandidates, newValue };
         }
 
+        const reducedValue = parameter.reducer(newValue, candidate);
+
         return {
           remainingCandidates: filterSamePositionEntities(candidates, candidate),
-          newValue: parameter.reducer(newValue, candidate),
+          newValue: reducedValue === undefined ? null : reducedValue,
         };
       }, {
         remainingCandidates: sameDimCandidates,
