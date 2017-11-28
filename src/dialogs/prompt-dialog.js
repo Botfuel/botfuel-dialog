@@ -227,7 +227,7 @@ class PromptDialog extends Dialog {
     logger.debug('executeWhenReady', { missingEntities, matchedEntities });
     await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
     await this.display(adapter, userId, 'entities', { matchedEntities, missingEntities });
-    if (missingEntities.length === 0) {
+    if (Object.keys(missingEntities).length === 0) {
       return this.executeWhenCompleted(adapter, userId, matchedEntities);
     }
     return { status: this.STATUS_READY };
