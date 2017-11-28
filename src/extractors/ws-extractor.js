@@ -29,12 +29,11 @@ class WsExtractor extends Extractor {
    * @param {Object} parameters - the extractor parameters
    */
   constructor(parameters) {
-    super();
+    super(parameters);
     this.client = new nlp.EntityExtraction({
       appId: process.env.BOTFUEL_APP_ID,
       appKey: process.env.BOTFUEL_APP_KEY,
     });
-    this.parameters = parameters;
   }
 
   // eslint-disable-next-line require-jsdoc

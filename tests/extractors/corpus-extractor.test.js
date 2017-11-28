@@ -18,13 +18,15 @@ describe('CorpusExtractor', function () {
     expect(entities).to.eql([
       {
         dim: 'teams',
-        body: 'Olympique Lyonnais',
+        body: 'L\'Olympique Lyonnais',
         values: [
           {
             type: 'string',
             value: 'Olympique Lyonnais',
           },
         ],
+        startIndex: 20,
+        endIndex: 40,
       },
       {
         dim: 'teams',
@@ -35,6 +37,8 @@ describe('CorpusExtractor', function () {
             value: 'Béziers',
           },
         ],
+        startIndex: 0,
+        endIndex: 7,
       },
     ]);
   });
@@ -43,4 +47,47 @@ describe('CorpusExtractor', function () {
     const entities = await extractor.compute('LOL');
     expect(entities).to.eql([]);
   });
+
+    it('should properly extract when several synonyms', async function () {
+    const entities = await extractor.compute('Paris Saint-Germain, Paris SG et PSG sont 3 synonymes.');
+    expect(entities).to.eql([
+      {
+        dim: 'teams',
+        body: 'Paris Saint-Germain',
+        values: [
+          {
+            type: 'string',
+            value: 'Paris Saint-Germain',
+          },
+        ],
+        startIndex: 0,
+        endIndex: 19,
+      },
+      {
+        dim: 'teams',
+        body: 'Paris SG',
+        values: [
+          {
+            type: 'string',
+            value: 'Paris Saint-Germain',
+          },
+        ],
+        startIndex: 21,
+        endIndex: 29,
+      },
+      {
+        dim: 'teams',
+        body: 'PSG',
+        values: [
+          {
+            type: 'string',
+            value: 'Paris Saint-Germain',
+          },
+        ],
+        startIndex: 33,
+        endIndex: 36,
+      },
+    ]);
+  });
+
 });

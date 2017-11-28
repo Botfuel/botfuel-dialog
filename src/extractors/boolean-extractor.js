@@ -33,7 +33,7 @@ class BooleanExtractor extends CorpusExtractor {
   }
 
   // eslint-disable-next-line require-jsdoc
-  getEntity(value) {
+  buildValue(value) {
     return { value: value === '1', type: 'boolean' };
   }
 }
