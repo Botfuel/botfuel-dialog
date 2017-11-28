@@ -472,10 +472,10 @@ describe('PromptDialog', function () {
           },
           {
             dim: 'number',
-            values: [{ value: '88', type: 'integer' }],
+            values: [{ value: '99', type: 'integer' }],
             start: 6,
             end: 8,
-            body: '88',
+            body: '99',
           },
         ];
 
