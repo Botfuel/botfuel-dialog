@@ -35,7 +35,9 @@ class Nlu {
   constructor(config) {
     logger.debug('constructor', config);
     this.config = config;
-    this.extractor = new CompositeExtractor(this.getExtractors(`${config.path}/src/extractors`));
+    this.extractor = new CompositeExtractor({
+      extractors: this.getExtractors(`${config.path}/src/extractors`),
+    });
     this.classifier = new Classifier(config);
     if (config.qna) {
       this.qna = new Qna({

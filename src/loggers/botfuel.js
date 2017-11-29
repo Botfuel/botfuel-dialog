@@ -41,9 +41,9 @@ module.exports = {
       MongoBrain: {
         disable: ['debug'],
       },
-      MemoryBrain: {
-        disable: ['debug'],
-      },
+      // MemoryBrain: {
+      //   disable: ['debug'],
+      // },
       WsExtractor: {
         disable: ['debug'],
       },
