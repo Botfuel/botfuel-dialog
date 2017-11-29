@@ -69,6 +69,10 @@ class DialogManager {
    */
   getDialog(dialog) {
     logger.debug('getDialog', dialog);
+    // @TODO: fix here we can have intents or dialogs, it's really confusing
+    if (Object.hasOwnProperty.call(dialog, 'label') && !Object.hasOwnProperty.call(dialog, 'name')) {
+      dialog.name = dialog.label;
+    }
     const path = this.getDialogPath(dialog.name);
     if (path) {
       const DialogConstructor = require(path);
@@ -160,7 +164,7 @@ class DialogManager {
         nb++;
       }
       const status = nb > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
-      const name = intent.label;
+      const name = intent.name;
       newDialogs.push({ name, entities, status });
     }
     this.updateWithDialogs(userId, dialogs, newDialogs, entities);
