@@ -28,7 +28,7 @@ const filterSamePositionEntities = (entities, entity) =>
 /**
  * The prompt dialog prompts the user for a number of entities.
  * The dialog parameters is an Object containing:
- *   - a namespace String representing the label of the dialog
+ *   - a namespace String representing the name of the dialog
  *   - an entities Object of the form:
  * ```
  *     <entity name>: {

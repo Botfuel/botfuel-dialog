@@ -175,7 +175,7 @@ class Bot {
   async respondWhenPostback(userMessage) {
     logger.debug('respondWhenPostback', userMessage);
     const dialog = {
-      label: userMessage.payload.value.dialog,
+      name: userMessage.payload.value.dialog,
       entities: userMessage.payload.value.entities,
     };
     return this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
@@ -191,7 +191,7 @@ class Bot {
   async respondWhenImage(userMessage) {
     logger.debug('respondWhenImage', userMessage);
     const dialog = {
-      label: 'image',
+      name: 'image',
       entities: [{ url: userMessage.payload.value.url }],
     };
     return this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
