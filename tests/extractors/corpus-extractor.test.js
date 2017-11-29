@@ -64,7 +64,7 @@ describe('CorpusExtractor', function () {
     expect(entities).to.eql([]);
   });
 
-    it('should properly extract when several synonyms', async function () {
+  it('should properly extract when several synonyms', async function () {
     const entities = await extractor.compute('Paris Saint-Germain, Paris SG et PSG sont 3 synonymes.');
     expect(entities).to.eql([
       {
@@ -105,5 +105,4 @@ describe('CorpusExtractor', function () {
       },
     ]);
   });
-
 });

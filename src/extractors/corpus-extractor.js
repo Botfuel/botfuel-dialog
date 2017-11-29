@@ -15,12 +15,14 @@
  */
 
 const logger = require('logtown')('CorpusExtractor');
-var CharFunk = require('charfunk');
+const CharFunk = require('charfunk');
 const Corpus = require('../corpora/corpus');
 const Extractor = require('./extractor');
 
 /**
  * Corpus based extractor.
+ * See {@link Corpus}.
+ * @extends Extractor
  */
 class CorpusExtractor extends Extractor {
   // eslint-disable-next-line require-jsdoc
@@ -31,8 +33,8 @@ class CorpusExtractor extends Extractor {
     for (const row of this.parameters.corpus.matrix) {
       for (const word of row) {
         this
-          .extracts(normalizedSentence, word)
-          .map(index => this.pushEntity(entities, {
+          .findOccurences(normalizedSentence, word)
+          .map(index => this.addEntity(entities, {
             dim: this.parameters.dimension,
             body: word,
             values: [this.buildValue(row[0])],
@@ -44,7 +46,14 @@ class CorpusExtractor extends Extractor {
     return entities;
   }
 
-  pushEntity(entities, newEntity) {
+  /**
+   * Adds an entity to an array of entities.
+   * @private
+   * @param {Object[]} entities - the array of entities
+   * @param {Object} newEntity - the entity
+   * @returns {void}
+   */
+  addEntity(entities, newEntity) {
     for (let i = 0; i < entities.length; i++) {
       const entity = entities[i];
       if (newEntity.startIndex <= entity.startIndex
@@ -57,15 +66,16 @@ class CorpusExtractor extends Extractor {
 
   /**
    * Finds occurences of a word in a sentence.
+   * @private
    * @param {String} sentence - the sentence
    * @param {String} word - the word
    * @returns {Object[]} an array of objects, each object contains start and end indices
    */
-  extracts(sentence, word) {
+  findOccurences(sentence, word) {
     logger.debug('extracts', sentence, word);
     const normalizedWord = Corpus.normalize(word, this.parameters.options);
     const results = [];
-    for (let startIndex = -1, endIndex = 0;;) {
+    for (let startIndex = -1, endIndex = 0; ;) {
       startIndex = sentence.indexOf(normalizedWord, endIndex);
       endIndex = startIndex + normalizedWord.length;
       if (startIndex < 0
