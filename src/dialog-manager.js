@@ -69,7 +69,7 @@ class DialogManager {
    */
   getDialog(dialog) {
     logger.debug('getDialog', dialog);
-    // @TODO: fix here we can have intents or dialogs, it's really confusing
+    // @TODO: here we can have intents or dialogs, the method name is really confusing
     if (Object.hasOwnProperty.call(dialog, 'label') && !Object.hasOwnProperty.call(dialog, 'name')) {
       dialog.name = dialog.label;
     }
