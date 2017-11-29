@@ -1,3 +1,4 @@
 git@github.com:Botfuel/sample-bot-sdk2-ecommerce
 git@github.com:Botfuel/sample-bot-sdk2-complexdialogs
 git@github.com:Botfuel/sample-bot-sdk2-qna
+git@github.com:Botfuel/sample-bot-sdk2-complexentities
