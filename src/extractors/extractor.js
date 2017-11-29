@@ -21,6 +21,15 @@ const { MissingImplementationError } = require('../errors');
  */
 class Extractor {
   /**
+   * @constructor
+   * @param {Object} parameters - the extractor parameters
+   */
+  constructor(parameters) {
+    this.parameters = parameters;
+  }
+
+
+  /**
    * Extracts the entities.
    * @abstract
    * @async

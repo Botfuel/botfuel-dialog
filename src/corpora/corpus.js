@@ -75,19 +75,6 @@ class Corpus {
   }
 
   /**
-   * Checks if two words match when normalized.
-   * @static
-   * @param {String} word1 - the first word
-   * @param {String} word2 - the second word
-   * @param {Object} options - the normalization options
-   * @returns {boolean} true iff both words match
-   */
-  static matches(word1, word2, options) {
-    logger.debug('matches', word1, word2, options);
-    return Corpus.normalize(word1, options) === Corpus.normalize(word2, options);
-  }
-
-  /**
    * Gets matching value for a key.
    * @param {String} key - the key
    * @param {Object} options - the normalization options
@@ -95,22 +82,16 @@ class Corpus {
    */
   getValue(key, options) {
     logger.debug('getValue', key, options);
+    const normalizedKey = Corpus.normalize(key, options);
     for (const row of this.matrix) {
       for (const word of row) {
-        if (Corpus.matches(key, word, options)) {
+        const normalizedWord = Corpus.normalize(word, options);
+        if (normalizedKey === normalizedWord) {
           return row[0];
         }
       }
     }
     return null;
-  }
-
-  /**
-   * Flattens the matrix of words into a list of words.
-   * @returns {String[]} the resulting list of words
-   */
-  getWords() {
-    return this.matrix.reduce((s, t) => s.concat(t));
   }
 }
 

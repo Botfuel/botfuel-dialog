@@ -15,88 +15,86 @@
  */
 
 const logger = require('logtown')('CorpusExtractor');
+const CharFunk = require('charfunk');
 const Corpus = require('../corpora/corpus');
 const Extractor = require('./extractor');
 
 /**
  * Corpus based extractor.
+ * See {@link Corpus}.
+ * @extends Extractor
  */
 class CorpusExtractor extends Extractor {
-  /**
-   * @constructor
-   * @param {Object} parameters - the extractor parameters
-   */
-  constructor(parameters) {
-    super();
-    this.dimension = parameters.dimension;
-    this.corpus = parameters.corpus;
-    this.options = parameters.options;
-  }
-
   // eslint-disable-next-line require-jsdoc
   async compute(sentence) {
     logger.debug('compute', sentence);
-    const normalizedSentence = Corpus.normalize(sentence, this.options);
-    return this.computeEntities(normalizedSentence, this.corpus.getWords(), []);
-  }
-
-  /**
-   * Gets the remainder of a sentence when removing a word.
-   * @param {String} sentence - the sentence
-   * @param {String} word - the word
-   * @returns {String|null} the remainder
-   */
-  getRemainder(sentence, word) {
-    logger.debug('getRemainder', sentence, word);
-    const startIndex = sentence.indexOf(word);
-    if (startIndex < 0) {
-      return null;
-    }
-    if (startIndex > 0 && sentence[startIndex - 1] !== ' ') {
-      return null;
-    }
-    const endIndex = startIndex + word.length;
-    if (endIndex < sentence.length && sentence[endIndex] !== ' ') {
-      return null;
-    }
-    return sentence.slice(0, startIndex) + sentence.slice(endIndex);
-  }
-
-  /**
-   * Gets the entity corresponding to a string value.
-   * @param {String} value - the value
-   * @returns {Object} the entity
-   */
-  getEntity(value) {
-    return { value, type: 'string' };
-  }
-
-  /**
-   * Recursive method for computing the entities
-   * of a sentence corresponding to a list of given words.
-   * @param {String} sentence - the sentence
-   * @param {String[]} words - the words
-   * @param {Object[]} entities - an accumulator for accumulating entities
-   * @returns {Object[]} the entities found in the sentence
-   */
-  computeEntities(sentence, words, entities) {
-    logger.debug('computeEntities', sentence, words, entities);
-    if (sentence.length > 0) {
-      for (const word of words) {
-        const normalizedWord = Corpus.normalize(word, this.options);
-        const remainder = this.getRemainder(sentence, normalizedWord);
-        if (remainder !== null) {
-          const value = this.corpus.getValue(normalizedWord, this.options);
-          entities.push({
-            dim: this.dimension,
+    const normalizedSentence = Corpus.normalize(sentence, this.parameters.options);
+    const entities = [];
+    for (const row of this.parameters.corpus.matrix) {
+      for (const word of row) {
+        this
+          .findOccurences(normalizedSentence, word)
+          .map(index => this.addEntity(entities, {
+            dim: this.parameters.dimension,
             body: word,
-            values: [this.getEntity(value)],
-          });
-          return this.computeEntities(remainder, words, entities);
-        }
+            values: [this.buildValue(row[0])],
+            startIndex: index.startIndex,
+            endIndex: index.endIndex,
+          }));
       }
     }
     return entities;
+  }
+
+  /**
+   * Adds an entity to an array of entities.
+   * @private
+   * @param {Object[]} entities - the array of entities
+   * @param {Object} newEntity - the entity
+   * @returns {void}
+   */
+  addEntity(entities, newEntity) {
+    for (let i = 0; i < entities.length; i++) {
+      const entity = entities[i];
+      if (newEntity.startIndex <= entity.startIndex
+          && newEntity.endIndex >= entity.endIndex) {
+        entities.splice(i, 1);
+      }
+    }
+    entities.push(newEntity);
+  }
+
+  /**
+   * Finds occurences of a word in a sentence.
+   * @private
+   * @param {String} sentence - the sentence
+   * @param {String} word - the word
+   * @returns {Object[]} an array of objects, each object contains start and end indices
+   */
+  findOccurences(sentence, word) {
+    logger.debug('extracts', sentence, word);
+    const normalizedWord = Corpus.normalize(word, this.parameters.options);
+    const results = [];
+    for (let startIndex = -1, endIndex = 0; ;) {
+      startIndex = sentence.indexOf(normalizedWord, endIndex);
+      endIndex = startIndex + normalizedWord.length;
+      if (startIndex < 0
+          || (startIndex > 0 && CharFunk.isLetterOrDigit(sentence[startIndex - 1]))
+          || (endIndex < sentence.length && CharFunk.isLetterOrDigit(sentence[endIndex]))) {
+        break;
+      }
+      results.push({ startIndex, endIndex });
+    }
+    return results;
+  }
+
+  /**
+   * Builds the object value from a string.
+   * @param {String} value - the string
+   * @returns {Object} the object value
+   */
+  buildValue(value) {
+    return { value, type: 'string' };
   }
 }
 
