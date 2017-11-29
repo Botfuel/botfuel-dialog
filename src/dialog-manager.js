@@ -160,7 +160,7 @@ class DialogManager {
         nb++;
       }
       const status = nb > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
-      const name = intent.name;
+      const name = intent.label;
       newDialogs.push({ name, entities, status });
     }
     this.updateWithDialogs(userId, dialogs, newDialogs, entities);
