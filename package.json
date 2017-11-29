@@ -32,7 +32,7 @@
     "fs": "0.0.1-security",
     "fs-promise": "^1.0.0",
     "lodash": "^4.17.4",
-    "logtown": "^2.1.1",
+    "logtown": "2.1.1",
     "logtown-winston": "^1.0.0",
     "mongodb": "^2.2.31",
     "natural": "^0.5.4",
