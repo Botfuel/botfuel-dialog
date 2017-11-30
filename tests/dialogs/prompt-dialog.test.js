@@ -211,6 +211,57 @@ describe('PromptDialog', function () {
         expect(matchedEntities.maxAge).to.eql(ageEntity3);
         expect(Object.keys(missingEntities)).to.have.length(0);
       });
+
+      it('should retain order of fulfilled entities', function () {
+        const numberEntity1 = {
+          dim: 'number',
+          start: 0,
+          end: 2,
+          values: [{ value: 15, type: 'integer' }],
+          body: '15',
+        };
+
+        const messageEntities = [numberEntity1];
+
+        const expectedEntities = {
+          maxAge: {
+            dim: 'number',
+          },
+          minAge: {
+            dim: 'number',
+            priority: 1,
+          },
+        };
+
+        const maxAgeEntity = {
+          dim: 'number',
+          start: 0,
+          end: 2,
+          values: [{ value: 42, type: 'integer' }],
+          body: '42',
+        };
+
+        const { matchedEntities, missingEntities } = prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {
+            maxAge: maxAgeEntity,
+            minAge: {
+              dim: 'number',
+              start: 0,
+              end: 2,
+              values: [{ value: 10, type: 'integer' }],
+              body: '10',
+            },
+          },
+        );
+
+        expect(matchedEntities).to.have.property('minAge');
+        expect(matchedEntities.minAge).to.eql(numberEntity1);
+        expect(matchedEntities).to.have.property('maxAge');
+        expect(matchedEntities.maxAge).to.eql(maxAgeEntity);
+        expect(Object.keys(missingEntities)).to.have.length(0);
+      });
     });
 
     describe('missing entities', () => {

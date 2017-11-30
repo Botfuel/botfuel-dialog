@@ -136,11 +136,9 @@ class PromptDialog extends Dialog {
               reducer: dialogParameter.reducer ||
                 ((oldEntities, newEntities) => newEntities),
               isFulfilled,
-              // Here we set fulfilled parameters’s priority to the lowest value possible
               // Because we need to to be able to override them but we want unfulfilled parameters
               // To have priority over them
-              priority: isFulfilled(dialogEntities[name], { dialogEntities }) ?
-                Number.NEGATIVE_INFINITY : dialogParameter.priority || 0,
+              priority: dialogParameter.priority || 0,
             },
           };
         },
@@ -148,13 +146,29 @@ class PromptDialog extends Dialog {
     );
 
     const result = Object.keys(dialogParameters)
-      // Sort expected entities by priority descending (highest priority first)
+      // Sort expected entities by:
+      // isFulfilled descending (unfulfilled first)
+      // then priority descending (highest priority first)
       .sort((nameA, nameB) => {
-        const priorityA = dialogParameters[nameA].priority;
-        const priorityB = dialogParameters[nameB].priority;
-        const valueA = typeof priorityA === 'function' ? priorityA() : priorityA;
-        const valueB = typeof priorityB === 'function' ? priorityB() : priorityB;
-        return valueB - valueA;
+        const dialogParameterA = dialogParameters[nameA];
+        const dialogParameterB = dialogParameters[nameB];
+
+        const priorityA = dialogParameterA.priority;
+        const priorityB = dialogParameterB.priority;
+
+        const priorityValueA = typeof priorityA === 'function' ? priorityA() : priorityA;
+        const priorityValueB = typeof priorityB === 'function' ? priorityB() : priorityB;
+
+        const isFulfilledA = dialogParameterA
+          .isFulfilled(dialogEntities[nameA], { dialogEntities }) ? 0 : 1;
+        const isFulfilledB = dialogParameterB
+          .isFulfilled(dialogEntities[nameB], { dialogEntities }) ? 0 : 1;
+
+        if (isFulfilledB !== isFulfilledA) {
+          return isFulfilledB - isFulfilledA;
+        }
+
+        return priorityValueB - priorityValueA;
       })
       .reduce(({ matchedEntities, remainingCandidates, missingEntities }, name) => {
         const dialogParameter = dialogParameters[name];
