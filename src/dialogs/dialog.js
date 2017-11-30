@@ -110,7 +110,7 @@ class Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {String[]} messageEntities - the message entities
-   * @returns {Promise.<void>}
+   * @returns {Promise.<Object>}
    */
   async execute() {
     throw new MissingImplementationError();

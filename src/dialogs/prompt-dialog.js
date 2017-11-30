@@ -205,7 +205,7 @@ class PromptDialog extends Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} [candidates] - the message entities extracted from the message
-   * @returns {Promise.<String>} the new dialog status
+   * @returns {Promise.<Object>} the new dialog status
    */
   async executeWhenBlocked(adapter, userId, candidates) {
     logger.debug('executeWhenBlocked', userId, candidates);
@@ -219,7 +219,7 @@ class PromptDialog extends Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} candidates - the message entities extracted from the message
-   * @returns {Promise.<String>} the new dialog status
+   * @returns {Promise.<Object>} the new dialog status
    */
   async executeWhenWaiting(adapter, userId, candidates) {
     logger.debug('executeWhenWaiting', userId, candidates);
@@ -247,7 +247,7 @@ class PromptDialog extends Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} candidates - the message entities extracted from the message
-   * @returns {Promise.<string>} the new dialog status
+   * @returns {Promise.<Object>} the new dialog status
    */
   async executeWhenReady(adapter, userId, candidates) {
     logger.debug('executeWhenReady', userId, candidates);
@@ -272,14 +272,14 @@ class PromptDialog extends Dialog {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} messageEntities - the message entities
-   * @returns {Promise.<string>} the new dialog status
+   * @returns {Promise.<Object>} the new dialog status
    */
   async executeWhenCompleted() {
     logger.debug('executeWhenCompleted');
     return { status: this.STATUS_COMPLETED };
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritdoc */
   async execute(adapter, userId, candidates, status) {
     logger.debug('execute', userId, candidates, status);
     switch (status) {
