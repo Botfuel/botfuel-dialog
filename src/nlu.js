@@ -40,12 +40,18 @@ class Nlu {
     });
     this.classifier = new Classifier(config);
     if (config.qna) {
+      if (!!process.env.BOTFUEL_APP_ID || !!process.env.BOTFUEL_APP_KEY) {
+        logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the QnA service!');
+      }
       this.qna = new Qna({
         appId: process.env.BOTFUEL_APP_ID,
         appKey: process.env.BOTFUEL_APP_KEY,
       });
     }
     if (config.spellchecking) {
+      if (!!process.env.BOTFUEL_APP_ID || !!process.env.BOTFUEL_APP_KEY) {
+        logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!');
+      }
       this.spellchecking = new Spellchecking({
         appId: process.env.BOTFUEL_APP_ID,
         appKey: process.env.BOTFUEL_APP_KEY,

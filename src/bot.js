@@ -44,6 +44,15 @@ class Bot {
    */
   constructor(config) {
     LoggerManager.configure(config);
+    if (process.env.BOT_ID === undefined || process.env.BOT_ID === '') {
+      logger.warn('Environment variable BOT_ID is not defined!');
+    }
+    if (process.env.BOTFUEL_APP_ID === undefined || process.env.BOT_APP_ID === '') {
+      logger.warn('Environment variable BOTFUEL_APP_ID is not defined!');
+    }
+    if (process.env.BOTFUEL_APP_KEY === undefined || process.env.BOT_APP_KEY === '') {
+      logger.warn('Environment variable BOTFUEL_APP_KEY is not defined!');
+    }
     this.id = process.env.BOT_ID;
     logger.debug('constructor', config);
     switch (config.adapter) {
