@@ -42,16 +42,16 @@ class DialogManager {
 
   /**
    * Gets dialog path
-   * @param {String} label - the dialog's label
+   * @param {String} name - the dialog's name
    * @returns {String|null} - the dialog path if found or null
    */
-  getDialogPath(label) {
-    logger.debug('getDialogPath', label);
+  getDialogPath(name) {
+    logger.debug('getDialogPath', name);
     const paths = [
-      `${this.config.path}/src/dialogs/${label}.${this.config.adapter}`,
-      `${this.config.path}/src/dialogs/${label}`,
-      `${__dirname}/dialogs/${label}.${this.config.adapter}`,
-      `${__dirname}/dialogs/${label}`,
+      `${this.config.path}/src/dialogs/${name}.${this.config.adapter}`,
+      `${this.config.path}/src/dialogs/${name}`,
+      `${__dirname}/dialogs/${name}.${this.config.adapter}`,
+      `${__dirname}/dialogs/${name}`,
     ];
     for (const path of paths) {
       logger.debug('getDialogPath: path', path);
@@ -69,13 +69,17 @@ class DialogManager {
    */
   getDialog(dialog) {
     logger.debug('getDialog', dialog);
-    const path = this.getDialogPath(dialog.label);
+    // @TODO: here we can have intents or dialogs, the method name is really confusing
+    if (Object.hasOwnProperty.call(dialog, 'label') && !Object.hasOwnProperty.call(dialog, 'name')) {
+      dialog.name = dialog.label;
+    }
+    const path = this.getDialogPath(dialog.name);
     if (path) {
       const DialogConstructor = require(path);
       return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
     }
-    logger.error(`Could not resolve '${dialog.label}' dialog`);
-    logger.error(`Make sure the '${dialog.label}' dialog file exists at ${process.cwd()}/src/dialogs/${dialog.label}.js`);
+    logger.error(`Could not resolve '${dialog.name}' dialog`);
+    logger.error(`Make sure the '${dialog.name}' dialog file exists at ${process.cwd()}/src/dialogs/${dialog.name}.js`);
     throw new DialogError({ dialog });
   }
 
@@ -107,13 +111,13 @@ class DialogManager {
   /**
    * Returns the last dialog to execute if no other dialog is found.
    * @param {Object[]} previousDialogs - the previous dialogs
-   * @returns {String} a dialog label
+   * @returns {String} a dialog name
    */
   getLastDialog(previousDialogs) {
     for (let i = previousDialogs.length - 1; i >= 0; i--) {
       const dialog = previousDialogs[i];
       if ((dialog.status === Dialog.STATUS_COMPLETED) && dialog.characteristics.reentrant) {
-        return dialog.label;
+        return dialog.name;
       }
     }
     return null;
@@ -160,8 +164,8 @@ class DialogManager {
         nb++;
       }
       const status = nb > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
-      const label = intent.label;
-      newDialogs.push({ label, entities, status });
+      const name = intent.name;
+      newDialogs.push({ name, entities, status });
     }
     this.updateWithDialogs(userId, dialogs, newDialogs, entities);
   }
@@ -180,7 +184,7 @@ class DialogManager {
       const newDialog = newDialogs[i];
       const lastIndex = dialogs.stack.length - 1;
       const lastDialog = lastIndex >= 0 ? dialogs.stack[lastIndex] : null;
-      if (lastDialog && lastDialog.label === newDialog.label) {
+      if (lastDialog && lastDialog.name === newDialog.name) {
         lastDialog.entities = newDialog.entities;
         lastDialog.status = newDialog.status || Dialog.STATUS_READY;
       } else {
@@ -189,7 +193,7 @@ class DialogManager {
     }
     if (dialogs.stack.length === 0) { // no intent detected
       dialogs.stack.push({
-        label: this.getLastDialog(dialogs.previous) || 'default-dialog',
+        name: this.getLastDialog(dialogs.previous) || 'default-dialog',
         entities: entities || [],
         status: Dialog.STATUS_READY,
       });
@@ -221,7 +225,7 @@ class DialogManager {
     if (status === Dialog.STATUS_DISCARDED || status === Dialog.STATUS_COMPLETED) {
       dialogs.stack = dialogs.stack.slice(0, -1);
       dialogs.previous.push({
-        label: dialog.label,
+        name: dialog.name,
         status: dialog.status,
         characteristics: dialogInstance.characteristics,
         date: Date.now(),
