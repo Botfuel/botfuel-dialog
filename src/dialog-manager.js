@@ -22,9 +22,6 @@ const { DialogError } = require('./errors');
 /**
  * The dialog manager turns NLU output into a dialog stack.
  *
- * A dialog manager has:
- * - an intent threshold.
- *
  * The dialog manager has access to:
  * - the bot {@link Brain}.
  */
@@ -37,7 +34,6 @@ class DialogManager {
   constructor(brain, config) {
     this.brain = brain;
     this.config = config;
-    this.intentThreshold = this.config.intentThreshold || 0.8;
   }
 
   /**
@@ -69,10 +65,6 @@ class DialogManager {
    */
   getDialog(dialog) {
     logger.debug('getDialog', dialog);
-    // @TODO: here we can have intents or dialogs, the method name is really confusing
-    if (Object.hasOwnProperty.call(dialog, 'label') && !Object.hasOwnProperty.call(dialog, 'name')) {
-      dialog.name = dialog.label;
-    }
     const path = this.getDialogPath(dialog.name);
     if (path) {
       const DialogConstructor = require(path);
@@ -84,15 +76,13 @@ class DialogManager {
   }
 
   /**
-   * Filters and sorts intents
+   * Sorts intents
    * @param {Object[]} intents - the intents
-   * @returns {Object[]} the filtered and sorted intents
+   * @returns {Object[]} the sorted intents
    */
-  filterIntents(intents) {
-    logger.debug('filterIntents', intents);
+  sortIntents(intents) {
+    logger.debug('sortIntents', intents);
     return intents
-      .filter(intent => intent.value > this.intentThreshold)
-      .slice(0, 2)
       .sort((intent1, intent2) => {
         const dialog1 = this.getDialog(intent1);
         const dialog2 = this.getDialog(intent2);
@@ -154,7 +144,7 @@ class DialogManager {
    */
   updateWithIntents(userId, dialogs, intents, entities) {
     logger.debug('updateWithIntents', userId, dialogs, intents, entities);
-    intents = this.filterIntents(intents);
+    intents = this.sortIntents(intents);
     logger.debug('updateWithIntents: intents', intents);
     let nb = 0;
     const newDialogs = [];

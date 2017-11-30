@@ -36,6 +36,7 @@ class Classifier {
     LoggerManager.configure(config);
     logger.debug('constructor', config);
     this.locale = config.locale;
+    this.intentThreshold = config.intentThreshold || 0.8;
     this.modelFilename = `${config.path}/models/model.json`;
     this.intentDirname = `${config.path}/src/intents`;
     this.classifier = null;
@@ -127,7 +128,12 @@ class Classifier {
   async compute(sentence, entities) {
     logger.debug('compute', sentence, entities);
     const features = this.computeFeatures(sentence, entities);
-    return this.classifier.getClassifications(features);
+    return this
+      .classifier
+      .getClassifications(features)
+      .filter(intent => intent.value > this.intentThreshold)
+      .slice(0, 2)
+      .map(intent => ({ name: intent.label, value: intent.value }));
   }
 
   /**
