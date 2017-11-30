@@ -40,7 +40,10 @@ class Nlu {
     });
     this.classifier = new Classifier(config);
     if (config.qna) {
-      if (!!process.env.BOTFUEL_APP_ID || !!process.env.BOTFUEL_APP_KEY) {
+      if (process.env.BOTFUEL_APP_ID === undefined
+          || process.env.BOTFUEL_APP_ID === ''
+          || process.env.BOTFUEL_APP_KEY === undefined
+          || process.env.BOTFUEL_APP_KEY === '') {
         logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the QnA service!');
       }
       this.qna = new Qna({
@@ -49,7 +52,10 @@ class Nlu {
       });
     }
     if (config.spellchecking) {
-      if (!!process.env.BOTFUEL_APP_ID || !!process.env.BOTFUEL_APP_KEY) {
+      if (process.env.BOTFUEL_APP_ID === undefined
+          || process.env.BOTFUEL_APP_ID === ''
+          || process.env.BOTFUEL_APP_KEY === undefined
+          || process.env.BOTFUEL_APP_KEY === '') {
         logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!');
       }
       this.spellchecking = new Spellchecking({
@@ -60,7 +66,7 @@ class Nlu {
   }
 
   /**
-   * Gets extractor files
+   * Gets extractor files.
    * @param {String} path - extractors path
    * @returns {Array.<string>} - extractor files
    */
@@ -73,9 +79,9 @@ class Nlu {
   }
 
   /**
-   * Gets and instantiates extractors
+   * Gets extractors.
    * @param {String} path - extractors path
-   * @returns {Array.<*>} - extractors instances
+   * @returns {Array.<*>} - extractor instances
    */
   getExtractors(path) {
     // user extractors
@@ -105,49 +111,54 @@ class Nlu {
   async compute(sentence) {
     logger.debug('compute', sentence);
     if (this.config.spellchecking) {
+      logger.debug('compute: spellchecking');
       const result = await this.spellcheck(sentence, this.config.spellchecking);
       sentence = result.correctSentence;
     }
-    if (this.config.qna === 'before') {
-      const result = await this.qnaCompute(sentence);
-      if (result.entities[0].value.length !== 0) {
-        return result;
+    if (this.config.qna) {
+      logger.debug('compute: qna');
+      if (this.config.qna === 'before') {
+        const result = await this.computeWithQna(sentence);
+        logger.debug('compute: computing with QnA first', result);
+        if (result.entities[0].value.length !== 0) {
+          return result;
+        }
+        return this.computeWithClassifier(sentence);
       }
-      return this.localCompute(sentence);
-    } else if (this.config.qna === 'after') {
-      const result = await this.localCompute(sentence);
+      const result = await this.computeWithClassifier(sentence);
+      logger.debug('compute: computing with classifier first', result);
       if (result.intents.length !== 0) {
         return result;
       }
-      return this.qnaCompute(sentence);
+      return this.computeWithQna(sentence);
     }
-    return this.localCompute(sentence);
+    return this.computeWithClassifier(sentence);
   }
 
   /**
-   * Computes local bot intents and entities
+   * Computes intents and entities with classifier.
    * @param {String} sentence - the user sentence
    * @returns {Promise.<Object>}
    */
-  async localCompute(sentence) {
-    logger.debug('localCompute', sentence);
+  async computeWithClassifier(sentence) {
+    logger.debug('computeWithClassifier', sentence);
     const entities = await this.extractor.compute(sentence);
-    logger.debug('localCompute: entities', entities);
+    logger.debug('computeWithClassifier: entities', entities);
     const intents = await this.classifier.compute(sentence, entities);
-    logger.debug('localCompute: intents', intents);
+    logger.debug('computeWithClassifier: intents', intents);
     return { intents, entities };
   }
 
   /**
-   * Computes qnas intents and entities
+   * Computes intents and entities with QnA.
    * @param {String} sentence - the user sentence
    * @returns {Promise.<Object>}
    */
-  async qnaCompute(sentence) {
-    logger.debug('qnaCompute', sentence);
+  async computeWithQna(sentence) {
+    logger.debug('computeWithQna', sentence);
     try {
       const qnas = await this.qna.getMatchingQnas({ sentence });
-      logger.debug('compute: qnas', qnas);
+      logger.debug('computeWithQna: qnas', qnas);
       const intents = [
         {
           name: 'qnas-dialog',
