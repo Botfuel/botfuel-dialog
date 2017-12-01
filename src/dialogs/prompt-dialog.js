@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const isEqual = require('lodash/isEqual');
 const omit = require('lodash/omit');
 const intersection = require('lodash/intersection');
 const logger = require('logtown')('PromptDialog');
@@ -30,10 +31,8 @@ const doEntitiesIntersect = (entityA, entityB) => !!(intersection(
 ).length);
 
 const filterIntersectingEntities = (entities, entity) => {
-  // If there is only one entity left, do not even check if it intersects with
-  // other entities.
-  if (entities.length === 1) {
-    return [];
+  if (entity.startIndex == null || entity.endIndex == null) {
+    return entities.filter(e => !isEqual(e, entity));
   }
 
   return entities.filter(e => !doEntitiesIntersect(e, entity));
