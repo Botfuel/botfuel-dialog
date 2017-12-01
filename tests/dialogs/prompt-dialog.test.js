@@ -356,6 +356,59 @@ describe('PromptDialog', function () {
 
         expect(Object.keys(missingEntities)).to.have.length(0);
       });
+
+      it('should remove candidates that intersect with a matched candidate', () => {
+        const ageEntity = {
+          dim: 'duration',
+          start: 0,
+          end: 8,
+          values: [{ value: 10, unit: 'year' }],
+          body: '10 years',
+        };
+
+        const newAgeEntity = {
+          dim: 'duration',
+          start: 0,
+          end: 8,
+          values: [{ value: 33, unit: 'year' }],
+          body: '33 years',
+        };
+
+        const numberEntity = {
+          dim: 'number',
+          start: 0,
+          end: 2,
+          values: [{ value: 10, type: 'integer' }],
+          body: '10',
+        };
+
+        const messageEntities = [newAgeEntity, numberEntity];
+
+        const expectedEntities = {
+          age: {
+            dim: 'duration',
+          },
+          favoriteNumber: {
+            dim: 'number',
+          },
+        };
+
+        const { matchedEntities, missingEntities } = prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {
+            age: ageEntity,
+          },
+        );
+
+        expect(matchedEntities).to.have.property('age');
+        expect(matchedEntities.age).to.eql(ageEntity);
+
+        expect(matchedEntities).to.have.property('favoriteNumber');
+        expect(matchedEntities.favoriteNumber).to.eql(numberEntity);
+
+        expect(Object.keys(missingEntities)).to.have.length(0);
+      });
     });
 
     describe('isFulfilled condition', () => {

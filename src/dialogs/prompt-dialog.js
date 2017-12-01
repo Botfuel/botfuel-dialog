@@ -15,15 +15,22 @@
  */
 
 const omit = require('lodash/omit');
+const intersection = require('lodash/intersection');
 const logger = require('logtown')('PromptDialog');
 const Dialog = require('./dialog');
 
 // Helper functions
-const areEntitiesPositionsEqual = (entityA, entityB) =>
-  entityA.start === entityB.start && entityA.end === entityB.end;
+const makePositionsArray = entity => Array(entity.end - entity.start)
+  .fill()
+  .map((_, i) => i + entity.start);
 
-const filterSamePositionEntities = (entities, entity) =>
-  entities.filter(e => !areEntitiesPositionsEqual(e, entity));
+const doEntitiesIntersect = (entityA, entityB) => !!intersection(
+  makePositionsArray(entityA),
+  makePositionsArray(entityB),
+).length;
+
+const filterIntersectingEntities = (entities, entity) =>
+  entities.filter(e => !doEntitiesIntersect(e, entity));
 
 /**
  * The prompt dialog prompts the user for a number of entities.
@@ -91,7 +98,7 @@ class PromptDialog extends Dialog {
         const reducedValue = dialogParameter.reducer(newValue, candidate);
 
         return {
-          remainingCandidates: filterSamePositionEntities(candidates, candidate),
+          remainingCandidates: filterIntersectingEntities(candidates, candidate),
           newValue: reducedValue === undefined ? null : reducedValue,
         };
       }, {
