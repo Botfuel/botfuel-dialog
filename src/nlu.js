@@ -133,7 +133,7 @@ class Nlu {
       }
       const qnaResult = await this.computeWithQna(sentence);
       logger.debug('compute: qnaResult', qnaResult);
-      return qnaResult.intents.length > 0 ? qnaResult : { intents: [], entities: [] };
+      return qnaResult.intents.length > 0 ? qnaResult : { intents: [], entities: classifierResult.entities };
     }
     return this.computeWithClassifier(sentence);
   }
