@@ -15,6 +15,7 @@
  */
 
 const logger = require('logtown')('Dialog');
+const { kebabCase } = require('lodash');
 const ViewManager = require('../view-manager');
 const { MissingImplementationError } = require('../errors');
 
@@ -81,7 +82,7 @@ class Dialog {
    * @returns {String} the dialog name
    */
   getName() {
-    return this.constructor.name.toLowerCase().replace(/dialog/g, '');
+    return kebabCase(this.constructor.name);
   }
 
   /**
