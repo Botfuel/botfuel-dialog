@@ -95,7 +95,7 @@ class Nlu {
   }
 
   /**
-   * Initializes the Nlu module
+   * Initializes the Nlu module.
    * @returns {Promise.<void>}
    */
   async init() {
@@ -116,10 +116,11 @@ class Nlu {
     }
     if (this.config.qna) {
       logger.debug('compute: qna');
-      if (this.config.qna === 'before') {
+      if (this.config.qna.when === 'before') {
         try {
           const qnas = await this.qna.getMatchingQnas({ sentence });
-          if (qnas.length > 0) {
+          if ((this.config.qna.strict && qnas.length === 1)
+              || (!this.config.qna.strict && qnas.length > 0)) {
             return this.buildResult(qnas);
           }
         } catch (error) {
