@@ -34,8 +34,8 @@ describe('PromptDialog', function () {
       it('should message entities with expected entities in a simple case (one entity)', function () {
         const cityEntity = {
           dim: 'city',
-          start: 0,
-          end: 5,
+          startIndex: 0,
+          endIndex: 5,
           values: [{ value: 'Paris', type: 'string' }],
           body: 'Paris',
         };
@@ -65,15 +65,15 @@ describe('PromptDialog', function () {
       it('should message entities with expected entities in a simple case (two entities)', function () {
         const ageEntity = {
           dim: 'number',
-          start: 0,
-          end: 2,
+          startIndex: 0,
+          endIndex: 2,
           values: [{ value: 42, type: 'integer' }],
           body: '42',
         };
         const weightEntity = {
           dim: 'weight',
-          start: 10,
-          end: 14,
+          startIndex: 10,
+          endIndex: 14,
           values: [{ value: 55, type: 'integer' }],
           body: '55kg',
         };
@@ -107,22 +107,22 @@ describe('PromptDialog', function () {
       it('should match entities with highest priority first', function () {
         const ageEntity1 = {
           dim: 'number',
-          start: 0,
-          end: 2,
+          startIndex: 0,
+          endIndex: 2,
           values: [{ value: 42, type: 'integer' }],
           body: '42',
         };
         const ageEntity2 = {
           dim: 'number',
-          start: 10,
-          end: 14,
+          startIndex: 10,
+          endIndex: 14,
           values: [{ value: 24, type: 'integer' }],
           body: '24',
         };
         const ageEntity3 = {
           dim: 'number',
-          start: 16,
-          end: 18,
+          startIndex: 16,
+          endIndex: 18,
           values: [{ value: 99, type: 'integer' }],
           body: '99',
         };
@@ -161,22 +161,22 @@ describe('PromptDialog', function () {
       it('should accept functions as a priority parameter', function () {
         const ageEntity1 = {
           dim: 'number',
-          start: 0,
-          end: 2,
+          startIndex: 0,
+          endIndex: 2,
           values: [{ value: 42, type: 'integer' }],
           body: '42',
         };
         const ageEntity2 = {
           dim: 'number',
-          start: 10,
-          end: 14,
+          startIndex: 10,
+          endIndex: 14,
           values: [{ value: 24, type: 'integer' }],
           body: '24',
         };
         const ageEntity3 = {
           dim: 'number',
-          start: 16,
-          end: 18,
+          startIndex: 16,
+          endIndex: 18,
           values: [{ value: 99, type: 'integer' }],
           body: '99',
         };
@@ -215,8 +215,8 @@ describe('PromptDialog', function () {
       it('should retain order of fulfilled entities', function () {
         const numberEntity1 = {
           dim: 'number',
-          start: 0,
-          end: 2,
+          startIndex: 0,
+          endIndex: 2,
           values: [{ value: 15, type: 'integer' }],
           body: '15',
         };
@@ -235,8 +235,8 @@ describe('PromptDialog', function () {
 
         const maxAgeEntity = {
           dim: 'number',
-          start: 0,
-          end: 2,
+          startIndex: 0,
+          endIndex: 2,
           values: [{ value: 42, type: 'integer' }],
           body: '42',
         };
@@ -248,8 +248,8 @@ describe('PromptDialog', function () {
             maxAge: maxAgeEntity,
             minAge: {
               dim: 'number',
-              start: 0,
-              end: 2,
+              startIndex: 0,
+              endIndex: 2,
               values: [{ value: 10, type: 'integer' }],
               body: '10',
             },
@@ -268,8 +268,8 @@ describe('PromptDialog', function () {
       it('should return unmatched entities', () => {
         const colorEntity = {
           dim: 'color',
-          start: 10,
-          end: 14,
+          startIndex: 10,
+          endIndex: 14,
           values: [{ value: 'blue', type: 'integer' }],
           body: 'blue',
         };
@@ -304,29 +304,29 @@ describe('PromptDialog', function () {
       it('should remove candidate entities when an expected entity already matched with them', () => {
         const weightEntity1 = {
           dim: 'weight',
-          start: 0,
-          end: 4,
+          startIndex: 0,
+          endIndex: 4,
           values: [{ value: '88', type: 'integer' }],
           body: '88 kg',
         };
         const itemCountEntity1 = {
           dim: 'item-count',
-          start: 0,
-          end: 4,
+          startIndex: 0,
+          endIndex: 4,
           values: [{ value: '88', type: 'integer' }],
           body: '88 kg',
         };
         const weightEntity2 = {
           dim: 'weight',
-          start: 10,
-          end: 14,
+          startIndex: 10,
+          endIndex: 14,
           values: [{ value: '35', type: 'integer' }],
           body: '35 kg',
         };
         const itemCountEntity2 = {
           dim: 'item-count',
-          start: 10,
-          end: 14,
+          startIndex: 10,
+          endIndex: 14,
           values: [{ value: '35', type: 'integer' }],
           body: '35 kg',
         };
@@ -356,14 +356,67 @@ describe('PromptDialog', function () {
 
         expect(Object.keys(missingEntities)).to.have.length(0);
       });
+
+      it('should remove candidates that intersect with a matched candidate', () => {
+        const ageEntity = {
+          dim: 'duration',
+          startIndex: 0,
+          endIndex: 8,
+          values: [{ value: 10, unit: 'year' }],
+          body: '10 years',
+        };
+
+        const newAgeEntity = {
+          dim: 'duration',
+          startIndex: 0,
+          endIndex: 8,
+          values: [{ value: 33, unit: 'year' }],
+          body: '33 years',
+        };
+
+        const numberEntity = {
+          dim: 'number',
+          startIndex: 0,
+          endIndex: 2,
+          values: [{ value: 10, type: 'integer' }],
+          body: '10',
+        };
+
+        const messageEntities = [newAgeEntity, numberEntity];
+
+        const expectedEntities = {
+          age: {
+            dim: 'duration',
+          },
+          favoriteNumber: {
+            dim: 'number',
+          },
+        };
+
+        const { matchedEntities, missingEntities } = prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {
+            age: ageEntity,
+          },
+        );
+
+        expect(matchedEntities).to.have.property('age');
+        expect(matchedEntities.age).to.eql(ageEntity);
+
+        expect(matchedEntities).to.have.property('favoriteNumber');
+        expect(matchedEntities.favoriteNumber).to.eql(numberEntity);
+
+        expect(Object.keys(missingEntities)).to.have.length(0);
+      });
     });
 
     describe('isFulfilled condition', () => {
       it('should set entity as missing if the isFulfilled condition is not met', () => {
         const numberEntity = {
           dim: 'number',
-          start: 0,
-          end: 2,
+          startIndex: 0,
+          endIndex: 2,
           values: [{ value: 50, type: 'integer' }],
           body: '50',
         };
@@ -391,8 +444,8 @@ describe('PromptDialog', function () {
       it('should set entity as matched if the isFulfilled condition is met', () => {
         const numberEntity = {
           dim: 'number',
-          start: 0,
-          end: 2,
+          startIndex: 0,
+          endIndex: 2,
           values: [{ value: 80, type: 'integer' }],
           body: '50',
         };
@@ -424,15 +477,15 @@ describe('PromptDialog', function () {
           {
             dim: 'number',
             values: [{ value: '55', type: 'integer' }],
-            start: 0,
-            end: 2,
+            startIndex: 0,
+            endIndex: 2,
             body: '55',
           },
           {
             dim: 'number',
             values: [{ value: '66', type: 'integer' }],
-            start: 3,
-            end: 5,
+            startIndex: 3,
+            endIndex: 5,
             body: '66',
           },
         ];
@@ -441,22 +494,22 @@ describe('PromptDialog', function () {
           {
             dim: 'number',
             values: [{ value: '77', type: 'integer' }],
-            start: 0,
-            end: 2,
+            startIndex: 0,
+            endIndex: 2,
             body: '77',
           },
           {
             dim: 'number',
             values: [{ value: '88', type: 'integer' }],
-            start: 3,
-            end: 5,
+            startIndex: 3,
+            endIndex: 5,
             body: '88',
           },
           {
             dim: 'number',
             values: [{ value: '88', type: 'integer' }],
-            start: 6,
-            end: 8,
+            startIndex: 6,
+            endIndex: 8,
             body: '99',
           },
         ];
@@ -493,15 +546,15 @@ describe('PromptDialog', function () {
           {
             dim: 'number',
             values: [{ value: '55', type: 'integer' }],
-            start: 0,
-            end: 2,
+            startIndex: 0,
+            endIndex: 2,
             body: '55',
           },
           {
             dim: 'number',
             values: [{ value: '66', type: 'integer' }],
-            start: 3,
-            end: 5,
+            startIndex: 3,
+            endIndex: 5,
             body: '66',
           },
         ];
@@ -510,22 +563,22 @@ describe('PromptDialog', function () {
           {
             dim: 'number',
             values: [{ value: '77', type: 'integer' }],
-            start: 0,
-            end: 2,
+            startIndex: 0,
+            endIndex: 2,
             body: '77',
           },
           {
             dim: 'number',
             values: [{ value: '88', type: 'integer' }],
-            start: 3,
-            end: 5,
+            startIndex: 3,
+            endIndex: 5,
             body: '88',
           },
           {
             dim: 'number',
             values: [{ value: '99', type: 'integer' }],
-            start: 6,
-            end: 8,
+            startIndex: 6,
+            endIndex: 8,
             body: '99',
           },
         ];
@@ -559,15 +612,15 @@ describe('PromptDialog', function () {
           {
             dim: 'number',
             values: [{ value: '55', type: 'integer' }],
-            start: 0,
-            end: 2,
+            startIndex: 0,
+            endIndex: 2,
             body: '55',
           },
           {
             dim: 'number',
             values: [{ value: '66', type: 'integer' }],
-            start: 3,
-            end: 5,
+            startIndex: 3,
+            endIndex: 5,
             body: '66',
           },
         ];
@@ -576,8 +629,8 @@ describe('PromptDialog', function () {
           {
             dim: 'number',
             values: [{ value: '77', type: 'integer' }],
-            start: 0,
-            end: 2,
+            startIndex: 0,
+            endIndex: 2,
             body: '77',
           },
         ];

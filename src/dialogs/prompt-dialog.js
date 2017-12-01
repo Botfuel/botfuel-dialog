@@ -14,16 +14,29 @@
  * limitations under the License.
  */
 
+const isEqual = require('lodash/isEqual');
 const omit = require('lodash/omit');
+const intersection = require('lodash/intersection');
 const logger = require('logtown')('PromptDialog');
 const Dialog = require('./dialog');
 
 // Helper functions
-const areEntitiesPositionsEqual = (entityA, entityB) =>
-  entityA.start === entityB.start && entityA.end === entityB.end;
+const makePositionsArray = entity => Array(entity.endIndex - entity.startIndex)
+  .fill()
+  .map((_, i) => i + entity.startIndex);
 
-const filterSamePositionEntities = (entities, entity) =>
-  entities.filter(e => !areEntitiesPositionsEqual(e, entity));
+const doEntitiesIntersect = (entityA, entityB) => !!(intersection(
+  makePositionsArray(entityA),
+  makePositionsArray(entityB),
+).length);
+
+const filterIntersectingEntities = (entities, entity) => {
+  if (entity.startIndex == null || entity.endIndex == null) {
+    return entities.filter(e => !isEqual(e, entity));
+  }
+
+  return entities.filter(e => !doEntitiesIntersect(e, entity));
+};
 
 /**
  * The prompt dialog prompts the user for a number of entities.
@@ -65,8 +78,8 @@ class PromptDialog extends Dialog {
    * from a message: {
    *     dim: String,
    *     body: String,
-   *     start: Number,
-   *     end: Number,
+   *     startIndex: Number,
+   *     endIndex: Number,
    *     values: Array<Object>
    * }
    * @param {Object} initialValue - initial value of the entity we want to match
@@ -91,7 +104,7 @@ class PromptDialog extends Dialog {
         const reducedValue = dialogParameter.reducer(newValue, candidate);
 
         return {
-          remainingCandidates: filterSamePositionEntities(candidates, candidate),
+          remainingCandidates: filterIntersectingEntities(candidates, candidate),
           newValue: reducedValue === undefined ? null : reducedValue,
         };
       }, {
