@@ -33,7 +33,7 @@ class FileCorpus extends Corpus {
           .readFileSync(path, 'utf8') // TODO: async?
           .toString()
           .split('\n')
-          .slice(0, -1) // remove last empty line
+          .filter(row => row.length > 0)
           .map(row => row.split(separator)));
   }
 }
