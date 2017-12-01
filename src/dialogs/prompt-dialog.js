@@ -24,24 +24,20 @@ const makePositionsArray = entity => Array(entity.endIndex - entity.startIndex)
   .fill()
   .map((_, i) => i + entity.startIndex);
 
-const doEntitiesIntersect = (entityA, entityB) => {
-  logger.debug(entityA);
-  logger.debug(entityB);
-  logger.debug(makePositionsArray(entityA));
-  logger.debug(makePositionsArray(entityB));
-  logger.debug(intersection(
-    makePositionsArray(entityA),
-    makePositionsArray(entityB),
-  ));
+const doEntitiesIntersect = (entityA, entityB) => !!(intersection(
+  makePositionsArray(entityA),
+  makePositionsArray(entityB),
+).length);
 
-  return !!(intersection(
-    makePositionsArray(entityA),
-    makePositionsArray(entityB),
-  ).length);
+const filterIntersectingEntities = (entities, entity) => {
+  // If there is only one entity left, do not even check if it intersects with
+  // other entities.
+  if (entities.length === 1) {
+    return [];
+  }
+
+  return entities.filter(e => !doEntitiesIntersect(e, entity));
 };
-
-const filterIntersectingEntities = (entities, entity) =>
-  entities.filter(e => !doEntitiesIntersect(e, entity));
 
 /**
  * The prompt dialog prompts the user for a number of entities.
