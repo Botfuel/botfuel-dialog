@@ -95,7 +95,7 @@ class Nlu {
   }
 
   /**
-   * Initializes the Nlu module
+   * Initializes the Nlu module.
    * @returns {Promise.<void>}
    */
   async init() {
@@ -115,39 +115,25 @@ class Nlu {
       sentence = (await this.spellcheck(sentence, this.config.spellchecking)).correctSentence;
     }
     if (this.config.qna) {
-      logger.debug('compute: qna');
-      if (this.config.qna === 'before') {
-        try {
-          const qnas = await this.qna.getMatchingQnas({ sentence });
-          if (qnas.length > 0) {
-            return this.buildResult(qnas);
-          }
-        } catch (error) {
-          logger.error('Could not classify with QnA!');
-          if (error.statusCode === 403) {
-            throw new AuthenticationError();
-          }
-          throw error;
+      logger.debug('compute: qna', this.config.qna);
+      if (this.config.qna.when === 'before') {
+        const qnaResult = await this.computeWithQna(sentence);
+        logger.debug('compute: qnaResult', qnaResult);
+        if (qnaResult.intents.length > 0) {
+          return qnaResult;
         }
-        return this.computeWithClassifier(sentence);
+        const classifierResult = await this.computeWithClassifier(sentence);
+        logger.debug('compute: classifierResult', classifierResult);
+        return classifierResult;
       }
-      const result = await this.computeWithClassifier(sentence);
-      if (result.intents.length > 0) {
-        return result;
+      const classifierResult = await this.computeWithClassifier(sentence);
+      logger.debug('compute: classifierResult', classifierResult);
+      if (classifierResult.intents.length > 0) {
+        return classifierResult;
       }
-      try {
-        const qnas = await this.qna.getMatchingQnas({ sentence });
-        if (qnas.length > 0) {
-          return this.buildResult(qnas);
-        }
-      } catch (error) {
-        logger.error('Could not classify with QnA!');
-        if (error.statusCode === 403) {
-          throw new AuthenticationError();
-        }
-        throw error;
-      }
-      return { intents: [], entities: [] };
+      const qnaResult = await this.computeWithQna(sentence);
+      logger.debug('compute: qnaResult', qnaResult);
+      return qnaResult.intents.length > 0 ? qnaResult : { intents: [], entities: [] };
     }
     return this.computeWithClassifier(sentence);
   }
@@ -158,6 +144,7 @@ class Nlu {
    * @returns {Object} the result
    */
   buildResult(qnas) {
+    logger.debug('buildResult', qnas);
     return {
       intents: [
         {
@@ -172,6 +159,30 @@ class Nlu {
         },
       ],
     };
+  }
+
+  /**
+   * Computes intents and entities using QnA.
+   * @param {String} sentence - the user sentence
+   * @returns {Promise.<Object>}
+   */
+  async computeWithQna(sentence) {
+    logger.debug('computeWithQna', sentence);
+    try {
+      const qnas = await this.qna.getMatchingQnas({ sentence });
+      logger.debug('computeWithQna: qnas', qnas);
+      if ((this.config.qna.strict && qnas.length === 1)
+          || (!this.config.qna.strict && qnas.length > 0)) {
+        return this.buildResult(qnas);
+      }
+      return { intents: [] };
+    } catch (error) {
+      logger.error('Could not classify with QnA!');
+      if (error.statusCode === 403) {
+        throw new AuthenticationError();
+      }
+      throw error;
+    }
   }
 
   /**
