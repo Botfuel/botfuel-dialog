@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-const logger = require('logtown')('StructuredView');
+const logger = require('logtown')('CommonView');
 const View = require('./view');
 
 /**
  * View that renders structured messages.
  * @extends View
  */
-class StructuredView extends View {
+class CommonView extends View {
   /** @inheritDoc */
   render(key, data) {
     logger.debug('render', key, data);
@@ -39,4 +39,4 @@ class StructuredView extends View {
   }
 }
 
-module.exports = StructuredView;
+module.exports = CommonView;
