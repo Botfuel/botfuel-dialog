@@ -22,7 +22,7 @@ const WebAdapter = require('./web-adapter');
  * @extends WebAdapter
  */
 class BotfuelAdapter extends WebAdapter {
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async handleMessage(req, res) {
     logger.debug('handleMessage');
     res.sendStatus(200);
@@ -33,17 +33,17 @@ class BotfuelAdapter extends WebAdapter {
     await this.bot.respond(userMessage);
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   getUri(botMessage) {
     return `${process.env.CHAT_SERVER}/bots/${this.bot.id}/users/${botMessage.user}/conversation/messages`;
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   getQs() {
     return {};
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   getBody(botMessage) {
     return botMessage;
   }

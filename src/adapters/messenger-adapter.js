@@ -24,7 +24,7 @@ const WebAdapter = require('./web-adapter');
  * @extends WebAdapter
  */
 class MessengerAdapter extends WebAdapter {
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   createRoutes(app) {
     logger.debug('createRoutes');
     super.createRoutes(app);
@@ -50,13 +50,14 @@ class MessengerAdapter extends WebAdapter {
     }
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async handleMessage(req, res) {
     logger.debug('handleMessage');
-    const data = req.body;
-    if (data.object === 'page') {
-      data.entry.forEach((entry) => {
-        entry.messaging.forEach(async (event) => {
+    const { object, entry } = req.body.data;
+    if (object === 'page') {
+      // @TODO: implement the method getUserProfile here
+      entry.forEach((entryItem) => {
+        entryItem.messaging.forEach(async (event) => {
           logger.debug('handleMessage: event', JSON.stringify(event));
           await this.processEvent(event);
         });
@@ -72,41 +73,41 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise.<void>}
    */
   async processEvent(event) {
-    const { sender } = event;
+    const { sender, message, postback } = event;
     const userId = sender.id; // messenger user id
     logger.debug('processEvent', userId, this.bot.id, JSON.stringify(event));
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
     // set userMessage
     let userMessage = null;
-    if (event.message) {
-      const message = event.message;
+    if (message) {
+      const { text, attachments } = message;
       // user send attachments
-      if (message.attachments && message.attachments[0].type === 'image') {
-        userMessage = new UserImageMessage(message.attachments[0].payload);
+      if (attachments.length > 0 && attachments[0].type === 'image') {
+        userMessage = new UserImageMessage(attachments[0].payload);
       } else {
-        userMessage = new UserTextMessage(message.text);
+        userMessage = new UserTextMessage(text);
       }
-    } else if (event.postback) {
-      const payload = JSON.parse(event.postback.payload);
-      userMessage = new PostbackMessage(payload.dialog, payload.entities);
+    } else if (postback) {
+      const { dialog, entities } = JSON.parse(postback.payload);
+      userMessage = new PostbackMessage(dialog, entities);
     }
     await this.bot.respond(userMessage.toJson(this.bot.id, userId));
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   getUri() {
     return 'https://graph.facebook.com/v2.6/me/messages';
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   getQs() {
     return {
       access_token: process.env.FB_PAGE_ACCESS_TOKEN,
     };
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   getBody(botMessage) {
     const message = this.adapt(botMessage);
     return {

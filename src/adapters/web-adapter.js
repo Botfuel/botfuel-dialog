@@ -26,7 +26,7 @@ const Adapter = require('./adapter');
  * @extends Adapter
  */
 class WebAdapter extends Adapter {
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async run() {
     logger.debug('run');
     const app = express();
@@ -56,7 +56,7 @@ class WebAdapter extends Adapter {
     throw new MissingImplementationError();
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async sendMessage(botMessage) {
     const requestOptions = {
       uri: this.getUri(botMessage),
