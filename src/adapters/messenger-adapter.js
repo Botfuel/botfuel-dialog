@@ -78,6 +78,8 @@ class MessengerAdapter extends WebAdapter {
     logger.debug('processEvent', userId, this.bot.id, JSON.stringify(event));
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
+    // not use await here, this request is not blocking for the event processing
+    this.getUserProfile(userId);
     // set userMessage
     let userMessage = null;
     if (message) {
@@ -258,21 +260,28 @@ class MessengerAdapter extends WebAdapter {
    * @param {String} userId - the user id
    * @returns {void}
    */
-  static async getUserProfile(userId) {
-    const requestOptions = {
-      method: 'GET',
-      json: true,
-      uri: `https://graph.facebook.com/v2.6/${userId}`,
-      qs: {
-        fields: 'first_name,last_name,gender',
-        access_token: process.env.FB_PAGE_ACCESS_TOKEN,
-      },
-    };
-    try {
-      const res = await rp(requestOptions);
-      logger.debug('getUserProfile: res', res);
-    } catch (error) {
-      logger.error('getUserProfile: error', error.message || error.error || error);
+  async getUserProfile(userId) {
+    logger.debug('getUserProfile', userId);
+    // check for user profile informations
+    const userProfile = await this.brain.userGet(userId, 'profile');
+    // if not profile informations then get user profile
+    if (!Object.keys(userProfile).length) {
+      try {
+        const res = await rp({
+          method: 'GET',
+          json: true,
+          uri: `https://graph.facebook.com/v2.6/${userId}`,
+          qs: {
+            fields: 'first_name,last_name,gender',
+            access_token: process.env.FB_PAGE_ACCESS_TOKEN,
+          },
+        });
+        logger.debug('getUserProfile: res', res);
+        await this.brain.userSet(userId, 'profile', res);
+        logger.debug('getUserProfile: user profile updated');
+      } catch (error) {
+        logger.error('getUserProfile: error', error.message || error.error || error);
+      }
     }
   }
 }
