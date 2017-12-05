@@ -216,7 +216,7 @@ class DialogManager {
       dialogs.stack = dialogs.stack.slice(0, -1);
       dialogs.previous.push({
         name: dialog.name,
-        status: dialog.status,
+        status,
         characteristics: dialogInstance.characteristics,
         date: Date.now(),
       });
