@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const rp = require('request-promise');
 const logger = require('logtown')('MessengerAdapter');
 const { PostbackMessage, UserImageMessage, UserTextMessage } = require('../messages');
 const WebAdapter = require('./web-adapter');
@@ -134,7 +135,7 @@ class MessengerAdapter extends WebAdapter {
    */
   adaptQuickreplies(payload) {
     return {
-      text: 'Quick replies' || payload.options.text, // TODO: fix this
+      text: payload.options.text,
       quick_replies: payload.value.map(qr => ({
         content_type: 'text',
         title: qr,
@@ -166,15 +167,13 @@ class MessengerAdapter extends WebAdapter {
    */
   adaptActions(payload) {
     logger.debug('adaptActions', payload);
-    const text = 'Actions' || payload.options.text; // TODO: fix this
-    const buttons = payload.value.map(MessengerAdapter.adaptAction);
     return {
       attachment: {
         type: 'template',
         payload: {
           template_type: 'button',
-          text,
-          buttons,
+          text: payload.options.text,
+          buttons: payload.value.map(MessengerAdapter.adaptAction),
         },
       },
     };
@@ -250,6 +249,29 @@ class MessengerAdapter extends WebAdapter {
         };
       default:
         return null;
+    }
+  }
+
+  /**
+   * Get user profile informations and store it into the brain
+   * @param {String} userId - the user id
+   * @returns {void}
+   */
+  static async getUserProfile(userId) {
+    const requestOptions = {
+      method: 'GET',
+      json: true,
+      uri: `https://graph.facebook.com/v2.6/${userId}`,
+      qs: {
+        fields: 'first_name,last_name,gender',
+        access_token: process.env.FB_PAGE_ACCESS_TOKEN,
+      },
+    };
+    try {
+      const res = await rp(requestOptions);
+      logger.debug('getUserProfile: res', res);
+    } catch (error) {
+      logger.error('getUserProfile: error', error.message || error.error || error);
     }
   }
 }
