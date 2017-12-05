@@ -34,7 +34,7 @@ class TestAdapter extends Adapter {
     this.userId = 'USER_TEST';
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async play(userMessages) {
     await this.bot.brain.initUserIfNecessary(this.userId);
     for (const userMessage of userMessages) {
@@ -45,7 +45,7 @@ class TestAdapter extends Adapter {
     }
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async sendMessage(botMessage) {
     this.log.push(botMessage);
   }

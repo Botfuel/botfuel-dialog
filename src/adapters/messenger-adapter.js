@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const rp = require('request-promise');
 const logger = require('logtown')('MessengerAdapter');
 const { PostbackMessage, UserImageMessage, UserTextMessage } = require('../messages');
 const WebAdapter = require('./web-adapter');
@@ -23,7 +24,7 @@ const WebAdapter = require('./web-adapter');
  * @extends WebAdapter
  */
 class MessengerAdapter extends WebAdapter {
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   createRoutes(app) {
     logger.debug('createRoutes');
     super.createRoutes(app);
@@ -49,13 +50,14 @@ class MessengerAdapter extends WebAdapter {
     }
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async handleMessage(req, res) {
-    logger.debug('handleMessage');
-    const data = req.body;
-    if (data.object === 'page') {
-      data.entry.forEach((entry) => {
-        entry.messaging.forEach(async (event) => {
+    logger.debug('handleMessage', req.body);
+    const { object, entry } = req.body;
+    if (object === 'page') {
+      // @TODO: implement the method getUserProfile here
+      entry.forEach((entryItem) => {
+        entryItem.messaging.forEach(async (event) => {
           logger.debug('handleMessage: event', JSON.stringify(event));
           await this.processEvent(event);
         });
@@ -71,41 +73,43 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise.<void>}
    */
   async processEvent(event) {
-    const { sender } = event;
+    const { sender, message, postback } = event;
     const userId = sender.id; // messenger user id
     logger.debug('processEvent', userId, this.bot.id, JSON.stringify(event));
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
+    // check for user profile
+    await this.getUserProfile(userId);
     // set userMessage
     let userMessage = null;
-    if (event.message) {
-      const message = event.message;
+    if (message) {
+      const { text, attachments } = message;
       // user send attachments
-      if (message.attachments && message.attachments[0].type === 'image') {
-        userMessage = new UserImageMessage(message.attachments[0].payload);
+      if (attachments && attachments[0].type === 'image') {
+        userMessage = new UserImageMessage(attachments[0].payload);
       } else {
-        userMessage = new UserTextMessage(message.text);
+        userMessage = new UserTextMessage(text);
       }
-    } else if (event.postback) {
-      const payload = JSON.parse(event.postback.payload);
-      userMessage = new PostbackMessage(payload.dialog, payload.entities);
+    } else if (postback) {
+      const { dialog, entities } = JSON.parse(postback.payload);
+      userMessage = new PostbackMessage(dialog, entities);
     }
     await this.bot.respond(userMessage.toJson(this.bot.id, userId));
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   getUri() {
     return 'https://graph.facebook.com/v2.6/me/messages';
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   getQs() {
     return {
       access_token: process.env.FB_PAGE_ACCESS_TOKEN,
     };
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   getBody(botMessage) {
     const message = this.adapt(botMessage);
     return {
@@ -134,7 +138,7 @@ class MessengerAdapter extends WebAdapter {
    */
   adaptQuickreplies(payload) {
     return {
-      text: 'Quick replies' || payload.options.text, // TODO: fix this
+      text: payload.options.text,
       quick_replies: payload.value.map(qr => ({
         content_type: 'text',
         title: qr,
@@ -166,15 +170,13 @@ class MessengerAdapter extends WebAdapter {
    */
   adaptActions(payload) {
     logger.debug('adaptActions', payload);
-    const text = 'Actions' || payload.options.text; // TODO: fix this
-    const buttons = payload.value.map(MessengerAdapter.adaptAction);
     return {
       attachment: {
         type: 'template',
         payload: {
           template_type: 'button',
-          text,
-          buttons,
+          text: payload.options.text,
+          buttons: payload.value.map(MessengerAdapter.adaptAction),
         },
       },
     };
@@ -250,6 +252,40 @@ class MessengerAdapter extends WebAdapter {
         };
       default:
         return null;
+    }
+  }
+
+  /**
+   * Get user profile informations and store it into the brain
+   * @param {String} userId - the user id
+   * @returns {void}
+   */
+  async getUserProfile(userId) {
+    logger.debug('getUserProfile', userId);
+    // check for user profile informations
+    const userProfile = await this.bot.brain.userGet(userId, 'profile');
+    // if not profile informations then get user profile
+    if (!userProfile || !Object.keys(userProfile).length) {
+      try {
+        const res = await rp({
+          method: 'GET',
+          json: true,
+          uri: `https://graph.facebook.com/v2.6/${userId}`,
+          qs: {
+            fields: 'first_name,last_name,gender',
+            access_token: process.env.FB_PAGE_ACCESS_TOKEN,
+          },
+        });
+        const profile = {
+          firstName: res.first_name,
+          lastName: res.last_name,
+          gender: res.gender,
+        };
+        await this.bot.brain.userSet(userId, 'profile', profile);
+        logger.debug('getUserProfile: user profile updated with', profile);
+      } catch (error) {
+        logger.error('getUserProfile: error', error.message || error.error || error);
+      }
     }
   }
 }
