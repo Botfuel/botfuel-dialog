@@ -52,8 +52,8 @@ class MessengerAdapter extends WebAdapter {
 
   /** @inheritDoc */
   async handleMessage(req, res) {
-    logger.debug('handleMessage');
-    const { object, entry } = req.body.data;
+    logger.debug('handleMessage', req.body);
+    const { object, entry } = req.body;
     if (object === 'page') {
       // @TODO: implement the method getUserProfile here
       entry.forEach((entryItem) => {
@@ -78,14 +78,14 @@ class MessengerAdapter extends WebAdapter {
     logger.debug('processEvent', userId, this.bot.id, JSON.stringify(event));
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
-    // not use await here, this request is not blocking for the event processing
-    this.getUserProfile(userId);
+    // check for user profile
+    await this.getUserProfile(userId);
     // set userMessage
     let userMessage = null;
     if (message) {
       const { text, attachments } = message;
       // user send attachments
-      if (attachments.length > 0 && attachments[0].type === 'image') {
+      if (attachments && attachments[0].type === 'image') {
         userMessage = new UserImageMessage(attachments[0].payload);
       } else {
         userMessage = new UserTextMessage(text);
@@ -263,9 +263,9 @@ class MessengerAdapter extends WebAdapter {
   async getUserProfile(userId) {
     logger.debug('getUserProfile', userId);
     // check for user profile informations
-    const userProfile = await this.brain.userGet(userId, 'profile');
+    const userProfile = await this.bot.brain.userGet(userId, 'profile');
     // if not profile informations then get user profile
-    if (!Object.keys(userProfile).length) {
+    if (!userProfile || !Object.keys(userProfile).length) {
       try {
         const res = await rp({
           method: 'GET',
@@ -276,9 +276,13 @@ class MessengerAdapter extends WebAdapter {
             access_token: process.env.FB_PAGE_ACCESS_TOKEN,
           },
         });
-        logger.debug('getUserProfile: res', res);
-        await this.brain.userSet(userId, 'profile', res);
-        logger.debug('getUserProfile: user profile updated');
+        const profile = {
+          firstName: res.first_name,
+          lastName: res.last_name,
+          gender: res.gender,
+        };
+        await this.bot.brain.userSet(userId, 'profile', profile);
+        logger.debug('getUserProfile: user profile updated with', profile);
       } catch (error) {
         logger.error('getUserProfile: error', error.message || error.error || error);
       }
