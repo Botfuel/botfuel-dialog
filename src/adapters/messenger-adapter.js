@@ -19,6 +19,8 @@ const logger = require('logtown')('MessengerAdapter');
 const { PostbackMessage, UserImageMessage, UserTextMessage } = require('../messages');
 const WebAdapter = require('./web-adapter');
 
+const FB_GRAPH_URL = 'https://graph.facebook.com/v2.6';
+
 /**
  * Adapter for the Facebook Messenger messaging platform.
  * @extends WebAdapter
@@ -58,7 +60,6 @@ class MessengerAdapter extends WebAdapter {
       // @TODO: implement the method getUserProfile here
       entry.forEach((entryItem) => {
         entryItem.messaging.forEach(async (event) => {
-          logger.debug('handleMessage: event', JSON.stringify(event));
           await this.processEvent(event);
         });
       });
@@ -73,9 +74,9 @@ class MessengerAdapter extends WebAdapter {
    * @returns {Promise.<void>}
    */
   async processEvent(event) {
+    logger.debug('processEvent', JSON.stringify(event));
     const { sender, message, postback } = event;
     const userId = sender.id; // messenger user id
-    logger.debug('processEvent', userId, this.bot.id, JSON.stringify(event));
     // init user if necessary
     await this.bot.brain.initUserIfNecessary(userId);
     // check for user profile
@@ -99,7 +100,7 @@ class MessengerAdapter extends WebAdapter {
 
   /** @inheritDoc */
   getUri() {
-    return 'https://graph.facebook.com/v2.6/me/messages';
+    return `${FB_GRAPH_URL}/me/messages`;
   }
 
   /** @inheritDoc */
@@ -270,7 +271,7 @@ class MessengerAdapter extends WebAdapter {
         const res = await rp({
           method: 'GET',
           json: true,
-          uri: `https://graph.facebook.com/v2.6/${userId}`,
+          uri: `${FB_GRAPH_URL}/${userId}`,
           qs: {
             fields: 'first_name,last_name,gender',
             access_token: process.env.FB_PAGE_ACCESS_TOKEN,
