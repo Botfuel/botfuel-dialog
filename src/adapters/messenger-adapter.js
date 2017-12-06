@@ -57,7 +57,6 @@ class MessengerAdapter extends WebAdapter {
     logger.debug('handleMessage', req.body);
     const { object, entry } = req.body;
     if (object === 'page') {
-      // @TODO: implement the method getUserProfile here
       entry.forEach((entryItem) => {
         entryItem.messaging.forEach(async (event) => {
           await this.processEvent(event);
