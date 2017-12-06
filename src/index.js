@@ -28,6 +28,7 @@ const PromptDialog = require('./dialogs/prompt-dialog');
 const PromptView = require('./views/prompt-view');
 const TextDialog = require('./dialogs/text-dialog');
 const TextView = require('./views/text-view');
+const CommonView = require('./views/common-view');
 const WsExtractor = require('./extractors/ws-extractor');
 
 module.exports = {
@@ -45,5 +46,6 @@ module.exports = {
   PromptView,
   TextDialog,
   TextView,
+  CommonView,
   WsExtractor,
 };
