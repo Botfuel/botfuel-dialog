@@ -230,7 +230,7 @@ class DialogManager {
     logger.debug('execute: newDialog', newDialog);
     if (newDialog) {
       newDialog.status = Dialog.STATUS_READY;
-      this.updateWithDialogs(userId, dialogs, [newDialog]);
+      this.updateWithDialogs(userId, dialogs, [newDialog], dialog.entities);
     }
     return this.execute(adapter, userId, dialogs);
   }
