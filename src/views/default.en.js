@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-const logger = require('logtown')('DefaultView.fr');
-const TextView = require('./text-view');
+const logger = require('logtown')('DefaultView.en');
+const TextView = require('./text');
 
 /**
- * Default text view for french.
+ * Default text view for english.
  * @extends TextView
  */
 class DefaultView extends TextView {
   // eslint-disable-next-line require-jsdoc
   getTexts(data) {
     logger.debug('getTexts', data);
-    return ['Je n\'ai pas compris.'];
+    return ['Not understood.'];
   }
 }
 

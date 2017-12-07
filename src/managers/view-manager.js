@@ -16,7 +16,7 @@
 
 const fs = require('fs');
 const logger = require('logtown')('ViewManager');
-const { ViewError } = require('./errors');
+const { ViewError } = require('../errors/index');
 
 /**
  * The view manager resolves the view for a given dialog.
@@ -29,6 +29,7 @@ class ViewManager {
   constructor(config) {
     logger.debug('constructor', config.path);
     this.viewsPath = `${config.path}/src/views`;
+    this.localViewsPath = `${__dirname}/../views`;
     this.locale = config.locale;
   }
 
@@ -40,10 +41,10 @@ class ViewManager {
   getPath(name) {
     logger.debug('getPath');
     const paths = [
-      `${this.viewsPath}/${name}-view.${this.locale}.js`,
-      `${this.viewsPath}/${name}-view.js`,
-      `${__dirname}/views/${name}-view.${this.locale}.js`,
-      `${__dirname}/views/${name}-view.js`,
+      `${this.viewsPath}/${name}.${this.locale}.js`,
+      `${this.viewsPath}/${name}.js`,
+      `${this.localViewsPath}/${name}.${this.locale}.js`,
+      `${this.localViewsPath}/${name}.js`,
     ];
     for (const path of paths) {
       logger.debug('getPath: test path', path);
@@ -68,8 +69,7 @@ class ViewManager {
       return new View();
     }
     logger.error(`Could not resolve '${name}' view`);
-    logger.error(`Make sure the '${name}' view file exists at ${process.cwd()}/src/views/${name}.js`);
-    throw new ViewError({ view: name });
+    throw new ViewError({ message: `there is no view '${name}' at ${process.cwd()}/src/views/${name}.js`, view: name });
   }
 }
 

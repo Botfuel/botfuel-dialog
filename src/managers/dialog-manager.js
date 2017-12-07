@@ -16,8 +16,8 @@
 
 const fs = require('fs');
 const logger = require('logtown')('DialogManager');
-const Dialog = require('./dialogs/dialog');
-const { DialogError } = require('./errors');
+const Dialog = require('../dialogs/dialog');
+const { DialogError } = require('../errors/index');
 
 /**
  * The dialog manager turns NLU output into a dialog stack.
@@ -46,8 +46,8 @@ class DialogManager {
     const paths = [
       `${this.config.path}/src/dialogs/${name}.${this.config.adapter}`,
       `${this.config.path}/src/dialogs/${name}`,
-      `${__dirname}/dialogs/${name}.${this.config.adapter}`,
-      `${__dirname}/dialogs/${name}`,
+      `${__dirname}/../dialogs/${name}.${this.config.adapter}`,
+      `${__dirname}/../dialogs/${name}`,
     ];
     for (const path of paths) {
       logger.debug('getDialogPath: path', path);
@@ -183,7 +183,7 @@ class DialogManager {
     }
     if (dialogs.stack.length === 0) { // no intent detected
       dialogs.stack.push({
-        name: this.getLastDialog(dialogs.previous) || 'default-dialog',
+        name: this.getLastDialog(dialogs.previous) || 'default',
         entities: entities || [],
         status: Dialog.STATUS_READY,
       });
