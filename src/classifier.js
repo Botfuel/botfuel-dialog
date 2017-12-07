@@ -18,7 +18,7 @@ const Fs = require('fs');
 const util = require('util');
 const Natural = require('natural');
 const logger = require('logtown')('Classifier');
-const LoggerManager = require('./logger-manager');
+const LoggerManager = require('./managers/logger-manager');
 
 const fsStat = util.promisify(Fs.stat);
 

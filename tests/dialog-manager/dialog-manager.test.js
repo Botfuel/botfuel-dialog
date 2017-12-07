@@ -17,7 +17,7 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const DialogManager = require('../../src/dialog-manager');
+const DialogManager = require('../../src/managers/dialog-manager');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const TestAdapter = require('../../src/adapters/test-adapter');
 const { BotTextMessage } = require('../../src/messages');
