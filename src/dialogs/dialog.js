@@ -82,7 +82,7 @@ class Dialog {
    * @returns {String} the dialog name
    */
   getName() {
-    return kebabCase(this.constructor.name).replace(/(dialog|-dialog)/g, '');
+    return kebabCase(this.constructor.name).replace(/dialog/g, '');
   }
 
   /**

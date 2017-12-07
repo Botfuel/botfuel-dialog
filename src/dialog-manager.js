@@ -183,7 +183,7 @@ class DialogManager {
     }
     if (dialogs.stack.length === 0) { // no intent detected
       dialogs.stack.push({
-        name: this.getLastDialog(dialogs.previous) || 'default-dialog',
+        name: this.getLastDialog(dialogs.previous) || 'default',
         entities: entities || [],
         status: Dialog.STATUS_READY,
       });

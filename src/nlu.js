@@ -150,7 +150,7 @@ class Nlu {
     return {
       intents: [
         {
-          name: 'qnas-dialog',
+          name: 'qnas',
           value: 1.0,
         },
       ],
