@@ -28,7 +28,7 @@ class LoggerManager {
    */
   static configure(config) {
     const paths = [
-      `${process.cwd()}/src/loggers/${config.logger}.js`,
+      `${config.path}/src/loggers/${config.logger}.js`,
       `${__dirname}/../loggers/${config.logger}.js`,
     ];
     for (const path of paths) {

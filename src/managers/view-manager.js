@@ -27,8 +27,8 @@ class ViewManager {
    * @param {Object} config - the bot config
    */
   constructor(config) {
-    logger.debug('constructor', process.cwd());
-    this.viewsPath = `${process.cwd()}/src/views`;
+    logger.debug('constructor', config.path);
+    this.viewsPath = `${config.path}/src/views`;
     this.localViewsPath = `${__dirname}/../views`;
     this.locale = config.locale;
   }
@@ -69,7 +69,7 @@ class ViewManager {
       return new View();
     }
     logger.error(`Could not resolve '${name}' view`);
-    throw new ViewError({ message: `there is no view '${name}' at ${process.cwd()}/src/views/${name}.js`, view: name });
+    throw new ViewError({ message: `there is no view '${name}' at ${config.path}/src/views/${name}.js`, view: name });
   }
 }
 

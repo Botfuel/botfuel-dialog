@@ -16,6 +16,13 @@
 
 const path = require('path');
 
+const defaultConfig = {
+  path: process.cwd(),
+  locale: 'en',
+  adapter: 'shell',
+  intentThreshold: 0.8,
+};
+
 /**
 * Returns the contents of the bot config file
 * @param {String} configFileName - the bot config file name/path
@@ -29,10 +36,9 @@ function resolveConfigFile(configFileName) {
 
   const configPath = path.resolve(process.cwd(), configFileName);
 
-  // @TODO: create a defaultConfig to set default values to config
-  // @TODO: set path to process.cwd() => current directory of node.js
   try {
-    return require(configPath);
+    const botConfig = require(configPath);
+    return Object.assign(defaultConfig, botConfig);
   } catch (error) {
     if (error.code === 'MODULE_NOT_FOUND') {
       console.log(`Could not load config file ${configPath}`);
