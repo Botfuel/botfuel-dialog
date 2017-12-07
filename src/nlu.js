@@ -21,8 +21,8 @@ const Spellchecking = require('botfuel-nlp-sdk').Spellchecking;
 const logger = require('logtown')('Nlu');
 const { AuthenticationError } = require('./errors');
 const Classifier = require('./classifier');
-const BooleanExtractor = require('./extractors/boolean-extractor');
-const CompositeExtractor = require('./extractors/composite-extractor');
+const BooleanExtractor = require('./extractors/boolean');
+const CompositeExtractor = require('./extractors/composite');
 
 /**
  * A nlu module (could be replaced by an external one).
