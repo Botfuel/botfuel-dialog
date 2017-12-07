@@ -35,6 +35,7 @@ class Dialog {
   static STATUS_DISCARDED = 'discarded';
   static STATUS_READY = 'ready';
   static STATUS_WAITING = 'waiting';
+  static ACTION_CANCEL_PREVIOUS_DIALOG = 'cancel_previous_dialog';
 
   /**
    * Indicates that this dialog cannot be processed.
@@ -60,6 +61,11 @@ class Dialog {
    * Indicates that this dialog is waiting for a user confirmation to be unblocked.
    */
   get STATUS_WAITING() { return Dialog.STATUS_WAITING; }
+
+  /**
+   * Indicates that this dialog is waiting for a user confirmation to be unblocked.
+   */
+  get ACTION_CANCEL_PREVIOUS_DIALOG() { return Dialog.ACTION_CANCEL_PREVIOUS_DIALOG; }
 
   /**
    * @constructor
@@ -98,9 +104,9 @@ class Dialog {
   async display(adapter, userId, key, data) {
     logger.debug('display', userId, key, data);
     const botMessages = this
-          .viewManager
-          .resolve(this.name)
-          .renderAsJson(adapter.bot.id, userId, key, data);
+      .viewManager
+      .resolve(this.name)
+      .renderAsJson(adapter.bot.id, userId, key, data);
     return adapter.send(botMessages);
   }
 
@@ -115,6 +121,64 @@ class Dialog {
    */
   async execute() {
     throw new MissingImplementationError();
+  }
+
+  /**
+  * Builds an object that sets the current dialog as completed
+  * and provides the name of the next dialog.
+  * @abstract
+  * @async
+  * @param {String} dialogName - the name of the next dialog
+  * @returns {Object} contains
+  *   - a newDialog object thas has a name
+  *   - a status set to STATUS_COMPLETED
+  */
+  nextDialog(dialogName) {
+    if (!dialogName) {
+      return logger.error('You must provide a dialogName as a parameter to the nextDialog method.');
+    }
+
+    return {
+      newDialog: {
+        name: dialogName,
+      },
+      status: this.STATUS_COMPLETED,
+    };
+  }
+
+  /**
+  * Builds an object that sets the previous dialog as canceled
+  * and optionally provides name of the next dialog.
+  * @abstract
+  * @async
+  * @param {String} dialogName - the name of the next dialog (optional)
+  * @returns {Object} contains
+  *   - a newDialog object thas has a name (optional)
+  *   - an action set to ACTION_CANCEL_PREVIOUS_DIALOG
+  */
+  cancelPreviousDialog(dialogName) {
+    return {
+      action: this.ACTION_CANCEL_PREVIOUS_DIALOG,
+      ...dialogName && {
+        newDialog: {
+          name: dialogName,
+        },
+      },
+    };
+  }
+
+
+  /**
+  * Builds an object that sets current dialog as completed
+  * @abstract
+  * @async
+  * @returns {Object} contains
+  *   - a status set to STATUS_COMPLETED
+  */
+  done() {
+    return {
+      status: this.STATUS_COMPLETED,
+    };
   }
 }
 

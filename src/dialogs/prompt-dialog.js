@@ -276,7 +276,9 @@ class PromptDialog extends Dialog {
     if (Object.keys(missingEntities).length === 0) {
       return this.executeWhenCompleted(adapter, userId, matchedEntities);
     }
-    return { status: this.STATUS_READY };
+    return {
+      status: this.STATUS_READY,
+    };
   }
 
   /**
@@ -289,7 +291,7 @@ class PromptDialog extends Dialog {
    */
   async executeWhenCompleted() {
     logger.debug('executeWhenCompleted');
-    return { status: this.STATUS_COMPLETED };
+    return this.done();
   }
 
   /** @inheritdoc */

@@ -210,8 +210,28 @@ class DialogManager {
     const dialogResult = await dialogInstance
       .execute(adapter, userId, dialog.entities, dialog.status);
     logger.debug('execute: dialogResult', dialogResult);
+    logger.debug('execute: dialogs', dialogs);
     const status = dialogResult.status || Dialog.STATUS_COMPLETED;
-    if (status === Dialog.STATUS_DISCARDED || status === Dialog.STATUS_COMPLETED) {
+    const action = dialogResult.action;
+
+    if (action === Dialog.ACTION_CANCEL_PREVIOUS_DIALOG) {
+      const previousDialog = dialogs.stack[dialogs.stack.length - 2];
+      dialogs.stack = dialogs.stack.slice(0, -2);
+      logger.debug('execute: canceling previous dialog', dialogs.stack);
+      logger.debug('execute: canceling previous dialog', previousDialog);
+      dialogs.previous.push({
+        name: previousDialog.name,
+        status: Dialog.STATUS_DISCARDED,
+        characteristics: previousDialog.characteristics,
+        date: Date.now(),
+      });
+      dialogs.previous.push({
+        name: dialog.name,
+        status: Dialog.STATUS_COMPLETED,
+        characteristics: dialog.characteristics,
+        date: Date.now(),
+      });
+    } else if (status === Dialog.STATUS_DISCARDED || status === Dialog.STATUS_COMPLETED) {
       dialogs.stack = dialogs.stack.slice(0, -1);
       dialogs.previous.push({
         name: dialog.name,
@@ -225,6 +245,7 @@ class DialogManager {
       // TODO: decide what to do if both a status and a dialog are provided
       return dialogs;
     }
+    logger.debug('execute: dialogs updated', dialogs);
     const newDialog = dialogResult.newDialog;
     logger.debug('execute: newDialog', newDialog);
     if (newDialog) {
