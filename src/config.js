@@ -37,8 +37,7 @@ function resolveConfigFile(configFileName) {
   const configPath = path.resolve(process.cwd(), configFileName);
 
   try {
-    const botConfig = require(configPath);
-    return Object.assign(defaultConfig, botConfig);
+    return Object.assign(defaultConfig, require(configPath));
   } catch (error) {
     if (error.code === 'MODULE_NOT_FOUND') {
       console.log(`Could not load config file ${configPath}`);

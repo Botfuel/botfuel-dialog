@@ -69,7 +69,7 @@ class ViewManager {
       return new View();
     }
     logger.error(`Could not resolve '${name}' view`);
-    throw new ViewError({ message: `there is no view '${name}' at ${config.path}/src/views/${name}.js`, view: name });
+    throw new ViewError({ message: `there is no view '${name}' at ${this.config.path}/src/views/${name}.js`, view: name });
   }
 }
 

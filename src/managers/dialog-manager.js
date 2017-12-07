@@ -44,14 +44,13 @@ class DialogManager {
   getDialogPath(name) {
     logger.debug('getDialogPath', name);
     const paths = [
-      `${config.path}/src/dialogs/${name}.${this.config.adapter}`,
-      `${config.path}/src/dialogs/${name}`,
+      `${this.config.path}/src/dialogs/${name}.${this.config.adapter}`,
+      `${this.config.path}/src/dialogs/${name}`,
       `${__dirname}/../dialogs/${name}.${this.config.adapter}`,
       `${__dirname}/../dialogs/${name}`,
     ];
     for (const path of paths) {
       logger.debug('getDialogPath: path', path);
-      console.log('getDialogPath: path', path);
       if (fs.existsSync(`${path}.js`)) {
         return path;
       }
@@ -67,14 +66,12 @@ class DialogManager {
   getDialog(dialog) {
     logger.debug('getDialog', dialog);
     const path = this.getDialogPath(dialog.name);
-    console.log('path: ', path);
     if (path) {
       const DialogConstructor = require(path);
       return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
     }
     logger.error(`Could not resolve '${dialog.name}' dialog`);
-    logger.error(`Make sure the '${dialog.name}' dialog file exists at ${config.path}/src/dialogs/${dialog.name}.js`);
-    throw new DialogError({ dialog });
+    throw new DialogError({ dialog, message: `Make sure the '${dialog.name}' dialog file exists at ${this.config.path}/src/dialogs/${dialog.name}.js` });
   }
 
   /**
