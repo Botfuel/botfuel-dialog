@@ -30,10 +30,9 @@ class ShellAdapter extends Adapter {
   /**
    * @constructor
    * @param {Object} bot - the bot
-   * @param {Object} config - the bot config
    */
-  constructor(bot, config) {
-    super(bot, config);
+  constructor(bot) {
+    super(bot);
     this.userId = 'USER_1';
     this.rl = readline.createInterface({
       input: process.stdin,

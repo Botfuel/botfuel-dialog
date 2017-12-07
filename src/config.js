@@ -20,8 +20,11 @@ const defaultConfig = {
   path: process.cwd(),
   locale: 'en',
   adapter: 'shell',
+  brain: 'memory',
   intentThreshold: 0.8,
 };
+
+const getConfig = (botConfig) => Object.assign(defaultConfig, botConfig);
 
 /**
 * Returns the contents of the bot config file
@@ -30,14 +33,16 @@ const defaultConfig = {
 */
 function resolveConfigFile(configFileName) {
   if (!configFileName) {
-    console.log('You must specify a config file: ./node-modules/.bin/botfuel-train config-file.js');
-    process.exit(1);
+    console.log('You didn\'t specify any config file, use default config.');
+    return {};
   }
 
   const configPath = path.resolve(process.cwd(), configFileName);
 
+  console.log('config path:', configPath);
+
   try {
-    return Object.assign(defaultConfig, require(configPath));
+    return require(configPath);
   } catch (error) {
     if (error.code === 'MODULE_NOT_FOUND') {
       console.log(`Could not load config file ${configPath}`);
@@ -50,4 +55,5 @@ function resolveConfigFile(configFileName) {
 
 module.exports = {
   resolveConfigFile,
+  getConfig,
 };

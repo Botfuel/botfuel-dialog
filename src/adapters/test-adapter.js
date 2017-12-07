@@ -25,11 +25,10 @@ class TestAdapter extends Adapter {
   /**
    * @constructor
    * @param {Object} bot - the bot
-   * @param {Object} config - the bot config
    */
-  constructor(bot, config) {
+  constructor(bot) {
     logger.debug('constructor');
-    super(bot, config);
+    super(bot);
     this.log = [];
     this.userId = 'USER_TEST';
   }

@@ -24,6 +24,7 @@ const MongoBrain = require('./brains/mongo-brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
+const { getConfig } = require('./config');
 const { AuthenticationError, DialogError, ViewError } = require('./errors');
 
 const logger = Logger.getLogger('Bot');
@@ -44,6 +45,7 @@ class Bot {
    */
   constructor(config) {
     LoggerManager.configure(config);
+    logger.debug('constructor', config);
     logger.info('BOT_ID', process.env.BOT_ID);
     logger.info('BOTFUEL_APP_ID', process.env.BOTFUEL_APP_ID);
     logger.info('BOTFUEL_APP_KEY', process.env.BOTFUEL_APP_KEY);
@@ -60,31 +62,12 @@ class Bot {
       logger.warn('Environment variable BOTFUEL_APP_KEY is not defined!');
     }
     this.id = process.env.BOT_ID;
-    logger.debug('constructor', config);
-    switch (config.adapter) {
-      case 'botfuel':
-        this.adapter = new BotfuelAdapter(this, config);
-        break;
-      case 'messenger':
-        this.adapter = new MessengerAdapter(this, config);
-        break;
-      case 'test':
-        this.adapter = new TestAdapter(this, config);
-        break;
-      case 'shell':
-      default:
-        this.adapter = new ShellAdapter(this, config);
-    }
-    switch (config.brain) {
-      case 'mongo':
-        this.brain = new MongoBrain(this.id);
-        break;
-      case 'memory':
-      default:
-        this.brain = new MemoryBrain(this.id);
-    }
-    this.nlu = new Nlu(config);
-    this.dm = new DialogManager(this.brain, config);
+    this.config = getConfig(config);
+    this.adapter = this.getAdapter(config.adapter);
+    this.brain = this.getBrain(config.brain);
+    this.nlu = new Nlu(this.config);
+    this.dm = new DialogManager(this.brain, this.config);
+    logger.info('config', this.config);
   }
 
   /**
@@ -96,6 +79,44 @@ class Bot {
   async init() {
     await this.brain.init();
     await this.nlu.init();
+  }
+
+  /**
+   * Gets brain instance
+   * @param {string} brain - brain name
+   * @returns {Brain}
+   */
+  getBrain(brain) {
+    switch (brain) {
+      case 'mongo':
+        return new MongoBrain(this.id);
+        break;
+      case 'memory':
+      default:
+        return new MemoryBrain(this.id);
+    }
+  }
+
+  /**
+   * Gets adapter instance
+   * @param {string} adapter - adapter name
+   * @returns {Adapter}
+   */
+  getAdapter(adapter) {
+    switch (adapter) {
+      case 'botfuel':
+        return new BotfuelAdapter(this);
+        break;
+      case 'messenger':
+        return new MessengerAdapter(this);
+        break;
+      case 'test':
+        return new TestAdapter(this);
+        break;
+      case 'shell':
+      default:
+        return new ShellAdapter(this);
+    }
   }
 
   /**
@@ -116,6 +137,7 @@ class Bot {
     }
     throw error;
   }
+
   /**
    * Runs the bot.
    * @async
