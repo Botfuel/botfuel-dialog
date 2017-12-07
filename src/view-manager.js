@@ -49,6 +49,7 @@ class ViewManager {
       logger.debug('getPath: test path', path);
       if (fs.existsSync(path)) {
         logger.debug('getPath: existing path', path);
+        console.log('getPath: existing path', path);
         return path;
       }
     }
@@ -68,8 +69,7 @@ class ViewManager {
       return new View();
     }
     logger.error(`Could not resolve '${name}' view`);
-    logger.error(`Make sure the '${name}' view file exists at ${process.cwd()}/src/views/${name}.js`);
-    throw new ViewError({ view: name });
+    throw new ViewError({ message: `there is no view '${name}' at ${process.cwd()}/src/views/${name}.js`, view: name });
   }
 }
 
