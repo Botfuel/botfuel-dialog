@@ -63,8 +63,8 @@ class Bot {
     }
     this.id = process.env.BOT_ID;
     this.config = getConfig(config);
-    this.adapter = this.getAdapter(config.adapter);
-    this.brain = this.getBrain(config.brain);
+    this.adapter = this.getAdapter(this.config.adapter);
+    this.brain = this.getBrain(this.config.brain);
     this.nlu = new Nlu(this.config);
     this.dm = new DialogManager(this.brain, this.config);
     logger.info('config', this.config);
