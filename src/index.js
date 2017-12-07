@@ -25,9 +25,9 @@ const Messages = require('./messages');
 const MongoBrain = require('./brains/mongo-brain');
 const Nlu = require('./nlu');
 const PromptDialog = require('./dialogs/prompt-dialog');
-const PromptView = require('./views/prompt-view');
+const PromptView = require('./views/prompt');
 const TextDialog = require('./dialogs/text-dialog');
-const TextView = require('./views/text-view');
+const TextView = require('./views/text');
 const View = require('./views/view');
 const WsExtractor = require('./extractors/ws-extractor');
 
