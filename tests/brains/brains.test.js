@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
 const MemoryBrain = require('../../src/brains/memory-brain');
