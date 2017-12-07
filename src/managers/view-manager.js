@@ -48,7 +48,6 @@ class ViewManager {
     ];
     for (const path of paths) {
       logger.debug('getPath: test path', path);
-      console.log('getPath: test path', path);
       if (fs.existsSync(path)) {
         logger.debug('getPath: existing path', path);
         return path;
