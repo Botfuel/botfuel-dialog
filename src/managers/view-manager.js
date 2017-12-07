@@ -27,8 +27,8 @@ class ViewManager {
    * @param {Object} config - the bot config
    */
   constructor(config) {
-    logger.debug('constructor', config.path);
-    this.viewsPath = `${config.path}/src/views`;
+    logger.debug('constructor', process.cwd());
+    this.viewsPath = `${process.cwd()}/src/views`;
     this.localViewsPath = `${__dirname}/../views`;
     this.locale = config.locale;
   }

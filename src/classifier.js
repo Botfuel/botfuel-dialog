@@ -37,8 +37,8 @@ class Classifier {
     logger.debug('constructor', config);
     this.locale = config.locale;
     this.intentThreshold = config.intentThreshold || 0.8;
-    this.modelFilename = `${config.path}/models/model.json`;
-    this.intentDirname = `${config.path}/src/intents`;
+    this.modelFilename = `${process.cwd()}/models/model.json`;
+    this.intentDirname = `${process.cwd()}/src/intents`;
     this.classifier = null;
     this.getStemmer().attach();
   }

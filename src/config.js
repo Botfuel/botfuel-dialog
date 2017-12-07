@@ -29,6 +29,8 @@ function resolveConfigFile(configFileName) {
 
   const configPath = path.resolve(process.cwd(), configFileName);
 
+  // @TODO: create a defaultConfig to set default values to config
+  // @TODO: set path to process.cwd() => current directory of node.js
   try {
     return require(configPath);
   } catch (error) {
