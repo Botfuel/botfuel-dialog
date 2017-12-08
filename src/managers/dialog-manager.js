@@ -44,10 +44,10 @@ class DialogManager {
   getDialogPath(name) {
     logger.debug('getDialogPath', name);
     const paths = [
-      `${this.config.path}/src/dialogs/${name}.${this.config.adapter}`,
-      `${this.config.path}/src/dialogs/${name}`,
-      `${__dirname}/../dialogs/${name}.${this.config.adapter}`,
-      `${__dirname}/../dialogs/${name}`,
+      `${this.config.path}/src/dialogs/${name}-dialog.${this.config.adapter}`,
+      `${this.config.path}/src/dialogs/${name}-dialog`,
+      `${__dirname}/../dialogs/${name}-dialog.${this.config.adapter}`,
+      `${__dirname}/../dialogs/${name}-dialog`,
     ];
     for (const path of paths) {
       logger.debug('getDialogPath: path', path);
@@ -71,8 +71,7 @@ class DialogManager {
       return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
     }
     logger.error(`Could not resolve '${dialog.name}' dialog`);
-    logger.error(`Make sure the '${dialog.name}' dialog file exists at ${process.cwd()}/src/dialogs/${dialog.name}.js`);
-    throw new DialogError({ dialog });
+    throw new DialogError({ dialog, message: `Make sure the '${dialog.name}' dialog file exists at ${process.cwd()}/src/dialogs/${dialog.name}-dialog.js` });
   }
 
   /**
@@ -183,7 +182,7 @@ class DialogManager {
     }
     if (dialogs.stack.length === 0) { // no intent detected
       dialogs.stack.push({
-        name: this.getLastDialog(dialogs.previous) || 'default-dialog',
+        name: this.getLastDialog(dialogs.previous) || 'default',
         entities: entities || [],
         status: Dialog.STATUS_READY,
       });
