@@ -207,7 +207,6 @@ class DialogManager {
       return dialogs;
     }
     const dialog = dialogs.stack[dialogs.stack.length - 1];
-    console.log('DIALOG', dialog);
     const dialogInstance = await this.getDialog(dialog);
     const dialogResult = await dialogInstance
       .execute(adapter, userId, dialog.entities, dialog.status);
