@@ -19,7 +19,6 @@
     "import/order": ["error"],
     "jsx-a11y/href-no-hash": "off",
     "mocha/no-exclusive-tests": "error",
-    "no-console": "off",
     "no-param-reassign": "off",
     "no-plusplus": "off",
     "no-restricted-syntax": "off",

@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Copyright (c) 2017 - present, Botfuel (https://www.botfuel.io).
  *
@@ -15,18 +14,26 @@
  * limitations under the License.
  */
 
-require('babel-polyfill');
+const WinstonWrapper = require('logtown-winston');
+const winston = require('winston');
 
-const logger = require('logtown')('Train');
-const Classifier = require('./classifier');
-const { resolveConfigFile } = require('./config');
+const transports = [
+  new winston.transports.Console({
+    json: false,
+    colorize: true,
+    prettyPrint: true,
+    timestamp: true,
+    handleExceptions: true,
+    align: false,
+    level: 'error',
+  }),
+];
 
-(async () => {
-  try {
-    const config = resolveConfigFile(process.argv[2]);
-    await new Classifier(config).train();
-    logger.info('Training done.');
-  } catch (e) {
-    logger.error(e);
-  }
-})();
+const options = { exitOnError: false };
+
+module.exports = {
+  wrapper: new WinstonWrapper(transports, options),
+  config: {
+    disable: ['warn', 'info', 'verbose', 'debug', 'silly'],
+  },
+};

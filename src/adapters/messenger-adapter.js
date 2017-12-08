@@ -47,7 +47,7 @@ class MessengerAdapter extends WebAdapter {
       logger.debug('validateWebhook: OK!');
       res.status(200).send(req.query['hub.challenge']);
     } else {
-      console.error('validateWebhook: KO!');
+      logger.error('validateWebhook: KO!');
       res.sendStatus(403);
     }
   }

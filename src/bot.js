@@ -17,14 +17,13 @@
 const Logger = require('logtown');
 const BotfuelAdapter = require('./adapters/botfuel-adapter');
 const DialogManager = require('./managers/dialog-manager');
-const LoggerManager = require('./managers/logger-manager');
 const MessengerAdapter = require('./adapters/messenger-adapter');
 const MemoryBrain = require('./brains/memory-brain');
 const MongoBrain = require('./brains/mongo-brain');
 const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
-const { getConfig } = require('./config');
+const { getConfiguration } = require('./config');
 const { AuthenticationError, DialogError, ViewError } = require('./errors');
 
 const logger = Logger.getLogger('Bot');
@@ -44,8 +43,8 @@ class Bot {
    * @param {object} config - the bot configuration
    */
   constructor(config) {
-    LoggerManager.configure(config);
-    logger.debug('constructor', config);
+    this.config = getConfiguration(config);
+    logger.debug('constructor', this.config);
     logger.info('BOT_ID', process.env.BOT_ID);
     logger.info('BOTFUEL_APP_ID', process.env.BOTFUEL_APP_ID);
     logger.info('BOTFUEL_APP_KEY', process.env.BOTFUEL_APP_KEY);
@@ -62,12 +61,10 @@ class Bot {
       logger.warn('Environment variable BOTFUEL_APP_KEY is not defined!');
     }
     this.id = process.env.BOT_ID;
-    this.config = getConfig(config);
     this.adapter = this.getAdapter(this.config.adapter);
     this.brain = this.getBrain(this.config.brain);
     this.nlu = new Nlu(this.config);
     this.dm = new DialogManager(this.brain, this.config);
-    logger.info('config', this.config);
   }
 
   /**
@@ -90,7 +87,6 @@ class Bot {
     switch (brain) {
       case 'mongo':
         return new MongoBrain(this.id);
-        break;
       case 'memory':
       default:
         return new MemoryBrain(this.id);
@@ -106,13 +102,10 @@ class Bot {
     switch (adapter) {
       case 'botfuel':
         return new BotfuelAdapter(this);
-        break;
       case 'messenger':
         return new MessengerAdapter(this);
-        break;
       case 'test':
         return new TestAdapter(this);
-        break;
       case 'shell':
       default:
         return new ShellAdapter(this);

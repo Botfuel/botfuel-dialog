@@ -64,9 +64,9 @@ class ShellAdapter extends Adapter {
     await this.bot.respond(userMessage.toJson(this.bot.id, this.userId));
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async sendMessage(botMessage) {
-    // logs the bot message
+    // eslint-disable-next-line no-console
     console.log(chalk.hex('#16a085')(`${DELIMITER}${botMessage.payload.value}`));
   }
 }
