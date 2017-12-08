@@ -38,7 +38,7 @@ Let's see how these components interact with a [sequence diagram](https://en.wik
 <--- |            |            |            |            |            |            |            |
 ```
 
-Note:
+### MVC
 The bot implements the [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) pattern where:
 - the brain is the _model_ : it contains all the information about the bot, the users, the conversations,
 - the dialog is the _controller_ : it updates the brain and calls its view with the required parameters,
@@ -52,6 +52,20 @@ The SDK defines its own message format and supports:
 - buttons and postbacks,
 - quick replies,
 - complex messages such as carrousels.
+
+A message has the form:
+```javacript
+{
+  type: '<message type>',
+  sender: '<bot or user>',
+  bot: '<bot id>',
+  user: '<user id>',
+  payload: {
+    value: '<the value>',
+    options: '<the options>',
+  }
+}
+```
 
 ## Adapters
 Each messaging platform (Messenger, ...) has its own message format.
@@ -97,7 +111,7 @@ Given a sentence, the nlu module computes a list of user intents with their prob
 The actual computation is performed by a classifier.
 
 The classifier builds a classification model based on a training set which takes the form of a set of `.intent` files.
-Here is an example for an intent file:
+Here is an example of an intent file:
 ```
 I want to eat!
 I am hungry.
@@ -107,21 +121,23 @@ Give me food!
 ### Entities
 Given a sentence, the nlu module computes a list of entities.
 The actual computation is performed by extractors.
+
 An extracted entity comes with the following details:
 ```javascript
 {
-  dim: <the dimension>,
-  body: <the substring>,
+  dim: '<the dimension>',
+  body: '<the substring>',
   values: [
     {
-      type: <the type>,
-      <depends on the type of value>,
+      type: '<the type>',
+      '<depends on the type of value>',
     }
   ],
-  start: <the start index of the extracted substring>,
-  end: <the end index of the extracted substring>
+  start: '<the start index of the extracted substring>',
+  end: '<the end index of the extracted substring>'
 }
 ```
+
 ## Extractors
 The SDK allows to use two types of extractors:
 - extractors using Botfuel's entity extraction web service (see https://app.botfuel.io),
