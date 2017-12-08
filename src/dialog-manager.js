@@ -71,7 +71,7 @@ class DialogManager {
       return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
     }
     logger.error(`Could not resolve '${dialog.name}' dialog`);
-    throw new DialogError({ dialog, message: `Make sure the '${dialog.name}' dialog file exists at ${process.cwd()}/src/dialogs/${dialog.name}-dialog.js` });
+    throw new DialogError({ dialog, message: `Make sure the '${dialog.name}' dialog file exists at ${this.config.path}/src/dialogs/${dialog.name}-dialog.js` });
   }
 
   /**
