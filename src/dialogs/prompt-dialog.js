@@ -291,7 +291,7 @@ class PromptDialog extends Dialog {
    */
   async executeWhenCompleted() {
     logger.debug('executeWhenCompleted');
-    return this.done();
+    return this.complete();
   }
 
   /** @inheritdoc */

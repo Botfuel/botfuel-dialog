@@ -27,7 +27,7 @@ class VoidDialog extends Dialog {
   // eslint-disable-next-line require-jsdoc
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
-    return this.done();
+    return this.complete();
   }
 }
 

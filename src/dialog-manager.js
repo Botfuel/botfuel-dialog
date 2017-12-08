@@ -193,6 +193,64 @@ class DialogManager {
   }
 
   /**
+   * Applies an action to the dialogs object
+   * @async
+   * @param {Object} dialogs - the dialogs object to be updated
+   * @param {String} action - an action that indicates
+   * how should the stack and previous dialogs be updated
+   * @returns {Promise.<Object>} The new dialogs object with its stack and previous arrays updated
+    */
+  computeNewDialogs(dialogs, action) {
+    const currentDialog = this.getDialog(dialogs.stack[dialogs.stack.length - 1]);
+    const previousDialog = dialogs.stack[dialogs.stack.length - 2];
+    const date = Date.now();
+
+    switch (action) {
+      case Dialog.ACTION_CANCEL:
+
+        logger.debug('execute: canceling previous dialog', dialogs.stack);
+        logger.debug('execute: canceling previous dialog', previousDialog);
+
+        return {
+          ...dialogs,
+          ...{
+            stack: dialogs.stack.slice(0, -2),
+            previous: dialogs.previous.concat([
+              { ...previousDialog, status: Dialog.STATUS_DISCARDED, date },
+              { ...currentDialog, status: Dialog.STATUS_COMPLETED, date },
+            ]),
+          },
+        };
+
+      case Dialog.ACTION_COMPLETE:
+        return {
+          ...dialogs,
+          ...{
+            stack: dialogs.stack.slice(0, -1),
+            previous: [
+              ...dialogs.previous,
+              { ...currentDialog, status: Dialog.STATUS_COMPLETED, date },
+            ],
+          },
+        };
+
+      case Dialog.ACTION_NEXT:
+        return {
+          ...dialogs,
+          ...{
+            stack: dialogs.stack.slice(0, -1),
+            previous: [
+              ...dialogs.previous,
+              { ...currentDialog, status: Dialog.STATUS_COMPLETED, date },
+            ],
+          },
+        };
+      default:
+        return dialogs;
+    }
+  }
+
+  /**
    * Executes the dialogs.
    * @async
    * @param {Adapter} adapter - the adapter
@@ -202,57 +260,31 @@ class DialogManager {
    */
   async execute(adapter, userId, dialogs) {
     logger.debug('execute', '<adapter>', userId, dialogs);
+
     if (dialogs.stack.length === 0) {
       return dialogs;
     }
+
     const dialog = dialogs.stack[dialogs.stack.length - 1];
     const dialogInstance = await this.getDialog(dialog);
-    const dialogResult = await dialogInstance
+    const { action, newDialog } = await dialogInstance
       .execute(adapter, userId, dialog.entities, dialog.status);
-    logger.debug('execute: dialogResult', dialogResult);
-    logger.debug('execute: dialogs', dialogs);
-    const status = dialogResult.status || Dialog.STATUS_COMPLETED;
-    const action = dialogResult.action;
+    const newDialogs = await this.computeNewDialogs(dialogs, action);
 
-    if (action === Dialog.ACTION_CANCEL_PREVIOUS_DIALOG) {
-      const previousDialog = dialogs.stack[dialogs.stack.length - 2];
-      dialogs.stack = dialogs.stack.slice(0, -2);
-      logger.debug('execute: canceling previous dialog', dialogs.stack);
-      logger.debug('execute: canceling previous dialog', previousDialog);
-      dialogs.previous.push({
-        name: previousDialog.name,
-        status: Dialog.STATUS_DISCARDED,
-        characteristics: previousDialog.characteristics,
-        date: Date.now(),
-      });
-      dialogs.previous.push({
-        name: dialog.name,
-        status: Dialog.STATUS_COMPLETED,
-        characteristics: dialog.characteristics,
-        date: Date.now(),
-      });
-    } else if (status === Dialog.STATUS_DISCARDED || status === Dialog.STATUS_COMPLETED) {
-      dialogs.stack = dialogs.stack.slice(0, -1);
-      dialogs.previous.push({
-        name: dialog.name,
-        status,
-        characteristics: dialogInstance.characteristics,
-        date: Date.now(),
-      });
-    } else { // ready or waiting
-      dialog.status = status;
-      // we don't want to execute another dialog
-      // TODO: decide what to do if both a status and a dialog are provided
-      return dialogs;
-    }
-    logger.debug('execute: dialogs updated', dialogs);
-    const newDialog = dialogResult.newDialog;
+    logger.debug('execute: dialogResult', { action, newDialog });
     logger.debug('execute: newDialog', newDialog);
+    logger.debug('execute: newDialogs', newDialogs);
+
     if (newDialog) {
-      newDialog.status = Dialog.STATUS_READY;
-      this.updateWithDialogs(userId, dialogs, [newDialog], dialog.entities);
+      this.updateWithDialogs(
+        userId,
+        newDialogs,
+        [{ ...newDialog, status: Dialog.STATUS_READY }],
+        dialog.entities,
+      );
     }
-    return this.execute(adapter, userId, dialogs);
+
+    return this.execute(adapter, userId, newDialogs);
   }
 
   /**
@@ -267,8 +299,8 @@ class DialogManager {
     logger.debug('execute', userId, intents, entities);
     const dialogs = await this.getDialogs(userId);
     this.updateWithIntents(userId, dialogs, intents, entities);
-    await this.execute(adapter, userId, dialogs);
-    return this.setDialogs(userId, dialogs);
+    const newDialogs = await this.execute(adapter, userId, dialogs);
+    return this.setDialogs(userId, newDialogs);
   }
 
   /**
@@ -282,8 +314,8 @@ class DialogManager {
     logger.debug('executeWithDialogs', userId, newDialogs);
     const dialogs = await this.getDialogs(userId);
     this.updateWithDialogs(userId, dialogs, newDialogs);
-    await this.execute(adapter, userId, dialogs);
-    return this.setDialogs(userId, dialogs);
+    const remainingDialogs = await this.execute(adapter, userId, dialogs);
+    return this.setDialogs(userId, remainingDialogs);
   }
 }
 
