@@ -41,10 +41,10 @@ class ViewManager {
   getPath(name) {
     logger.debug('getPath');
     const paths = [
-      `${this.viewsPath}/${name}.${this.locale}.js`,
-      `${this.viewsPath}/${name}.js`,
-      `${this.localViewsPath}/${name}.${this.locale}.js`,
-      `${this.localViewsPath}/${name}.js`,
+      `${this.viewsPath}/${name}-view.${this.locale}.js`,
+      `${this.viewsPath}/${name}-view.js`,
+      `${this.localViewsPath}/${name}-view.${this.locale}.js`,
+      `${this.localViewsPath}/${name}-view.js`,
     ];
     for (const path of paths) {
       logger.debug('getPath: test path', path);
