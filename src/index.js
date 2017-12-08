@@ -16,7 +16,7 @@
 
 const Bot = require('./bot');
 const Classifier = require('./classifier');
-const CorpusExtractor = require('./extractors/corpus');
+const CorpusExtractor = require('./extractors/corpus-extractor');
 const Dialog = require('./dialogs/dialog');
 const DialogManager = require('./managers/dialog-manager');
 const FileCorpus = require('./corpora/file-corpus');
@@ -29,7 +29,7 @@ const PromptView = require('./views/prompt-view');
 const TextDialog = require('./dialogs/text-dialog');
 const TextView = require('./views/text-view');
 const View = require('./views/view');
-const WsExtractor = require('./extractors/ws');
+const WsExtractor = require('./extractors/ws-extractor');
 
 module.exports = {
   Bot,
