@@ -16,7 +16,7 @@
 
 const path = require('path');
 const logger = require('logtown')('ShellAdapter');
-const LoggerManager = require('./managers/logger-manager');
+const LoggerManager = require('./logger-manager');
 
 const defaultConfig = {
   path: process.cwd(),
