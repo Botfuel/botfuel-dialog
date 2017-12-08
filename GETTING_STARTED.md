@@ -1,12 +1,15 @@
+By the end of this this tutorial, you will be able to have a bot running that is able to respond to a greeting and ask for your name. You will also add a new functionality that will make the bot ask for your age.
+
 # Getting API credentials
 
 ## Creating a Botfuel Developer Account
 
+You can use the SDK without any API credentials, but in this tutorial we want to take advantage of the entity extraction service.
+To get API crendentialsl you need to create a Botfuel developer account. The Labs plan is free up to 5000 API calls per month!
+
 If you haven’t already, visit the [Botfuel Developer Portal](https://app.botfuel.io/) and create an account:
 
 <img src="https://s3.eu-west-1.amazonaws.com/botfuel-docs/screenshots/signup.png" alt="Sign up" width="300"/>
-
-A Botfuel developer account and app are needed because our SDK internally uses our Natural Language Processing (NLP) APIs which are authenticated and limited in calls depending on your app’s plan. The Labs plan is free up to 5000 API calls per month!
 
 ## Creating an app
 
@@ -28,7 +31,7 @@ Once your app is created, make sure you locate the `Credentials` section. We wil
 
 # Installation
 
-Open a terminal and clone the bot sample starter:
+Open a terminal and clone the sample starter bot:
 
 ```shell
 git clone git@github.com:Botfuel/sample-bot-starter.git
@@ -44,7 +47,7 @@ npm install
 Start the bot with the `BOTFUEL_APP_ID` and `BOTFUEL_APP_KEY` environment variables using your app’s credentials:
 
 ```shell
-BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start
+BOT_ID BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start
 ```
 
 If you set your app credentials right, you should see:
@@ -60,40 +63,66 @@ Your bot is now running, congratulations!
 
 # Basics
 
-Right now, your bot has 2 basic features:
+Right now, your bot has 2 basic intents:
 
 - Greetings: if you say hello, it will simply reply with `Hello human!`
 - Name: if you say `My name is bob` it will reply with `So your name is Bob... Hello Bob!`
 
-A bot has 4 basic building blocs:
+A bot has 4 basic building blocks:
 
-- Intents: text file that contains sentences that should be recognised to trigger a Dialog
-- Extractors: determines what entities (forename, number, color, city...) can be extracted by the bot.
-- Dialogs: specifies what data (API call, entities, plain text) should be used in the corresponding View
-- Views: what should the bot display as a reply
+- Intents: text files that contain examples of sentences that are used in training to trigger a Dialog,
+- Extractors: extract entities (e.g. forename, number, color, city...) that can then be used by the bot,
+- Dialogs: controllers that specify what user input is needed to respond. Interact with the brain and compute the data (e.g entities, plain text) that will passed to the corresponding View,
+- Views: generate the bot messages.
 
-Let’s illustrate this using the `Name` feature:
+Let’s illustrate this using the `Name` functionality:
 
-| Block | Example | File
+| Block | What it does | File
 | --- | --- | --- |
-| Intent | the sentence `My name is bob` is matched with the `name` intent | `src/intents/name.intent`
-| Extractor | extracts the forename `bob` from the user sentence | `src/extractors/forename-extractor.js`
+| Intent | Matches user input (`My name is bob` for example) with the `name` intent | `src/intents/name.intent`
+| Extractor | Extracts the forename `bob` from the user sentence | `src/extractors/forename-extractor.js`
 | Dialog | Specifies it needs a `forename` entity named `name` | `src/dialogs/name-dialog.js`
-| View | Replies with the recognised name | `src/views/name-view.js`
+| View | Replies with the recognized name | `src/views/name-view.js`
 
-# Adding a feature
+# Adding a functionality
 
-Let’s add the age feature. What we’d like:
+Let’s add the age functionality. What we’d like:
 
-- User says: `I am <AGE> years old`
+- User says something like: `I am <AGE>` or `<AGE> years old`
 - Bot replies:
-  - `<AGE>! You’re pretty old.` if <AGE> > 50
-  - `<AGE>... I could be your dad!` if <AGE> <= 50
+  - `<AGE>! You’re older than me.` if <AGE> > 50
+  - `<AGE>... You’re younger than me.` if <AGE> < 50
+  - `<AGE>. You’re as old as I am!` if <AGE> === 50
 
 ## Adding the age Intent
 
 First let’s create the `age` intent.
-Create a `age.intent` file in the `src/intents` directory with `I am 42 years old.` as its content.
+Create a `age.intent` file in the `src/intents` directory with:
+
+```
+I am 42 years old.
+I am 42.
+42 years old.
+Ask me about my age.
+``
+as its content.
+
+The more sentences you add, the more likely your bot will be able to understand and match a user input.
+
+Run this command to check the contents of your new intent:
+
+```shell
+less src/intents/age.intent
+```
+
+This should display:
+
+```
+I am 42 years old.
+I am 42.
+42 years old.
+Ask me about my age.
+```
 
 In your terminal, execute the following command:
 
@@ -105,8 +134,7 @@ This will update the model to include your new model. Be sure to train each time
 
 ## Adding the number Extractor
 
-Create a `number-extractor.js` file in the `src/extractors` directory.
-Here we need to tell our bot to extract `number` entities from users messages:
+Create a `number-extractor.js` file in the `src/extractors` directory so that the bot can extract numbers from user input.
 
 ```javascript
 const sdk2 = require('@botfuel/bot-sdk2');
@@ -123,7 +151,7 @@ module.exports = NumberExtractor;
 ## Adding the age Dialog
 
 Create a `age-dialog.js` file in the `src/dialogs` directory.
-Because it needs user input to reply, the `age` Dialog is a PromptIntent:
+Because it needs user input to reply, the age Dialog is a PromptDialog:
 
 ```javascript
 const sdk2 = require('@botfuel/bot-sdk2');
@@ -161,10 +189,14 @@ class AgeView extends PromptView {
     }
 
     if (age > 50) {
-        return [new BotTextMessage(`${age}! You’re pretty old.`)];
+        return [new BotTextMessage(`${age}! You’re older than me`)];
+    }
+
+    if (age === 50) {
+        return [new BotTextMessage(`${age}! You’re as old as I am!`)];
     }
     
-    return [new BotTextMessage(`${age}... I could be your dad!`)];
+    return [new BotTextMessage(`${age}... You’re younger than me.`)];
   }
 }
 
