@@ -34,8 +34,8 @@ describe('BooleanExtractor', function () {
             value: false,
           },
         ],
-        startIndex: 18,
-        endIndex: 20,
+        start: 18,
+        end: 20,
       },
       {
         dim: 'system:boolean',
@@ -46,8 +46,8 @@ describe('BooleanExtractor', function () {
             value: true,
           },
         ],
-        startIndex: 6,
-        endIndex: 9,
+        start: 6,
+        end: 9,
       },
     ]);
   });

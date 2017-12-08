@@ -51,8 +51,8 @@ class WsExtractor extends Extractor {
       const entities = await this.client.compute(query);
       return entities.map(entity => ({
         ...entity,
-        startIndex: entity.start,
-        endIndex: entity.end,
+        start: entity.start,
+        end: entity.end,
       }));
     } catch (error) {
       logger.error('Could not extract the entities!');

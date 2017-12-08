@@ -95,12 +95,33 @@ module is responsible for computing intents and entities from a user text messag
 ### Intents
 Given a sentence, the nlu module computes a list of user intents with their probabilities.
 The actual computation is performed by a classifier.
+
 The classifier builds a classification model based on a training set which takes the form of a set of `.intent` files.
+Here is an example for an intent file:
+```
+I want to eat!
+I am hungry.
+Give me food!
+```
 
 ### Entities
 Given a sentence, the nlu module computes a list of entities.
 The actual computation is performed by extractors.
-
+An extracted entity comes with the following details:
+```javascript
+{
+  dim: <the dimension>,
+  body: <the substring>,
+  values: [
+    {
+      type: <the type>,
+      <depends on the type of value>,
+    }
+  ],
+  start: <the start index of the extracted substring>,
+  end: <the end index of the extracted substring>
+}
+```
 ## Extractors
 The SDK allows to use two types of extractors:
 - extractors using Botfuel's entity extraction web service (see https://app.botfuel.io),
@@ -111,13 +132,14 @@ The dialog manager is responsible to choose which dialog to call.
 The dialog manager allows to handle complex conversations, including:
 - digressions,
 - multi-intents,
-- [random access navigation] (https://medium.com/assist/theres-a-dozen-ways-to-order-a-coffee-why-do-dumb-bots-only-allow-one-27230542636d).
+- [random access navigation](https://medium.com/assist/theres-a-dozen-ways-to-order-a-coffee-why-do-dumb-bots-only-allow-one-27230542636d).
 
 ## Brains
 The brain is the _model_ of a bot.
 The SDK offers different brain implementations:
 - an in-memory brain,
 - a [MongoDb](https://www.mongodb.com) based brain.
+
 It is very easy to write a new brain implementation.
 
 ## Dialogs
@@ -130,5 +152,7 @@ The SDK offers several dialogs:
 - a `QnaDialog` which answers questions using Botfuel's QnA service (see https://app.botfuel.io).
 
 ## Views
-Each dialog comes with a single view. The view is responsible for generating the bot messages.
+Each dialog comes with a single view.
+The view is responsible for generating the bot messages.
+
 A view can have different sections, those are identified with a key.
