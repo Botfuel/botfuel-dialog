@@ -24,7 +24,7 @@ const defaultConfig = {
   intentThreshold: 0.8,
 };
 
-const getConfig = (botConfig) => Object.assign(defaultConfig, botConfig);
+const getConfig = botConfig => Object.assign(defaultConfig, botConfig);
 
 /**
 * Returns the contents of the bot config file
@@ -33,7 +33,7 @@ const getConfig = (botConfig) => Object.assign(defaultConfig, botConfig);
 */
 function resolveConfigFile(configFileName) {
   if (!configFileName) {
-    console.log('You didn\'t specify any config file, use default config.');
+    console.log('You didn\'t specify any config file, using default config.');
     return {};
   }
 
