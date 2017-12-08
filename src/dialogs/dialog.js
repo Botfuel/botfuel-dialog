@@ -17,7 +17,7 @@
 const logger = require('logtown')('Dialog');
 const kebabCase = require('lodash/kebabCase');
 const ViewManager = require('../view-manager');
-const { MissingImplementationError } = require('../errors');
+const { MissingImplementationError, DialogError } = require('../errors');
 
 /**
  * A dialog is responsible for calling its associated view with the right parameters.
@@ -135,7 +135,9 @@ class Dialog {
   */
   nextDialog(dialogName) {
     if (!dialogName) {
-      return logger.error('You must provide a dialogName as a parameter to the nextDialog method.');
+      throw new DialogError({
+        message: 'You must provide a dialogName as a parameter to the nextDialog method.',
+      });
     }
 
     return {
