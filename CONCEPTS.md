@@ -62,7 +62,7 @@ A message has the form:
   user: '<user id>',
   payload: {
     value: '<the value>',
-    options: '<the options>',
+    options: '<the options>'
   }
 }
 ```
