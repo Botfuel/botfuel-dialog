@@ -16,8 +16,8 @@
 
 const fs = require('fs');
 const logger = require('logtown')('DialogManager');
-const Dialog = require('../dialogs/dialog');
-const { DialogError } = require('../errors/index');
+const Dialog = require('./dialogs/dialog');
+const { DialogError } = require('./errors/index');
 
 /**
  * The dialog manager turns NLU output into a dialog stack.
@@ -44,10 +44,10 @@ class DialogManager {
   getDialogPath(name) {
     logger.debug('getDialogPath', name);
     const paths = [
-      `${this.config.path}/src/dialogs/${name}.${this.config.adapter}`,
-      `${this.config.path}/src/dialogs/${name}`,
-      `${__dirname}/../dialogs/${name}.${this.config.adapter}`,
-      `${__dirname}/../dialogs/${name}`,
+      `${this.config.path}/src/dialogs/${name}-dialog.${this.config.adapter}`,
+      `${this.config.path}/src/dialogs/${name}-dialog`,
+      `${__dirname}/dialogs/${name}-dialog.${this.config.adapter}`,
+      `${__dirname}/dialogs/${name}-dialog`,
     ];
     for (const path of paths) {
       logger.debug('getDialogPath: path', path);
@@ -71,7 +71,7 @@ class DialogManager {
       return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
     }
     logger.error(`Could not resolve '${dialog.name}' dialog`);
-    throw new DialogError({ dialog, message: `Make sure the '${dialog.name}' dialog file exists at ${this.config.path}/src/dialogs/${dialog.name}.js` });
+    throw new DialogError({ dialog, message: `Make sure the '${dialog.name}' dialog file exists at ${this.config.path}/src/dialogs/${dialog.name}-dialog.js` });
   }
 
   /**
