@@ -29,7 +29,7 @@ class ViewManager {
   constructor(config) {
     logger.debug('constructor', config.path);
     this.viewsPath = `${config.path}/src/views`;
-    this.localViewsPath = `${__dirname}/../views`;
+    this.localViewsPath = `${__dirname}/views`;
     this.locale = config.locale;
   }
 
