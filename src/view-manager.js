@@ -16,7 +16,7 @@
 
 const fs = require('fs');
 const logger = require('logtown')('ViewManager');
-const { ViewError } = require('../errors/index');
+const { ViewError } = require('./errors/index');
 
 /**
  * The view manager resolves the view for a given dialog.

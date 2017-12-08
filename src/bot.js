@@ -16,8 +16,8 @@
 
 const Logger = require('logtown');
 const BotfuelAdapter = require('./adapters/botfuel-adapter');
-const DialogManager = require('./managers/dialog-manager');
-const LoggerManager = require('./managers/logger-manager');
+const DialogManager = require('./dialog-manager');
+const LoggerManager = require('./logger-manager');
 const MessengerAdapter = require('./adapters/messenger-adapter');
 const MemoryBrain = require('./brains/memory-brain');
 const MongoBrain = require('./brains/mongo-brain');
