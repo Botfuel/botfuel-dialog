@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const TextDialog = require('./text');
+const TextDialog = require('./text-dialog');
 
 /**
  * The default dialog is used when the bot does not understand the user intent.

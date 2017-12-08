@@ -17,7 +17,7 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const PromptDialog = require('../../src/dialogs/prompt');
+const PromptDialog = require('../../src/dialogs/prompt-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 
 const TEST_BOT = process.env.BOT_ID;

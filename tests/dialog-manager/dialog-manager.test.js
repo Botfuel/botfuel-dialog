@@ -17,7 +17,7 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const DialogManager = require('../../src/managers/dialog-manager');
+const DialogManager = require('../../src/dialog-manager');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const TestAdapter = require('../../src/adapters/test-adapter');
 const { BotTextMessage } = require('../../src/messages');
@@ -39,11 +39,11 @@ describe('DialogManager', function () {
   it('when given a name, it should return the correct path', function () {
     expect(dm.getDialogPath('test'))
       .to
-      .eql(`${__dirname}/src/dialogs/test`);
+      .eql(`${__dirname}/src/dialogs/test-dialog`);
   });
 
   it('when given an unknown name, it should return null', function () {
-    expect(dm.getDialogPath('unknown_dialog')).to.be(null);
+    expect(dm.getDialogPath('unknown')).to.be(null);
   });
 
   it('should not crash when no intent', async function () {

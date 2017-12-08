@@ -16,7 +16,7 @@
 
 const logger = require('logtown')('Dialog');
 const { kebabCase } = require('lodash');
-const ViewManager = require('../managers/view-manager');
+const ViewManager = require('../view-manager');
 const { MissingImplementationError } = require('../errors');
 
 /**
