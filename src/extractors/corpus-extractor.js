@@ -38,8 +38,8 @@ class CorpusExtractor extends Extractor {
             dim: this.parameters.dimension,
             body: word,
             values: [this.buildValue(row[0])],
-            startIndex: index.startIndex,
-            endIndex: index.endIndex,
+            start: index.start,
+            end: index.end,
           }));
       }
     }
@@ -56,8 +56,8 @@ class CorpusExtractor extends Extractor {
   addEntity(entities, newEntity) {
     for (let i = 0; i < entities.length; i++) {
       const entity = entities[i];
-      if (newEntity.startIndex <= entity.startIndex
-          && newEntity.endIndex >= entity.endIndex) {
+      if (newEntity.start <= entity.start
+          && newEntity.end >= entity.end) {
         entities.splice(i, 1);
       }
     }
@@ -75,15 +75,15 @@ class CorpusExtractor extends Extractor {
     logger.debug('extracts', sentence, word);
     const normalizedWord = Corpus.normalize(word, this.parameters.options);
     const results = [];
-    for (let startIndex = -1, endIndex = 0; ;) {
-      startIndex = sentence.indexOf(normalizedWord, endIndex);
-      endIndex = startIndex + normalizedWord.length;
-      if (startIndex < 0
-          || (startIndex > 0 && CharFunk.isLetterOrDigit(sentence[startIndex - 1]))
-          || (endIndex < sentence.length && CharFunk.isLetterOrDigit(sentence[endIndex]))) {
+    for (let start = -1, end = 0; ;) {
+      start = sentence.indexOf(normalizedWord, end);
+      end = start + normalizedWord.length;
+      if (start < 0
+          || (start > 0 && CharFunk.isLetterOrDigit(sentence[start - 1]))
+          || (end < sentence.length && CharFunk.isLetterOrDigit(sentence[end]))) {
         break;
       }
-      results.push({ startIndex, endIndex });
+      results.push({ start, end });
     }
     return results;
   }

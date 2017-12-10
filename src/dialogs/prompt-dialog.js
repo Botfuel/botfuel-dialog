@@ -21,9 +21,9 @@ const logger = require('logtown')('PromptDialog');
 const Dialog = require('./dialog');
 
 // Helper functions
-const makePositionsArray = entity => Array(entity.endIndex - entity.startIndex)
+const makePositionsArray = entity => Array(entity.end - entity.start)
   .fill()
-  .map((_, i) => i + entity.startIndex);
+  .map((_, i) => i + entity.start);
 
 const doEntitiesIntersect = (entityA, entityB) => !!(intersection(
   makePositionsArray(entityA),
@@ -31,7 +31,7 @@ const doEntitiesIntersect = (entityA, entityB) => !!(intersection(
 ).length);
 
 const filterIntersectingEntities = (entities, entity) => {
-  if (entity.startIndex == null || entity.endIndex == null) {
+  if (entity.start == null || entity.end == null) {
     return entities.filter(e => !isEqual(e, entity));
   }
 
@@ -78,8 +78,8 @@ class PromptDialog extends Dialog {
    * from a message: {
    *     dim: String,
    *     body: String,
-   *     startIndex: Number,
-   *     endIndex: Number,
+   *     start: Number,
+   *     end: Number,
    *     values: Array<Object>
    * }
    * @param {Object} initialValue - initial value of the entity we want to match

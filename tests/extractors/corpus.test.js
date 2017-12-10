@@ -41,8 +41,8 @@ describe('CorpusExtractor', function () {
             value: 'Olympique Lyonnais',
           },
         ],
-        startIndex: 20,
-        endIndex: 40,
+        start: 20,
+        end: 40,
       },
       {
         dim: 'teams',
@@ -53,8 +53,8 @@ describe('CorpusExtractor', function () {
             value: 'Béziers',
           },
         ],
-        startIndex: 0,
-        endIndex: 7,
+        start: 0,
+        end: 7,
       },
     ]);
   });
@@ -76,8 +76,8 @@ describe('CorpusExtractor', function () {
             value: 'Paris Saint-Germain',
           },
         ],
-        startIndex: 0,
-        endIndex: 19,
+        start: 0,
+        end: 19,
       },
       {
         dim: 'teams',
@@ -88,8 +88,8 @@ describe('CorpusExtractor', function () {
             value: 'Paris Saint-Germain',
           },
         ],
-        startIndex: 21,
-        endIndex: 29,
+        start: 21,
+        end: 29,
       },
       {
         dim: 'teams',
@@ -100,8 +100,8 @@ describe('CorpusExtractor', function () {
             value: 'Paris Saint-Germain',
           },
         ],
-        startIndex: 33,
-        endIndex: 36,
+        start: 33,
+        end: 36,
       },
     ]);
   });
