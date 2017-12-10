@@ -6,12 +6,12 @@ A user message is processed by the bot which computes responses (bot messages).
 The processing of the user message and the generation of the bot messages are performed by several components.
 
 ## Components
-A bot is composed of differents components:
-- a nlu component, it is used to process user text messages,
+A bot is composed of different components:
+- a nlu (Natural Language Understanding) component, it is used to process user text messages,
 - a dialog manager, it decides which dialogs to call,
 - a brain, it stores things,
 - adapters, they adapt the messages to the messaging platform,
-- dialogs, they interact with the brain and the views
+- dialogs, they interact with the brain and the views,
 - views, they generate the messages,
 - extractors, they extract entities from user sentences.
 
@@ -38,6 +38,8 @@ Let's see how these components interact with a [sequence diagram](https://en.wik
 <--- |            |            |            |            |            |            |            |
 ```
 
+TODO: illustrate each step with a sentence
+
 ### MVC
 The bot implements the [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) pattern where:
 - the brain is the _model_ : it contains all the information about the bot, the users, the conversations,
@@ -45,12 +47,11 @@ The bot implements the [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2
 - the _view_ generates the messages to be sent to the user.
 
 ## Messages
-The SDK defines its own message format and supports:
-- text messages,
+The SDK defines its own message format which supports:
+- text messages and quick replies,
 - images and image uploads,
 - links,
-- buttons and postbacks,
-- quick replies,
+- buttons and clicks on buttons (aka postbacks),
 - complex messages such as carrousels.
 
 A message has the form:
@@ -69,7 +70,7 @@ A message has the form:
 
 ## Adapters
 Each messaging platform (Messenger, ...) has its own message format.
-It is the responsibility of the adapters to translate external formats into the SDK's message format.
+The adapters are responsible for translating external formats into the SDK's message format.
 
 The SDK comes with the following adapters:
 - _messenger_, an adapter for Facebook's messaging platform,
@@ -144,7 +145,7 @@ The SDK allows to use two types of extractors:
 - corpus based extractors.
 
 ## Dialog Manager
-The dialog manager is responsible to choose which dialog to call.
+The dialog manager is responsible for choosing which dialog to call.
 The dialog manager allows to handle complex conversations, including:
 - digressions,
 - multi-intents,
