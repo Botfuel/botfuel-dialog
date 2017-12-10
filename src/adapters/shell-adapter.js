@@ -30,10 +30,9 @@ class ShellAdapter extends Adapter {
   /**
    * @constructor
    * @param {Object} bot - the bot
-   * @param {Object} config - the bot config
    */
-  constructor(bot, config) {
-    super(bot, config);
+  constructor(bot) {
+    super(bot);
     this.userId = 'USER_1';
     this.rl = readline.createInterface({
       input: process.stdin,
@@ -65,9 +64,9 @@ class ShellAdapter extends Adapter {
     await this.bot.respond(userMessage.toJson(this.bot.id, this.userId));
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async sendMessage(botMessage) {
-    // logs the bot message
+    // eslint-disable-next-line no-console
     console.log(chalk.hex('#16a085')(`${DELIMITER}${botMessage.payload.value}`));
   }
 }

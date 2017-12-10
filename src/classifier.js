@@ -18,7 +18,7 @@ const Fs = require('fs');
 const util = require('util');
 const Natural = require('natural');
 const logger = require('logtown')('Classifier');
-const LoggerManager = require('./managers/logger-manager');
+const { getConfiguration } = require('./config');
 
 const fsStat = util.promisify(Fs.stat);
 
@@ -33,12 +33,12 @@ class Classifier {
    * @param {Object} config - the bot config
    */
   constructor(config) {
-    LoggerManager.configure(config);
+    this.config = getConfiguration(config);
     logger.debug('constructor', config);
-    this.locale = config.locale;
-    this.intentThreshold = config.intentThreshold || 0.8;
-    this.modelFilename = `${config.path}/models/model.json`;
-    this.intentDirname = `${config.path}/src/intents`;
+    this.locale = this.config.locale;
+    this.intentThreshold = this.config.intentThreshold;
+    this.modelFilename = `${this.config.path}/models/model.json`;
+    this.intentDirname = `${this.config.path}/src/intents`;
     this.classifier = null;
     this.getStemmer().attach();
   }

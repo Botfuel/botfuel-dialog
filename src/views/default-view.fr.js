@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Copyright (c) 2017 - present, Botfuel (https://www.botfuel.io).
  *
@@ -15,18 +14,19 @@
  * limitations under the License.
  */
 
-require('babel-polyfill');
+const logger = require('logtown')('DefaultView.fr');
+const TextView = require('./text-view');
 
-const logger = require('logtown')('Train');
-const Classifier = require('./classifier');
-const { resolveConfigFile } = require('./config');
-
-(async () => {
-  try {
-    const config = resolveConfigFile(process.argv[2]);
-    await new Classifier(config).train();
-    logger.info('Training done.');
-  } catch (e) {
-    logger.error(e);
+/**
+ * Default text view for french.
+ * @extends TextView
+ */
+class DefaultView extends TextView {
+  // eslint-disable-next-line require-jsdoc
+  getTexts(data) {
+    logger.debug('getTexts', data);
+    return ['Je n\'ai pas compris.'];
   }
-})();
+}
+
+module.exports = DefaultView;

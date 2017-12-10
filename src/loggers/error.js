@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-const logger = require('logtown')('DefaultView.en');
-const TextView = require('./text');
+const WinstonWrapper = require('logtown-winston');
+const winston = require('winston');
 
-/**
- * Default text view for english.
- * @extends TextView
- */
-class DefaultView extends TextView {
-  // eslint-disable-next-line require-jsdoc
-  getTexts(data) {
-    logger.debug('getTexts', data);
-    return ['Not understood.'];
-  }
-}
+const transports = [
+  new winston.transports.Console({
+    json: false,
+    colorize: true,
+    prettyPrint: true,
+    timestamp: true,
+    handleExceptions: true,
+    align: false,
+    level: 'error',
+  }),
+];
 
-module.exports = DefaultView;
+const options = { exitOnError: false };
+
+module.exports = {
+  wrapper: new WinstonWrapper(transports, options),
+  config: {
+    disable: ['warn', 'info', 'verbose', 'debug', 'silly'],
+  },
+};
