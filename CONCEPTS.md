@@ -179,16 +179,6 @@ An extracted entity comes with the following details:
 The dialog manager is responsible for choosing which dialog to call.
 In the case where an intent has been classified, the dialog manager will try to find a dialog with the same name.
 
-### Resolution strategy
-The strategy for finding the dialog with a given name is the following:
-- The dialog manager first looks in the bot for the dialog file `<dialog name>.<adapter>.js`
-- If it does not exist, it looks in the bot for the dialog file `<dialog name>.js`
-- If it does not exist, it looks in the SDK for the dialog file `<dialog name>.<adapter>.js`
-- If it does not exist, it looks in the SDK for the dialog file `<dialog name>.js`
-
-This allows to customize the behaviour of the bot depending on the adapter.
-It also allows to provide default dialog implementations in the SDK.
-
 ### Complex conversations
 The dialog manager enables complex conversations, including:
 - Digressions
@@ -236,14 +226,14 @@ Dialogs are responsible:
 - for dispatching to their view with the correct parameters.
 
 ### Resolution strategy
-The strategy for finding the view with a given name is the following:
-- The dialog first looks in the bot for the view file `<view name>.<locale>.js`
-- If it does not exist, it looks in the bot for the view file `<view name>.js`
-- If it does not exist, it looks in the SDK for the view file `<view name>.<locale>.js`
-- If it does not exist, it looks in the SDK for the view file `<view name>.js`
+The strategy for finding the dialog with a given name is the following:
+- The dialog manager first looks in the bot for the dialog file `<dialog name>.<adapter>.js`
+- If it does not exist, it looks in the bot for the dialog file `<dialog name>.js`
+- If it does not exist, it looks in the SDK for the dialog file `<dialog name>.<adapter>.js`
+- If it does not exist, it looks in the SDK for the dialog file `<dialog name>.js`
 
-This allows to customize the rendering depending on the locale.
-It also allows to provide default view implementations in the SDK.
+This allows to customize the behaviour of the bot depending on the adapter.
+It also allows to provide default dialog implementations in the SDK.
 
 ### Built-in dialogs
 The SDK offers several built-in dialogs:
@@ -256,6 +246,16 @@ Each dialog comes with a single view.
 The view is responsible for generating the bot messages.
 
 A view can have different sections, those are identified with a key.
+
+### Resolution strategy
+The strategy for finding the view with a given name is the following:
+- The dialog first looks in the bot for the view file `<view name>.<locale>.js`
+- If it does not exist, it looks in the bot for the view file `<view name>.js`
+- If it does not exist, it looks in the SDK for the view file `<view name>.<locale>.js`
+- If it does not exist, it looks in the SDK for the view file `<view name>.js`
+
+This allows to customize the rendering depending on the locale.
+It also allows to provide default view implementations in the SDK.
 
 ### Built-in views
 The SDK offers several built-in views:
