@@ -1,35 +1,37 @@
-By the end of this this tutorial, you will be able to have a bot running that is able to respond to a greeting and ask for your name. You will also add a new functionality that will make the bot ask for your age.
+By the end of this tutorial, you will have a simple bot that is able to respond to a greeting and ask for your name. You will also learn how to add new functionality that will allow the bot to ask for your age.
 
-# Getting API credentials
-
-## Creating a Botfuel Developer Account
+# Get API credentials
 
 You can use the SDK without any API credentials, but in this tutorial we want to take advantage of the entity extraction service.
-To get API crendentialsl you need to create a Botfuel developer account. The Labs plan is free up to 5000 API calls per month!
+To get API crendentials you need to create a Botfuel developer account and create an app. The Labs plan is free up to 5000 API calls per month!
+
+## Create a Botfuel developer account
 
 If you haven’t already, visit the [Botfuel Developer Portal](https://app.botfuel.io/) and create an account:
 
 <img src="https://s3.eu-west-1.amazonaws.com/botfuel-docs/screenshots/signup.png" alt="Sign up" width="300"/>
 
-## Creating an app
+## Create an app
 
-Once you have created an account and are logged in, create an app by clicling on the `New app` button:
+Once you have created an account and are logged in, create an app by clicking on the `New app` button:
 
 <img src="https://s3.eu-west-1.amazonaws.com/botfuel-docs/screenshots/createapp.png" alt="Creating an app" width="800"/>
 
-Now give a name to your app, an optional description and a language.
+Now name your app, provide an optional description and select a language.
 
-The app’s language determines what language your bot will understand. Under the hood, our NLP APIs behave differently based on the language you choose. You won’t be able to change it later so choose carefully!
+The app’s language determines what language your bot will understand. Under the hood, our NLP APIs behave differently based on the language you choose. You won’t be able to change it later, so choose carefully!
 
 <img src="https://s3.eu-west-1.amazonaws.com/botfuel-docs/screenshots/createapp2.png" alt="Creating an app 2" width="800"/>
 
-## Getting the credentials
+## Get the app credentials
 
-Once your app is created, make sure you locate the `Credentials` section. We will use the App Id and App Key parameters later in this tutorial.
+Once your app is created, locate the `Credentials` section and take note of the credentials. We will use the App Id and App Key parameters later in this tutorial.
 
 <img src="https://s3.eu-west-1.amazonaws.com/botfuel-docs/screenshots/credentials.png" alt="Credentials" width="800"/>
 
 # Installation
+
+For our tutorial, we will make a copy of an existing sample bot that is able to respond to a greeting and respond back to you with your name.
 
 Open a terminal and clone the sample starter bot:
 
@@ -61,67 +63,63 @@ If you set your app credentials right, you should see:
 
 Your bot is now running, congratulations!
 
-# Basics
+# Bot components
 
-Right now, your bot has 2 basic intents:
+Right now, your bot has 2 basic functionalities:
 
 - Greetings: if you say hello, it will simply reply with `Hello human!`
 - Name: if you say `My name is bob` it will reply with `So your name is Bob... Hello Bob!`
 
-A bot has 4 basic building blocks:
+A bot has 4 basic building components:
 
 - Intents: text files that contain examples of sentences that are used in training to trigger a Dialog,
 - Extractors: extract entities (e.g. forename, number, color, city...) that can then be used by the bot,
-- Dialogs: controllers that specify what user input is needed to respond. Interact with the brain and compute the data (e.g entities, plain text) that will passed to the corresponding View,
+- Dialogs: specify what user input is needed to respond. They interact with the brain and compute the data (e.g, entities, plain text) that will be passed to the corresponding View,
 - Views: generate the bot messages.
 
 Let’s illustrate this using the `Name` functionality:
 
-| Block | What it does | File
+| Component | What it does | File
 | --- | --- | --- |
 | Intent | Matches user input (`My name is bob` for example) with the `name` intent | `src/intents/name.intent`
 | Extractor | Extracts the forename `bob` from the user sentence | `src/extractors/forename-extractor.js`
 | Dialog | Specifies it needs a `forename` entity named `name` | `src/dialogs/name-dialog.js`
 | View | Replies with the recognized name | `src/views/name-view.js`
 
-# Adding a functionality
+# Add new functionality
 
-Let’s add the age functionality. What we’d like:
+So far, our bot is very basic. But we can easily extend its functionality.
+Let’s add the travel functionality that works like this:
 
-- User says something like: `I am <AGE>` or `<AGE> years old`
+- User says something like: `I want to travel` or `I want to travel to Paris`
 - Bot replies:
-  - `<AGE>! You’re older than me.` if <AGE> > 50
-  - `<AGE>... You’re younger than me.` if <AGE> < 50
-  - `<AGE>. You’re as old as I am!` if <AGE> === 50
+  - `Where do you want to go?` if the destination city is missing
+  - `<DESTINATION> is a very nice place.` if the destination city is provided
 
-## Adding the age Intent
+## Add the travel Intent
 
-First let’s create the `age` intent.
-Create a `age.intent` file in the `src/intents` directory with:
+First let’s create the `travel` intent.
+Create an `travel.intent` file in the `src/intents` directory with:
 
 ```
-I am 42 years old.
-I am 42.
-42 years old.
-Ask me about my age.
-``
+I want to travel.
+I want to travel to Paris.
+```
 as its content.
 
-The more sentences you add, the more likely your bot will be able to understand and match a user input.
+The more examples you add, the better your bot will be able to understand user input and match it to the intent.
 
 Run this command to check the contents of your new intent:
 
 ```shell
-less src/intents/age.intent
+less src/intents/travel.intent
 ```
 
 This should display:
 
 ```
-I am 42 years old.
-I am 42.
-42 years old.
-Ask me about my age.
+I want to travel.
+I want to travel to Paris.
 ```
 
 In your terminal, execute the following command:
@@ -130,80 +128,75 @@ In your terminal, execute the following command:
 npm run train
 ```
 
-This will update the model to include your new model. Be sure to train each time you add, remove or change an intent.
+This will update the model to include your new intent. 
+**Be sure to train each time you add, remove or change an intent.**
 
-## Adding the number Extractor
+## Add the city Extractor
 
-Create a `number-extractor.js` file in the `src/extractors` directory so that the bot can extract numbers from user input.
+Create a `city-extractor.js` file in the `src/extractors` directory so that the bot can extract numbers from user input, such as a city in our example.
 
 ```javascript
-const sdk2 = require('@botfuel/bot-sdk2');
+const { WsExtractor } = require('@botfuel/bot-sdk2');
 
-class NumberExtractor extends sdk2.WsExtractor {}
+class CityExtractor extends WsExtractor {}
 
-NumberExtractor.params = {
-  dimensions: ['number'],
+CityExtractor.params = {
+  dimensions: ['city'],
 };
 
-module.exports = NumberExtractor;
+module.exports = CityExtractor;
 ```
 
-## Adding the age Dialog
+## Add the travel Dialog
 
-Create a `age-dialog.js` file in the `src/dialogs` directory.
-Because it needs user input to reply, the age Dialog is a PromptDialog:
+Create an `travel-dialog.js` file in the `src/dialogs` directory.
+Because it may need user input to reply, the age Dialog is a PromptDialog:
 
 ```javascript
-const sdk2 = require('@botfuel/bot-sdk2');
+const { PromptDialog } = require('@botfuel/bot-sdk2');
 
-class Age extends sdk2.PromptDialog {}
+class Travel extends PromptDialog {}
 
-Age.params = {
-  namespace: 'age',
+Travel.params = {
+  namespace: 'travel',
   entities: {
-    age: {
-      dim: 'number',
+    destination: {
+      dim: 'city',
     },
   },
 };
 
-module.exports = Age;
+module.exports = Travel;
 ```
 
-Here we say that the age Dialog needs an entity named `age` that is a `number`.
+Here we say that the travel Dialog needs an entity named `destination` that is a `city`.
 
-## Adding the age View
+## Add the travel View
 
-Create a `age-view.js` file in the `src/views` directory.
-Since the age Dialog is a `PromptDialog`, the age View needs to be a `PromptView` so it can access the `age` entity in the `renderEntities` method:
+Create an `travel-view.js` file in the `src/views` directory.
+It serves two main purposes. In cases when the user did not provide a city, this would prompt the user to do so. In addition, the View contains the logic of the response based on the user value provided. 
+
+Since the travel Dialog is a `PromptDialog`, the travel View needs to be a `PromptView` so it can access the `destination` entity in the `renderEntities` method:
 
 ```javascript
 const { PromptView, Messages: { BotTextMessage } } = require('@botfuel/bot-sdk2');
 
-class AgeView extends PromptView {
+class TravelView extends PromptView {
   renderEntities(matchedEntities) {
-    const age = matchedEntities.age && matchedEntities.age.values[0].value;
+    const destination = matchedEntities.destination && matchedEntities.destination.values[0].value;
 
-    if (!age) {
-        return [new BotTextMessage('Can you tell me your age?')];
+    if (!destination) {
+        return [new BotTextMessage('Where do you want to go?')];
     }
 
-    if (age > 50) {
-        return [new BotTextMessage(`${age}! You’re older than me`)];
-    }
-
-    if (age === 50) {
-        return [new BotTextMessage(`${age}! You’re as old as I am!`)];
-    }
-    
-    return [new BotTextMessage(`${age}... You’re younger than me.`)];
+    return [new BotTextMessage(`${destination} is a very nice place.`)];
   }
 }
 
-module.exports = AgeView;
+module.exports = TravelView;
 ```
 
-Here we return different messages based on the value of the `age` extracted. If no value was successfully extracted, we reply with `Can you tell me your age?`.
+Here we return different messages based on the value of the `destination` extracted. If no value was successfully extracted, we reply with `Where do you want to go?`.
 
 ## Try it out
 
@@ -214,6 +207,6 @@ shell
 BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start
 ```
 
-Try and see what your bot thinks about your age!
+Try and see what your bot thinks about your travel destination!
 
 If you have any issue or question about this tutorial, feel free to open an issue [here](https://github.com/Botfuel/sample-bot-starter/issues).
