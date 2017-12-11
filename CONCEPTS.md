@@ -84,7 +84,7 @@ Let's have a look at two specific adapters which play a special role in bots dev
 The shell adapter allows to run a bot in a shell which is handy for debugging purpose.
 The following command allows to run a bot in a shell:
 ```
-BOT_ID=<the bot id> BOTFUEL_APP_ID=<the app id> BOTFUEL_APP_KEY=<the app key> ./node_modules/.bin/botfuel-run <a optional configuration file>
+BOT_ID=<the bot id> BOTFUEL_APP_ID=<the app id> BOTFUEL_APP_KEY=<the app key> ./node_modules/.bin/botfuel-run <an optional configuration file>
 ```
 
 ### Test adapter
@@ -108,7 +108,7 @@ expect(bot.adapter.log).to.eql([
 const user = await bot.brain.getUser(userId);
 expect(user.conversations.length).to.be(1);
 ```
-See the sample bots on [Github](https://github.com/Botfuel) for more examples of tests.
+See the [sample bots](https://github.com/Botfuel/bot-sdk2/blob/master/SAMPLES.txt) for more examples of tests.
 
 ## NLU
 User message often contain a sentence.
@@ -157,7 +157,7 @@ The SDK allows to use two types of extractors:
 (see https://app.botfuel.io for more details about the web service and the entities supported)
 - Corpus based extractors, for user defined named entities (useful if you plan to integrate industry specific knowledge to your bot)
 
-See the sample bots on [Github](https://github.com/Botfuel) for examples of corpus based extractors.
+See the [sample bots] (https://github.com/Botfuel/bot-sdk2/blob/master/SAMPLES.txt) for examples of corpus based extractors.
 
 An extracted entity comes with the following details:
 ```javascript
@@ -179,7 +179,12 @@ An extracted entity comes with the following details:
 The dialog manager is responsible for choosing which dialog to call.
 In the case where an intent has been classified, the dialog manager will try to find a dialog with the same name.
 
-### Resolution mechanism
+### Resolution strategy
+The strategy for finding the dialog with a given name is the following:
+- The dialog manager first looks in the bot for the dialog file <dialog name>.<adapter>.js
+- If it does not exist, it looks in the bot for the dialog file <dialog name>.js
+- If it does not exist, it looks in the SDK for the dialog file <dialog name>.<adapter>.js
+- If it does not exist, it looks in the SDK for the dialog file <dialog name>.js
 
 ### Complex conversations
 The dialog manager enables complex conversations, including:
@@ -190,33 +195,33 @@ The dialog manager enables complex conversations, including:
 Let's illustrate different examples of complex conversation.
 
 #### Digressions
-> User: I want to go to Paris
+> _User_: I want to go to Paris
 
-> Bot: You go to Paris. When do you leave?
+> _Bot_: You go to Paris. When do you leave?
 
-> User: **BTW, what's the weather in Paris this week**
+> _User_: **BTW, what's the weather in Paris this week**
 
-> Bot: Cloudy
+> _Bot_: Cloudy
 
-> Bot: When do you leave?
+> _Bot_: When do you leave?
 
-> User: I'll leave next week then
+> _User_: I'll leave next week then
 
 #### Multi-intents
-> User: I want to cancel my plane ticket
+> _User_: I want to cancel my plane ticket
 
-> Bot: Ticket cancelled, anything else?
+> _Bot_: Ticket cancelled, anything else?
 
-> User: **Thank you, I'd like to book a train ticket**
+> _User_: **Thank you, I'd like to book a train ticket**
 
 #### Random access navigation
-> User: I want to go to Paris next Monday
+> _User_: I want to go to Paris next Monday
 
-> Bot: You are leaving Monday from Paris. Where do you leave from?
+> _Bot_: You are leaving Monday from Paris. Where do you leave from?
 
-> User: **Actually, I am leaving next Tuesday**
+> _User_: **Actually, I am leaving next Tuesday**
 
-> Bot: You are leaving Tuesday. Where do you leave from?
+> _Bot_: You are leaving Tuesday. Where do you leave from?
 
 ## Brains
 The brain is the _model_ of a bot.
@@ -236,13 +241,18 @@ Dialogs are responsible:
 - for calling external APIs and
 - for dispatching to their view with the correct parameters.
 
-### Resolution mechanism
+### Resolution strategy
+The strategy for finding the view with a given name is the following:
+- The dialog first looks in the bot for the view file <view name>.<locale>.js
+- If it does not exist, it looks in the bot for the view file <view name>.js
+- If it does not exist, it looks in the SDK for the view file <view name>.<locale>.js
+- If it does not exist, it looks in the SDK for the view file <view name>.js
 
 ### Built-in dialogs
 The SDK offers several dialogs:
 - `TextDialog` for simple text messages
 - `PromptDialog` which prompts the user for inputs
-- `QnaDialog` which answers questions using Botfuel's QnA service (see https://app.botfuel.io)
+- `QnaDialog` which answers questions using Botfuel's QnA service (see https://app.botfuel.io/docs#qna)
 
 ## Views
 Each dialog comes with a single view.
