@@ -156,6 +156,7 @@ The SDK allows to use two types of extractors:
 - Extractors based on Botfuel's entity extraction web service, this web service covers 31 named entities such as dates, addresses, durations, quantities
 (see https://app.botfuel.io for more details about the web service and the entities supported)
 - Corpus based extractors, for user defined named entities (useful if you plan to integrate industry specific knowledge to your bot)
+
 See the sample bots on [Github](https://github.com/Botfuel) for examples of corpus based extractors.
 
 An extracted entity comes with the following details:
@@ -190,21 +191,31 @@ Let's illustrate different examples of complex conversation.
 
 #### Digressions
 > User: I want to go to Paris
+
 > Bot: You go to Paris. When do you leave?
+
 > User: **BTW, what's the weather in Paris this week**
+
 > Bot: Cloudy
+
 > Bot: When do you leave?
+
 > User: I'll leave next week then
 
 #### Multi-intents
 > User: I want to cancel my plane ticket
+
 > Bot: Ticket cancelled, anything else?
+
 > User: **Thank you, I'd like to book a train ticket**
 
 #### Random access navigation
 > User: I want to go to Paris next Monday
+
 > Bot: You are leaving Monday from Paris. Where do you leave from?
+
 > User: **Actually, I am leaving next Tuesday**
+
 > Bot: You are leaving Tuesday. Where do you leave from?
 
 ## Brains
