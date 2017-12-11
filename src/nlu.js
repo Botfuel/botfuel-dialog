@@ -76,14 +76,14 @@ class Nlu {
    */
   async init() {
     logger.debug('init');
-    // init extractors
+    // Extractors
     this.extractor = new CompositeExtractor({
       extractors: this.getExtractors(`${this.config.path}/src/extractors`),
     });
-    // init classifier
+    // Classifier
     this.classifier = new Classifier(this.config);
     await this.classifier.init();
-    // qna
+    // QnA
     if (this.config.qna) {
       if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
         logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the QnA service!');
@@ -93,7 +93,7 @@ class Nlu {
         appKey: process.env.BOTFUEL_APP_KEY,
       });
     }
-    // spellchecking
+    // Spellchecking
     if (this.config.spellchecking) {
       if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
         logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!');
