@@ -163,6 +163,21 @@ class Bot {
   }
 
   /**
+   * Clean the bot brain.
+   * @async
+   * @returns {Promise.<void>}
+   */
+  async clean() {
+    logger.debug('clean');
+    try {
+      await this.init();
+      await this.brain.clean();
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  /**
    * Responds to the user.
    * @async
    * @param {object} userMessage - the user message
