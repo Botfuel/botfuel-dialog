@@ -186,6 +186,9 @@ The strategy for finding the dialog with a given name is the following:
 - If it does not exist, it looks in the SDK for the dialog file `<dialog name>.<adapter>.js`
 - If it does not exist, it looks in the SDK for the dialog file `<dialog name>.js`
 
+This allows to customize the behaviour of the bot depending on the adapter.
+It also allows to provide default dialog implementations in the SDK.
+
 ### Complex conversations
 The dialog manager enables complex conversations, including:
 - Digressions
@@ -247,6 +250,9 @@ The strategy for finding the view with a given name is the following:
 - If it does not exist, it looks in the bot for the view file `<view name>.js`
 - If it does not exist, it looks in the SDK for the view file `<view name>.<locale>.js`
 - If it does not exist, it looks in the SDK for the view file `<view name>.js`
+
+This allows to customize the rendering depending on the locale.
+It also allows to provide default view implementations in the SDK.
 
 ### Built-in dialogs
 The SDK offers several dialogs:
