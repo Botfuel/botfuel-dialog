@@ -1,58 +1,56 @@
 # Concepts
-This document explains how a bot works and what the underlying concepts are.
+This document explains how a bot works as well as the underlying concepts.
 
 The purpose of a bot is to exchange messages with a user.
-A user message is processed by the bot which computes responses (bot messages).
+A user message is processed by the bot that computes responses (bot messages).
 The processing of the user message and the generation of the bot messages are performed by several components.
 
 ## Components
-A bot is composed of different components:
-- a nlu (Natural Language Understanding) component, it is used to process user text messages,
-- a dialog manager, it decides which dialogs to call,
-- a brain, it stores things,
-- adapters, they adapt the messages to the messaging platform,
-- dialogs, they interact with the brain and the views,
-- views, they generate the messages,
-- extractors, they extract entities from user sentences.
+A bot is composed of the following components:
+- Adapters, adapt the messages to the messaging platform
+- NLU (Natural Language Understanding) component, processes user text messages
+- Extractors, extract entities from user sentences
+- Dialog Manager, decides which dialogs to call
+- Brain, stores values relevant to the operation of the bot
+- Dialogs, interact with the brain and the views
+- Views, generate the messages
 
-Let's see how these components interact with a [sequence diagram](https://en.wikipedia.org/wiki/Sequence_diagram):
+You can see how these components interact in this [sequence diagram](https://en.wikipedia.org/wiki/Sequence_diagram):
 
 ```
-  Adapter        Bot          Nlu       Extractor  DialogManager    Brain       Dialog        View
-  -------        ---          ---       ---------  -------------    -----       ------        ----
----> |            |            |            |            |            |            |            |
-     | ---------> |            |            |            |            |            |            |
-     |            | ---------> |            |            |            |            |            |
-     |            |            | ---------> |            |            |            |            |
-     |            |            | <--------- |            |            |            |            |
-     |            | <--------- |            |            |            |            |            |
-     |            | -----------|------------|----------> |            |            |            |
-     |            |            |            |            | ---------> |            |            |
-     |            |            |            |            | <--------- |            |            |
-     |            |            |            |            | -----------|----------> |            |
-     |            |            |            |            |            | <--------- |            |
-     |            |            |            |            |            | ---------> |            |
-     |            |            |            |            |            |            | ---------> |
-     |            |            |            |            |            |            | <--------- |
-     | <----------|------------|------------|------------|------------|----------- |            |
-<--- |            |            |            |            |            |            |            |
+             Adapter       Bot         NLU      Extractor   DialogMgr     Brain      Dialog       View
+             -------       ---         ---      ---------   ---------     -----      ------       ----
+-- user msg --> |           |           |           |           |           |           |           |
+                | --------> |           |           |           |           |           |           |
+                |           | --------> |           |           |           |           |           |
+                |           |           | --------> |           |           |           |           |
+                |           |           | <-------- |           |           |           |           |
+                |           | <-------- |           |           |           |           |           |
+                |           | ----------|-----------|---------> |           |           |           |
+                |           |           |           |           | --------> |           |           |
+                |           |           |           |           | <-------- |           |           |
+                |           |           |           |           | ----------|---------> |           |
+                |           |           |           |           |           | <-------- |           |
+                |           |           |           |           |           | --------> |           |
+                |           |           |           |           |           |           | --------> |
+                |           |           |           |           |           |           | <-------- |
+                | <---------|-----------|-----------|-----------|-----------|---------- |           |
+<-- bot msgs -- |           |           |           |           |           |           |           |
 ```
-
-TODO: illustrate each step with a sentence
 
 ### MVC
 The bot implements the [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) pattern where:
-- the brain is the _model_ : it contains all the information about the bot, the users, the conversations,
-- the dialog is the _controller_ : it updates the brain and calls its view with the required parameters,
-- the _view_ generates the messages to be sent to the user.
+- the brain is the _model_ : it contains all the information about the bot, the users, the conversations
+- the dialog is the _controller_ : it updates the brain and calls its view with the required parameters
+- the _view_ generates the messages to be sent to the user
 
 ## Messages
 The SDK defines its own message format which supports:
-- text messages and quick replies,
-- images and image uploads,
-- links,
-- buttons and clicks on buttons (aka postbacks),
-- complex messages such as carrousels.
+- Text messages and quick replies
+- Images and image uploads
+- Links
+- Buttons and clicks on buttons (aka postbacks)
+- Complex messages such as carrousels
 
 A message has the form:
 ```javacript
@@ -69,14 +67,25 @@ A message has the form:
 ```
 
 ## Adapters
-Each messaging platform (Messenger, ...) has its own message format.
+Each messaging platform (e.g. Facebook Messenger) has its own message format.
 The adapters are responsible for translating external formats into the SDK's message format.
 
 The SDK comes with the following adapters:
-- _messenger_, an adapter for Facebook's messaging platform,
-- _botfuel_, an adapter for Botfuel's webchat,
-- _shell_, an adapter for running a bot in a shell,
-- _test_, a test adapter for running tests.
+- _messenger_, an adapter for Facebook Messenger
+- _botfuel_, an adapter for Botfuel's webchat
+- _shell_, an adapter for running a bot in a shell
+- _test_, a test adapter for running tests
+
+It is very easy to developer a new adapter. One just need to implement the `Adapter` abstract class.
+
+Let's have a look at two specific adapters which play a special role in bots development.
+
+### Shell adapter ###
+The shell adapter allows to run a bot in a shell which is handy for debugging purpose.
+The following command allows to run a bot in a shell:
+```
+BOT_ID=<the bot id> BOTFUEL_APP_ID=<the app id> BOTFUEL_APP_KEY=<the app key> ./node_modules/.bin/botfuel-run <a optional configuration file>
+```
 
 ### Test adapter
 The test adapter allows to easily run tests.
@@ -101,27 +110,53 @@ expect(user.conversations.length).to.be(1);
 ```
 See the sample bots on [Github](https://github.com/Botfuel) for more examples of tests.
 
-## Nlu
-The nlu
-([Natural Language Understanding](https://en.wikipedia.org/wiki/Natural_language_understanding))
-module is responsible for computing intents and entities from a user text message
-(which mainly contains a sentence).
+## NLU
+User message often contain a sentence.
+Note that a user message can also be:
+- a click on a button
+- an upload (e.g. of an image)
+- a geolocation
 
-### Intents
-Given a sentence, the nlu module computes a list of user intents with their probabilities.
-The actual computation is performed by a classifier.
+In the case of the user message is a text message, and thus contains a sentence, the NLU
+([Natural Language Understanding](https://en.wikipedia.org/wiki/Natural_language_understanding))
+module is responsible for computing intents and entities from this sentence.
+
+### Intents and classification
+Given a sentence, it is key to understand the user intention or intent.
+Look at the following example:
+```
+I want to eat!
+```
+In this case, the intent could be `hungry`.
+
+Note that a sentence can express more than one intent, like in:
+```
+Thank you, I want to eat!
+```
+In this new example, the intents would be `thanks` and `hungry`.
+
+Given a sentence, the NLU module computes a list of user intents with their probabilities.
+The actual computation is performed by a classifier which is a part of the NLU module (we will see later on that the NLU module has other parts).
 
 The classifier builds a classification model based on a training set which takes the form of a set of `.intent` files.
-Here is an example of an intent file:
+Here is an example of an `hungry.intent` intent file well suited for of `hungry` intent:
 ```
 I want to eat!
 I am hungry.
 Give me food!
 ```
 
-### Entities
-Given a sentence, the nlu module computes a list of entities.
-The actual computation is performed by extractors.
+### Named entities and extractors
+In order to understand the meaning of a sentence, it is also key to be able to extract [named entities](https://en.wikipedia.org/wiki/Named_entity).
+
+Given a sentence, the NLU module computes a list of named entities.
+The actual computation is performed by extractors which form another part of the NLU module (the first one being the classifier).
+
+The SDK allows to use two types of extractors:
+- Extractors based on Botfuel's entity extraction web service, this web service covers 31 named entities such as dates, addresses, durations, quantities
+(see https://app.botfuel.io for more details about the web service and the entities supported)
+- Corpus based extractors, for user defined named entities (useful if you plan to integrate industry specific knowledge to your bot)
+See the sample bots on [Github](https://github.com/Botfuel) for examples of corpus based extractors.
 
 An extracted entity comes with the following details:
 ```javascript
@@ -139,34 +174,64 @@ An extracted entity comes with the following details:
 }
 ```
 
-## Extractors
-The SDK allows to use two types of extractors:
-- extractors using Botfuel's entity extraction web service (see https://app.botfuel.io),
-- corpus based extractors.
-
 ## Dialog Manager
 The dialog manager is responsible for choosing which dialog to call.
-The dialog manager allows to handle complex conversations, including:
-- digressions,
-- multi-intents,
-- [random access navigation](https://medium.com/assist/theres-a-dozen-ways-to-order-a-coffee-why-do-dumb-bots-only-allow-one-27230542636d).
+In the case where an intent has been classified, the dialog manager will try to find a dialog with the same name.
+
+### Resolution mechanism
+
+### Complex conversations
+The dialog manager enables complex conversations, including:
+- Digressions
+- Multi-intents
+- [Random access navigation](https://medium.com/assist/theres-a-dozen-ways-to-order-a-coffee-why-do-dumb-bots-only-allow-one-27230542636d)
+
+Let's illustrate different examples of complex conversation.
+
+#### Digressions
+> User: I want to go to Paris
+> Bot: You go to Paris. When do you leave?
+> User: **BTW, what's the weather in Paris this week**
+> Bot: Cloudy
+> Bot: When do you leave?
+> User: I'll leave next week then
+
+#### Multi-intents
+> User: I want to cancel my plane ticket
+> Bot: Ticket cancelled, anything else?
+> User: **Thank you, I'd like to book a train ticket**
+
+#### Random access navigation
+> User: I want to go to Paris next Monday
+> Bot: You are leaving Monday from Paris. Where do you leave from?
+> User: **Actually, I am leaving next Tuesday**
+> Bot: You are leaving Tuesday. Where do you leave from?
 
 ## Brains
 The brain is the _model_ of a bot.
 The SDK offers different brain implementations:
-- an in-memory brain,
-- a [MongoDb](https://www.mongodb.com) based brain.
+- In-memory brain
+- [MongoDb](https://www.mongodb.com) based brain
 
 It is very easy to write a new brain implementation.
+One just need to implement the `Brain` abstract class.
 
 ## Dialogs
 Dialogs are the _controllers_ of the bot.
-They are responsible for reading from/writing to the brain and for calling their view with the correct parameters.
+A dialog has a single view, the name of the dialog and the name its view are the same.
 
+Dialogs are responsible:
+- for reading from/writing to the brain,
+- for calling external APIs and
+- for dispatching to their view with the correct parameters.
+
+### Resolution mechanism
+
+### Built-in dialogs
 The SDK offers several dialogs:
-- a `TextDialog` for simple text messages,
-- a `PromptDialog` which prompts the user for inputs,
-- a `QnaDialog` which answers questions using Botfuel's QnA service (see https://app.botfuel.io).
+- `TextDialog` for simple text messages
+- `PromptDialog` which prompts the user for inputs
+- `QnaDialog` which answers questions using Botfuel's QnA service (see https://app.botfuel.io)
 
 ## Views
 Each dialog comes with a single view.
