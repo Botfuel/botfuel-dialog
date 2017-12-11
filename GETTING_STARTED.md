@@ -70,7 +70,7 @@ Right now, your bot can respond in two ways:
 - Greetings: if you say `hello`, it will simply reply with `Hello human!`
 - Name: if you say `My name is Bob` it will reply with `Nice to meet you Bob!`
 
-A bot has 4 basic building components:
+A bot has 4 basic building components (for more details, check our [concepts](https://github.com/Botfuel/bot-sdk2/blob/master/CONCEPTS.md)):
 
 - Intents: text files that contain examples of sentences that are used in training to trigger a Dialog
 - Extractors: extract entities (e.g. forename, number, color, city...) that can then be used by the bot
