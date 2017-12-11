@@ -25,7 +25,7 @@ const Bot = require('./bot');
     await new Bot({ brain: 'mongo' }).clean();
     logger.info('Cleaning done.');
   } catch (e) {
-    logger.error(e);
+    logger.error(e.message);
   }
   process.exit(0);
 })();
