@@ -170,7 +170,7 @@ class Bot {
   async clean() {
     logger.debug('clean');
     try {
-      await this.init();
+      await this.brain.init();
       await this.brain.clean();
     } catch (error) {
       this.handleError(error);
