@@ -11,9 +11,9 @@ A bot is composed of the following components:
 - NLU (Natural Language Understanding) component, processes user text messages
 - Extractors, extract entities from user sentences
 - Dialog Manager, decides which dialogs to call
-- Brain, stores values relevant to the operation of the bot
 - Dialogs, interact with the brain and the views
 - Views, generate the messages
+- Brain, stores values relevant to the operation of the bot
 
 You can see how these components interact in this [sequence diagram](https://en.wikipedia.org/wiki/Sequence_diagram):
 
@@ -226,15 +226,6 @@ Let's illustrate different examples of complex conversation.
 
 > _Bot_: You are leaving Tuesday. Where do you leave from?
 
-## Brains
-The brain is the _model_ of a bot.
-The SDK offers different brain implementations:
-- In-memory brain
-- [MongoDb](https://www.mongodb.com) based brain
-
-It is very easy to write a new brain implementation.
-One just need to implement the `Brain` abstract class.
-
 ## Dialogs
 Dialogs are the _controllers_ of the bot.
 A dialog has a single view, the name of the dialog and the name its view are the same.
@@ -255,7 +246,7 @@ This allows to customize the rendering depending on the locale.
 It also allows to provide default view implementations in the SDK.
 
 ### Built-in dialogs
-The SDK offers several dialogs:
+The SDK offers several built-in dialogs:
 - `TextDialog` for simple text messages
 - `PromptDialog` which prompts the user for inputs
 - `QnaDialog` which answers questions using Botfuel's QnA service (see https://app.botfuel.io/docs#qna)
@@ -265,3 +256,18 @@ Each dialog comes with a single view.
 The view is responsible for generating the bot messages.
 
 A view can have different sections, those are identified with a key.
+
+### Built-in views
+The SDK offers several built-in views:
+- `TextView` for simple text messages
+- `PromptView` which prompts the user for inputs
+- `QnaView` which answers questions using Botfuel's QnA service (see https://app.botfuel.io/docs#qna)
+
+## Brains
+The brain is the _model_ of a bot.
+The SDK offers different brain implementations:
+- In-memory brain
+- [MongoDb](https://www.mongodb.com) based brain
+
+It is very easy to write a new brain implementation.
+One just need to implement the `Brain` abstract class.
