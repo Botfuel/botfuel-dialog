@@ -154,10 +154,10 @@ The actual computation is performed by extractors which form another part of the
 
 The SDK allows to use two types of extractors:
 - Extractors based on Botfuel's entity extraction web service, this web service covers 31 named entities such as dates, addresses, durations, quantities
-(see https://app.botfuel.io for more details about the web service and the entities supported)
+(see https://app.botfuel.io/docs/#entity-extraction for more details about the web service and the entities supported)
 - Corpus based extractors, for user defined named entities (useful if you plan to integrate industry specific knowledge to your bot)
 
-See the [sample bots] (https://github.com/Botfuel/bot-sdk2/blob/master/SAMPLES.txt) for examples of corpus based extractors.
+See the [sample bots](https://github.com/Botfuel/bot-sdk2/blob/master/SAMPLES.txt) for examples of corpus based extractors.
 
 An extracted entity comes with the following details:
 ```javascript
@@ -181,10 +181,10 @@ In the case where an intent has been classified, the dialog manager will try to 
 
 ### Resolution strategy
 The strategy for finding the dialog with a given name is the following:
-- The dialog manager first looks in the bot for the dialog file <dialog name>.<adapter>.js
-- If it does not exist, it looks in the bot for the dialog file <dialog name>.js
-- If it does not exist, it looks in the SDK for the dialog file <dialog name>.<adapter>.js
-- If it does not exist, it looks in the SDK for the dialog file <dialog name>.js
+- The dialog manager first looks in the bot for the dialog file `<dialog name>.<adapter>.js`
+- If it does not exist, it looks in the bot for the dialog file `<dialog name>.js`
+- If it does not exist, it looks in the SDK for the dialog file `<dialog name>.<adapter>.js`
+- If it does not exist, it looks in the SDK for the dialog file `<dialog name>.js`
 
 ### Complex conversations
 The dialog manager enables complex conversations, including:
@@ -243,10 +243,10 @@ Dialogs are responsible:
 
 ### Resolution strategy
 The strategy for finding the view with a given name is the following:
-- The dialog first looks in the bot for the view file <view name>.<locale>.js
-- If it does not exist, it looks in the bot for the view file <view name>.js
-- If it does not exist, it looks in the SDK for the view file <view name>.<locale>.js
-- If it does not exist, it looks in the SDK for the view file <view name>.js
+- The dialog first looks in the bot for the view file `<view name>.<locale>.js`
+- If it does not exist, it looks in the bot for the view file `<view name>.js`
+- If it does not exist, it looks in the SDK for the view file `<view name>.<locale>.js`
+- If it does not exist, it looks in the SDK for the view file `<view name>.js`
 
 ### Built-in dialogs
 The SDK offers several dialogs:
