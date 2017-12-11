@@ -19,10 +19,12 @@ require('babel-polyfill');
 
 const logger = require('logtown')('Clean');
 const Bot = require('./bot');
+const { resolveConfigFile } = require('./config');
 
 (async () => {
   try {
-    await new Bot({ brain: 'mongo' }).clean();
+    const config = resolveConfigFile(process.argv[2]);
+    await new Bot(config).clean();
     logger.info('Cleaning done.');
   } catch (e) {
     logger.error(e.message);
