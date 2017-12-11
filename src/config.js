@@ -15,7 +15,7 @@
  */
 
 const path = require('path');
-const logger = require('logtown')('ShellAdapter');
+const logger = require('logtown')('Config');
 const LoggerManager = require('./logger-manager');
 
 const defaultConfig = {
@@ -24,7 +24,7 @@ const defaultConfig = {
   adapter: 'shell',
   brain: 'memory',
   intentThreshold: 0.8,
-  logger: 'error',
+  logger: 'dev',
 };
 
 /**
@@ -37,7 +37,7 @@ const resolveConfigFile = (configFileName) => {
   LoggerManager.configure(defaultConfig);
 
   if (!configFileName) {
-    logger.error('You didn\'t specify any config file, using default config.');
+    logger.info('You didn\'t specify any config file, using default config.');
     return {};
   }
 
