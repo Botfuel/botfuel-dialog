@@ -1,4 +1,4 @@
-By the end of this tutorial, you will have a simple bot that is able to respond to a greeting and ask for your name. You will also learn how to add new functionality that will allow the bot to understand a travel intent.
+By the end of this tutorial, you will have a simple bot that is able to respond to a greeting and say back your name. You will also learn how to add new functionality that will allow the bot to understand a travel intent.
 
 # Get API credentials
 
