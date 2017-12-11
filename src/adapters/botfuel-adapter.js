@@ -17,6 +17,8 @@
 const logger = require('logtown')('BotfuelAdapter');
 const WebAdapter = require('./web-adapter');
 
+const CHAT_SERVER_URL = process.env.CHAT_SERVER || 'https://webchat.botfuel.io';
+
 /**
  * Adapter for Botfuel's webchat.
  * @extends WebAdapter
@@ -35,7 +37,7 @@ class BotfuelAdapter extends WebAdapter {
 
   /** @inheritDoc */
   getUri(botMessage) {
-    return `${process.env.CHAT_SERVER}/bots/${this.bot.id}/users/${botMessage.user}/conversation/messages`;
+    return `${CHAT_SERVER_URL}/bots/${this.bot.id}/users/${botMessage.user}/conversation/messages`;
   }
 
   /** @inheritDoc */
