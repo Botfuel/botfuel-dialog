@@ -36,19 +36,9 @@ class Nlu {
     logger.debug('constructor', config);
     this.config = config;
     this.extractor = null;
-    this.classifier = new Classifier(config);
-    if (config.qna) {
-      this.qna = new Qna({
-        appId: process.env.BOTFUEL_APP_ID,
-        appKey: process.env.BOTFUEL_APP_KEY,
-      });
-    }
-    if (config.spellchecking) {
-      this.spellchecking = new Spellchecking({
-        appId: process.env.BOTFUEL_APP_ID,
-        appKey: process.env.BOTFUEL_APP_KEY,
-      });
-    }
+    this.qna = null;
+    this.spellchecking = null;
+    this.classifier = null;
   }
 
   /**
@@ -86,17 +76,33 @@ class Nlu {
    */
   async init() {
     logger.debug('init');
-    if (this.config.qna && (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY)) {
-      logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the QnA service!');
-    }
-    if (this.config.spellchecking &&
-      (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY)) {
-      logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!');
-    }
+    // init extractors
     this.extractor = new CompositeExtractor({
       extractors: this.getExtractors(`${this.config.path}/src/extractors`),
     });
+    // init classifier
+    this.classifier = new Classifier(this.config);
     await this.classifier.init();
+    // qna
+    if (this.config.qna) {
+      if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
+        logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the QnA service!');
+      }
+      this.qna = new Qna({
+        appId: process.env.BOTFUEL_APP_ID,
+        appKey: process.env.BOTFUEL_APP_KEY,
+      });
+    }
+    // spellchecking
+    if (this.config.spellchecking) {
+      if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
+        logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!');
+      }
+      this.spellchecking = new Spellchecking({
+        appId: process.env.BOTFUEL_APP_ID,
+        appKey: process.env.BOTFUEL_APP_KEY,
+      });
+    }
   }
 
   /**
