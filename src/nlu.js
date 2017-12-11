@@ -35,29 +35,15 @@ class Nlu {
   constructor(config) {
     logger.debug('constructor', config);
     this.config = config;
-    this.extractor = new CompositeExtractor({
-      extractors: this.getExtractors(`${config.path}/src/extractors`),
-    });
+    this.extractor = null;
     this.classifier = new Classifier(config);
     if (config.qna) {
-      if (process.env.BOTFUEL_APP_ID === undefined
-          || process.env.BOTFUEL_APP_ID === ''
-          || process.env.BOTFUEL_APP_KEY === undefined
-          || process.env.BOTFUEL_APP_KEY === '') {
-        logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the QnA service!');
-      }
       this.qna = new Qna({
         appId: process.env.BOTFUEL_APP_ID,
         appKey: process.env.BOTFUEL_APP_KEY,
       });
     }
     if (config.spellchecking) {
-      if (process.env.BOTFUEL_APP_ID === undefined
-          || process.env.BOTFUEL_APP_ID === ''
-          || process.env.BOTFUEL_APP_KEY === undefined
-          || process.env.BOTFUEL_APP_KEY === '') {
-        logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!');
-      }
       this.spellchecking = new Spellchecking({
         appId: process.env.BOTFUEL_APP_ID,
         appKey: process.env.BOTFUEL_APP_KEY,
@@ -100,6 +86,16 @@ class Nlu {
    */
   async init() {
     logger.debug('init');
+    if (this.config.qna && (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY)) {
+      logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the QnA service!');
+    }
+    if (this.config.spellchecking &&
+      (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY)) {
+      logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!');
+    }
+    this.extractor = new CompositeExtractor({
+      extractors: this.getExtractors(`${this.config.path}/src/extractors`),
+    });
     await this.classifier.init();
   }
 

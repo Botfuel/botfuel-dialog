@@ -30,10 +30,7 @@ class WsExtractor extends Extractor {
    */
   constructor(parameters) {
     super(parameters);
-    if (process.env.BOTFUEL_APP_ID === undefined
-        || process.env.BOTFUEL_APP_ID === ''
-        || process.env.BOTFUEL_APP_KEY === undefined
-        || process.env.BOTFUEL_APP_KEY === '') {
+    if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
       logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the entity extraction service!');
     }
     this.client = new nlp.EntityExtraction({
