@@ -1,9 +1,9 @@
-By the end of this tutorial, you will have a simple bot that is able to respond to a greeting and ask for your name. You will also learn how to add new functionality that will allow the bot to ask for your age.
+By the end of this tutorial, you will have a simple bot that is able to respond to a greeting and ask for your name. You will also learn how to add new functionality that will allow the bot to understand a travel intent.
 
 # Get API credentials
 
 You can use the SDK without any API credentials, but in this tutorial we want to take advantage of the entity extraction service.
-To get API crendentials you need to create a Botfuel developer account and create an app. The Labs plan is free up to 5000 API calls per month!
+To get API credentials you need to create a Botfuel developer account and create an app. The Labs plan is free up to 5000 API calls per month!
 
 ## Create a Botfuel developer account
 
@@ -31,7 +31,7 @@ Once your app is created, locate the `Credentials` section and take note of the 
 
 # Installation
 
-For our tutorial, we will make a copy of an existing sample bot that is able to respond to a greeting and respond back to you with your name.
+For our tutorial, we will make a copy of an existing sample bot that is able to respond to a greeting and say back your name.
 
 Open a terminal and clone the sample starter bot:
 
@@ -65,24 +65,24 @@ Your bot is now running, congratulations!
 
 # Bot components
 
-Right now, your bot has 2 basic functionalities:
+Right now, your bot can respond in two ways:
 
-- Greetings: if you say hello, it will simply reply with `Hello human!`
-- Name: if you say `My name is bob` it will reply with `So your name is Bob... Hello Bob!`
+- Greetings: if you say `hello`, it will simply reply with `Hello human!`
+- Name: if you say `My name is Bob` it will reply with `Nice to meet you Bob!`
 
 A bot has 4 basic building components:
 
-- Intents: text files that contain examples of sentences that are used in training to trigger a Dialog,
-- Extractors: extract entities (e.g. forename, number, color, city...) that can then be used by the bot,
-- Dialogs: specify what user input is needed to respond. They interact with the brain and compute the data (e.g, entities, plain text) that will be passed to the corresponding View,
+- Intents: text files that contain examples of sentences that are used in training to trigger a Dialog
+- Extractors: extract entities (e.g. forename, number, color, city...) that can then be used by the bot
+- Dialogs: specify what user input is needed to respond. They interact with the brain and compute the data (e.g, entities, plain text) that will be passed to the corresponding View
 - Views: generate the bot messages.
 
 Let’s illustrate this using the `Name` functionality:
 
 | Component | What it does | File
 | --- | --- | --- |
-| Intent | Matches user input (`My name is bob` for example) with the `name` intent | `src/intents/name.intent`
-| Extractor | Extracts the forename `bob` from the user sentence | `src/extractors/forename-extractor.js`
+| Intent | Matches user input (`My name is Bob` for example) with the `name` intent | `src/intents/name.intent`
+| Extractor | Extracts the forename `Bob` from the user sentence | `src/extractors/forename-extractor.js`
 | Dialog | Specifies it needs a `forename` entity named `name` | `src/dialogs/name-dialog.js`
 | View | Replies with the recognized name | `src/views/name-view.js`
 
@@ -91,7 +91,7 @@ Let’s illustrate this using the `Name` functionality:
 So far, our bot is very basic. But we can easily extend its functionality.
 Let’s add the travel functionality that works like this:
 
-- User says something like: `I want to travel` or `I want to travel to Paris`
+- User says something like: `I want to travel` or `I want to travel to Paris` (but it can be any city that the user can think of!)
 - Bot replies:
   - `Where do you want to go?` if the destination city is missing
   - `<DESTINATION> is a very nice place.` if the destination city is provided
@@ -107,7 +107,7 @@ I want to travel to Paris.
 ```
 as its content.
 
-The more examples you add, the better your bot will be able to understand user input and match it to the intent.
+The more examples you add, the better your bot will be able to understand user input and match it to the intent. As you can see from these examples, some include the name of the city and some do not. This is OK, since the purpose of training the intent is to “teach” the bot that the user wants to travel. We will make sure we capture any destination that the user may mention when we get to the city Extractor below.
 
 Run this command to check the contents of your new intent:
 
@@ -133,7 +133,7 @@ This will update the model to include your new intent.
 
 ## Add the city Extractor
 
-Create a `city-extractor.js` file in the `src/extractors` directory so that the bot can extract numbers from user input, such as a city in our example.
+Create a `city-extractor.js` file in the `src/extractors` directory so that the bot can extract city names from user input.
 
 ```javascript
 const { WsExtractor } = require('@botfuel/bot-sdk2');
@@ -149,8 +149,8 @@ module.exports = CityExtractor;
 
 ## Add the travel Dialog
 
-Create an `travel-dialog.js` file in the `src/dialogs` directory.
-Because it may need user input to reply, the age Dialog is a PromptDialog:
+Create a `travel-dialog.js` file in the `src/dialogs` directory.
+Because it needs the name of the city to be provided by the user to reply, the travel Dialog is a PromptDialog:
 
 ```javascript
 const { PromptDialog } = require('@botfuel/bot-sdk2');
@@ -173,7 +173,7 @@ Here we say that the travel Dialog needs an entity named `destination` that is a
 
 ## Add the travel View
 
-Create an `travel-view.js` file in the `src/views` directory.
+Create a `travel-view.js` file in the `src/views` directory.
 It serves two main purposes. In cases when the user did not provide a city, this would prompt the user to do so. In addition, the View contains the logic of the response based on the user value provided. 
 
 Since the travel Dialog is a `PromptDialog`, the travel View needs to be a `PromptView` so it can access the `destination` entity in the `renderEntities` method:
