@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const _ = require('underscore');
+const { clone, extend } = require('lodash');
 const nlp = require('botfuel-nlp-sdk');
 const logger = require('logtown')('WsExtractor');
 const { AuthenticationError } = require('../errors');
@@ -42,12 +42,12 @@ class WsExtractor extends Extractor {
     });
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async compute(sentence) {
     try {
       logger.debug('compute', sentence);
-      const query = _.clone(this.parameters);
-      _.extend(query, { sentence });
+      const query = clone(this.parameters);
+      extend(query, { sentence });
       const entities = await this.client.compute(query);
       return entities.map(entity => ({
         ...entity,
