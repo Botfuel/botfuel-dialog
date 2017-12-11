@@ -16,7 +16,6 @@
 
 /* eslint-disable prefer-arrow-callback */
 
-const expect = require('expect.js');
 const DialogManager = require('../../src/dialog-manager');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const TestAdapter = require('../../src/adapters/test-adapter');
@@ -27,53 +26,55 @@ const TEST_BOT = process.env.BOT_ID;
 
 require('../../src/logger-manager').configure({ logger: 'botfuel' });
 
-describe('DialogManager', function () {
+describe('DialogManager', () => {
   const brain = new MemoryBrain(TEST_BOT);
   const dm = new DialogManager(brain, { path: __dirname, locale: 'en' });
 
-  beforeEach(async function () {
+  beforeEach(async () => {
     await brain.clean();
     await brain.initUserIfNecessary(TEST_USER);
   });
 
-  it('when given a name, it should return the correct path', function () {
-    expect(dm.getDialogPath('test')).to.eql(`${__dirname}/src/dialogs/test-dialog`);
+  test('when given a name, it should return the correct path', () => {
+    expect(dm.getDialogPath('test')).toEqual(`${__dirname}/src/dialogs/test-dialog`);
   });
 
-  it('when given an unknown name, it should return null', function () {
-    expect(dm.getDialogPath('unknown')).to.be(null);
+  test('when given an unknown name, it should return null', () => {
+    expect(dm.getDialogPath('unknown')).toBe(null);
   });
 
-  it('should not crash when no intent', async function () {
+  test('should not crash when no intent', async () => {
     const adapter = new TestAdapter({ id: TEST_BOT }, {});
     await dm.executeIntents(adapter, TEST_USER, [], []);
-    expect(adapter.log).to.eql([new BotTextMessage('Not understood.').toJson(TEST_BOT, TEST_USER)]);
+    expect(adapter.log).toEqual([
+      new BotTextMessage('Not understood.').toJson(TEST_BOT, TEST_USER),
+    ]);
   });
 
-  it('should keep on the stack a dialog which is waiting', async function () {
+  test('should keep on the stack a dialog which is waiting', async () => {
     await dm.executeIntents(null, TEST_USER, [{ name: 'waiting', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
-    expect(user.dialogs.stack.length).to.be(1);
+    expect(user.dialogs.stack.length).toBe(1);
   });
 
-  it('should not stack the same dialog twice', async function () {
+  test('should not stack the same dialog twice', async () => {
     await dm.executeIntents(null, TEST_USER, [{ name: 'waiting', value: 1.0 }], []);
     await dm.executeIntents(null, TEST_USER, [{ name: 'waiting', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
-    expect(user.dialogs.stack.length).to.be(1);
+    expect(user.dialogs.stack.length).toBe(1);
   });
 
-  it('should empty the stack (1)', async function () {
+  test('should empty the stack (1)', async () => {
     const adapter = new TestAdapter({ id: TEST_BOT }, {});
     await dm.executeIntents(adapter, TEST_USER, [{ name: 'default', value: 1.0 }], []);
     const user = await dm.brain.getUser(TEST_USER);
-    expect(user.dialogs.stack.length).to.be(0);
+    expect(user.dialogs.stack.length).toBe(0);
   });
 
-  it('should empty the stack (2)', async function () {
+  test('should empty the stack (2)', async () => {
     const adapter = new TestAdapter({ id: TEST_BOT }, {});
     await dm.executeDialogs(adapter, TEST_USER, [{ name: 'default' }]);
     const user = await dm.brain.getUser(TEST_USER);
-    expect(user.dialogs.stack.length).to.be(0);
+    expect(user.dialogs.stack.length).toBe(0);
   });
 });

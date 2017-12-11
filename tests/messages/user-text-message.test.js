@@ -16,13 +16,12 @@
 
 /* eslint-disable prefer-arrow-callback */
 
-const expect = require('expect.js');
 const { UserTextMessage } = require('../../src/messages');
 
-describe('UserTextMessage', function () {
-  it('should generate the proper json', async function () {
+describe('UserTextMessage', () => {
+  test('should generate the proper json', async () => {
     const message = new UserTextMessage('foo');
-    expect(message.toJson('BOT', 'USER')).to.eql({
+    expect(message.toJson('BOT', 'USER')).toEqual({
       type: 'text',
       sender: 'user',
       bot: 'BOT',

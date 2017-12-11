@@ -17,12 +17,11 @@
 /* eslint-disable prefer-arrow-callback */
 /* eslint-disable quotes */
 
-const expect = require('expect.js');
 const MessengerAdapter = require('../../src/adapters/messenger-adapter');
 const { Card, CardsMessage, Link, Postback } = require('../../src/messages');
 
-describe('MessengerAdapter', function () {
-  it('should generate the proper json', async function () {
+describe('MessengerAdapter', () => {
+  test('should generate the proper json', async () => {
     const message = new CardsMessage([
       new Card('Card 1', 'https://image1.jpg', [
         new Link('Details', 'https://image1'),
@@ -33,7 +32,7 @@ describe('MessengerAdapter', function () {
         new Postback('Buy', 'products', [{ dim: 'product', value: '2' }]),
       ]),
     ]);
-    expect(new MessengerAdapter({}).adapt(message.toJson('BOT', 'USER'))).to.eql({
+    expect(new MessengerAdapter({}).adapt(message.toJson('BOT', 'USER'))).toEqual({
       attachment: {
         type: 'template',
         payload: {

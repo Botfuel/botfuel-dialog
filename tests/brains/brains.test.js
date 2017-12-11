@@ -15,7 +15,6 @@
  */
 /* eslint-disable prefer-arrow-callback */
 
-const expect = require('expect.js');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const MongoBrain = require('../../src/brains/mongo-brain');
 
@@ -30,7 +29,7 @@ const USER_ID = 'USER_TEST';
 const brainTest = (brainLabel) => {
   let brain;
 
-  beforeEach(async function () {
+  beforeEach(async () => {
     switch (brainLabel) {
       case MONGO_BRAIN_LABEL:
         brain = new MongoBrain(BOT_ID);
@@ -42,106 +41,108 @@ const brainTest = (brainLabel) => {
     }
   });
 
-  afterEach(async function () {
+  afterEach(async () => {
     await brain.clean();
   });
 
-  after('Drop database if MongoBrain', async function () {
+  afterAll(async function () {
     if (brainLabel === MONGO_BRAIN_LABEL) {
       await brain.dropDatabase();
     }
   });
 
-  it('adds a user', async function () {
+  test('adds a user', async () => {
     await brain.addUser(USER_ID);
     const brainHasUser = await brain.hasUser(USER_ID);
-    expect(brainHasUser).to.be(true);
+    expect(brainHasUser).toBe(true);
   });
 
-  it('gets a user', async function () {
+  test('gets a user', async () => {
     await brain.addUser(USER_ID);
     const user = await brain.getUser(USER_ID);
-    expect(user).to.include.keys('botId', 'userId', 'conversations', 'dialogs', 'createdAt');
-    expect(user.userId).to.be(USER_ID);
-    expect(user.botId).to.be(BOT_ID);
-    expect(user.conversations).to.have.length(1);
-    expect(user.dialogs.stack).to.empty();
+    expect(Object.keys(user)).toContain('botId', 'userId', 'conversations', 'dialogs', 'createdAt');
+    expect(user.userId).toBe(USER_ID);
+    expect(user.botId).toBe(BOT_ID);
+    expect(user.conversations).toHaveLength(1);
+    expect(user.dialogs.stack).toHaveLength(0);
   });
 
-  it('sets user key', async function () {
+  test('sets user key', async () => {
     await brain.addUser(USER_ID);
     const user = await brain.userSet(USER_ID, 'name', 'test');
-    expect(user).to.have.property('name');
-    expect(user.name).to.eql('test');
+    expect(user).toHaveProperty('name');
+    expect(user.name).toEqual('test');
   });
 
-  it('gets user value', async function () {
+  test('gets user value', async () => {
     await brain.addUser(USER_ID);
     await brain.userSet(USER_ID, 'name', 'test');
     const name = await brain.userGet(USER_ID, 'name');
-    expect(name).to.eql('test');
+    expect(name).toEqual('test');
   });
 
-  it('add conversation to user', async function () {
+  test('add conversation to user', async () => {
     await brain.addUser(USER_ID);
     await brain.addConversation(USER_ID);
     const user = await brain.getUser(USER_ID);
-    expect(user.conversations).to.have.length(2);
+    expect(user.conversations).toHaveLength(2);
   });
 
-  it('get last user conversation', async function () {
+  test('get last user conversation', async () => {
     await brain.addUser(USER_ID);
     const conversation = await brain.getLastConversation(USER_ID);
-    expect(conversation).not.to.be(null);
+    expect(conversation).not.toBe(null);
   });
 
-  it('set user last conversation key', async function () {
+  test('set user last conversation key', async () => {
     await brain.addUser(USER_ID);
     const conversation = await brain.conversationSet(USER_ID, 'city', 'Paris');
-    expect(conversation).to.have.property('city', 'Paris');
+    expect(conversation).toHaveProperty('city');
   });
 
-  it('get user last conversation key', async function () {
+  test('get user last conversation key', async () => {
     await brain.addUser(USER_ID);
     await brain.conversationSet(USER_ID, 'city', 'Paris');
     const city = await brain.conversationGet(USER_ID, 'city');
-    expect(city).to.eql('Paris');
+    expect(city).toEqual('Paris');
   });
 
-  it('get user last conversation values when many conversations', async function () {
-    await brain.addUser(USER_ID);
-    await brain.addConversation(USER_ID);
-    await brain.addConversation(USER_ID);
-    await brain.conversationSet(USER_ID, 'foo', 'bar');
-    const value = await brain.conversationGet(USER_ID, 'foo');
-    expect(value).to.eql('bar');
-  });
+  test(
+    'get user last conversation values when many conversations',
+    async () => {
+      await brain.addUser(USER_ID);
+      await brain.addConversation(USER_ID);
+      await brain.addConversation(USER_ID);
+      await brain.conversationSet(USER_ID, 'foo', 'bar');
+      const value = await brain.conversationGet(USER_ID, 'foo');
+      expect(value).toEqual('bar');
+    },
+  );
 
-  it("don't get user last conversation values from previous conversation", async function () {
-    await brain.addUser(USER_ID);
-    await brain.addConversation(USER_ID);
-    await brain.conversationSet(USER_ID, 'previous', 'before');
-    await brain.addConversation(USER_ID);
-    await brain.conversationSet(USER_ID, 'current', 'now');
-    const previous = await brain.conversationGet(USER_ID, 'previous');
-    const current = await brain.conversationGet(USER_ID, 'current');
-    expect(previous).to.be(undefined);
-    expect(current).to.eql('now');
-  });
+  test(
+    'don\'t get user last conversation values from previous conversation',
+    async () => {
+      await brain.addUser(USER_ID);
+      await brain.addConversation(USER_ID);
+      await brain.conversationSet(USER_ID, 'previous', 'before');
+      await brain.addConversation(USER_ID);
+      await brain.conversationSet(USER_ID, 'current', 'now');
+      const previous = await brain.conversationGet(USER_ID, 'previous');
+      const current = await brain.conversationGet(USER_ID, 'current');
+      expect(previous).toBe(undefined);
+      expect(current).toEqual('now');
+    },
+  );
 
-  it('clean the brain', async function () {
+  test('clean the brain', async () => {
     await brain.addUser(USER_ID);
     await brain.clean();
     const brainHasUser = await brain.hasUser(USER_ID);
-    expect(brainHasUser).to.be(false);
+    expect(brainHasUser).toBe(false);
   });
 };
 
 describe('Brains', () => {
-  describe('MongoBrain', function () {
-    brainTest(MONGO_BRAIN_LABEL);
-  });
-  describe('MemoryBrain', function () {
-    brainTest(MEMORY_BRAIN_LABEL);
-  });
+  describe('MongoBrain', () => { brainTest(MONGO_BRAIN_LABEL); });
+  describe('MemoryBrain', () => { brainTest(MEMORY_BRAIN_LABEL); });
 });

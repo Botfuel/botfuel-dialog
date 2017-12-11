@@ -16,18 +16,17 @@
 
 /* eslint-disable prefer-arrow-callback */
 
-const expect = require('expect.js');
 const FileCorpus = require('../../src/corpora/file-corpus');
 
-describe('FileCorpus', function () {
-  it('should retrieve the correct values', function () {
+describe('FileCorpus', () => {
+  test('should retrieve the correct values', () => {
     const corpus = new FileCorpus(`${__dirname}/test-corpus.en.txt`);
-    expect(corpus.getValue('that')).to.not.be(null);
-    expect(corpus.getValue('not')).to.be(null);
+    expect(corpus.getValue('that')).not.toBe(null);
+    expect(corpus.getValue('not')).toBe(null);
   });
 
-  it('should not retrieve empty rows', function () {
+  test('should not retrieve empty rows', () => {
     const corpus = new FileCorpus(`${__dirname}/test-corpus.en.txt`);
-    expect(corpus.matrix.length).to.be(5);
+    expect(corpus.matrix.length).toBe(5);
   });
 });
