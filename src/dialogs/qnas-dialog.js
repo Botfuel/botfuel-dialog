@@ -38,11 +38,10 @@ class QnasDialog extends Dialog {
     logger.debug('execute', userId, messageEntities);
     const qnas = messageEntities[0].value;
     logger.debug('execute: qnas', qnas);
+    await this.display(adapter, userId, { qnas });
     if (qnas.length === 1) {
-      await this.display(adapter, userId, 'answer', { qnas });
       return this.complete();
     }
-    await this.display(adapter, userId, 'questions', { qnas });
     return this.wait();
   }
 }
