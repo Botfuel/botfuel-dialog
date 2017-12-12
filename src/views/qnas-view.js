@@ -23,7 +23,7 @@ const View = require('./view');
  * @extends View
  */
 class QnasView extends View {
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   render(key, data) {
     logger.debug('render', key, data);
     switch (key) {
