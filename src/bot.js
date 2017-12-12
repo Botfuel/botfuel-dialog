@@ -28,21 +28,6 @@ const { AuthenticationError, DialogError, ViewError } = require('./errors');
 
 const logger = Logger.getLogger('Bot');
 
-const reportsMissingEnvVars = () => {
-  logger.info('BOT_ID:', process.env.BOT_ID);
-  logger.info('BOTFUEL_APP_ID:', process.env.BOTFUEL_APP_ID);
-  logger.info('BOTFUEL_APP_KEY:', process.env.BOTFUEL_APP_KEY);
-  if (!process.env.BOT_ID) {
-    logger.warn('Environment variable BOT_ID is not defined!');
-  }
-  if (!process.env.BOTFUEL_APP_ID) {
-    logger.warn('Environment variable BOTFUEL_APP_ID is not defined!');
-  }
-  if (!process.env.BOTFUEL_APP_KEY) {
-    logger.warn('Environment variable BOTFUEL_APP_KEY is not defined!');
-  }
-};
-
 /**
  * This is the bot main class.
  *
@@ -74,7 +59,7 @@ class Bot {
    * @returns {Promise.<void>}
    */
   async init() {
-    reportsMissingEnvVars();
+    Bot.reportsMissingEnvVars();
     await this.brain.init();
     await this.nlu.init();
   }
@@ -241,6 +226,25 @@ class Bot {
       entities: [{ url: userMessage.payload.value.url }],
     };
     return this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
+  }
+
+  /**
+   * Reports informations about missing environment variables
+   * @returns {void}
+   */
+  static reportsMissingEnvVars() {
+    logger.info('BOT_ID:', process.env.BOT_ID);
+    logger.info('BOTFUEL_APP_ID:', process.env.BOTFUEL_APP_ID);
+    logger.info('BOTFUEL_APP_KEY:', process.env.BOTFUEL_APP_KEY);
+    if (!process.env.BOT_ID) {
+      logger.warn('Environment variable BOT_ID is not defined!');
+    }
+    if (!process.env.BOTFUEL_APP_ID) {
+      logger.warn('Environment variable BOTFUEL_APP_ID is not defined!');
+    }
+    if (!process.env.BOTFUEL_APP_KEY) {
+      logger.warn('Environment variable BOTFUEL_APP_KEY is not defined!');
+    }
   }
 }
 
