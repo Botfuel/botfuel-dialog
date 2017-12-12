@@ -45,21 +45,8 @@ class Bot {
   constructor(config) {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
-    logger.info('BOT_ID', process.env.BOT_ID);
-    logger.info('BOTFUEL_APP_ID', process.env.BOTFUEL_APP_ID);
-    logger.info('BOTFUEL_APP_KEY', process.env.BOTFUEL_APP_KEY);
-    if (process.env.BOT_ID === undefined
-        || process.env.BOTFUEL_ID === '') {
-      logger.warn('Environment variable BOT_ID is not defined!');
-    }
-    if (process.env.BOTFUEL_APP_ID === undefined
-        || process.env.BOTFUEL_APP_ID === '') {
-      logger.warn('Environment variable BOTFUEL_APP_ID is not defined!');
-    }
-    if (process.env.BOTFUEL_APP_KEY === undefined
-        || process.env.BOTFUEL_APP_KEY === '') {
-      logger.warn('Environment variable BOTFUEL_APP_KEY is not defined!');
-    }
+    // give informations about env vars
+    Bot.logsEnvVars();
     this.id = process.env.BOT_ID;
     this.adapter = this.getAdapter(this.config.adapter);
     this.brain = this.getBrain(this.config.brain);
@@ -163,6 +150,21 @@ class Bot {
   }
 
   /**
+   * Clean the bot brain.
+   * @async
+   * @returns {Promise.<void>}
+   */
+  async clean() {
+    logger.debug('clean');
+    try {
+      await this.brain.init();
+      await this.brain.clean();
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  /**
    * Responds to the user.
    * @async
    * @param {object} userMessage - the user message
@@ -225,6 +227,25 @@ class Bot {
       entities: [{ url: userMessage.payload.value.url }],
     };
     return this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
+  }
+
+  /**
+   * Logs informations/warnings about environment variables
+   * @returns {void}
+   */
+  static logsEnvVars() {
+    logger.info('BOT_ID:', process.env.BOT_ID);
+    logger.info('BOTFUEL_APP_ID:', process.env.BOTFUEL_APP_ID);
+    logger.info('BOTFUEL_APP_KEY:', process.env.BOTFUEL_APP_KEY);
+    if (!process.env.BOT_ID) {
+      logger.warn('Environment variable BOT_ID is not defined!');
+    }
+    if (!process.env.BOTFUEL_APP_ID) {
+      logger.warn('Environment variable BOTFUEL_APP_ID is not defined!');
+    }
+    if (!process.env.BOTFUEL_APP_KEY) {
+      logger.warn('Environment variable BOTFUEL_APP_KEY is not defined!');
+    }
   }
 }
 

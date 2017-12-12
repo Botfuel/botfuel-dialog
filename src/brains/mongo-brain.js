@@ -16,6 +16,7 @@
 
 const MongoClient = require('mongodb').MongoClient;
 const logger = require('logtown')('MongoBrain');
+const { SdkError } = require('../errors');
 const Brain = require('./brain');
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';
@@ -41,6 +42,9 @@ class MongoBrain extends Brain {
   /** @inheritdoc */
   async clean() {
     logger.debug('clean');
+    if (!this.botId) {
+      throw new SdkError('BOT_ID environment variable is missing.');
+    }
     return this.users.deleteMany({ botId: this.botId });
   }
 

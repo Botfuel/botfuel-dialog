@@ -10,7 +10,8 @@
   ],
   "bin": {
     "botfuel-run": "./build/run.js",
-    "botfuel-train": "./build/train.js"
+    "botfuel-train": "./build/train.js",
+    "botfuel-clean": "./build/clean.js"
   },
   "scripts": {
     "prepublish": "npm run compile",
