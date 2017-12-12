@@ -28,6 +28,10 @@ class ConfirmationDialog extends PromptDialog {
   /** @inheritDoc */
   async dialogWillComplete(adapter, userId, { matchedEntities, missingEntities }) {
     logger.debug('dialogWillComplete', userId, { matchedEntities, missingEntities });
+
+    // Clean entities for this dialog so it can be reused later
+    await this.brain.conversationSet(userId, this.parameters.namespace, {});
+
     if (matchedEntities.answer.values[0].value) {
       return this.complete();
     }
