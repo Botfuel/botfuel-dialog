@@ -49,7 +49,7 @@ npm install
 Start the bot with the `BOTFUEL_APP_ID` and `BOTFUEL_APP_KEY` environment variables using your app’s credentials:
 
 ```shell
-BOT_ID BOTFUEL_APP_ID=<YOUR BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR BOTFUEL_APP_KEY> npm start
+BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start
 ```
 
 If you set your app credentials right, you should see:
@@ -202,7 +202,6 @@ Here we return different messages based on the value of the `destination` extrac
 
 Run your bot with:
 
-shell
 ```shell
 BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start
 ```
