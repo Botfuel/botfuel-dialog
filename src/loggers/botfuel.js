@@ -50,9 +50,6 @@ module.exports = {
       CompositeExtractor: {
         disable: ['debug'],
       },
-      PromptView: {
-        disable: ['debug'],
-      },
       QnasView: {
         disable: ['debug'],
       },

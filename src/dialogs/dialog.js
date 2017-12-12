@@ -29,39 +29,10 @@ const { MissingImplementationError, DialogError } = require('../errors');
  * either the new status of the dialog or or a new dialog to execute.
  */
 class Dialog {
-  static STATUS_BLOCKED = 'blocked';
-  static STATUS_COMPLETED = 'completed';
-  static STATUS_DISCARDED = 'discarded';
-  static STATUS_READY = 'ready';
-  static STATUS_WAITING = 'waiting';
   static ACTION_CANCEL = 'cancel';
   static ACTION_COMPLETE = 'complete';
+  static ACTION_WAIT = 'wait';
   static ACTION_NEXT = 'next';
-
-  /**
-   * Indicates that this dialog cannot be processed.
-   */
-  get STATUS_BLOCKED() { return Dialog.STATUS_BLOCKED; }
-
-  /**
-   * Indicates that this dialog has been processed successfully.
-   */
-  get STATUS_COMPLETED() { return Dialog.STATUS_COMPLETED; }
-
-  /**
-   * Indicates that this dialog has been discarded by the user.
-   */
-  get STATUS_DISCARDED() { return Dialog.STATUS_DISCARDED; }
-
-  /**
-   * Indicates that this dialog is ready to be processed.
-   */
-  get STATUS_READY() { return Dialog.STATUS_READY; }
-
-  /**
-   * Indicates that this dialog is waiting for a user confirmation to be unblocked.
-   */
-  get STATUS_WAITING() { return Dialog.STATUS_WAITING; }
 
   /**
    * Indicates that this dialog is cancelling the previous one.
@@ -72,6 +43,11 @@ class Dialog {
    * Indicates that this dialog is completed.
    */
   get ACTION_COMPLETE() { return Dialog.ACTION_COMPLETE; }
+
+  /**
+   * Indicates that this dialog should wait.
+   */
+  get ACTION_WAIT() { return Dialog.ACTION_WAIT; }
 
   /**
    * Indicates that this dialog is calling the next one.
@@ -99,7 +75,7 @@ class Dialog {
    * @returns {String} the dialog name
    */
   getName() {
-    return kebabCase(this.constructor.name).replace(/(dialog|-dialog)/g, '');
+    return kebabCase(this.constructor.name).replace(/(dialog|-dialog)/g, ''); // TODO: is this correct?
   }
 
   /**
@@ -107,17 +83,16 @@ class Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {String} [key] - the dialog key is an optional parameter
    * used by the view to customize its behaviour
    * @param {Object} [data] - data used at display time
    * @returns {Promise.<void>}
    */
-  async display(adapter, userId, key, data) {
-    logger.debug('display', userId, key, data);
+  async display(adapter, userId, data) {
+    logger.debug('display', userId, data);
     const botMessages = this
       .viewManager
       .resolve(this.name)
-      .renderAsJson(adapter.bot.id, userId, key, data);
+      .renderAsJson(adapter.bot.id, userId, data);
     return adapter.send(botMessages);
   }
 
@@ -137,14 +112,13 @@ class Dialog {
   /**
   * Builds an object that sets the current dialog as completed
   * and provides the name of the next dialog.
-  * @abstract
-  * @async
   * @param {String} dialogName - the name of the next dialog
+  * @param {Object[]} dialogEntities - the entities for the next dialog
   * @returns {Object} contains
   *   - a newDialog object thas has a name
   *   - an action set to ACTION_NEXT
   */
-  triggerNext(dialogName) {
+  triggerNext(dialogName, dialogEntities) {
     if (!dialogName) {
       throw new DialogError({
         message: 'You must provide a dialogName as a parameter to the nextDialog method.',
@@ -154,24 +128,23 @@ class Dialog {
     return {
       newDialog: {
         name: dialogName,
+        entities: dialogEntities,
       },
-      action: this.ACTION_NEXT,
+      name: this.ACTION_NEXT,
     };
   }
 
   /**
-  * Builds an object that sets the previous dialog as canceled
-  * and optionally provides name of the next dialog.
-  * @abstract
-  * @async
-  * @param {String} dialogName - the name of the next dialog (optional)
-  * @returns {Object} contains
-  *   - a newDialog object thas has a name (optional)
-  *   - an action set to ACTION_CANCEL
-  */
+   * Builds an object that sets the previous dialog as canceled
+   * and optionally provides name of the next dialog.
+   * @param {String} dialogName - the name of the next dialog (optional)
+   * @returns {Object} contains
+   *   - a newDialog object thas has a name (optional)
+   *   - an action set to ACTION_CANCEL
+   */
   cancelPrevious(dialogName) {
     return {
-      action: this.ACTION_CANCEL,
+      name: this.ACTION_CANCEL,
       ...dialogName && {
         newDialog: {
           name: dialogName,
@@ -182,15 +155,24 @@ class Dialog {
 
 
   /**
-  * Builds an object that sets current dialog as completed
-  * @abstract
-  * @async
-  * @returns {Object} contains
-  *   - an action set to ACTION_COMPLETE
-  */
+   * Builds an object that sets current dialog as completed.
+   * @returns {Object} contains
+   *   - an action set to ACTION_COMPLETE
+   */
   complete() {
     return {
-      action: this.ACTION_COMPLETE,
+      name: this.ACTION_COMPLETE,
+    };
+  }
+
+   /**
+   * Builds an object that indicates that current dialog should wait.
+   * @returns {Object} contains
+   *   - an action set to ACTION_WAIT
+   */
+  wait() {
+    return {
+      name: this.ACTION_WAIT,
     };
   }
 }

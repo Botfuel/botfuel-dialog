@@ -16,6 +16,8 @@
 
 const Bot = require('./bot');
 const Classifier = require('./classifier');
+const ConfirmationDialog = require('./dialogs/confirmation-dialog');
+const ConfirmationView = require('./views/confirmation-view');
 const CorpusExtractor = require('./extractors/corpus-extractor');
 const Dialog = require('./dialogs/dialog');
 const DialogManager = require('./dialog-manager');
@@ -34,6 +36,8 @@ const WsExtractor = require('./extractors/ws-extractor');
 module.exports = {
   Bot,
   Classifier,
+  ConfirmationDialog,
+  ConfirmationView,
   CorpusExtractor,
   Dialog,
   DialogManager,

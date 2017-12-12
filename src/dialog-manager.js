@@ -37,7 +37,7 @@ class DialogManager {
   }
 
   /**
-   * Gets dialog path
+   * Gets the dialog path.
    * @param {String} name - the dialog's name
    * @returns {String|null} - the dialog path if found or null
    */
@@ -59,8 +59,8 @@ class DialogManager {
   }
 
   /**
-   * Gets a dialog and instantiates it
-   * @param {Object} dialog - the dialog
+   * Gets the dialog.
+   * @param {Object} dialog - object which has a name
    * @returns {Dialog} - the dialog instance
    */
   getDialog(dialog) {
@@ -105,8 +105,8 @@ class DialogManager {
   getLastDialog(previousDialogs) {
     for (let i = previousDialogs.length - 1; i >= 0; i--) {
       const dialog = previousDialogs[i];
-      if ((dialog.status === Dialog.STATUS_COMPLETED) && dialog.characteristics.reentrant) {
-        return dialog.name;
+      if (dialog.characteristics.reentrant) {
+        return dialog;
       }
     }
     return null;
@@ -149,42 +149,28 @@ class DialogManager {
     const newDialogs = [];
     for (let i = 0; i < intents.length; i++) {
       const intent = intents[i];
-      if (this.getDialog(intent).characteristics.reentrant) {
+      const dialogInstance = this.getDialog(intent);
+      if (dialogInstance.characteristics.reentrant) {
         nb++;
       }
-      const status = nb > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
-      const name = intent.name;
-      newDialogs.push({ name, entities, status });
+      newDialogs.push({
+        name: intent.name,
+        characteristics: dialogInstance.characteristics,
+        entities,
+        blocked: nb > 1,
+      });
     }
-    this.updateWithDialogs(userId, dialogs, newDialogs, entities);
-  }
-
-  /**
-   * Updates the dialogs.
-   * @param {String} userId - the user id
-   * @param {Object} dialogs - the dialogs data
-   * @param {Object[]} newDialogs - new dialogs to be added to the dialog stack
-   * @param {Object[]} entities - the entities
-   * @returns {void}
-   */
-  updateWithDialogs(userId, dialogs, newDialogs, entities) {
-    logger.debug('updateWithDialogs', userId, dialogs, newDialogs, entities);
-    for (let i = newDialogs.length - 1; i >= 0; i--) {
-      const newDialog = newDialogs[i];
-      const lastIndex = dialogs.stack.length - 1;
-      const lastDialog = lastIndex >= 0 ? dialogs.stack[lastIndex] : null;
-      if (lastDialog && lastDialog.name === newDialog.name) {
-        lastDialog.entities = newDialog.entities;
-        lastDialog.status = newDialog.status || Dialog.STATUS_READY;
-      } else {
-        dialogs.stack.push(newDialog);
-      }
-    }
+    this.updateWithDialogs(dialogs, newDialogs);
     if (dialogs.stack.length === 0) { // no intent detected
+      const lastDialog = this.getLastDialog(dialogs.previous) || {
+        name: 'default',
+        characteristics: {
+          reentrant: false,
+        },
+      };
       dialogs.stack.push({
-        name: this.getLastDialog(dialogs.previous) || 'default',
+        ...lastDialog,
         entities: entities || [],
-        status: Dialog.STATUS_READY,
       });
     }
     if (entities) {
@@ -193,60 +179,75 @@ class DialogManager {
   }
 
   /**
-   * Applies an action to the dialogs object
+   * Updates the dialogs.
+   * @param {Object} dialogs - the dialogs data
+   * @param {Object[]} newDialogs - new dialogs to be added to the dialog stack
+   * @returns {void}
+   */
+  updateWithDialogs(dialogs, newDialogs) {
+    for (let i = newDialogs.length - 1; i >= 0; i--) {
+      const newDialog = newDialogs[i];
+      const lastIndex = dialogs.stack.length - 1;
+      const lastDialog = lastIndex >= 0 ? dialogs.stack[lastIndex] : null;
+      if (lastDialog && lastDialog.name === newDialog.name) {
+        lastDialog.entities = newDialog.entities;
+      } else {
+        dialogs.stack.push(newDialog);
+      }
+    }
+  }
+
+  /**
+   * Applies an action to the dialogs object.
    * @async
    * @param {Object} dialogs - the dialogs object to be updated
    * @param {String} action - an action that indicates
    * how should the stack and previous dialogs be updated
    * @returns {Promise.<Object>} The new dialogs object with its stack and previous arrays updated
     */
-  computeNewDialogs(dialogs, action) {
-    const currentDialog = this.getDialog(dialogs.stack[dialogs.stack.length - 1]);
+  applyAction(dialogs, { name, newDialog }) {
+    logger.debug('applyAction', dialogs, { name, newDialog });
+    const currentDialog = dialogs.stack[dialogs.stack.length - 1];
     const previousDialog = dialogs.stack[dialogs.stack.length - 2];
     const date = Date.now();
 
-    switch (action) {
+    switch (name) {
       case Dialog.ACTION_CANCEL:
-
-        logger.debug('execute: canceling previous dialog', dialogs.stack);
-        logger.debug('execute: canceling previous dialog', previousDialog);
-
-        return {
-          ...dialogs,
-          ...{
-            stack: dialogs.stack.slice(0, -2),
-            previous: dialogs.previous.concat([
-              { ...previousDialog, status: Dialog.STATUS_DISCARDED, date },
-              { ...currentDialog, status: Dialog.STATUS_COMPLETED, date },
-            ]),
-          },
+        logger.debug('applyAction: cancelling previous dialog', previousDialog);
+        dialogs = {
+          stack: dialogs.stack.slice(0, -2),
+          previous: [
+            ...dialogs.previous,
+            { ...currentDialog, date },
+          ],
         };
+        if (newDialog) {
+          this.updateWithDialogs(dialogs, [newDialog]);
+        }
+        return dialogs;
 
       case Dialog.ACTION_COMPLETE:
         return {
-          ...dialogs,
-          ...{
-            stack: dialogs.stack.slice(0, -1),
-            previous: [
-              ...dialogs.previous,
-              { ...currentDialog, status: Dialog.STATUS_COMPLETED, date },
-            ],
-          },
+          stack: dialogs.stack.slice(0, -1),
+          previous: [
+            ...dialogs.previous,
+            { ...currentDialog, date },
+          ],
         };
 
       case Dialog.ACTION_NEXT:
-        return {
-          ...dialogs,
-          ...{
-            stack: dialogs.stack.slice(0, -1),
-            previous: [
-              ...dialogs.previous,
-              { ...currentDialog, status: Dialog.STATUS_COMPLETED, date },
-            ],
-          },
+        dialogs = {
+          stack: dialogs.stack.slice(0, -1),
+          previous: [
+            ...dialogs.previous,
+            { ...currentDialog, date },
+          ],
         };
-      default:
+        this.updateWithDialogs(dialogs, [newDialog]);
         return dialogs;
+
+      default:
+        throw new DialogError({ dialog: currentDialog, message: `Unknown action '${name}' in '${currentDialog.name}'` });
     }
   }
 
@@ -260,31 +261,32 @@ class DialogManager {
    */
   async execute(adapter, userId, dialogs) {
     logger.debug('execute', '<adapter>', userId, dialogs);
-
     if (dialogs.stack.length === 0) {
       return dialogs;
     }
-
     const dialog = dialogs.stack[dialogs.stack.length - 1];
-    const dialogInstance = await this.getDialog(dialog);
-    const { action, newDialog } = await dialogInstance
-      .execute(adapter, userId, dialog.entities, dialog.status);
-    const newDialogs = await this.computeNewDialogs(dialogs, action);
-
-    logger.debug('execute: dialogResult', { action, newDialog });
-    logger.debug('execute: newDialog', newDialog);
-    logger.debug('execute: newDialogs', newDialogs);
-
-    if (newDialog) {
-      this.updateWithDialogs(
-        userId,
-        newDialogs,
-        [{ ...newDialog, status: Dialog.STATUS_READY }],
-        dialog.entities,
-      );
+    if (dialog.blocked) {
+      dialog.blocked = false;
+      const confirmationDialogName = this.getDialogPath(`${dialog.name}-confirmation`)
+            ? `${dialog.name}-confirmation`
+            : 'confirmation';
+      dialogs.stack.push({
+        name: confirmationDialogName,
+        characteristics: {
+          reentrant: false,
+        },
+        entities: [],
+      });
+    } else {
+      const dialogInstance = this.getDialog(dialog);
+      const action = await dialogInstance.execute(adapter, userId, dialog.entities);
+      logger.debug('execute: action', action);
+      if (action.name === Dialog.ACTION_WAIT) {
+        return dialogs;
+      }
+      dialogs = await this.applyAction(dialogs, action);
     }
-
-    return this.execute(adapter, userId, newDialogs);
+    return this.execute(adapter, userId, dialogs);
   }
 
   /**
@@ -299,8 +301,7 @@ class DialogManager {
     logger.debug('execute', userId, intents, entities);
     const dialogs = await this.getDialogs(userId);
     this.updateWithIntents(userId, dialogs, intents, entities);
-    const newDialogs = await this.execute(adapter, userId, dialogs);
-    return this.setDialogs(userId, newDialogs);
+    return this.setDialogs(userId, await this.execute(adapter, userId, dialogs));
   }
 
   /**
@@ -313,9 +314,8 @@ class DialogManager {
   async executeDialogs(adapter, userId, newDialogs) {
     logger.debug('executeWithDialogs', userId, newDialogs);
     const dialogs = await this.getDialogs(userId);
-    this.updateWithDialogs(userId, dialogs, newDialogs);
-    const remainingDialogs = await this.execute(adapter, userId, dialogs);
-    return this.setDialogs(userId, remainingDialogs);
+    this.updateWithDialogs(dialogs, newDialogs);
+    return this.setDialogs(userId, await this.execute(adapter, userId, dialogs));
   }
 }
 
