@@ -271,6 +271,7 @@ A brain is needed to persist information between two user messages.
 The SDK offers different brain implementations:
 - In-memory brain
 - [MongoDb](https://www.mongodb.com) based brain
+
 If you plan to deploy your bot on more than a single machine, then you need a brain which is shareable like the MongoDb-based brain.
 
 It is very easy to write a new brain implementation.
