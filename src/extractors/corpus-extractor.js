@@ -33,7 +33,7 @@ class CorpusExtractor extends Extractor {
     for (const row of this.parameters.corpus.matrix) {
       for (const word of row) {
         this
-          .findOccurences(normalizedSentence, word)
+          .findOccurrences(normalizedSentence, word)
           .map(index => this.addEntity(entities, {
             dim: this.parameters.dimension,
             body: word,
@@ -65,13 +65,13 @@ class CorpusExtractor extends Extractor {
   }
 
   /**
-   * Finds occurences of a word in a sentence.
+   * Finds occurrences of a word in a sentence.
    * @private
    * @param {String} sentence - the sentence
    * @param {String} word - the word
    * @returns {Object[]} an array of objects, each object contains start and end indices
    */
-  findOccurences(sentence, word) {
+  findOccurrences(sentence, word) {
     logger.debug('extracts', sentence, word);
     const normalizedWord = Corpus.normalize(word, this.parameters.options);
     const results = [];

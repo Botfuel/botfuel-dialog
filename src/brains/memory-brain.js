@@ -15,7 +15,7 @@
  */
 
 const logger = require('logtown')('MemoryBrain');
-const _ = require('lodash');
+const last = require('lodash/last');
 const Brain = require('./brain');
 
 /**
@@ -73,7 +73,7 @@ class MemoryBrain extends Brain {
   /** @inheritdoc */
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
-    const conversation = _.last(this.users[userId].conversations);
+    const conversation = last(this.users[userId].conversations);
     return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
   }
 

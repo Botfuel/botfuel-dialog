@@ -24,49 +24,9 @@ const View = require('./view');
  */
 class PromptView extends View {
   // eslint-disable-next-line require-jsdoc
-  render(key, data) {
-    logger.debug('render', key, data);
-    switch (key) {
-      case 'ask':
-        return this.renderAsk();
-      case 'confirm':
-        return this.renderConfirm();
-      case 'discard':
-        return this.renderDiscard();
-      case 'entities': {
-        const { matchedEntities, missingEntities } = data;
-        return this.renderEntities(matchedEntities, missingEntities);
-      }
-      default:
-        return null;
-    }
-  }
-
-  /**
-   * Asks for confirmation.
-   * @private
-   * @returns {Object[]} the bot messages
-   */
-  renderAsk() {
-    return [new BotTextMessage('continue dialog?')];
-  }
-
-  /**
-   * Confirms the dialog.
-   * @private
-   * @returns {Object[]} the bot messages
-   */
-  renderConfirm() {
-    return [new BotTextMessage('dialog confirmed.')];
-  }
-
-  /**
-   * Discards the dialog.
-   * @private
-   * @returns {Object[]} the bot messages
-   */
-  renderDiscard() {
-    return [new BotTextMessage('dialog discarded.')];
+  render({ matchedEntities, missingEntities }) {
+    logger.debug('render', { matchedEntities, missingEntities });
+    return this.renderEntities(matchedEntities, missingEntities);
   }
 
   /**

@@ -40,17 +40,17 @@ You can see how these components interact in this [sequence diagram](https://en.
 
 ### MVC
 The bot implements the [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) pattern where:
-- the brain is the _model_ : it contains all the information about the bot, the users, the conversations
-- the dialog is the _controller_ : it updates the brain and calls its view with the required parameters
-- the _view_ generates the messages to be sent to the user
+- Brain is the _model_, it contains all the information about the bot, the users, the conversations,
+- Dialog is the _controller_, it updates the brain and calls its view with the required parameters,
+- _View_ generates the messages to be sent to the user.
 
 ## Messages
-The SDK defines its own message format which supports:
-- Text messages and quick replies
-- Images and image uploads
-- Links
-- Buttons and clicks on buttons (aka postbacks)
-- Complex messages such as carrousels
+The SDK defines its own message format that supports:
+- text messages and quick replies,
+- images and image uploads,
+- links,
+- buttons and clicks on buttons (aka postbacks),
+- complex messages such as carousels.
 
 A message has the form:
 ```javacript

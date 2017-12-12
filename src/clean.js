@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Copyright (c) 2017 - present, Botfuel (https://www.botfuel.io).
  *
@@ -14,23 +15,19 @@
  * limitations under the License.
  */
 
-const Dialog = require('../../../../src/dialogs/dialog');
+require('babel-polyfill');
 
-/**
- * WaitingDialog class.
- */
-class Waiting extends Dialog {
-  /**
-   * Executes.
-   * @returns {string}
-   */
-  async execute() {
-    return this.wait();
+const logger = require('logtown')('Clean');
+const Bot = require('./bot');
+const { resolveConfigFile } = require('./config');
+
+(async () => {
+  try {
+    const config = resolveConfigFile(process.argv[2]);
+    await new Bot(config).clean();
+    logger.info('Cleaning done.');
+  } catch (e) {
+    logger.error(e.message);
   }
-}
-
-Waiting.params = {
-  namespace: 'waiting',
-};
-
-module.exports = Waiting;
+  process.exit(0);
+})();

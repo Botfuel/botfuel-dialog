@@ -1,6 +1,6 @@
 {
   "name": "@botfuel/bot-sdk2",
-  "version": "0.50.0",
+  "version": "0.51.3",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel SDK2",
@@ -10,7 +10,8 @@
   ],
   "bin": {
     "botfuel-run": "./build/run.js",
-    "botfuel-train": "./build/train.js"
+    "botfuel-train": "./build/train.js",
+    "botfuel-clean": "./build/clean.js"
   },
   "scripts": {
     "prepublish": "npm run compile",
@@ -39,7 +40,6 @@
     "node-dir": "^0.1.17",
     "request": "^2.82.0",
     "request-promise": "^4.2.1",
-    "underscore": "^1.8.3",
     "winston": "^2.4.0"
   },
   "devDependencies": {

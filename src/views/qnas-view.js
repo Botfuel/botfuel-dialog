@@ -24,16 +24,12 @@ const View = require('./view');
  */
 class QnasView extends View {
   // eslint-disable-next-line require-jsdoc
-  render(key, data) {
-    logger.debug('render', key, data);
-    switch (key) {
-      case 'answer':
-        return this.renderAnswer(data.answer);
-      case 'questions':
-        return this.renderQuestions(data.qnas);
-      default:
-        return null;
+  render(data) {
+    logger.debug('render', data);
+    if (data.qnas.length === 1) {
+      return this.renderAnswer(data.qnas[0].answer);
     }
+    return this.renderQuestions(data.qnas);
   }
 
   /**

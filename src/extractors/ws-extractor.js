@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const _ = require('underscore');
+const { clone, extend } = require('lodash');
 const nlp = require('botfuel-nlp-sdk');
 const logger = require('logtown')('WsExtractor');
 const { AuthenticationError } = require('../errors');
@@ -30,10 +30,7 @@ class WsExtractor extends Extractor {
    */
   constructor(parameters) {
     super(parameters);
-    if (process.env.BOTFUEL_APP_ID === undefined
-        || process.env.BOTFUEL_APP_ID === ''
-        || process.env.BOTFUEL_APP_KEY === undefined
-        || process.env.BOTFUEL_APP_KEY === '') {
+    if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
       logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the entity extraction service!');
     }
     this.client = new nlp.EntityExtraction({
@@ -42,12 +39,12 @@ class WsExtractor extends Extractor {
     });
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async compute(sentence) {
     try {
       logger.debug('compute', sentence);
-      const query = _.clone(this.parameters);
-      _.extend(query, { sentence });
+      const query = clone(this.parameters);
+      extend(query, { sentence });
       const entities = await this.client.compute(query);
       return entities.map(entity => ({
         ...entity,
