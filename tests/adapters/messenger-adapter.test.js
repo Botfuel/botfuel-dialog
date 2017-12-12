@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
 /* eslint-disable quotes */
 
 const MessengerAdapter = require('../../src/adapters/messenger-adapter');

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
 const PromptDialog = require('../../src/dialogs/prompt-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 

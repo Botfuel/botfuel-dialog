@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
 const { UserTextMessage } = require('../../src/messages');
 
 describe('UserTextMessage', () => {

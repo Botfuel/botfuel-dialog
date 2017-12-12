@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
 const path = require('path');
 const fs = require('fs-extra');
 const Classifer = require('../../src/classifier');
@@ -62,7 +60,7 @@ describe('Classifier', () => {
     );
   });
 
-  afterAll(function () {
+  afterAll(() => {
     fs.removeSync(path.join(process.cwd(), '_tmp_tests'));
   });
 });

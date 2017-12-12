@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
 const FileCorpus = require('../../src/corpora/file-corpus');
 
 describe('FileCorpus', () => {

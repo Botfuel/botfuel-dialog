@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
 const BooleanExtractor = require('../../src/extractors/boolean-extractor');
 
 const extractor = new BooleanExtractor({ locale: 'en' });

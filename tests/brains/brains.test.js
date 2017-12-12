@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable prefer-arrow-callback */
 
 const MemoryBrain = require('../../src/brains/memory-brain');
 const MongoBrain = require('../../src/brains/mongo-brain');
@@ -45,7 +44,7 @@ const brainTest = (brainLabel) => {
     await brain.clean();
   });
 
-  afterAll(async function () {
+  afterAll(async () => {
     if (brainLabel === MONGO_BRAIN_LABEL) {
       await brain.dropDatabase();
     }

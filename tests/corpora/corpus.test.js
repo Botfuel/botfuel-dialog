@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
 const Corpus = require('../../src/corpora/corpus');
 
 describe('Corpus', () => {

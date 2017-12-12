@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
 const { BotTextMessage } = require('../../src/messages');
 
 describe('BotTextMessage', () => {

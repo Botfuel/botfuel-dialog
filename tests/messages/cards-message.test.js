@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
 const { Card, CardsMessage, Link, Postback } = require('../../src/messages');
 
 describe('CardsMessage', () => {

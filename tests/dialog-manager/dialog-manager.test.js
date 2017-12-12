@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
 const DialogManager = require('../../src/dialog-manager');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const TestAdapter = require('../../src/adapters/test-adapter');
