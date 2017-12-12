@@ -45,8 +45,8 @@ class Bot {
   constructor(config) {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
-    // give warnings to user when he forgot bot id or botfuel credentials
-    Bot.reportsMissingEnvVars();
+    // give informations about env vars
+    Bot.logsEnvVars();
     this.id = process.env.BOT_ID;
     this.adapter = this.getAdapter(this.config.adapter);
     this.brain = this.getBrain(this.config.brain);
@@ -230,10 +230,10 @@ class Bot {
   }
 
   /**
-   * Reports informations about missing environment variables
+   * Logs informations/warnings about environment variables
    * @returns {void}
    */
-  static reportsMissingEnvVars() {
+  static logsEnvVars() {
     logger.info('BOT_ID:', process.env.BOT_ID);
     logger.info('BOTFUEL_APP_ID:', process.env.BOTFUEL_APP_ID);
     logger.info('BOTFUEL_APP_KEY:', process.env.BOTFUEL_APP_KEY);
