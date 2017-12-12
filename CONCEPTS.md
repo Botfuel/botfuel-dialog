@@ -17,6 +17,8 @@ The processing of the user message and the generation of the bot messages involv
 - Dialogs, interact with the brain and the views
 - Views, generate the messages
 
+![Diagram explaining the concepts](concepts-diagram.svg?raw=true)
+
 You can see how these components interact in this [sequence diagram](https://en.wikipedia.org/wiki/Sequence_diagram):
 
 ```
