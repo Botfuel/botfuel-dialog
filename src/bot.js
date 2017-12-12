@@ -45,6 +45,8 @@ class Bot {
   constructor(config) {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
+    // give warnings to user when he forgot bot id or botfuel credentials
+    Bot.reportsMissingEnvVars();
     this.id = process.env.BOT_ID;
     this.adapter = this.getAdapter(this.config.adapter);
     this.brain = this.getBrain(this.config.brain);
@@ -59,7 +61,6 @@ class Bot {
    * @returns {Promise.<void>}
    */
   async init() {
-    Bot.reportsMissingEnvVars();
     await this.brain.init();
     await this.nlu.init();
   }
