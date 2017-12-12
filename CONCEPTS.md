@@ -17,30 +17,8 @@ The processing of the user message and the generation of the bot messages involv
 - Dialogs, interact with the brain and the views
 - Views, generate the messages
 
+You can see how these components interact in this diagram:
 ![Diagram explaining the concepts](concepts-diagram.jpg)
-
-You can see how these components interact in this [sequence diagram](https://en.wikipedia.org/wiki/Sequence_diagram):
-
-```
-             Adapter       Bot         NLU      Extractor   DialogMgr     Brain      Dialog       View
-             -------       ---         ---      ---------   ---------     -----      ------       ----
--- user msg --> |           |           |           |           |           |           |           |
-                | --------> |           |           |           |           |           |           |
-                |           | --------> |           |           |           |           |           |
-                |           |           | --------> |           |           |           |           |
-                |           |           | <-------- |           |           |           |           |
-                |           | <-------- |           |           |           |           |           |
-                |           | ----------|-----------|---------> |           |           |           |
-                |           |           |           |           | --------> |           |           |
-                |           |           |           |           | <-------- |           |           |
-                |           |           |           |           | ----------|---------> |           |
-                |           |           |           |           |           | <-------- |           |
-                |           |           |           |           |           | --------> |           |
-                |           |           |           |           |           |           | --------> |
-                |           |           |           |           |           |           | <-------- |
-                | <---------|-----------|-----------|-----------|-----------|---------- |           |
-<-- bot msgs -- |           |           |           |           |           |           |           |
-```
 
 ### MVC
 Note that the bot implements the [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) pattern where:
