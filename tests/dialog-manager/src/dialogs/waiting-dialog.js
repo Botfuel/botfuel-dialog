@@ -17,20 +17,20 @@
 const Dialog = require('../../../../src/dialogs/dialog');
 
 /**
- * FalseDialog class.
+ * WaitingDialog class.
  */
-class FalseDialog extends Dialog {
+class Waiting extends Dialog {
   /**
    * Executes.
    * @returns {string}
    */
   async execute() {
-    return { status: Dialog.STATUS_WAITING };
+    return this.wait();
   }
 }
 
-FalseDialog.params = {
-  namespace: 'false',
+Waiting.params = {
+  namespace: 'waiting',
 };
 
-module.exports = FalseDialog;
+module.exports = Waiting;

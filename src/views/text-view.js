@@ -24,8 +24,8 @@ const View = require('./view');
  */
 class TextView extends View {
   // eslint-disable-next-line require-jsdoc
-  render(key, data) {
-    logger.debug('render', key, data);
+  render(data) {
+    logger.debug('render', data);
     return this
       .getTexts(data)
       .map(text => new BotTextMessage(text));

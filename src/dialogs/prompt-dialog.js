@@ -213,96 +213,45 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * Executes the dialog when status is 'blocked'.
-   * @async
-   * @param {Adapter} adapter - the adapter
-   * @param {String} userId - the user id
-   * @param {Object[]} [candidates] - the message entities extracted from the message
-   * @returns {Promise.<Object>} the new dialog status
-   */
-  async executeWhenBlocked(adapter, userId, candidates) {
-    logger.debug('executeWhenBlocked', userId, candidates);
-    await this.display(adapter, userId, 'ask');
-    return { status: this.STATUS_WAITING };
-  }
-
-  /**
-   * Executes the dialog when status is 'waiting'.
+   * Executes the dialog.
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} candidates - the message entities extracted from the message
-   * @returns {Promise.<Object>} the new dialog status
+   * @returns {Promise.<Object>} an action
    */
-  async executeWhenWaiting(adapter, userId, candidates) {
-    logger.debug('executeWhenWaiting', userId, candidates);
-    for (const candidate of candidates) {
-      if (candidate.dim === 'system:boolean') {
-        const booleanValue = candidate.values[0].value;
-        logger.debug('execute: system:boolean', booleanValue);
-        if (booleanValue) {
-          // eslint-disable-next-line no-await-in-loop
-          await this.display(adapter, userId, 'confirm');
-          return this.executeWhenReady(adapter, userId, candidates);
-        }
-        // if not confirmed, then discard dialog
-        // eslint-disable-next-line no-await-in-loop
-        await this.display(adapter, userId, 'discard');
-        return { status: this.STATUS_DISCARDED };
-      }
-    }
-    return { status: this.STATUS_BLOCKED };
-  }
-
-  /**
-   * Executes the dialog when status is 'ready'.
-   * @async
-   * @param {Adapter} adapter - the adapter
-   * @param {String} userId - the user id
-   * @param {Object[]} candidates - the message entities extracted from the message
-   * @returns {Promise.<Object>} the new dialog status
-   */
-  async executeWhenReady(adapter, userId, candidates) {
-    logger.debug('executeWhenReady', userId, candidates);
+  async execute(adapter, userId, candidates) {
+    logger.debug('execute', userId, candidates);
     const dialogEntities =
           (await this.brain.conversationGet(userId, this.parameters.namespace)) || {};
-    logger.debug('executeWhenReady: dialogEntities', dialogEntities);
+    logger.debug('execute: dialogEntities', dialogEntities);
     // Get missing entities and matched entities
     const { missingEntities, matchedEntities } =
           this.computeEntities(candidates, this.parameters.entities, dialogEntities);
-    logger.debug('executeWhenReady', { missingEntities, matchedEntities });
+    logger.debug('execute', { missingEntities, matchedEntities });
     await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
     await this.display(adapter, userId, 'entities', { matchedEntities, missingEntities });
     if (Object.keys(missingEntities).length === 0) {
-      return this.executeWhenCompleted(adapter, userId, matchedEntities);
+      const result = await this.dialogWillComplete(
+        adapter,
+        userId,
+        { matchedEntities, missingEntities },
+      );
+      return result || this.complete();
     }
-    return { status: this.STATUS_READY };
+    return this.wait();
   }
 
   /**
-   * Executes the dialog when status is 'completed'.
+   * Hook to be overriden before dialog completes.
+   * Does nothing by default.
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
-   * @param {Object[]} messageEntities - the message entities
-   * @returns {Promise.<Object>} the new dialog status
+   * @returns {Promise.<void>}
    */
-  async executeWhenCompleted() {
-    logger.debug('executeWhenCompleted');
-    return { status: this.STATUS_COMPLETED };
-  }
-
-  /** @inheritdoc */
-  async execute(adapter, userId, candidates, status) {
-    logger.debug('execute', userId, candidates, status);
-    switch (status) {
-      case this.STATUS_BLOCKED:
-        return this.executeWhenBlocked(adapter, userId, candidates);
-      case this.STATUS_WAITING:
-        return this.executeWhenWaiting(adapter, userId, candidates);
-      default:
-        return this.executeWhenReady(adapter, userId, candidates);
-    }
+  async dialogWillComplete(adapter, userId, { matchedEntities, missingEntities }) {
+    logger.debug('dialogWillComplete', userId, { matchedEntities, missingEntities });
   }
 }
 

@@ -39,11 +39,11 @@ class QnasDialog extends Dialog {
     const qnas = messageEntities[0].value;
     logger.debug('execute: qnas', qnas);
     if (qnas.length === 1) {
-      await this.display(adapter, userId, 'answer', { answer: qnas[0].answer });
-      return { status: this.STATUS_COMPLETED };
+      await this.display(adapter, userId, 'answer', { qnas });
+      return this.complete();
     }
     await this.display(adapter, userId, 'questions', { qnas });
-    return { status: this.STATUS_READY };
+    return this.wait();
   }
 }
 
