@@ -174,6 +174,8 @@ Let's illustrate different examples of complex conversation.
 
 > _User_: **Thank you, I'd like to book a train ticket**
 
+> _Bot_: You are welcome. Where do yo go?
+
 #### Random access navigation
 > _User_: I want to go to Paris next Monday
 
@@ -208,6 +210,21 @@ The SDK offers several built-in dialogs:
 - `QnaDialog` that answers questions using Botfuel's QnA service (see https://app.botfuel.io/docs#qna)
 
 It is very easy to write new dialog types to implement custom logic.
+
+#### PromptDialog
+The `PromptDialog` class allows you to prompt the user for entities.
+You can override the `dialogWillComplete` method
+to perform some actions when all required entities have been extracted.
+
+### Dialog instructions
+Dialogs come with a set of powerful instructions:
+- `complete` indicates that the dialog is complete and should let the dialog execute other dialogs
+- `wait` indicates that user input is required for continuing execution of the dialog
+- `triggerNext` is used for chaining dialogs
+- `cancelPrevious` is used for cancelling the previous dialog
+
+See the [sample bots](https://github.com/Botfuel/bot-sdk2/blob/master/SAMPLES.txt) for examples of use of these instructions.
+
 
 ## Views
 Each dialog comes with a single view.
@@ -244,13 +261,17 @@ The SDK offers several built-in views:
 - `PromptView` that prompts the user for inputs
 - `QnaView` that answers questions using Botfuel's QnA service (see https://app.botfuel.io/docs#qna)
 
+#### TextView
+The `TextView` class offers an easy way to display text.
+Simply subclass it and override the `getTexts` method to return an array of texts.
+
 ## Brain
 From an MVC perspective, the brain is the _model_ of a bot.
 A brain is needed to persist information between two user messages.
 
 The SDK offers different brain implementations:
 - In-memory brain
-- [MongoDb](https://www.mongodb.com) based brain
+- [MongoDb](https://www.mongodb.com)-based brain
 
 If you plan to deploy your bot on more than a single machine, then you need a brain which is shareable like the MongoDb-based brain.
 

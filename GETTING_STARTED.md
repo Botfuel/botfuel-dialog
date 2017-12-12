@@ -49,7 +49,7 @@ npm install
 Start the bot with the `BOTFUEL_APP_ID` and `BOTFUEL_APP_KEY` environment variables using your app’s credentials:
 
 ```shell
-BOT_ID BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start
+BOT_ID BOTFUEL_APP_ID=<YOUR BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR BOTFUEL_APP_KEY> npm start
 ```
 
 If you set your app credentials right, you should see:
@@ -128,7 +128,7 @@ In your terminal, execute the following command:
 npm run train
 ```
 
-This will update the model to include your new intent. 
+This will update the model to include your new intent.
 **Be sure to train each time you add, remove or change an intent.**
 
 ## Add the city Extractor
@@ -174,7 +174,7 @@ Here we say that the travel Dialog needs an entity named `destination` that is a
 ## Add the travel View
 
 Create a `travel-view.js` file in the `src/views` directory.
-It serves two main purposes. In cases when the user did not provide a city, this would prompt the user to do so. In addition, the View contains the logic of the response based on the user value provided. 
+It serves two main purposes. In cases when the user did not provide a city, this would prompt the user to do so. In addition, the View contains the logic of the response based on the user value provided.
 
 Since the travel Dialog is a `PromptDialog`, the travel View needs to be a `PromptView` so it can access the `destination` entity in the `renderEntities` method:
 
