@@ -31,8 +31,7 @@ class LoggerManager {
     const [loggerPath] = [
       `${config.path}/src/loggers/${config.logger}.js`,
       `${__dirname}/loggers/${config.logger}.js`,
-    ]
-    .filter(path => fs.pathExistsSync(path));
+    ].filter(path => fs.pathExistsSync(path));
 
     if (!loggerPath) {
       throw new LoggerError({ message: `Logger ${config.logger} not found!` });
