@@ -28,16 +28,16 @@ const defaultConfig = {
 };
 
 /**
-* Returns the contents of the bot config file
-* @param {String} configFileName - the bot config file name/path
-* @returns {Object} the contents of the bot config file
-*/
+ * Returns the contents of the bot config file
+ * @param {String} configFileName - the bot config file name/path
+ * @returns {Object} the contents of the bot config file
+ */
 const resolveConfigFile = (configFileName) => {
   // configure the logger with default configuration first the be able to log errors
   LoggerManager.configure(defaultConfig);
 
   if (!configFileName) {
-    logger.info('You didn\'t specify any config file, using default config.');
+    logger.info("You didn't specify any config file, using default config.");
     return {};
   }
 

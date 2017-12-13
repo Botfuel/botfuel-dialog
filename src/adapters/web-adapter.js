@@ -66,7 +66,8 @@ class WebAdapter extends Adapter {
     const options = Object.assign({ method: 'POST', json: true }, requestOptions);
     try {
       const res = await rp(options);
-      if (res.statusCode && res.statusCode !== 200) { // not handled on messenger
+      if (res.statusCode && res.statusCode !== 200) {
+        // not handled on messenger
         logger.error('postResponse: KO', res);
       } else {
         logger.debug('postResponse: OK');

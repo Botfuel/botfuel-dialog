@@ -71,7 +71,12 @@ class DialogManager {
       return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
     }
     logger.error(`Could not resolve '${dialog.name}' dialog`);
-    throw new DialogError({ dialog, message: `Make sure the '${dialog.name}' dialog file exists at ${this.config.path}/src/dialogs/${dialog.name}-dialog.js` });
+    throw new DialogError({
+      dialog,
+      message: `Make sure the '${dialog.name}' dialog file exists at ${
+        this.config.path
+      }/src/dialogs/${dialog.name}-dialog.js`,
+    });
   }
 
   /**
@@ -81,20 +86,19 @@ class DialogManager {
    */
   sortIntents(intents) {
     logger.debug('sortIntents', intents);
-    return intents
-      .sort((intent1, intent2) => {
-        const dialog1 = this.getDialog(intent1);
-        const dialog2 = this.getDialog(intent2);
-        const reentrant1 = dialog1.characteristics.reentrant;
-        const reentrant2 = dialog2.characteristics.reentrant;
-        if (reentrant1 && !reentrant2) {
-          return 1;
-        }
-        if (!reentrant1 && reentrant2) {
-          return -1;
-        }
-        return 0;
-      });
+    return intents.sort((intent1, intent2) => {
+      const dialog1 = this.getDialog(intent1);
+      const dialog2 = this.getDialog(intent2);
+      const reentrant1 = dialog1.characteristics.reentrant;
+      const reentrant2 = dialog2.characteristics.reentrant;
+      if (reentrant1 && !reentrant2) {
+        return 1;
+      }
+      if (!reentrant1 && reentrant2) {
+        return -1;
+      }
+      return 0;
+    });
   }
 
   /**
@@ -161,7 +165,8 @@ class DialogManager {
       });
     }
     this.updateWithDialogs(dialogs, newDialogs);
-    if (dialogs.stack.length === 0) { // no intent detected
+    if (dialogs.stack.length === 0) {
+      // no intent detected
       const lastDialog = this.getLastDialog(dialogs.previous) || {
         name: 'default',
         characteristics: {
@@ -204,7 +209,7 @@ class DialogManager {
    * @param {String} action - an action that indicates
    * how should the stack and previous dialogs be updated
    * @returns {Promise.<Object>} The new dialogs object with its stack and previous arrays updated
-    */
+   */
   applyAction(dialogs, { name, newDialog }) {
     logger.debug('applyAction', dialogs, { name, newDialog });
     const currentDialog = dialogs.stack[dialogs.stack.length - 1];
@@ -216,10 +221,7 @@ class DialogManager {
         logger.debug('applyAction: cancelling previous dialog', previousDialog);
         dialogs = {
           stack: dialogs.stack.slice(0, -2),
-          previous: [
-            ...dialogs.previous,
-            { ...currentDialog, date },
-          ],
+          previous: [...dialogs.previous, { ...currentDialog, date }],
         };
         if (newDialog) {
           this.updateWithDialogs(dialogs, [newDialog]);
@@ -229,25 +231,22 @@ class DialogManager {
       case Dialog.ACTION_COMPLETE:
         return {
           stack: dialogs.stack.slice(0, -1),
-          previous: [
-            ...dialogs.previous,
-            { ...currentDialog, date },
-          ],
+          previous: [...dialogs.previous, { ...currentDialog, date }],
         };
 
       case Dialog.ACTION_NEXT:
         dialogs = {
           stack: dialogs.stack.slice(0, -1),
-          previous: [
-            ...dialogs.previous,
-            { ...currentDialog, date },
-          ],
+          previous: [...dialogs.previous, { ...currentDialog, date }],
         };
         this.updateWithDialogs(dialogs, [newDialog]);
         return dialogs;
 
       default:
-        throw new DialogError({ dialog: currentDialog, message: `Unknown action '${name}' in '${currentDialog.name}'` });
+        throw new DialogError({
+          dialog: currentDialog,
+          message: `Unknown action '${name}' in '${currentDialog.name}'`,
+        });
     }
   }
 
@@ -268,8 +267,8 @@ class DialogManager {
     if (dialog.blocked) {
       dialog.blocked = false;
       const confirmationDialogName = this.getDialogPath(`${dialog.name}-confirmation`)
-            ? `${dialog.name}-confirmation`
-            : 'confirmation';
+        ? `${dialog.name}-confirmation`
+        : 'confirmation';
       dialogs.stack.push({
         name: confirmationDialogName,
         characteristics: {

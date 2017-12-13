@@ -21,14 +21,13 @@ const logger = require('logtown')('PromptDialog');
 const Dialog = require('./dialog');
 
 // Helper functions
-const makePositionsArray = entity => Array(entity.end - entity.start)
-  .fill()
-  .map((_, i) => i + entity.start);
+const makePositionsArray = entity =>
+  Array(entity.end - entity.start)
+    .fill()
+    .map((_, i) => i + entity.start);
 
-const doEntitiesIntersect = (entityA, entityB) => !!(intersection(
-  makePositionsArray(entityA),
-  makePositionsArray(entityB),
-).length);
+const doEntitiesIntersect = (entityA, entityB) =>
+  !!intersection(makePositionsArray(entityA), makePositionsArray(entityB)).length;
 
 const filterIntersectingEntities = (entities, entity) => {
   if (entity.start == null || entity.end == null) {
@@ -95,8 +94,8 @@ class PromptDialog extends Dialog {
       initialValue = Array.isArray(initialValue) ? [] : null;
     }
 
-    return sameDimCandidates
-      .reduce(({ newValue, remainingCandidates }, candidate) => {
+    return sameDimCandidates.reduce(
+      ({ newValue, remainingCandidates }, candidate) => {
         if (dialogParameter.isFulfilled(newValue)) {
           return { remainingCandidates, newValue };
         }
@@ -107,10 +106,12 @@ class PromptDialog extends Dialog {
           remainingCandidates: filterIntersectingEntities(candidates, candidate),
           newValue: reducedValue === undefined ? null : reducedValue,
         };
-      }, {
+      },
+      {
         remainingCandidates: candidates,
         newValue: initialValue,
-      });
+      },
+    );
   }
 
   /**
@@ -133,30 +134,25 @@ class PromptDialog extends Dialog {
   computeEntities(candidates, parameters, dialogEntities = {}) {
     logger.debug('computeEntities', { candidates, parameters, dialogEntities });
     // Setup default values for entities
-    const dialogParameters = Object.keys(parameters)
-      .reduce(
-        (allEntities, name) => {
-          const dialogParameter = parameters[name];
-          // If the fulfilled function is not defined, we consider that the fulfilled condition
-          // is met if the entity simply exists (not null or undefined)
-          const isFulfilled = dialogParameter.isFulfilled || (entity => entity != null);
+    const dialogParameters = Object.keys(parameters).reduce((allEntities, name) => {
+      const dialogParameter = parameters[name];
+      // If the fulfilled function is not defined, we consider that the fulfilled condition
+      // is met if the entity simply exists (not null or undefined)
+      const isFulfilled = dialogParameter.isFulfilled || (entity => entity != null);
 
-          return {
-            ...allEntities,
-            [name]: {
-              dim: dialogParameter.dim,
-              // If the reducer function is not defined, we replace the old entities by the new ones
-              reducer: dialogParameter.reducer ||
-                ((oldEntities, newEntities) => newEntities),
-              isFulfilled,
-              // Because we need to to be able to override them but we want unfulfilled parameters
-              // To have priority over them
-              priority: dialogParameter.priority || 0,
-            },
-          };
+      return {
+        ...allEntities,
+        [name]: {
+          dim: dialogParameter.dim,
+          // If the reducer function is not defined, we replace the old entities by the new ones
+          reducer: dialogParameter.reducer || ((oldEntities, newEntities) => newEntities),
+          isFulfilled,
+          // Because we need to to be able to override them but we want unfulfilled parameters
+          // To have priority over them
+          priority: dialogParameter.priority || 0,
         },
-        {},
-    );
+      };
+    }, {});
 
     const result = Object.keys(dialogParameters)
       // Sort expected entities by:
@@ -172,10 +168,12 @@ class PromptDialog extends Dialog {
         const priorityValueA = typeof priorityA === 'function' ? priorityA() : priorityA;
         const priorityValueB = typeof priorityB === 'function' ? priorityB() : priorityB;
 
-        const isFulfilledA = dialogParameterA
-          .isFulfilled(dialogEntities[nameA], { dialogEntities }) ? 0 : 1;
-        const isFulfilledB = dialogParameterB
-          .isFulfilled(dialogEntities[nameB], { dialogEntities }) ? 0 : 1;
+        const isFulfilledA = dialogParameterA.isFulfilled(dialogEntities[nameA], { dialogEntities })
+          ? 0
+          : 1;
+        const isFulfilledB = dialogParameterB.isFulfilled(dialogEntities[nameB], { dialogEntities })
+          ? 0
+          : 1;
 
         if (isFulfilledB !== isFulfilledA) {
           return isFulfilledB - isFulfilledA;
@@ -183,32 +181,35 @@ class PromptDialog extends Dialog {
 
         return priorityValueB - priorityValueA;
       })
-      .reduce(({ matchedEntities, remainingCandidates, missingEntities }, name) => {
-        const dialogParameter = dialogParameters[name];
-        const { newValue, remainingCandidates: newRemainingCandidates } = this
-          .matchParameterWithCandidates({
+      .reduce(
+        ({ matchedEntities, remainingCandidates, missingEntities }, name) => {
+          const dialogParameter = dialogParameters[name];
+          const {
+            newValue,
+            remainingCandidates: newRemainingCandidates,
+          } = this.matchParameterWithCandidates({
             dialogParameter,
             candidates: remainingCandidates,
             initialValue: dialogEntities[name],
           });
-        logger.debug('computeEntities', { newValue, remainingCandidates });
-        const isFulfilled = dialogParameter.isFulfilled(newValue, { dialogEntities });
-        return {
-          // Store the found entities here as a { <entityName>: <entity> } map
-          matchedEntities: { ...matchedEntities, [name]: newValue },
-          remainingCandidates: newRemainingCandidates,
-          // If an entity matching the one we are expecting was found,
-          // remove it from missing entities
-          // If it was not found, keep missing entities intact
-          missingEntities: isFulfilled ? omit(missingEntities, [name]) : missingEntities,
-        };
-      },
-      {
-        matchedEntities: dialogEntities,
-        remainingCandidates: candidates,
-        missingEntities: dialogParameters,
-      },
-    );
+          logger.debug('computeEntities', { newValue, remainingCandidates });
+          const isFulfilled = dialogParameter.isFulfilled(newValue, { dialogEntities });
+          return {
+            // Store the found entities here as a { <entityName>: <entity> } map
+            matchedEntities: { ...matchedEntities, [name]: newValue },
+            remainingCandidates: newRemainingCandidates,
+            // If an entity matching the one we are expecting was found,
+            // remove it from missing entities
+            // If it was not found, keep missing entities intact
+            missingEntities: isFulfilled ? omit(missingEntities, [name]) : missingEntities,
+          };
+        },
+        {
+          matchedEntities: dialogEntities,
+          remainingCandidates: candidates,
+          missingEntities: dialogParameters,
+        },
+      );
     return { matchedEntities: result.matchedEntities, missingEntities: result.missingEntities };
   }
 
@@ -223,20 +224,22 @@ class PromptDialog extends Dialog {
   async execute(adapter, userId, candidates) {
     logger.debug('execute', userId, candidates);
     const dialogEntities =
-          (await this.brain.conversationGet(userId, this.parameters.namespace)) || {};
+      (await this.brain.conversationGet(userId, this.parameters.namespace)) || {};
     logger.debug('execute: dialogEntities', dialogEntities);
     // Get missing entities and matched entities
-    const { missingEntities, matchedEntities } =
-          this.computeEntities(candidates, this.parameters.entities, dialogEntities);
+    const { missingEntities, matchedEntities } = this.computeEntities(
+      candidates,
+      this.parameters.entities,
+      dialogEntities,
+    );
     logger.debug('execute', { missingEntities, matchedEntities });
     await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
     await this.display(adapter, userId, { matchedEntities, missingEntities });
     if (Object.keys(missingEntities).length === 0) {
-      const result = await this.dialogWillComplete(
-        adapter,
-        userId,
-        { matchedEntities, missingEntities },
-      );
+      const result = await this.dialogWillComplete(adapter, userId, {
+        matchedEntities,
+        missingEntities,
+      });
       return result || this.complete();
     }
     return this.wait();

@@ -63,7 +63,7 @@ class Corpus {
       sentence = sentence.toLowerCase();
     }
     if (options === undefined || options.keepQuotes !== true) {
-      sentence = sentence.replace('\'', ' ');
+      sentence = sentence.replace("'", ' ');
     }
     if (options === undefined || options.keepDashes !== true) {
       sentence = sentence.replace('-', ' ');

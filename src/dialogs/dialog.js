@@ -37,22 +37,30 @@ class Dialog {
   /**
    * Indicates that this dialog is cancelling the previous one.
    */
-  get ACTION_CANCEL() { return Dialog.ACTION_CANCEL; }
+  get ACTION_CANCEL() {
+    return Dialog.ACTION_CANCEL;
+  }
 
   /**
    * Indicates that this dialog is completed.
    */
-  get ACTION_COMPLETE() { return Dialog.ACTION_COMPLETE; }
+  get ACTION_COMPLETE() {
+    return Dialog.ACTION_COMPLETE;
+  }
 
   /**
    * Indicates that this dialog should wait.
    */
-  get ACTION_WAIT() { return Dialog.ACTION_WAIT; }
+  get ACTION_WAIT() {
+    return Dialog.ACTION_WAIT;
+  }
 
   /**
    * Indicates that this dialog is calling the next one.
    */
-  get ACTION_NEXT() { return Dialog.ACTION_NEXT; }
+  get ACTION_NEXT() {
+    return Dialog.ACTION_NEXT;
+  }
 
   /**
    * @constructor
@@ -89,8 +97,7 @@ class Dialog {
    */
   async display(adapter, userId, data) {
     logger.debug('display', userId, data);
-    const botMessages = this
-      .viewManager
+    const botMessages = this.viewManager
       .resolve(this.name)
       .renderAsJson(adapter.bot.id, userId, data);
     return adapter.send(botMessages);
@@ -110,14 +117,14 @@ class Dialog {
   }
 
   /**
-  * Builds an object that sets the current dialog as completed
-  * and provides the name of the next dialog.
-  * @param {String} dialogName - the name of the next dialog
-  * @param {Object[]} dialogEntities - the entities for the next dialog
-  * @returns {Object} contains
-  *   - a newDialog object thas has a name
-  *   - an action set to ACTION_NEXT
-  */
+   * Builds an object that sets the current dialog as completed
+   * and provides the name of the next dialog.
+   * @param {String} dialogName - the name of the next dialog
+   * @param {Object[]} dialogEntities - the entities for the next dialog
+   * @returns {Object} contains
+   *   - a newDialog object thas has a name
+   *   - an action set to ACTION_NEXT
+   */
   triggerNext(dialogName, dialogEntities) {
     if (!dialogName) {
       throw new DialogError({
@@ -145,14 +152,13 @@ class Dialog {
   cancelPrevious(dialogName) {
     return {
       name: this.ACTION_CANCEL,
-      ...dialogName && {
+      ...(dialogName && {
         newDialog: {
           name: dialogName,
         },
-      },
+      }),
     };
   }
-
 
   /**
    * Builds an object that sets current dialog as completed.
@@ -165,7 +171,7 @@ class Dialog {
     };
   }
 
-   /**
+  /**
    * Builds an object that indicates that current dialog should wait.
    * @returns {Object} contains
    *   - an action set to ACTION_WAIT

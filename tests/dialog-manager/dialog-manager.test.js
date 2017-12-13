@@ -37,9 +37,7 @@ describe('DialogManager', function () {
   });
 
   it('when given a name, it should return the correct path', function () {
-    expect(dm.getDialogPath('test'))
-      .to
-      .eql(`${__dirname}/src/dialogs/test-dialog`);
+    expect(dm.getDialogPath('test')).to.eql(`${__dirname}/src/dialogs/test-dialog`);
   });
 
   it('when given an unknown name, it should return null', function () {
@@ -49,9 +47,7 @@ describe('DialogManager', function () {
   it('should not crash when no intent', async function () {
     const adapter = new TestAdapter({ id: TEST_BOT }, {});
     await dm.executeIntents(adapter, TEST_USER, [], []);
-    expect(adapter.log).to.eql([
-      new BotTextMessage('Not understood.').toJson(TEST_BOT, TEST_USER),
-    ]);
+    expect(adapter.log).to.eql([new BotTextMessage('Not understood.').toJson(TEST_BOT, TEST_USER)]);
   });
 
   it('should keep on the stack a dialog which is waiting', async function () {

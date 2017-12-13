@@ -102,7 +102,7 @@ class Brain {
     throw new MissingImplementationError();
   }
 
-   /**
+  /**
    * Adds a user.
    * @async
    * @param {String} userId - the  user id
@@ -199,7 +199,7 @@ class Brain {
    * @returns {Boolean}
    */
   isConversationValid(conversation) {
-    return conversation !== undefined && (Date.now() - conversation.createdAt) < this.dayInMs;
+    return conversation !== undefined && Date.now() - conversation.createdAt < this.dayInMs;
   }
 }
 

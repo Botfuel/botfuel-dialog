@@ -32,15 +32,15 @@ class CorpusExtractor extends Extractor {
     const entities = [];
     for (const row of this.parameters.corpus.matrix) {
       for (const word of row) {
-        this
-          .findOccurrences(normalizedSentence, word)
-          .map(index => this.addEntity(entities, {
+        this.findOccurrences(normalizedSentence, word).map(index =>
+          this.addEntity(entities, {
             dim: this.parameters.dimension,
             body: word,
             values: [this.buildValue(row[0])],
             start: index.start,
             end: index.end,
-          }));
+          }),
+        );
       }
     }
     return entities;
@@ -56,8 +56,7 @@ class CorpusExtractor extends Extractor {
   addEntity(entities, newEntity) {
     for (let i = 0; i < entities.length; i++) {
       const entity = entities[i];
-      if (newEntity.start <= entity.start
-          && newEntity.end >= entity.end) {
+      if (newEntity.start <= entity.start && newEntity.end >= entity.end) {
         entities.splice(i, 1);
       }
     }
@@ -78,9 +77,11 @@ class CorpusExtractor extends Extractor {
     for (let start = -1, end = 0; ;) {
       start = sentence.indexOf(normalizedWord, end);
       end = start + normalizedWord.length;
-      if (start < 0
-          || (start > 0 && CharFunk.isLetterOrDigit(sentence[start - 1]))
-          || (end < sentence.length && CharFunk.isLetterOrDigit(sentence[end]))) {
+      if (
+        start < 0 ||
+        (start > 0 && CharFunk.isLetterOrDigit(sentence[start - 1])) ||
+        (end < sentence.length && CharFunk.isLetterOrDigit(sentence[end]))
+      ) {
         break;
       }
       results.push({ start, end });

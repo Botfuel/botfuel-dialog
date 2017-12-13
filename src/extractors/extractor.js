@@ -28,7 +28,6 @@ class Extractor {
     this.parameters = parameters;
   }
 
-
   /**
    * Extracts the entities.
    * @abstract
