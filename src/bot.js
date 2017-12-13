@@ -94,8 +94,9 @@ class Bot {
       case 'test':
         return new TestAdapter(this);
       case 'shell':
-      default:
         return new ShellAdapter(this);
+      default:
+        throw new AdapterError({ message: `'${adapter}' not found!` });
     }
   }
 
