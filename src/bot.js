@@ -24,7 +24,7 @@ const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
 const { getConfiguration } = require('./config');
-const { AuthenticationError, DialogError, ViewError } = require('./errors');
+const { AuthenticationError, DialogError, ViewError, AdapterError } = require('./errors');
 
 const logger = Logger.getLogger('Bot');
 
@@ -94,8 +94,9 @@ class Bot {
       case 'test':
         return new TestAdapter(this);
       case 'shell':
-      default:
         return new ShellAdapter(this);
+      default:
+        throw new AdapterError({ message: `'${adapter}' not found!` });
     }
   }
 
