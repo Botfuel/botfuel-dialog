@@ -25,7 +25,7 @@ class DefaultView extends TextView {
   // eslint-disable-next-line require-jsdoc
   getTexts(data) {
     logger.debug('getTexts', data);
-    return ['Je n\'ai pas compris.'];
+    return ["Je n'ai pas compris."];
   }
 }
 

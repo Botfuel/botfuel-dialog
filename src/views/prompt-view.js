@@ -41,7 +41,9 @@ class PromptView extends View {
     if (Object.keys(matchedEntities).length !== 0) {
       messages.push(
         new BotTextMessage(
-          `Entities defined: ${Object.keys(matchedEntities).filter(name => !!matchedEntities[name]).join(', ')}`,
+          `Entities defined: ${Object.keys(matchedEntities)
+            .filter(name => !!matchedEntities[name])
+            .join(', ')}`,
         ),
       );
     }

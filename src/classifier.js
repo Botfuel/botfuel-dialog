@@ -75,15 +75,13 @@ class Classifier {
     }
 
     return new Promise((resolve, reject) => {
-      Natural
-        .LogisticRegressionClassifier
-        .load(this.modelFilename, null, (err, classifier) => {
-          if (err !== null) {
-            return reject(err);
-          }
-          this.classifier = classifier;
-          return resolve();
-        });
+      Natural.LogisticRegressionClassifier.load(this.modelFilename, null, (err, classifier) => {
+        if (err !== null) {
+          return reject(err);
+        }
+        this.classifier = classifier;
+        return resolve();
+      });
     });
   }
 
@@ -128,8 +126,7 @@ class Classifier {
   async compute(sentence, entities) {
     logger.debug('compute', sentence, entities);
     const features = this.computeFeatures(sentence, entities);
-    return this
-      .classifier
+    return this.classifier
       .getClassifications(features)
       .filter(intent => intent.value > this.intentThreshold)
       .slice(0, 2)
@@ -143,15 +140,13 @@ class Classifier {
   async train() {
     logger.debug('train');
     this.classifier = new Natural.LogisticRegressionClassifier(this.getStemmer());
-    Fs
-      .readdirSync(this.intentDirname, 'utf8')
+    Fs.readdirSync(this.intentDirname, 'utf8')
       .filter(fileName => fileName.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX)
       .map((fileName) => {
         logger.debug('train: filename', fileName);
         const intent = fileName.substring(0, fileName.length - INTENT_SUFFIX.length);
         logger.debug('train: intent', intent);
-        return Fs
-          .readFileSync(`${this.intentDirname}/${fileName}`, 'utf8')
+        return Fs.readFileSync(`${this.intentDirname}/${fileName}`, 'utf8')
           .toString()
           .split('\n')
           .map((line) => {

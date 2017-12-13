@@ -29,12 +29,14 @@ class FileCorpus extends Corpus {
    */
   constructor(path, separator = ',') {
     logger.debug('constructor', path, separator);
-    super(fs
-          .readFileSync(path, 'utf8') // TODO: async?
-          .toString()
-          .split('\n')
-          .filter(row => row.length > 0)
-          .map(row => row.split(separator)));
+    super(
+      fs
+        .readFileSync(path, 'utf8') // TODO: async?
+        .toString()
+        .split('\n')
+        .filter(row => row.length > 0)
+        .map(row => row.split(separator)),
+    );
   }
 }
 

@@ -26,9 +26,7 @@ class TextView extends View {
   // eslint-disable-next-line require-jsdoc
   render(data) {
     logger.debug('render', data);
-    return this
-      .getTexts(data)
-      .map(text => new BotTextMessage(text));
+    return this.getTexts(data).map(text => new BotTextMessage(text));
   }
 
   /**

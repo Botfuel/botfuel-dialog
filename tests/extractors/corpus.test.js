@@ -22,7 +22,7 @@ const CorpusExtractor = require('../../src/extractors/corpus-extractor');
 
 const teams = new Corpus([
   ['Paris Saint-Germain', 'Paris SG', 'PSG'],
-  ['Olympique Lyonnais', 'L\'Olympique Lyonnais', 'OL'],
+  ['Olympique Lyonnais', "L'Olympique Lyonnais", 'OL'],
   ['Football Club de Nantes', 'FCN'],
   ['Béziers'],
 ]);
@@ -30,11 +30,11 @@ const extractor = new CorpusExtractor({ dimension: 'teams', corpus: teams });
 
 describe('CorpusExtractor', function () {
   it('should properly extract', async function () {
-    const entities = await extractor.compute('Béziers joue contre l\'Olympique Lyonnais');
+    const entities = await extractor.compute("Béziers joue contre l'Olympique Lyonnais");
     expect(entities).to.eql([
       {
         dim: 'teams',
-        body: 'L\'Olympique Lyonnais',
+        body: "L'Olympique Lyonnais",
         values: [
           {
             type: 'string',
@@ -65,7 +65,9 @@ describe('CorpusExtractor', function () {
   });
 
   it('should properly extract when several synonyms', async function () {
-    const entities = await extractor.compute('Paris Saint-Germain, Paris SG et PSG sont 3 synonymes.');
+    const entities = await extractor.compute(
+      'Paris Saint-Germain, Paris SG et PSG sont 3 synonymes.',
+    );
     expect(entities).to.eql([
       {
         dim: 'teams',

@@ -431,11 +431,7 @@ describe('PromptDialog', function () {
           },
         };
 
-        const { missingEntities } = prompt.computeEntities(
-          messageEntities,
-          expectedEntities,
-          {},
-        );
+        const { missingEntities } = prompt.computeEntities(messageEntities, expectedEntities, {});
 
         expect(Object.keys(missingEntities)).to.have.length(1);
         expect(missingEntities).to.have.property('myNumber');
@@ -600,9 +596,7 @@ describe('PromptDialog', function () {
         );
 
         expect(matchedEntities).to.have.property('favoriteNumbers');
-        expect(matchedEntities.favoriteNumbers).to.eql([
-          ...messageEntities.slice(0, 2),
-        ]);
+        expect(matchedEntities.favoriteNumbers).to.eql([...messageEntities.slice(0, 2)]);
 
         expect(Object.keys(missingEntities)).to.have.length(0);
       });

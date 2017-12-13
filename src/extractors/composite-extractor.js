@@ -25,7 +25,8 @@ class CompositeExtractor extends Extractor {
   async compute(sentence) {
     logger.debug('compute', sentence);
     let entities = [];
-    for (const extractor of this.parameters.extractors) { // TODO: in parallel
+    for (const extractor of this.parameters.extractors) {
+      // TODO: in parallel
       // eslint-disable-next-line no-await-in-loop
       const extractorEntities = await extractor.compute(sentence);
       entities = entities.concat(extractorEntities);

@@ -107,7 +107,9 @@ class Bot {
   handleError(error) {
     if (error instanceof AuthenticationError) {
       logger.error('Botfuel API authentication failed!');
-      logger.error('Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io');
+      logger.error(
+        'Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io',
+      );
     } else if (error instanceof ViewError) {
       const { view } = error;
       logger.error(`Could not render view '${view}'`);

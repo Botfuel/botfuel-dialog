@@ -16,8 +16,8 @@
 
 module.exports = class AuthenticationError extends Error {
   /**
-  * @constructor
-  */
+   * @constructor
+   */
   constructor() {
     super('Could not authenticate!');
     Error.captureStackTrace(this, this.constructor);

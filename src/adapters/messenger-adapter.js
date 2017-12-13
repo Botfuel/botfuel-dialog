@@ -43,7 +43,10 @@ class MessengerAdapter extends WebAdapter {
    */
   async validateWebhook(req, res) {
     logger.debug('validateWebhook');
-    if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === process.env.FB_VERIFY_TOKEN) {
+    if (
+      req.query['hub.mode'] === 'subscribe' &&
+      req.query['hub.verify_token'] === process.env.FB_VERIFY_TOKEN
+    ) {
       logger.debug('validateWebhook: OK!');
       res.status(200).send(req.query['hub.challenge']);
     } else {

@@ -96,7 +96,9 @@ class Nlu {
     // Spellchecking
     if (this.config.spellchecking) {
       if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
-        logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!');
+        logger.error(
+          'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!',
+        );
       }
       this.spellchecking = new Spellchecking({
         appId: process.env.BOTFUEL_APP_ID,
@@ -135,9 +137,9 @@ class Nlu {
       }
       const qnaResult = await this.computeWithQna(sentence);
       logger.debug('compute: qnaResult', qnaResult);
-      return qnaResult.intents.length > 0 ?
-        qnaResult :
-        { intents: [], entities: classifierResult.entities };
+      return qnaResult.intents.length > 0
+        ? qnaResult
+        : { intents: [], entities: classifierResult.entities };
     }
     return this.computeWithClassifier(sentence);
   }
@@ -175,8 +177,10 @@ class Nlu {
     try {
       const qnas = await this.qna.getMatchingQnas({ sentence });
       logger.debug('computeWithQna: qnas', qnas);
-      if ((this.config.qna.strict && qnas.length === 1)
-          || (!this.config.qna.strict && qnas.length > 0)) {
+      if (
+        (this.config.qna.strict && qnas.length === 1) ||
+        (!this.config.qna.strict && qnas.length > 0)
+      ) {
         return this.buildResult(qnas);
       }
       return { intents: [] };

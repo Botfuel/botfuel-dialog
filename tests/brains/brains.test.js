@@ -117,7 +117,7 @@ const brainTest = (brainLabel) => {
     expect(value).to.eql('bar');
   });
 
-  it('don\'t get user last conversation values from previous conversation', async function () {
+  it("don't get user last conversation values from previous conversation", async function () {
     await brain.addUser(USER_ID);
     await brain.addConversation(USER_ID);
     await brain.conversationSet(USER_ID, 'previous', 'before');
@@ -138,6 +138,10 @@ const brainTest = (brainLabel) => {
 };
 
 describe('Brains', () => {
-  describe('MongoBrain', function () { brainTest(MONGO_BRAIN_LABEL); });
-  describe('MemoryBrain', function () { brainTest(MEMORY_BRAIN_LABEL); });
+  describe('MongoBrain', function () {
+    brainTest(MONGO_BRAIN_LABEL);
+  });
+  describe('MemoryBrain', function () {
+    brainTest(MEMORY_BRAIN_LABEL);
+  });
 });

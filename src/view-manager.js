@@ -69,7 +69,10 @@ class ViewManager {
       return new View();
     }
     logger.error(`Could not resolve '${name}' view`);
-    throw new ViewError({ message: `there is no view '${name}' at ${process.cwd()}/src/views/${name}-view.js`, view: name });
+    throw new ViewError({
+      message: `there is no view '${name}' at ${process.cwd()}/src/views/${name}-view.js`,
+      view: name,
+    });
   }
 }
 
