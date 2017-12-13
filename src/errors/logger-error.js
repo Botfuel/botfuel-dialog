@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-module.exports = {
-  AdapterError: require('./adapter-error'),
-  AuthenticationError: require('./authentication-error'),
-  DialogError: require('./dialog-error'),
-  LoggerError: require('./logger-error'),
-  MissingImplementationError: require('./missing-implementation-error'),
-  SdkError: require('./sdk-error'),
-  ViewError: require('./view-error'),
+const SdkError = require('./sdk-error');
+
+module.exports = class LoggerError extends SdkError {
+  /**
+  * @constructor
+  * @param {String} message - the error message
+  * @param {Object} logger - the dialog in error
+  */
+  constructor({ message, logger }) {
+    super(message || 'Unknown LoggerError');
+    this.logger = logger;
+  }
 };
