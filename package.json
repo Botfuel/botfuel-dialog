@@ -1,9 +1,9 @@
 {
-  "name": "@botfuel/bot-sdk2",
+  "name": "botfuel-dialog",
   "version": "0.51.3",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
-  "description": "Botfuel SDK2",
+  "description": "Botfuel Dialog",
   "license": "Apache-2.0",
   "files": [
     "build"

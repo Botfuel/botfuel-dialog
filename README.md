@@ -1,6 +1,6 @@
-# Bot SDK 2
+# Botfuel Dialog
 
-[![Build Status](https://travis-ci.com/Botfuel/bot-sdk2.svg?token=DzdpA2xzqKcvBPt7ExGD&branch=master)](https://travis-ci.com/Botfuel/bot-sdk2)
+[![Build Status](https://travis-ci.com/Botfuel/botfuel-dialog.svg?token=DzdpA2xzqKcvBPt7ExGD&branch=master)](https://travis-ci.com/Botfuel/botfuel-dialog)
 
 ## Test samples
 

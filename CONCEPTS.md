@@ -65,7 +65,7 @@ expect(bot.adapter.log).to.eql([
   new BotTextMessage('Hello human.'),
 ].map(msg => msg.toJson(bot.id, userId)));
 ```
-See the [sample bots](https://github.com/topics/bot-sdk2-samples) for more examples of tests.
+See the [sample bots](https://github.com/topics/botfuel-dialog-samples) for more examples of tests.
 
 ## NLU
 User messages often contain text, such asa sentence.
@@ -114,7 +114,7 @@ The SDK allows to use two types of extractors:
 (see https://app.botfuel.io/docs/#entity-extraction for more details about the web service and the entities supported)
 - Corpus-based extractors, for user defined named entities (useful if you plan to integrate industry-specific knowledge into your bot)
 
-See the [sample bots](https://github.com/topics/bot-sdk2-samples) for examples of corpus-based extractors.
+See the [sample bots](https://github.com/topics/botfuel-dialog-samples) for examples of corpus-based extractors.
 
 An extracted entity comes with the following details:
 ```javascript
@@ -223,7 +223,7 @@ Dialogs come with a set of powerful instructions:
 - `triggerNext` is used for chaining dialogs
 - `cancelPrevious` is used for cancelling the previous dialog
 
-See the [sample bots](https://github.com/topics/bot-sdk2-samples) for examples of use of these instructions.
+See the [sample bots](https://github.com/topics/botfuel-dialog-samples) for examples of use of these instructions.
 
 
 ## Views
