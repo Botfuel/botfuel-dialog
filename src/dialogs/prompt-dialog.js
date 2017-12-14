@@ -14,28 +14,10 @@
  * limitations under the License.
  */
 
-const isEqual = require('lodash/isEqual');
 const omit = require('lodash/omit');
-const intersection = require('lodash/intersection');
 const logger = require('logtown')('PromptDialog');
+const { filterIntersectingEntities } = require('../utils/entities');
 const Dialog = require('./dialog');
-
-// Helper functions
-const makePositionsArray = entity =>
-  Array(entity.end - entity.start)
-    .fill()
-    .map((_, i) => i + entity.start);
-
-const doEntitiesIntersect = (entityA, entityB) =>
-  !!intersection(makePositionsArray(entityA), makePositionsArray(entityB)).length;
-
-const filterIntersectingEntities = (entities, entity) => {
-  if (entity.start == null || entity.end == null) {
-    return entities.filter(e => !isEqual(e, entity));
-  }
-
-  return entities.filter(e => !doEntitiesIntersect(e, entity));
-};
 
 /**
  * The prompt dialog prompts the user for a number of entities.
