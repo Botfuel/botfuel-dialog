@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
-const expect = require('expect.js');
 const BooleanExtractor = require('../../src/extractors/boolean-extractor');
 
 const extractor = new BooleanExtractor({ locale: 'en' });
 
-describe('BooleanExtractor', function () {
-  it('should properly extract', async function () {
+describe('BooleanExtractor', () => {
+  test('should properly extract', async () => {
     const entities = await extractor.compute('I say yes you say no');
-    expect(entities).to.eql([
+    expect(entities).toEqual([
       {
         dim: 'system:boolean',
         body: 'no',
