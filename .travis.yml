@@ -4,9 +4,11 @@ node_js:
 services:
   - mongodb
 env:
-  - BOTFUEL_PROXY_HOST=https://api.botfuel.io/staging BOTFUEL_APP_ID=29ce6795 BOTFUEL_APP_KEY=703d9ff1e2cfdf6a2ccc591213e57053
+  - BOTFUEL_PROXY_HOST=https://api.botfuel.io/staging BOTFUEL_APP_ID=29ce6795 BOTFUEL_APP_KEY=703d9ff1e2cfdf6a2ccc591213e57053 CODECOV_TOKEN="7787f5d2-3dd4-4e3f-bdbc-7bdb88f0c031"
 notifications:
   slack: botfuel:m19mrLajAVq0CkYHceYCGnL9
 script:
   - npm run style
   - npm test
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -e TRAVIS_NODE_VERSION

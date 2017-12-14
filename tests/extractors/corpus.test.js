@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
-const expect = require('expect.js');
 const Corpus = require('../../src/corpora/corpus');
 const CorpusExtractor = require('../../src/extractors/corpus-extractor');
 
@@ -28,10 +25,10 @@ const teams = new Corpus([
 ]);
 const extractor = new CorpusExtractor({ dimension: 'teams', corpus: teams });
 
-describe('CorpusExtractor', function () {
-  it('should properly extract', async function () {
-    const entities = await extractor.compute("Béziers joue contre l'Olympique Lyonnais");
-    expect(entities).to.eql([
+describe('CorpusExtractor', () => {
+  test('should properly extract', async () => {
+    const entities = await extractor.compute('Béziers joue contre l\'Olympique Lyonnais');
+    expect(entities).toEqual([
       {
         dim: 'teams',
         body: "L'Olympique Lyonnais",
@@ -59,16 +56,14 @@ describe('CorpusExtractor', function () {
     ]);
   });
 
-  it('should properly extract when substring', async function () {
+  test('should properly extract when substring', async () => {
     const entities = await extractor.compute('LOL');
-    expect(entities).to.eql([]);
+    expect(entities).toEqual([]);
   });
 
-  it('should properly extract when several synonyms', async function () {
-    const entities = await extractor.compute(
-      'Paris Saint-Germain, Paris SG et PSG sont 3 synonymes.',
-    );
-    expect(entities).to.eql([
+  test('should properly extract when several synonyms', async () => {
+    const entities = await extractor.compute('Paris Saint-Germain, Paris SG et PSG sont 3 synonymes.');
+    expect(entities).toEqual([
       {
         dim: 'teams',
         body: 'Paris Saint-Germain',
