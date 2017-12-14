@@ -15,7 +15,9 @@
  */
 
 const logger = require('logtown')('QnasView');
-const { ActionsMessage, BotTextMessage, Postback } = require('../messages');
+const ActionsMessage = require('../messages/actions-message');
+const BotTextMessage = require('../messages/bot-text-message');
+const Postback = require('../messages/postback');
 const View = require('./view');
 
 /**

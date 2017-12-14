@@ -203,8 +203,7 @@ class PromptDialog extends Dialog {
             // If it was not found, keep missing entities intact
             missingEntities: isFulfilled ? omit(missingEntities, [name]) : missingEntities,
           };
-        },
-        {
+        }, {
           matchedEntities: dialogEntities,
           remainingCandidates: candidates,
           missingEntities: dialogParameters,

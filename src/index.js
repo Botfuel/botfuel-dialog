@@ -23,7 +23,6 @@ const Dialog = require('./dialogs/dialog');
 const DialogManager = require('./dialog-manager');
 const FileCorpus = require('./corpora/file-corpus');
 const MemoryBrain = require('./brains/memory-brain');
-const Messages = require('./messages');
 const MongoBrain = require('./brains/mongo-brain');
 const Nlu = require('./nlu');
 const PromptDialog = require('./dialogs/prompt-dialog');
@@ -32,6 +31,16 @@ const TextDialog = require('./dialogs/text-dialog');
 const TextView = require('./views/text-view');
 const View = require('./views/view');
 const WsExtractor = require('./extractors/ws-extractor');
+const Link = require('./messages/link');
+const ActionsMessage = require('./messages/actions-message');
+const BotTextMessage = require('./messages/bot-text-message');
+const Card = require('./messages/card');
+const CardsMessage = require('./messages/cards-message');
+const Postback = require('./messages/postback');
+const PostbackMessage = require('./messages/postback-message');
+const QuickrepliesMessage = require('./messages/quickreplies-message');
+const UserImageMessage = require('./messages/user-image-message');
+const UserTextMessage = require('./messages/user-text-message');
 
 module.exports = {
   Bot,
@@ -43,7 +52,6 @@ module.exports = {
   DialogManager,
   FileCorpus,
   MemoryBrain,
-  Messages,
   MongoBrain,
   Nlu,
   PromptDialog,
@@ -52,4 +60,14 @@ module.exports = {
   TextView,
   View,
   WsExtractor,
+  Link,
+  ActionsMessage,
+  BotTextMessage,
+  Card,
+  CardsMessage,
+  Postback,
+  PostbackMessage,
+  QuickrepliesMessage,
+  UserImageMessage,
+  UserTextMessage,
 };

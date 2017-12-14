@@ -17,7 +17,10 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const { Card, CardsMessage, Link, Postback } = require('../../src/messages');
+const Card = require('../../src/messages/card');
+const CardsMessage = require('../../src/messages/cards-message');
+const Link = require('../../src/messages/link');
+const Postback = require('../../src/messages/postback');
 
 describe('CardsMessage', function () {
   it('should generate the proper json', async function () {

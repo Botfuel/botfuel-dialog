@@ -17,7 +17,8 @@
 const readline = require('readline');
 const chalk = require('chalk');
 const logger = require('logtown')('ShellAdapter');
-const { BotTextMessage, UserTextMessage } = require('../messages');
+const BotTextMessage = require('../messages/bot-text-message');
+const UserTextMessage = require('../messages/user-text-message');
 const Adapter = require('./adapter');
 
 const DELIMITER = `${chalk.bold('> ')}`;

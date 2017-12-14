@@ -18,7 +18,7 @@ const express = require('express');
 const rp = require('request-promise');
 const bodyParser = require('body-parser');
 const logger = require('logtown')('WebAdapter');
-const { MissingImplementationError } = require('../errors');
+const MissingImplementationError = require('../errors/missing-implementation-error');
 const Adapter = require('./adapter');
 
 /**

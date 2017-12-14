@@ -17,7 +17,7 @@
 /* eslint-disable prefer-arrow-callback */
 
 const expect = require('expect.js');
-const { BotTextMessage } = require('../../src/messages');
+const BotTextMessage = require('../../src/messages/bot-text-message');
 
 describe('BotTextMessage', function () {
   it('should generate the proper json', async function () {

@@ -17,7 +17,7 @@
 const { clone, extend } = require('lodash');
 const nlp = require('botfuel-nlp-sdk');
 const logger = require('logtown')('WsExtractor');
-const { AuthenticationError } = require('../errors');
+const AuthenticationError = require('../errors/authentication-error');
 const Extractor = require('./extractor');
 
 /**

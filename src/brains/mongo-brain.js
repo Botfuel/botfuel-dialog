@@ -16,7 +16,7 @@
 
 const MongoClient = require('mongodb').MongoClient;
 const logger = require('logtown')('MongoBrain');
-const { SdkError } = require('../errors');
+const SdkError = require('../errors/sdk-error');
 const Brain = require('./brain');
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';
