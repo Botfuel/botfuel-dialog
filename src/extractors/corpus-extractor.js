@@ -15,9 +15,10 @@
  */
 
 const logger = require('logtown')('CorpusExtractor');
-const CharFunk = require('charfunk');
 const Corpus = require('../corpora/corpus');
 const Extractor = require('./extractor');
+
+const LETTER_DIGIT_REGEX = /^[0-9a-zA-Z]{1}$/;
 
 /**
  * Corpus based extractor.
@@ -79,8 +80,8 @@ class CorpusExtractor extends Extractor {
       end = start + normalizedWord.length;
       if (
         start < 0 ||
-        (start > 0 && CharFunk.isLetterOrDigit(sentence[start - 1])) ||
-        (end < sentence.length && CharFunk.isLetterOrDigit(sentence[end]))
+        (start > 0 && LETTER_DIGIT_REGEX.test(sentence[start - 1])) ||
+        (end < sentence.length && LETTER_DIGIT_REGEX.test(sentence[end]))
       ) {
         break;
       }
