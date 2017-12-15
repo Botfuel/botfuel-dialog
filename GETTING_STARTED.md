@@ -55,6 +55,7 @@ BOT_ID=starter BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUE
 If you set your app credentials right, you should see:
 
 ```shell
+2017-12-07T16:12:09.131Z - info: [Config] You didn't specify any config file, using default config.
 2017-12-07T16:12:09.131Z - info: [Bot] BOT_ID starter
 2017-12-07T16:12:09.133Z - info: [Bot] BOTFUEL_APP_ID <YOUR_BOTFUEL_APP_ID>
 2017-12-07T16:12:09.133Z - info: [Bot] BOTFUEL_APP_KEY <YOUR_BOTFUEL_APP_KEY>
@@ -179,7 +180,7 @@ It serves two main purposes. In cases when the user did not provide a city, this
 Since the travel Dialog is a `PromptDialog`, the travel View needs to be a `PromptView` so it can access the `destination` entity in the `renderEntities` method:
 
 ```javascript
-const { PromptView, Messages: { BotTextMessage } } = require('botfuel-dialog');
+const { PromptView, BotTextMessage } = require('botfuel-dialog');
 
 class TravelView extends PromptView {
   renderEntities(matchedEntities) {
