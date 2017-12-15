@@ -49,7 +49,7 @@ npm install
 Start the bot with the `BOTFUEL_APP_ID` and `BOTFUEL_APP_KEY` environment variables using your app’s credentials:
 
 ```shell
-BOTFUEL_APP_TOKEN=starter BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start
+BOTFUEL_APP_TOKEN=starter BOTFUEL_APP_ID=<the BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<the BOTFUEL_APP_KEY> npm start
 ```
 
 If you set your app credentials right, you should see:
