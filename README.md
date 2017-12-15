@@ -37,7 +37,7 @@ sh scripts/add-header.sh src/bot.js
 ## Need help ?
 
 - See [GETTING_STARTED](GETTING_STARTED.md) to learn how to run a bot in minutes.
-- See [CONCEPT](CONCEPTS.md) for explanations about the internals of the SDK.
+- See [CONCEPTS](CONCEPTS.md) for explanations about the internals of the SDK.
 
 ## License
 
