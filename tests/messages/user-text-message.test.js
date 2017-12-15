@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { UserTextMessage } = require('../../src/messages');
+const UserTextMessage = require('../../src/messages/user-text-message');
 
 describe('UserTextMessage', () => {
   test('should generate the proper json', async () => {

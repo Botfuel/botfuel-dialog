@@ -17,7 +17,8 @@
 const logger = require('logtown')('Dialog');
 const kebabCase = require('lodash/kebabCase');
 const ViewManager = require('../view-manager');
-const { MissingImplementationError, DialogError } = require('../errors');
+const MissingImplementationError = require('../errors/missing-implementation-error');
+const DialogError = require('../errors/dialog-error');
 
 /**
  * A dialog is responsible for calling its associated view with the right parameters.

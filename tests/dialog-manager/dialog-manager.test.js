@@ -17,7 +17,7 @@
 const DialogManager = require('../../src/dialog-manager');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const TestAdapter = require('../../src/adapters/test-adapter');
-const { BotTextMessage } = require('../../src/messages');
+const BotTextMessage = require('../../src/messages/bot-text-message');
 
 const TEST_USER = '1';
 const TEST_BOT = process.env.BOT_ID;

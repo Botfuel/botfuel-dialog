@@ -15,7 +15,7 @@
  */
 
 const logger = require('logtown')('TextView');
-const { BotTextMessage } = require('../messages');
+const BotTextMessage = require('../messages/bot-text-message');
 const View = require('./view');
 
 /**

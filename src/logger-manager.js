@@ -16,7 +16,7 @@
 
 const fs = require('fs-extra');
 const Logger = require('logtown');
-const { LoggerError } = require('./errors');
+const LoggerError = require('./errors/logger-error');
 
 /**
  * Configure the logger facade

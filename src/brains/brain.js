@@ -15,7 +15,7 @@
  */
 
 const logger = require('logtown')('Brain');
-const { MissingImplementationError } = require('../errors');
+const MissingImplementationError = require('../errors/missing-implementation-error');
 
 /**
  * A brain is a storage for user and conversation data.

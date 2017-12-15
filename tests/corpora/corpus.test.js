@@ -18,10 +18,10 @@ const Corpus = require('../../src/corpora/corpus');
 
 describe('Corpus', () => {
   test('should properly normalize', () => {
-    expect(Corpus.normalize('A  é l\'a c-b', { caseSensitive: true })).toBe('A e l a c b');
-    expect(Corpus.normalize('A  é l\'a c-b', { keepQuotes: true })).toBe('a e l\'a c b');
-    expect(Corpus.normalize('A  é l\'a c-b', { keepDashes: true })).toBe('a e l a c-b');
-    expect(Corpus.normalize('A  é l\'a c-b', { keepAccents: true })).toBe('a é l a c b');
+    expect(Corpus.normalize("A  é l'a c-b", { caseSensitive: true })).toBe('A e l a c b');
+    expect(Corpus.normalize("A  é l'a c-b", { keepQuotes: true })).toBe("a e l'a c b");
+    expect(Corpus.normalize("A  é l'a c-b", { keepDashes: true })).toBe('a e l a c-b');
+    expect(Corpus.normalize("A  é l'a c-b", { keepAccents: true })).toBe('a é l a c b');
   });
 
   test('should retrieve the correct values', () => {
@@ -36,9 +36,13 @@ describe('Corpus', () => {
     expect(corpus.getValue('PARIS SG')).toBe('Paris Saint-Germain');
     expect(corpus.getValue('PARIS SG', { caseSensitive: true })).not.toBe('Paris Saint-Germain');
     expect(corpus.getValue('Paris Saint Germain')).toBe('Paris Saint-Germain');
-    expect(corpus.getValue('Paris Saint Germain', { keepDashes: true })).not.toBe('Paris Saint-Germain');
+    expect(corpus.getValue('Paris Saint Germain', { keepDashes: true })).not.toBe(
+      'Paris Saint-Germain',
+    );
     expect(corpus.getValue('L Olympique Lyonnais')).toBe('Olympique Lyonnais');
-    expect(corpus.getValue('L Olympique Lyonnais', { keepQuotes: true })).not.toBe('Olympique Lyonnais');
+    expect(corpus.getValue('L Olympique Lyonnais', { keepQuotes: true })).not.toBe(
+      'Olympique Lyonnais',
+    );
     expect(corpus.getValue('Montbeliard')).toBe('Montbéliard');
     expect(corpus.getValue('Montbeliard', { keepAccents: true })).not.toBe('Montbéliard');
   });

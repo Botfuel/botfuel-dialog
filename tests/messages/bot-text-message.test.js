@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { BotTextMessage } = require('../../src/messages');
+const BotTextMessage = require('../../src/messages/bot-text-message');
 
 describe('BotTextMessage', () => {
   test('should generate the proper json', async () => {

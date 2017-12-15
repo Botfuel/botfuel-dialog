@@ -15,7 +15,7 @@
  */
 
 const logger = require('logtown')('Adapter');
-const { MissingImplementationError } = require('../errors');
+const MissingImplementationError = require('../errors/missing-implementation-error');
 
 /**
  * An adapter adapts the messages to the messaging platform.

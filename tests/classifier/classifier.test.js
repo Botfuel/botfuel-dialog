@@ -50,14 +50,11 @@ describe('Classifier', () => {
       expect(isModelFresh).toBe(true);
     });
 
-    test(
-      'should return false if model is fresher than intents',
-      async () => {
-        await fs.ensureFileSync(makeIntentPath('4.intent'));
-        const isModelFresh = await classifier.isModelUpToDate(modelPath, testDirPath);
-        expect(isModelFresh).toBe(false);
-      },
-    );
+    test('should return false if model is fresher than intents', async () => {
+      await fs.ensureFileSync(makeIntentPath('4.intent'));
+      const isModelFresh = await classifier.isModelUpToDate(modelPath, testDirPath);
+      expect(isModelFresh).toBe(false);
+    });
   });
 
   afterAll(() => {

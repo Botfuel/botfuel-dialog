@@ -17,7 +17,7 @@
 const fs = require('fs');
 const logger = require('logtown')('DialogManager');
 const Dialog = require('./dialogs/dialog');
-const { DialogError } = require('./errors/index');
+const DialogError = require('./errors/dialog-error');
 
 /**
  * The dialog manager turns NLU output into a dialog stack.

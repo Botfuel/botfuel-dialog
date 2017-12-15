@@ -27,7 +27,7 @@ const extractor = new CorpusExtractor({ dimension: 'teams', corpus: teams });
 
 describe('CorpusExtractor', () => {
   test('should properly extract', async () => {
-    const entities = await extractor.compute('Béziers joue contre l\'Olympique Lyonnais');
+    const entities = await extractor.compute("Béziers joue contre l'Olympique Lyonnais");
     expect(entities).toEqual([
       {
         dim: 'teams',
@@ -62,7 +62,9 @@ describe('CorpusExtractor', () => {
   });
 
   test('should properly extract when several synonyms', async () => {
-    const entities = await extractor.compute('Paris Saint-Germain, Paris SG et PSG sont 3 synonymes.');
+    const entities = await extractor.compute(
+      'Paris Saint-Germain, Paris SG et PSG sont 3 synonymes.',
+    );
     expect(entities).toEqual([
       {
         dim: 'teams',

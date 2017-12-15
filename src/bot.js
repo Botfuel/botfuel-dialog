@@ -24,7 +24,10 @@ const Nlu = require('./nlu');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
 const { getConfiguration } = require('./config');
-const { AuthenticationError, DialogError, ViewError, AdapterError } = require('./errors');
+const AuthenticationError = require('./errors/authentication-error');
+const DialogError = require('./errors/dialog-error');
+const ViewError = require('./errors/view-error');
+const AdapterError = require('./errors/adapter-error');
 
 const logger = Logger.getLogger('Bot');
 

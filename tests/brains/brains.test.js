@@ -106,32 +106,26 @@ const brainTest = (brainLabel) => {
     expect(city).toEqual('Paris');
   });
 
-  test(
-    'get user last conversation values when many conversations',
-    async () => {
-      await brain.addUser(USER_ID);
-      await brain.addConversation(USER_ID);
-      await brain.addConversation(USER_ID);
-      await brain.conversationSet(USER_ID, 'foo', 'bar');
-      const value = await brain.conversationGet(USER_ID, 'foo');
-      expect(value).toEqual('bar');
-    },
-  );
+  test('get user last conversation values when many conversations', async () => {
+    await brain.addUser(USER_ID);
+    await brain.addConversation(USER_ID);
+    await brain.addConversation(USER_ID);
+    await brain.conversationSet(USER_ID, 'foo', 'bar');
+    const value = await brain.conversationGet(USER_ID, 'foo');
+    expect(value).toEqual('bar');
+  });
 
-  test(
-    'don\'t get user last conversation values from previous conversation',
-    async () => {
-      await brain.addUser(USER_ID);
-      await brain.addConversation(USER_ID);
-      await brain.conversationSet(USER_ID, 'previous', 'before');
-      await brain.addConversation(USER_ID);
-      await brain.conversationSet(USER_ID, 'current', 'now');
-      const previous = await brain.conversationGet(USER_ID, 'previous');
-      const current = await brain.conversationGet(USER_ID, 'current');
-      expect(previous).toBe(undefined);
-      expect(current).toEqual('now');
-    },
-  );
+  test("don't get user last conversation values from previous conversation", async () => {
+    await brain.addUser(USER_ID);
+    await brain.addConversation(USER_ID);
+    await brain.conversationSet(USER_ID, 'previous', 'before');
+    await brain.addConversation(USER_ID);
+    await brain.conversationSet(USER_ID, 'current', 'now');
+    const previous = await brain.conversationGet(USER_ID, 'previous');
+    const current = await brain.conversationGet(USER_ID, 'current');
+    expect(previous).toBe(undefined);
+    expect(current).toEqual('now');
+  });
 
   test('clean the brain', async () => {
     await brain.addUser(USER_ID);
@@ -142,6 +136,10 @@ const brainTest = (brainLabel) => {
 };
 
 describe('Brains', () => {
-  describe('MongoBrain', () => { brainTest(MONGO_BRAIN_LABEL); });
-  describe('MemoryBrain', () => { brainTest(MEMORY_BRAIN_LABEL); });
+  describe('MongoBrain', () => {
+    brainTest(MONGO_BRAIN_LABEL);
+  });
+  describe('MemoryBrain', () => {
+    brainTest(MEMORY_BRAIN_LABEL);
+  });
 });

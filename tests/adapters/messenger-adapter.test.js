@@ -17,7 +17,10 @@
 /* eslint-disable quotes */
 
 const MessengerAdapter = require('../../src/adapters/messenger-adapter');
-const { Card, CardsMessage, Link, Postback } = require('../../src/messages');
+const Card = require('../../src/messages/card');
+const CardsMessage = require('../../src/messages/cards-message');
+const Link = require('../../src/messages/link');
+const Postback = require('../../src/messages/postback');
 
 describe('MessengerAdapter', () => {
   test('should generate the proper json', async () => {

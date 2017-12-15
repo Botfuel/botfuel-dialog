@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { MissingImplementationError } = require('../errors');
+const MissingImplementationError = require('../errors/missing-implementation-error');
 
 /**
  * A message part.
