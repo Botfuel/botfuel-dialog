@@ -70,7 +70,7 @@ Right now, your bot can respond in two ways:
 - Greetings: if you say `hello`, it will simply reply with `Hello human!`
 - Name: if you say `My name is Bob` it will reply with `Nice to meet you Bob!`
 
-A bot has 4 basic building components (for more details, check our [concepts](https://github.com/Botfuel/bot-sdk2/blob/master/CONCEPTS.md)):
+A bot has 4 basic building components (for more details, check our [concepts](CONCEPTS.md)):
 
 - Intents: text files that contain examples of sentences that are used in training to trigger a Dialog
 - Extractors: extract entities (e.g. forename, number, color, city...) that can then be used by the bot
@@ -136,7 +136,7 @@ This will update the model to include your new intent.
 Create a `city-extractor.js` file in the `src/extractors` directory so that the bot can extract city names from user input.
 
 ```javascript
-const { WsExtractor } = require('@botfuel/bot-sdk2');
+const { WsExtractor } = require('botfuel-dialog');
 
 class CityExtractor extends WsExtractor {}
 
@@ -153,7 +153,7 @@ Create a `travel-dialog.js` file in the `src/dialogs` directory.
 Because it needs the name of the city to be provided by the user to reply, the travel Dialog is a PromptDialog:
 
 ```javascript
-const { PromptDialog } = require('@botfuel/bot-sdk2');
+const { PromptDialog } = require('botfuel-dialog');
 
 class Travel extends PromptDialog {}
 
@@ -179,7 +179,7 @@ It serves two main purposes. In cases when the user did not provide a city, this
 Since the travel Dialog is a `PromptDialog`, the travel View needs to be a `PromptView` so it can access the `destination` entity in the `renderEntities` method:
 
 ```javascript
-const { PromptView, Messages: { BotTextMessage } } = require('@botfuel/bot-sdk2');
+const { PromptView, Messages: { BotTextMessage } } = require('botfuel-dialog');
 
 class TravelView extends PromptView {
   renderEntities(matchedEntities) {

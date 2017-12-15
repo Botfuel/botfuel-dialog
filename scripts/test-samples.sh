@@ -75,7 +75,7 @@ test_sample() {
   clone ${SAMPLE}
   # install dependencies
   install ${SAMPLE_NAME}
-  # link sample to local bot-sdk2
+  # link sample to local botfuel-dialog
   link
   # train bot model
   train

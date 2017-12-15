@@ -15,7 +15,7 @@
  */
 
 const express = require('express');
-const rp = require('request-promise');
+const rp = require('request-promise-native');
 const bodyParser = require('body-parser');
 const logger = require('logtown')('WebAdapter');
 const MissingImplementationError = require('../errors/missing-implementation-error');
@@ -65,7 +65,7 @@ class WebAdapter extends Adapter {
     };
     const options = Object.assign({ method: 'POST', json: true }, requestOptions);
     try {
-      const res = await rp(options);
+      const res = await rp(options).promise();
       if (res.statusCode && res.statusCode !== 200) {
         // not handled on messenger
         logger.error('postResponse: KO', res);

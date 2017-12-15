@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
-const expect = require('expect.js');
 const PromptDialog = require('../../src/dialogs/prompt-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 
 const TEST_BOT = process.env.BOT_ID;
 
-describe('PromptDialog', function () {
+describe('PromptDialog', () => {
   describe('computeEntities', () => {
     const brain = new MemoryBrain(TEST_BOT);
     const prompt = new PromptDialog({ path: __dirname, locale: 'en' }, brain, {
@@ -31,80 +28,86 @@ describe('PromptDialog', function () {
     });
 
     describe('simple matching', () => {
-      it('should message entities with expected entities in a simple case (one entity)', function () {
-        const cityEntity = {
-          dim: 'city',
-          start: 0,
-          end: 5,
-          values: [{ value: 'Paris', type: 'string' }],
-          body: 'Paris',
-        };
-
-        const messageEntities = [cityEntity];
-
-        const expectedEntities = {
-          age: {
-            dim: 'number',
-          },
-          city: {
+      test(
+        'should message entities with expected entities in a simple case (one entity)',
+        () => {
+          const cityEntity = {
             dim: 'city',
-          },
-        };
+            start: 0,
+            end: 5,
+            values: [{ value: 'Paris', type: 'string' }],
+            body: 'Paris',
+          };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
-          messageEntities,
-          expectedEntities,
-          {},
-        );
+          const messageEntities = [cityEntity];
 
-        expect(matchedEntities).to.have.property('city');
-        expect(matchedEntities.city).to.eql(cityEntity);
-        expect(Object.keys(missingEntities)).to.have.length(1);
-      });
+          const expectedEntities = {
+            age: {
+              dim: 'number',
+            },
+            city: {
+              dim: 'city',
+            },
+          };
 
-      it('should message entities with expected entities in a simple case (two entities)', function () {
-        const ageEntity = {
-          dim: 'number',
-          start: 0,
-          end: 2,
-          values: [{ value: 42, type: 'integer' }],
-          body: '42',
-        };
-        const weightEntity = {
-          dim: 'weight',
-          start: 10,
-          end: 14,
-          values: [{ value: 55, type: 'integer' }],
-          body: '55kg',
-        };
+          const { matchedEntities, missingEntities } = prompt.computeEntities(
+            messageEntities,
+            expectedEntities,
+            {},
+          );
 
-        const messageEntities = [ageEntity, weightEntity];
+          expect(matchedEntities).toHaveProperty('city');
+          expect(matchedEntities.city).toEqual(cityEntity);
+          expect(Object.keys(missingEntities)).toHaveLength(1);
+        },
+      );
 
-        const expectedEntities = {
-          age: {
+      test(
+        'should message entities with expected entities in a simple case (two entities)',
+        () => {
+          const ageEntity = {
             dim: 'number',
-          },
-          weight: {
+            start: 0,
+            end: 2,
+            values: [{ value: 42, type: 'integer' }],
+            body: '42',
+          };
+          const weightEntity = {
             dim: 'weight',
-          },
-        };
+            start: 10,
+            end: 14,
+            values: [{ value: 55, type: 'integer' }],
+            body: '55kg',
+          };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
-          messageEntities,
-          expectedEntities,
-          {},
-        );
+          const messageEntities = [ageEntity, weightEntity];
 
-        expect(matchedEntities).to.have.property('age');
-        expect(matchedEntities.age).to.eql(ageEntity);
-        expect(matchedEntities).to.have.property('weight');
-        expect(matchedEntities.weight).to.eql(weightEntity);
-        expect(Object.keys(missingEntities)).to.have.length(0);
-      });
+          const expectedEntities = {
+            age: {
+              dim: 'number',
+            },
+            weight: {
+              dim: 'weight',
+            },
+          };
+
+          const { matchedEntities, missingEntities } = prompt.computeEntities(
+            messageEntities,
+            expectedEntities,
+            {},
+          );
+
+          expect(matchedEntities).toHaveProperty('age');
+          expect(matchedEntities.age).toEqual(ageEntity);
+          expect(matchedEntities).toHaveProperty('weight');
+          expect(matchedEntities.weight).toEqual(weightEntity);
+          expect(Object.keys(missingEntities)).toHaveLength(0);
+        },
+      );
     });
 
     describe('priority handling', () => {
-      it('should match entities with highest priority first', function () {
+      test('should match entities with highest priority first', () => {
         const ageEntity1 = {
           dim: 'number',
           start: 0,
@@ -149,16 +152,16 @@ describe('PromptDialog', function () {
           {},
         );
 
-        expect(matchedEntities).to.have.property('otherAge');
-        expect(matchedEntities.otherAge).to.eql(ageEntity1);
-        expect(matchedEntities).to.have.property('minAge');
-        expect(matchedEntities.minAge).to.eql(ageEntity2);
-        expect(matchedEntities).to.have.property('maxAge');
-        expect(matchedEntities.maxAge).to.eql(ageEntity3);
-        expect(Object.keys(missingEntities)).to.have.length(0);
+        expect(matchedEntities).toHaveProperty('otherAge');
+        expect(matchedEntities.otherAge).toEqual(ageEntity1);
+        expect(matchedEntities).toHaveProperty('minAge');
+        expect(matchedEntities.minAge).toEqual(ageEntity2);
+        expect(matchedEntities).toHaveProperty('maxAge');
+        expect(matchedEntities.maxAge).toEqual(ageEntity3);
+        expect(Object.keys(missingEntities)).toHaveLength(0);
       });
 
-      it('should accept functions as a priority parameter', function () {
+      test('should accept functions as a priority parameter', () => {
         const ageEntity1 = {
           dim: 'number',
           start: 0,
@@ -203,16 +206,16 @@ describe('PromptDialog', function () {
           {},
         );
 
-        expect(matchedEntities).to.have.property('minAge');
-        expect(matchedEntities.minAge).to.eql(ageEntity1);
-        expect(matchedEntities).to.have.property('otherAge');
-        expect(matchedEntities.otherAge).to.eql(ageEntity2);
-        expect(matchedEntities).to.have.property('maxAge');
-        expect(matchedEntities.maxAge).to.eql(ageEntity3);
-        expect(Object.keys(missingEntities)).to.have.length(0);
+        expect(matchedEntities).toHaveProperty('minAge');
+        expect(matchedEntities.minAge).toEqual(ageEntity1);
+        expect(matchedEntities).toHaveProperty('otherAge');
+        expect(matchedEntities.otherAge).toEqual(ageEntity2);
+        expect(matchedEntities).toHaveProperty('maxAge');
+        expect(matchedEntities.maxAge).toEqual(ageEntity3);
+        expect(Object.keys(missingEntities)).toHaveLength(0);
       });
 
-      it('should retain order of fulfilled entities', function () {
+      test('should retain order of fulfilled entities', () => {
         const numberEntity1 = {
           dim: 'number',
           start: 0,
@@ -256,16 +259,16 @@ describe('PromptDialog', function () {
           },
         );
 
-        expect(matchedEntities).to.have.property('minAge');
-        expect(matchedEntities.minAge).to.eql(numberEntity1);
-        expect(matchedEntities).to.have.property('maxAge');
-        expect(matchedEntities.maxAge).to.eql(maxAgeEntity);
-        expect(Object.keys(missingEntities)).to.have.length(0);
+        expect(matchedEntities).toHaveProperty('minAge');
+        expect(matchedEntities.minAge).toEqual(numberEntity1);
+        expect(matchedEntities).toHaveProperty('maxAge');
+        expect(matchedEntities.maxAge).toEqual(maxAgeEntity);
+        expect(Object.keys(missingEntities)).toHaveLength(0);
       });
     });
 
     describe('missing entities', () => {
-      it('should return unmatched entities', () => {
+      test('should return unmatched entities', () => {
         const colorEntity = {
           dim: 'color',
           start: 10,
@@ -291,184 +294,205 @@ describe('PromptDialog', function () {
           {},
         );
 
-        expect(matchedEntities).to.have.property('color');
-        expect(matchedEntities.color).to.eql(colorEntity);
-        expect(matchedEntities).to.not.have.property('otherAge');
-        expect(Object.keys(missingEntities)).to.have.length(1);
-        expect(missingEntities).to.have.property('age');
-        expect(missingEntities.age).to.be.ok();
+        expect(matchedEntities).toHaveProperty('color');
+        expect(matchedEntities.color).toEqual(colorEntity);
+        expect(matchedEntities).not.toHaveProperty('otherAge');
+        expect(Object.keys(missingEntities)).toHaveLength(1);
+        expect(missingEntities).toHaveProperty('age');
+        expect(missingEntities.age).toBeTruthy();
       });
     });
 
     describe('handle multiple results for a single entity', () => {
-      it('should remove candidate entities when an expected entity already matched with them', () => {
-        const weightEntity1 = {
-          dim: 'weight',
-          start: 0,
-          end: 4,
-          values: [{ value: '88', type: 'integer' }],
-          body: '88 kg',
-        };
-        const itemCountEntity1 = {
-          dim: 'item-count',
-          start: 0,
-          end: 4,
-          values: [{ value: '88', type: 'integer' }],
-          body: '88 kg',
-        };
-        const weightEntity2 = {
-          dim: 'weight',
-          start: 10,
-          end: 14,
-          values: [{ value: '35', type: 'integer' }],
-          body: '35 kg',
-        };
-        const itemCountEntity2 = {
-          dim: 'item-count',
-          start: 10,
-          end: 14,
-          values: [{ value: '35', type: 'integer' }],
-          body: '35 kg',
-        };
-
-        const messageEntities = [weightEntity1, itemCountEntity1, weightEntity2, itemCountEntity2];
-
-        const expectedEntities = {
-          weight: {
+      test(
+        'should remove candidate entities when an expected entity already matched with them',
+        () => {
+          const weightEntity1 = {
             dim: 'weight',
-          },
-          itemCount: {
+            start: 0,
+            end: 4,
+            values: [{ value: '88', type: 'integer' }],
+            body: '88 kg',
+          };
+          const itemCountEntity1 = {
             dim: 'item-count',
-          },
-        };
+            start: 0,
+            end: 4,
+            values: [{ value: '88', type: 'integer' }],
+            body: '88 kg',
+          };
+          const weightEntity2 = {
+            dim: 'weight',
+            start: 10,
+            end: 14,
+            values: [{ value: '35', type: 'integer' }],
+            body: '35 kg',
+          };
+          const itemCountEntity2 = {
+            dim: 'item-count',
+            start: 10,
+            end: 14,
+            values: [{ value: '35', type: 'integer' }],
+            body: '35 kg',
+          };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
-          messageEntities,
-          expectedEntities,
-          {},
-        );
+          const messageEntities = [
+            weightEntity1,
+            itemCountEntity1,
+            weightEntity2,
+            itemCountEntity2,
+          ];
 
-        expect(matchedEntities).to.have.property('weight');
-        expect(matchedEntities.weight).to.eql(weightEntity1);
+          const expectedEntities = {
+            weight: {
+              dim: 'weight',
+            },
+            itemCount: {
+              dim: 'item-count',
+            },
+          };
 
-        expect(matchedEntities).to.have.property('itemCount');
-        expect(matchedEntities.itemCount).to.eql(itemCountEntity2);
+          const { matchedEntities, missingEntities } = prompt.computeEntities(
+            messageEntities,
+            expectedEntities,
+            {},
+          );
 
-        expect(Object.keys(missingEntities)).to.have.length(0);
-      });
+          expect(matchedEntities).toHaveProperty('weight');
+          expect(matchedEntities.weight).toEqual(weightEntity1);
 
-      it('should remove candidates that intersect with a matched candidate', () => {
-        const ageEntity = {
-          dim: 'duration',
-          start: 0,
-          end: 8,
-          values: [{ value: 10, unit: 'year' }],
-          body: '10 years',
-        };
+          expect(matchedEntities).toHaveProperty('itemCount');
+          expect(matchedEntities.itemCount).toEqual(itemCountEntity2);
 
-        const newAgeEntity = {
-          dim: 'duration',
-          start: 0,
-          end: 8,
-          values: [{ value: 33, unit: 'year' }],
-          body: '33 years',
-        };
+          expect(Object.keys(missingEntities)).toHaveLength(0);
+        },
+      );
 
-        const numberEntity = {
-          dim: 'number',
-          start: 0,
-          end: 2,
-          values: [{ value: 10, type: 'integer' }],
-          body: '10',
-        };
-
-        const messageEntities = [newAgeEntity, numberEntity];
-
-        const expectedEntities = {
-          age: {
+      test(
+        'should remove candidates that intersect with a matched candidate',
+        () => {
+          const ageEntity = {
             dim: 'duration',
-          },
-          favoriteNumber: {
+            start: 0,
+            end: 8,
+            values: [{ value: 10, unit: 'year' }],
+            body: '10 years',
+          };
+
+          const newAgeEntity = {
+            dim: 'duration',
+            start: 0,
+            end: 8,
+            values: [{ value: 33, unit: 'year' }],
+            body: '33 years',
+          };
+
+          const numberEntity = {
             dim: 'number',
-          },
-        };
+            start: 0,
+            end: 2,
+            values: [{ value: 10, type: 'integer' }],
+            body: '10',
+          };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
-          messageEntities,
-          expectedEntities,
-          {
-            age: ageEntity,
-          },
-        );
+          const messageEntities = [newAgeEntity, numberEntity];
 
-        expect(matchedEntities).to.have.property('age');
-        expect(matchedEntities.age).to.eql(ageEntity);
+          const expectedEntities = {
+            age: {
+              dim: 'duration',
+            },
+            favoriteNumber: {
+              dim: 'number',
+            },
+          };
 
-        expect(matchedEntities).to.have.property('favoriteNumber');
-        expect(matchedEntities.favoriteNumber).to.eql(numberEntity);
+          const { matchedEntities, missingEntities } = prompt.computeEntities(
+            messageEntities,
+            expectedEntities,
+            {
+              age: ageEntity,
+            },
+          );
 
-        expect(Object.keys(missingEntities)).to.have.length(0);
-      });
+          expect(matchedEntities).toHaveProperty('age');
+          expect(matchedEntities.age).toEqual(ageEntity);
+
+          expect(matchedEntities).toHaveProperty('favoriteNumber');
+          expect(matchedEntities.favoriteNumber).toEqual(numberEntity);
+
+          expect(Object.keys(missingEntities)).toHaveLength(0);
+        },
+      );
     });
 
     describe('isFulfilled condition', () => {
-      it('should set entity as missing if the isFulfilled condition is not met', () => {
-        const numberEntity = {
-          dim: 'number',
-          start: 0,
-          end: 2,
-          values: [{ value: 50, type: 'integer' }],
-          body: '50',
-        };
-
-        const messageEntities = [numberEntity];
-
-        const expectedEntities = {
-          myNumber: {
+      test(
+        'should set entity as missing if the isFulfilled condition is not met',
+        () => {
+          const numberEntity = {
             dim: 'number',
-            isFulfilled: newValue =>
-              newValue && newValue.values && newValue.values[0] && newValue.values[0].value > 60,
-          },
-        };
+            start: 0,
+            end: 2,
+            values: [{ value: 50, type: 'integer' }],
+            body: '50',
+          };
 
-        const { missingEntities } = prompt.computeEntities(messageEntities, expectedEntities, {});
+          const messageEntities = [numberEntity];
 
-        expect(Object.keys(missingEntities)).to.have.length(1);
-        expect(missingEntities).to.have.property('myNumber');
-      });
+          const expectedEntities = {
+            myNumber: {
+              dim: 'number',
+              isFulfilled: newValue =>
+                newValue && newValue.values && newValue.values[0] && newValue.values[0].value > 60,
+            },
+          };
 
-      it('should set entity as matched if the isFulfilled condition is met', () => {
-        const numberEntity = {
-          dim: 'number',
-          start: 0,
-          end: 2,
-          values: [{ value: 80, type: 'integer' }],
-          body: '50',
-        };
+          const { missingEntities } = prompt.computeEntities(
+            messageEntities,
+            expectedEntities,
+            {},
+          );
 
-        const messageEntities = [numberEntity];
+          expect(Object.keys(missingEntities)).toHaveLength(1);
+          expect(missingEntities).toHaveProperty('myNumber');
+        },
+      );
 
-        const expectedEntities = {
-          myNumber: {
+      test(
+        'should set entity as matched if the isFulfilled condition is met',
+        () => {
+          const numberEntity = {
             dim: 'number',
-            isFulfilled: newValue =>
-              newValue && newValue.values && newValue.values[0] && newValue.values[0].value > 60,
-          },
-        };
+            start: 0,
+            end: 2,
+            values: [{ value: 80, type: 'integer' }],
+            body: '50',
+          };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
-          messageEntities,
-          expectedEntities,
-          {},
-        );
+          const messageEntities = [numberEntity];
 
-        expect(matchedEntities.myNumber).to.eql(numberEntity);
-        expect(Object.keys(missingEntities)).to.have.length(0);
-      });
+          const expectedEntities = {
+            myNumber: {
+              dim: 'number',
+              isFulfilled: newValue =>
+                newValue && newValue.values && newValue.values[0] && newValue.values[0].value > 60,
+            },
+          };
+
+          const { matchedEntities, missingEntities } = prompt.computeEntities(
+            messageEntities,
+            expectedEntities,
+            {},
+          );
+
+          expect(matchedEntities.myNumber).toEqual(numberEntity);
+          expect(Object.keys(missingEntities)).toHaveLength(0);
+        },
+      );
     });
 
     describe('reducer parameter', () => {
-      it('should use the reducer function', () => {
+      test('should use the reducer function', () => {
         const numbers = [
           {
             dim: 'number',
@@ -526,18 +550,18 @@ describe('PromptDialog', function () {
           },
         );
 
-        expect(matchedEntities).to.have.property('favoriteNumbers');
-        expect(matchedEntities.favoriteNumbers).to.eql([
+        expect(matchedEntities).toHaveProperty('favoriteNumbers');
+        expect(matchedEntities.favoriteNumbers).toEqual([
           ...numbers,
           ...messageEntities.slice(0, 2),
         ]);
 
-        expect(Object.keys(missingEntities)).to.have.length(0);
+        expect(Object.keys(missingEntities)).toHaveLength(0);
       });
     });
 
     describe('replacing fulfilled entities', () => {
-      it('should replace a fulfilled entity if a new message is sent', () => {
+      test('should replace a fulfilled entity if a new message is sent', () => {
         const numbers = [
           {
             dim: 'number',
@@ -595,65 +619,70 @@ describe('PromptDialog', function () {
           },
         );
 
-        expect(matchedEntities).to.have.property('favoriteNumbers');
-        expect(matchedEntities.favoriteNumbers).to.eql([...messageEntities.slice(0, 2)]);
+        expect(matchedEntities).toHaveProperty('favoriteNumbers');
+        expect(matchedEntities.favoriteNumbers).toEqual([
+          ...messageEntities.slice(0, 2),
+        ]);
 
-        expect(Object.keys(missingEntities)).to.have.length(0);
+        expect(Object.keys(missingEntities)).toHaveLength(0);
       });
 
-      it('should not replace a fulfilled entity if extracting from a new message', () => {
-        const numbers = [
-          {
-            dim: 'number',
-            values: [{ value: '55', type: 'integer' }],
-            start: 0,
-            end: 2,
-            body: '55',
-          },
-          {
-            dim: 'number',
-            values: [{ value: '66', type: 'integer' }],
-            start: 3,
-            end: 5,
-            body: '66',
-          },
-        ];
+      test(
+        'should not replace a fulfilled entity if extracting from a new message',
+        () => {
+          const numbers = [
+            {
+              dim: 'number',
+              values: [{ value: '55', type: 'integer' }],
+              start: 0,
+              end: 2,
+              body: '55',
+            },
+            {
+              dim: 'number',
+              values: [{ value: '66', type: 'integer' }],
+              start: 3,
+              end: 5,
+              body: '66',
+            },
+          ];
 
-        const messageEntities = [
-          {
-            dim: 'number',
-            values: [{ value: '77', type: 'integer' }],
-            start: 0,
-            end: 2,
-            body: '77',
-          },
-        ];
+          const messageEntities = [
+            {
+              dim: 'number',
+              values: [{ value: '77', type: 'integer' }],
+              start: 0,
+              end: 2,
+              body: '77',
+            },
+          ];
 
-        const expectedEntities = {
-          favoriteNumbers: {
-            dim: 'number',
-            isFulfilled: entity => entity && entity.length === 2,
-            reducer: (oldEntities, newEntity) => [...(oldEntities || []), newEntity],
-          },
-          age: {
-            dim: 'number',
-          },
-        };
+          const expectedEntities = {
+            favoriteNumbers: {
+              dim: 'number',
+              isFulfilled: entity => entity && entity.length === 2,
+              reducer: (oldEntities, newEntity) => [...(oldEntities || []), newEntity],
+            },
+            age: {
+              dim: 'number',
+            },
+          };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
-          messageEntities,
-          expectedEntities,
-          {
-            favoriteNumbers: numbers,
-          },
-        );
+          const { matchedEntities, missingEntities } = prompt.computeEntities(
+            messageEntities,
+            expectedEntities,
+            {
+              favoriteNumbers: numbers,
+            },
+          );
 
-        expect(matchedEntities).to.have.property('favoriteNumbers');
-        expect(matchedEntities.favoriteNumbers).to.eql(numbers);
-        expect(matchedEntities.age).to.eql(messageEntities[0]);
+          expect(matchedEntities).toHaveProperty('favoriteNumbers');
+          expect(matchedEntities.favoriteNumbers).toEqual(numbers);
+          expect(matchedEntities.age).toEqual(messageEntities[0]);
 
-        expect(Object.keys(missingEntities)).to.have.length(0);
-      });
+          expect(Object.keys(missingEntities)).toHaveLength(0);
+        },
+      );
     });
   });
 });

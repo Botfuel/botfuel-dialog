@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
 const expect = require('expect.js');
 const Card = require('../../src/messages/card');
 const CardsMessage = require('../../src/messages/cards-message');
 const Link = require('../../src/messages/link');
 const Postback = require('../../src/messages/postback');
 
-describe('CardsMessage', function () {
-  it('should generate the proper json', async function () {
+describe('CardsMessage', () => {
+  test('should generate the proper json', async () => {
     const message = new CardsMessage([
       new Card('Card 1', 'https://image1.jpg', [
         new Link('Details', 'https://image1'),
@@ -34,7 +32,7 @@ describe('CardsMessage', function () {
         new Postback('Buy', 'products', [{ dim: 'product', value: '2' }]),
       ]),
     ]);
-    expect(message.toJson('BOT', 'USER')).to.eql({
+    expect(message.toJson('BOT', 'USER')).toEqual({
       type: 'cards',
       sender: 'bot',
       bot: 'BOT',

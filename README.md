@@ -1,6 +1,7 @@
-# Bot SDK 2
+# Botfuel Dialog
 
-[![Build Status](https://travis-ci.com/Botfuel/bot-sdk2.svg?token=DzdpA2xzqKcvBPt7ExGD&branch=master)](https://travis-ci.com/Botfuel/bot-sdk2)
+[![Build Status](https://travis-ci.com/Botfuel/botfuel-dialog.svg?token=DzdpA2xzqKcvBPt7ExGD&branch=master)](https://travis-ci.com/Botfuel/botfuel-dialog)
+[![Coverage](https://img.shields.io/codecov/c/github/botfuel/botfuel-dialog.svg)](https://codecov.io/gh/Botfuel/botfuel-dialog)
 
 ## Test samples
 
@@ -32,6 +33,11 @@ You can pass the scope argument to update one directory, or one js file, for exa
 ```
 sh scripts/add-header.sh src/bot.js
 ```
+
+## Need help ?
+
+- See [GETTING_STARTED](GETTING_STARTED.md) to learn how to run a bot in minutes.
+- See [CONCEPTS](CONCEPTS.md) for explanations about the internals of the SDK.
 
 ## License
 
