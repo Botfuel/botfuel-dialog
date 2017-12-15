@@ -36,20 +36,20 @@ For our tutorial, we will make a copy of an existing sample bot that is able to 
 Open a terminal and clone the sample starter bot:
 
 ```shell
-git clone git@github.com:Botfuel/sample-bot-starter.git
+git clone git@github.com:Botfuel/sample-botfuel-dialog-starter.git
 ```
 
 Install dependencies:
 
 ```shell
-cd sample-bot-starter
+cd sample-botfuel-dialog-starter
 npm install
 ```
 
 Start the bot with the `BOTFUEL_APP_ID` and `BOTFUEL_APP_KEY` environment variables using your app’s credentials:
 
 ```shell
-BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start
+BOT_ID=starter BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start
 ```
 
 If you set your app credentials right, you should see:
@@ -203,9 +203,9 @@ Here we return different messages based on the value of the `destination` extrac
 Run your bot with:
 
 ```shell
-BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start
+BOT_ID=starter BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start
 ```
 
 Try and see what your bot thinks about your travel destination!
 
-If you have any issue or question about this tutorial, feel free to open an issue [here](https://github.com/Botfuel/sample-bot-starter/issues).
+If you have any issue or question about this tutorial, feel free to open an issue [here](https://github.com/Botfuel/sample-botfuel-dialog-starter/issues).
