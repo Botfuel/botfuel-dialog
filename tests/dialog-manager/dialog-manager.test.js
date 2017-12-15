@@ -20,7 +20,7 @@ const TestAdapter = require('../../src/adapters/test-adapter');
 const BotTextMessage = require('../../src/messages/bot-text-message');
 
 const TEST_USER = '1';
-const TEST_BOT = process.env.BOT_ID;
+const TEST_BOT = process.env.BOTFUEL_APP_TOKEN;
 
 require('../../src/logger-manager').configure({ logger: 'botfuel' });
 
