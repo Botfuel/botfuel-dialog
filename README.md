@@ -21,7 +21,7 @@ npm test
 
 ### Samples
 ```
-BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm run test-samples
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm run test-samples
 ```
 
 ## License
