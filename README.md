@@ -5,10 +5,10 @@
 
 Build highly conversational bots with Botfuel Dialog.
 
-Read [GETTING_STARTED](GETTING_STARTED.md) to learn how to run a bot in minutes.
+Read [_Getting started_](GETTING_STARTED.md) to learn how to run a bot in minutes.
 See some [sample bots](https://github.com/topics/botfuel-dialog-samples) written with Botfuel Dialog.
 
-For more explanations about the internals of Botfuel Dialog, see [CONCEPTS](CONCEPTS.md).
+For more explanations about the internals of Botfuel Dialog, see [_Concepts_](CONCEPTS.md).
 
 If you have any issue or question, feel free to open a ticket [here](https://github.com/Botfuel/botfuel-dialog/issues).
 
