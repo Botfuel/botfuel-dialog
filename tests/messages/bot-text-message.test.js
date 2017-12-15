@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
-const expect = require('expect.js');
 const BotTextMessage = require('../../src/messages/bot-text-message');
 
-describe('BotTextMessage', function () {
-  it('should generate the proper json', async function () {
+describe('BotTextMessage', () => {
+  test('should generate the proper json', async () => {
     const message = new BotTextMessage('foo');
-    expect(message.toJson('BOT', 'USER')).to.eql({
+    expect(message.toJson('BOT', 'USER')).toEqual({
       type: 'text',
       sender: 'bot',
       bot: 'BOT',

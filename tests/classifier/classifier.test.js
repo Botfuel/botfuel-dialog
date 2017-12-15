@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-/* eslint-disable prefer-arrow-callback */
-
 const path = require('path');
-const expect = require('expect.js');
 const fs = require('fs-extra');
 const Classifer = require('../../src/classifier');
 
@@ -29,14 +26,14 @@ const classifier = new Classifer({ path: __dirname, locale: 'en' });
 
 const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-describe('Classifier', function () {
-  before(function () {
+describe('Classifier', () => {
+  beforeAll(function () {
     this.globalTestDir = fs.ensureDirSync(globalTestDirPath);
     this.testDir = fs.ensureDirSync(testDirPath);
   });
 
-  describe('isModelUpToDate', async function () {
-    before(async () => {
+  describe('isModelUpToDate', async () => {
+    beforeAll(async () => {
       await Promise.all([
         fs.ensureFileSync(makeIntentPath('1.intent')),
         fs.ensureFileSync(makeIntentPath('2.intent')),
@@ -48,19 +45,19 @@ describe('Classifier', function () {
       await fs.ensureFileSync(modelPath);
     });
 
-    it('should return true if model is fresher than intents', async function () {
+    test('should return true if model is fresher than intents', async () => {
       const isModelFresh = await classifier.isModelUpToDate(modelPath, testDirPath);
-      expect(isModelFresh).to.be(true);
+      expect(isModelFresh).toBe(true);
     });
 
-    it('should return false if model is fresher than intents', async function () {
+    test('should return false if model is fresher than intents', async () => {
       await fs.ensureFileSync(makeIntentPath('4.intent'));
       const isModelFresh = await classifier.isModelUpToDate(modelPath, testDirPath);
-      expect(isModelFresh).to.be(false);
+      expect(isModelFresh).toBe(false);
     });
   });
 
-  after(function () {
+  afterAll(() => {
     fs.removeSync(path.join(process.cwd(), '_tmp_tests'));
   });
 });

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const rp = require('request-promise');
+const rp = require('request-promise-native');
 const logger = require('logtown')('MessengerAdapter');
 const PostbackMessage = require('../messages/postback-message');
 const UserImageMessage = require('../messages/user-image-message');
@@ -280,7 +280,7 @@ class MessengerAdapter extends WebAdapter {
             fields: 'first_name,last_name,gender',
             access_token: process.env.FB_PAGE_ACCESS_TOKEN,
           },
-        });
+        }).promise();
         const profile = {
           firstName: res.first_name,
           lastName: res.last_name,
