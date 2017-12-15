@@ -22,8 +22,6 @@ const BotTextMessage = require('../../src/messages/bot-text-message');
 const TEST_USER = '1';
 const TEST_BOT = process.env.BOT_ID;
 
-require('../../src/logger-manager').configure({ logger: 'botfuel' });
-
 describe('DialogManager', () => {
   const brain = new MemoryBrain(TEST_BOT);
   const dm = new DialogManager(brain, { path: __dirname, locale: 'en' });
