@@ -49,8 +49,8 @@ class Bot {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
     // give informations about env vars
-    Bot.logsEnvVars();
-    this.id = process.env.BOT_ID;
+    this.checkEnvVars();
+    this.id = process.env.BOTFUEL_APP_TOKEN;
     this.adapter = this.getAdapter(this.config.adapter);
     this.brain = this.getBrain(this.config.brain);
     this.nlu = new Nlu(this.config);
@@ -236,15 +236,15 @@ class Bot {
   }
 
   /**
-   * Logs informations/warnings about environment variables
+   * Logs informations/warnings about environment variables.
    * @returns {void}
    */
-  static logsEnvVars() {
-    logger.info('BOT_ID:', process.env.BOT_ID);
+  checkEnvVars() {
+    logger.info('BOTFUEL_APP_TOKEN:', process.env.BOTFUEL_APP_TOKEN);
     logger.info('BOTFUEL_APP_ID:', process.env.BOTFUEL_APP_ID);
     logger.info('BOTFUEL_APP_KEY:', process.env.BOTFUEL_APP_KEY);
-    if (!process.env.BOT_ID) {
-      logger.warn('Environment variable BOT_ID is not defined!');
+    if (!process.env.BOTFUEL_APP_TOKEN) {
+      logger.warn('Environment variable BOTFUEL_APP_TOKEN is not defined!');
     }
     if (!process.env.BOTFUEL_APP_ID) {
       logger.warn('Environment variable BOTFUEL_APP_ID is not defined!');

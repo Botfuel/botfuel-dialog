@@ -44,7 +44,7 @@ Let's have a look at two specific adapters that play a special role in bots deve
 The shell adapter allows you to run a bot in a shell, which is handy for debugging purposes.
 The following command runs a bot in a shell:
 ```
-BOT_ID=<the bot id> BOTFUEL_APP_ID=<the app id> BOTFUEL_APP_KEY=<the app key> ./node_modules/.bin/botfuel-run <an optional configuration file>
+BOTFUEL_APP_TOKEN=<the BOTFUEL_APP_TOKEN> BOTFUEL_APP_ID=<the BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<the BOTFUEL_APP_KEY> ./node_modules/.bin/botfuel-run <an optional configuration file>
 ```
 
 ### Test adapter

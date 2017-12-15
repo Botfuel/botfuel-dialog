@@ -17,7 +17,7 @@
 const PromptDialog = require('../../src/dialogs/prompt-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 
-const TEST_BOT = process.env.BOT_ID;
+const TEST_BOT = process.env.BOTFUEL_APP_TOKEN;
 
 describe('PromptDialog', () => {
   describe('computeEntities', () => {

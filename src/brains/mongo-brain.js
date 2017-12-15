@@ -43,7 +43,7 @@ class MongoBrain extends Brain {
   async clean() {
     logger.debug('clean');
     if (!this.botId) {
-      throw new SdkError('BOT_ID environment variable is missing.');
+      throw new SdkError('BOTFUEL_APP_TOKEN environment variable is missing.');
     }
     return this.users.deleteMany({ botId: this.botId });
   }
