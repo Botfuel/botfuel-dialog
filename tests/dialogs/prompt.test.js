@@ -155,60 +155,6 @@ describe('PromptDialog', () => {
         expect(Object.keys(missingEntities)).toHaveLength(0);
       });
 
-      test('should accept functions as a priority parameter', () => {
-        const ageEntity1 = {
-          dim: 'number',
-          start: 0,
-          end: 2,
-          values: [{ value: 42, type: 'integer' }],
-          body: '42',
-        };
-        const ageEntity2 = {
-          dim: 'number',
-          start: 10,
-          end: 14,
-          values: [{ value: 24, type: 'integer' }],
-          body: '24',
-        };
-        const ageEntity3 = {
-          dim: 'number',
-          start: 16,
-          end: 18,
-          values: [{ value: 99, type: 'integer' }],
-          body: '99',
-        };
-
-        const messageEntities = [ageEntity1, ageEntity2, ageEntity3];
-
-        const expectedEntities = {
-          maxAge: {
-            dim: 'number',
-          },
-          otherAge: {
-            dim: 'number',
-            priority: () => Math.min(1, 5, 10),
-          },
-          minAge: {
-            dim: 'number',
-            priority: () => Math.max(1, 5, 10),
-          },
-        };
-
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
-          messageEntities,
-          expectedEntities,
-          {},
-        );
-
-        expect(matchedEntities).toHaveProperty('minAge');
-        expect(matchedEntities.minAge).toEqual(ageEntity1);
-        expect(matchedEntities).toHaveProperty('otherAge');
-        expect(matchedEntities.otherAge).toEqual(ageEntity2);
-        expect(matchedEntities).toHaveProperty('maxAge');
-        expect(matchedEntities.maxAge).toEqual(ageEntity3);
-        expect(Object.keys(missingEntities)).toHaveLength(0);
-      });
-
       test('should retain order of fulfilled entities', () => {
         const numberEntity1 = {
           dim: 'number',
