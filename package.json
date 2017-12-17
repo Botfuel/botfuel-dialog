@@ -14,7 +14,7 @@
   "scripts": {
     "prepublish": "npm run compile",
     "compile": "rm -rf build; babel src --out-dir build; cp -r src/corpora/*.txt build/corpora/",
-    "test": "BOTFUEL_APP_TOKEN=TEST_BOT MONGODB_URI=mongodb://localhost/sdk-brain-test jest --forceExit",
+    "test": "BOTFUEL_APP_TOKEN=TEST_BOT MONGODB_URI=mongodb://localhost/sdk-brain-test jest --testPathPattern='tests/.' --forceExit",
     "style": "eslint src; eslint tests",
     "test-samples": "./scripts/test-samples.sh",
     "docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose",
