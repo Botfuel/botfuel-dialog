@@ -1,6 +1,6 @@
 # PromptDialog
 
-**PromptDialog** is a class that allow developer building complex dialogs.
+**PromptDialog** is a class that allow developers building complex dialogs.
 
 > Remember **complex dialogs** are dialogues that requires additional informations called **entities** in order to customize the flow of a conversation according to an user.
 
@@ -61,24 +61,24 @@ PromptDialog.matchParameterWithCandidates({
 
 Attempt to match an entity parameter with raw entities candidates extracted from a message by extractors.
 
-> Note that we apply the reducer function to a raw entity candidate until we run out of candidates or if the isFulfilled condition is met.
+> We apply the reducer function to a raw entity candidate until we run out of candidates **or** if the isFulfilled condition is met.
 
 ### computeEntities()
 ```javascript
 PromptDialog.computeEntities(
   candidates,
   parameters,
-  [dialogEntities = {}], // optional
+  dialogEntities = {}, // optional
 )
 ```
 
 Computes **matched** and **missing** entities before displaying them.
 
-> Note that **matchedEntities** are the entities that have a value and **missingEntities** not.
+> **matchedEntities** are entities that have a value, **missingEntities** not.
 
 ### execute()
 ```javascript
-PromptDialog.execute(
+async PromptDialog.execute(
   adapter,
   userId,
   candidates,
@@ -87,12 +87,12 @@ PromptDialog.execute(
 
 Computes **matched** and **missing** entities and display them before completing the dialog or waiting for others missing entities.
 
-> Note that before completing a prompt dialog the `dialogWillComplete` hook is called.
+> Before completing a prompt dialog the `dialogWillComplete` hook is called.
 
 
 ### dialogWillComplete()
 ```javascript
-PromptDialog.dialogWillComplete(
+async PromptDialog.dialogWillComplete(
   adapter,
   userId,
   { matchedEntities, missingEntities },
