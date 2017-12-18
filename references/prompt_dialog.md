@@ -1,6 +1,6 @@
 # PromptDialog
 
-**PromptDialog** is a class that allow developers building complex dialogs.
+**PromptDialog** is a class that allows developers building complex dialogs.
 
 > Remember **complex dialogs** are dialogues that requires additional informations called **entities** in order to customize the flow of a conversation according to an user.
 
@@ -21,7 +21,7 @@ The prompt dialog have some parameters:
 - The **namespace** is used to identify the dialog.
 - The **entities** represents the informations we want to get from users to customize the flow of the conversation.
 
-For example:
+_For example:_
 
 ```javascript
 MyPromptDialog.params = {
