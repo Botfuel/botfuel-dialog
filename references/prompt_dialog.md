@@ -1,6 +1,4 @@
-# Botfuel-dialog: the PromptDialog
-
-## Introduction
+# PromptDialog
 
 **PromptDialog** is a class that allow developer building complex dialogs.
 
