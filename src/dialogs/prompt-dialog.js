@@ -118,9 +118,11 @@ class PromptDialog extends Dialog {
         ...allEntities,
         [name]: {
           dim: dialogParameter.dim,
-          // If the reducer function is not defined, we replace the old entities by the new ones
+          // If the reducer function is not defined,
+          // we replace the old entities by the new ones
           reducer: dialogParameter.reducer || ((oldEntities, newEntities) => newEntities),
-          // If the isFulfilled function is not defined, we check that the entity is not null
+          // If the isFulfilled function is not defined,
+          // we check that the entity is not null and not undefined
           isFulfilled: dialogParameter.isFulfilled || (entity => entity != null),
           // Because we need to to be able to override them but we want unfulfilled parameters
           // to have priority over them
