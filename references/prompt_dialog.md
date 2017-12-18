@@ -37,13 +37,13 @@ MyPromptDialog.params = {
 }
 ```
 
-Here is defined a prompt dialog identfied by the namespace **my-prompt** which have only one entity called **entityName**.
+Here is defined a prompt dialog identified by the namespace **my-prompt** which have only one entity called **entityName**.
 
-This entity have some properties:
+An entity have some properties:
 
 - **dim** is the dimension of the entity.
-- **priority** is a number that give a priority to an entity, greater is the priority, earlier will the bot ask for this entity. _Default value is 0._
-- **isFullfilled** is a function that return a boolean indicating if the entity value is matching condition of done of the entity. _By default, an entity is fullfilled if the entity value is not null._
+- **priority** is a number that give a priority to an entity, greater is the priority earlier will the bot ask for this entity. _Default value is 0._
+- **isFullfilled** is a function that return a boolean indicating if the entity value is matching the condition of done of the entity. _By default, an entity is fullfilled if the entity value is not null._
 - **reducer** is a function that define how we deal with new values for the entity. _By default old value is replaced with the new one._
 
 > Note that the **dim** property is required, but **priority**, **isFullfilled** and **reducer** properties are optionnal, you can use them if you want more control on your entities.
@@ -74,7 +74,7 @@ PromptDialog.computeEntities(
 
 Computes **matched** and **missing** entities before displaying them.
 
-> **matchedEntities** are entities that have a value, **missingEntities** not.
+> **matchedEntities** are entities that have a value, **missingEntities** haven't.
 
 ### execute()
 ```javascript
@@ -85,7 +85,7 @@ async PromptDialog.execute(
 )
 ```
 
-Computes **matched** and **missing** entities and display them before completing the dialog or waiting for others missing entities.
+Computes **matched** and **missing** entities and displays them before completing the dialog or waiting for others missing entities.
 
 > Before completing a prompt dialog the `dialogWillComplete` hook is called.
 
@@ -99,6 +99,6 @@ async PromptDialog.dialogWillComplete(
 )
 ```
 
-Hook that allow to perform things before a prompt dialog is completed.
+Hook that allows to perform things before a prompt dialog is completed.
 
 > For example you can **chaining** a new dialog or **performing** actions on the brain.
