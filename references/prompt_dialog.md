@@ -4,7 +4,7 @@
 Each question corresponds to an entity. When the user answers the questions, entities are extracted from the answer.
 The PromptDialog uses the extracted entities to decide what to do next.
 
-For example you would like to use a PromptDialog when you want to:
+For example you have to use a PromptDialog when you want:
 
 - configure a travel
 - get the weather in given location
@@ -57,7 +57,7 @@ Here is defined a prompt dialog identified by the namespace **travel** which hav
 
 An entity have some properties:
 
-- **dim** is the dimension of the entity.
+- **dim** is the dimension of the entity, it's used to extract the correct information from a user answer.
 - **priority** is a number that give a priority to an entity, greater is the priority earlier will the bot ask for this entity. _Default value is 0._
 - **isFullfilled** is a function that return a boolean indicating if the entity value is matching the condition of done of the entity. _By default, an entity is fullfilled if the entity value is not null._
 - **reducer** is a function that define how we deal with new values for the entity. _By default old value is replaced with the new one._
