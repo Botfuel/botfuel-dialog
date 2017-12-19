@@ -5,7 +5,9 @@
   "main": "index.js",
   "description": "Botfuel Dialog",
   "license": "Apache-2.0",
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "bin": {
     "botfuel-run": "./build/run.js",
     "botfuel-train": "./build/train.js",
@@ -21,7 +23,10 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": ["prettier-eslint --write \"{src,tests}/**/*.js\"", "git add"]
+    "*.js": [
+      "prettier-eslint --write \"{src,tests}/**/*.js\"",
+      "git add"
+    ]
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
