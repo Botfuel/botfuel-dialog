@@ -47,7 +47,7 @@ TravelDialog.params = {
     }
     date: {
       dim: String,
-      isFullfilled: Function(),
+      isFulfilled: Function(),
     }
   }
 }
@@ -59,12 +59,12 @@ An entity have some properties:
 
 - **dim** is the dimension of the entity, it's used to extract the correct information from a user answer.
 - **priority** is a number that give a priority to an entity, greater is the priority earlier will the bot ask for this entity. _Default value is 0._
-- **isFullfilled** is a function that return a boolean indicating if the entity value is matching the condition of done of the entity. _By default, an entity is fullfilled if the entity value is not null._
+- **isFulfilled** is a function that return a boolean indicating if the entity value is matching the condition of done of the entity. _By default, an entity is fulfilled if the entity value is not null._
 - **reducer** is a function that define how we deal with new values for the entity. _By default old value is replaced with the new one._
 
 > There is also a built-in entity dimension `system:boolean` used to extract yes/no answers
 
-> Note that the **dim** property is required, but **priority**, **isFullfilled** and **reducer** properties are optionnal, you can use them if you want more control on your entities.
+> Note that the **dim** property is required, but **priority**, **isFulfilled** and **reducer** properties are optional, you can use them if you want more control on your entities.
 
 ## Hooks
 
