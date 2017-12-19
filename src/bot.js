@@ -15,14 +15,11 @@
  */
 
 const Logger = require('logtown');
-const BotfuelAdapter = require('./adapters/botfuel-adapter');
+const AdapterManager = require('./adapter-manager');
 const DialogManager = require('./dialog-manager');
-const MessengerAdapter = require('./adapters/messenger-adapter');
 const MemoryBrain = require('./brains/memory-brain');
 const MongoBrain = require('./brains/mongo-brain');
 const Nlu = require('./nlu');
-const ShellAdapter = require('./adapters/shell-adapter');
-const TestAdapter = require('./adapters/test-adapter');
 const { getConfiguration } = require('./config');
 const AuthenticationError = require('./errors/authentication-error');
 const DialogError = require('./errors/dialog-error');
@@ -51,7 +48,10 @@ class Bot {
     // give informations about env vars
     this.checkEnvVars();
     this.id = process.env.BOTFUEL_APP_TOKEN;
-    this.adapter = this.getAdapter(this.config.adapter);
+
+    this.adapterManager = new AdapterManager(this);
+    this.adapter = this.adapterManager.resolve(this.config.adapter);
+
     this.brain = this.getBrain(this.config.brain);
     this.nlu = new Nlu(this.config);
     this.dm = new DialogManager(this.brain, this.config);
@@ -80,26 +80,6 @@ class Bot {
       case 'memory':
       default:
         return new MemoryBrain(this.id);
-    }
-  }
-
-  /**
-   * Gets adapter instance
-   * @param {string} adapter - adapter name
-   * @returns {Adapter}
-   */
-  getAdapter(adapter) {
-    switch (adapter) {
-      case 'botfuel':
-        return new BotfuelAdapter(this);
-      case 'messenger':
-        return new MessengerAdapter(this);
-      case 'test':
-        return new TestAdapter(this);
-      case 'shell':
-        return new ShellAdapter(this);
-      default:
-        throw new AdapterError({ message: `'${adapter}' not found!` });
     }
   }
 
