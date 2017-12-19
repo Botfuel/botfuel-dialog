@@ -92,7 +92,7 @@ We want to store a positive number and replace it only if the given number is gr
 ```javascript
 positiveNumber: {
   dim: 'number',
-  isFulfilled: positiveNumber => positiveNumber > 0,
+  isFulfilled: number => number && number > 0,
   reducer: (oldNumber, newNumber) => newNumber > 21 ? newNumber : oldNumber,
 }
 ```
