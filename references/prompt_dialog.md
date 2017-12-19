@@ -66,6 +66,37 @@ An entity have some properties:
 
 > Note that the **dim** property is required, but **priority**, **isFulfilled** and **reducer** properties are optional, you can use them if you want more control on your entities.
 
+_isFulfilled and reducer implementations examples_
+
+We want to store exactly 3 cities and replace the old ones with the new ones:
+
+```javascript
+cities: {
+  dim: 'city',
+  isFulfilled: cities => cities && cities.length === 3,
+  reducer: (cities, newCity) => [...(cities || []), newCity],
+}
+```
+
+We want to store a date that is greater than the current date:
+
+```javascript
+date: {
+  dim: 'time',
+  isFulfilled: date => date && date > new Date(),
+}
+```
+
+We want to store a positive number and replace it only if the given number is greater than 21:
+
+```javascript
+positiveNumber: {
+  dim: 'number',
+  isFulfilled: positiveNumber => positiveNumber > 0,
+  reducer: (oldNumber, newNumber) => newNumber > 21 ? newNumber : oldNumber,
+}
+```
+
 ## Hooks
 
 ### dialogWillComplete()
