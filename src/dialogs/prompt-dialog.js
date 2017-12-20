@@ -206,7 +206,11 @@ class PromptDialog extends Dialog {
     );
     logger.debug('execute', { missingEntities, matchedEntities });
     await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
-    await this.display(adapter, userId, { matchedEntities, missingEntities });
+    const data = await this.dialogWillDisplay(adapter, userId, {
+      missingEntities,
+      matchedEntities,
+    });
+    await this.display(adapter, userId, { matchedEntities, missingEntities, ...data });
     if (Object.keys(missingEntities).length === 0) {
       const result = await this.dialogWillComplete(adapter, userId, {
         matchedEntities,
@@ -215,18 +219,6 @@ class PromptDialog extends Dialog {
       return result || this.complete();
     }
     return this.wait();
-  }
-
-  /**
-   * Hook to be overriden before dialog completes.
-   * Does nothing by default.
-   * @async
-   * @param {Adapter} adapter - the adapter
-   * @param {String} userId - the user id
-   * @returns {Promise.<void>}
-   */
-  async dialogWillComplete(adapter, userId, { matchedEntities, missingEntities }) {
-    logger.debug('dialogWillComplete', userId, { matchedEntities, missingEntities });
   }
 }
 
