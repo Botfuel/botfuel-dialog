@@ -31,24 +31,13 @@ class TextDialog extends Dialog {
     super(config, brain, { reentrant: false });
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
-    const data = await this.getViewData(userId, messageEntities);
+    const data = await this.dialogWillDisplay(adapter, userId, messageEntities);
     await this.display(adapter, userId, data);
-    return this.complete();
-  }
-
-  /**
-   * Returns optional data used to generate the view.
-   * @async
-   * @param {String} userId - the user id
-   * @param {Object[]} messageEntities - the message entities
-   * @returns {Promise.<Object>} the data
-   */
-  async getViewData(userId, messageEntities) {
-    logger.debug('getViewData', userId, messageEntities);
-    return null;
+    const result = await this.dialogWillComplete(adapter, userId, messageEntities);
+    return result || this.complete();
   }
 }
 

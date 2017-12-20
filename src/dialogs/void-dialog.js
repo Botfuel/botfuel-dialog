@@ -24,7 +24,7 @@ const Dialog = require('./dialog');
  * @extends Dialog
  */
 class VoidDialog extends Dialog {
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
     return this.complete();
