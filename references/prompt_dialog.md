@@ -65,7 +65,7 @@ TripDialog = {
 
 ## Implementation
 
-In order to use the prompt dialog, you need to import the class and extend it to your dialog class.
+In order to use the PromptDialog, you need to import the class and extend it to your dialog class.
 
 _The following example illustrate a travel dialog_
 
@@ -97,7 +97,7 @@ TravelDialog.params = {
 
 ## Parameters
 
-The prompt dialog have some parameters:
+The PromptDialog have some parameters:
 
 - The **namespace** is used to identify the dialog in the brain, where things are stored.
 - The **entities** are extracted from users answers by extractors and used to customize the flow of a conversation or to be able to do some actions.
@@ -119,7 +119,7 @@ _For example:_
 }
 ```
 
-Here is defined a prompt dialog identified by the namespace **travel** which have 3 entities called **departureCity**, **destinationCity** and **date**.
+Here is defined a PromptDialog identified by the namespace **travel** which have 3 entities called **departureCity**, **destinationCity** and **date**.
 
 ### Namespace
 
@@ -208,7 +208,7 @@ async PromptDialog.dialogWillDisplay(
 )
 ```
 
-Allows to perform things before a prompt dialog view is displayed, like API call or actions in the brain.
+Allows to perform things before a PromptDialog view is displayed, like API call or actions in the brain.
 
 > For example you can **chaining** a new dialog or **performing** actions on the brain.
 
@@ -230,6 +230,6 @@ async PromptDialog.dialogWillComplete(
 )
 ```
 
-Allows to perform things before a prompt dialog is completed, like chaining with another dialog or actions in the brain.
+Allows to perform things before a PromptDialog is completed, like chaining with another dialog or actions in the brain.
 
 > For example you can **chaining** a new dialog or **performing** actions on the brain.
