@@ -187,12 +187,11 @@ class Dialog {
    * Hook to be overridden before dialog displays.
    * Returns null by default.
    * @async
-   * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object} dialogData - the dialog data
    * @returns {Promise.<*>} the data extended to the display method
    */
-  async dialogWillDisplay(adapter, userId, dialogData) {
+  async dialogWillDisplay(userId, dialogData) {
     logger.debug('dialogWillDisplay', userId, dialogData);
     return null;
   }
@@ -201,12 +200,11 @@ class Dialog {
    * Hook to be overridden before dialog completes.
    * Does nothing by default.
    * @async
-   * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object} dialogData - the dialog data
    * @returns {Promise.<*>}
    */
-  async dialogWillComplete(adapter, userId, dialogData) {
+  async dialogWillComplete(userId, dialogData) {
     logger.debug('dialogWillComplete', userId, dialogData);
   }
 }

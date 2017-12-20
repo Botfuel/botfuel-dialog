@@ -206,13 +206,13 @@ class PromptDialog extends Dialog {
     );
     logger.debug('execute', { missingEntities, matchedEntities });
     await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
-    const data = await this.dialogWillDisplay(adapter, userId, {
+    const data = await this.dialogWillDisplay(userId, {
       missingEntities,
       matchedEntities,
     });
     await this.display(adapter, userId, { matchedEntities, missingEntities, ...data });
     if (Object.keys(missingEntities).length === 0) {
-      const result = await this.dialogWillComplete(adapter, userId, {
+      const result = await this.dialogWillComplete(userId, {
         matchedEntities,
         missingEntities,
       });

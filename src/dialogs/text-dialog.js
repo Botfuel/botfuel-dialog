@@ -34,9 +34,9 @@ class TextDialog extends Dialog {
   /** @inheritDoc */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
-    const data = await this.dialogWillDisplay(adapter, userId, messageEntities);
+    const data = await this.dialogWillDisplay(userId, messageEntities);
     await this.display(adapter, userId, data);
-    const result = await this.dialogWillComplete(adapter, userId, messageEntities);
+    const result = await this.dialogWillComplete(userId, messageEntities);
     return result || this.complete();
   }
 }

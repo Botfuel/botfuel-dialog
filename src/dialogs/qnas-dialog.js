@@ -36,7 +36,7 @@ class QnasDialog extends Dialog {
   /** @inheritDoc */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
-    const qnas = await this.dialogWillComplete(adapter, userId, messageEntities);
+    const qnas = await this.dialogWillComplete(userId, messageEntities);
     logger.debug('execute: qnas', qnas);
     await this.display(adapter, userId, { qnas });
     if (qnas.length === 1) {
@@ -46,7 +46,7 @@ class QnasDialog extends Dialog {
   }
 
   /** @inheritDoc */
-  async dialogWillComplete(adapter, userId, messageEntities) {
+  async dialogWillComplete(userId, messageEntities) {
     return messageEntities[0].value;
   }
 }
