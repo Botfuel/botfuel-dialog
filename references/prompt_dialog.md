@@ -242,12 +242,12 @@ Call a weather api after extracting a location:
 
 ```javascript
 async PromptDialog.dialogWillDisplay(adapter, userId, dialogData) {
-	const { lat, long } = dialogData;
-	let weather = null;
-	if (lat && long) {
-	  weather = await axios.get(`https://api.darksky.net/forecast/${API_KEY}/${lat},${long}`);
-	}
-	return weather;
+  const { lat, long } = dialogData;
+  let weather = null;
+  if (lat && long) {
+    weather = await axios.get(`https://api.darksky.net/forecast/${API_KEY}/${lat},${long}`);
+  }
+  return weather;
 }
 ```
 
@@ -277,7 +277,7 @@ For example you can:
 
 ```javascript
 async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
-	this.triggerNext('thanks');
+  this.triggerNext('thanks');
 }
 ```
 
@@ -285,6 +285,6 @@ async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
 
 ```javascript
 async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
-	await this.brain.conversationSet(userId, 'foo', 'bar');
+  await this.brain.conversationSet(userId, 'foo', 'bar');
 }
 ```
