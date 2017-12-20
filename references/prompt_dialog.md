@@ -80,12 +80,12 @@ TravelDialog.params = {
     departure: {
       dim: 'city',
       priority: 3,
-      isFulfilled: (city, { destination }) => city & city !== destination,
+      isFulfilled: (city, { dialogEntities }) => city & city !== dialogEntities.destination,
     },
     destination: {
       dim: 'city',
       priority: 2,
-      isFulfilled: (city, { departure }) => city & city !== departure,
+      isFulfilled: (city, { dialogEntities }) => city & city !== dialogEntities.departure,
     }
     date: {
       dim: 'time',
