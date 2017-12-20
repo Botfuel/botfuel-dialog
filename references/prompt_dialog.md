@@ -145,11 +145,46 @@ The **priority** property is a number that give a priority to an entity, greater
 
 > priority is an **optional** porperty with a default value of 0.
 
+For example:
+
+You want the bot ask for the name first, then the age of the user:
+
+```javascript
+age: {
+  dim: 'city',
+  priority: 1,
+},
+name: {
+  dim: 'forename',
+  priority: 2,
+}
+```
+
 #### isFulfilled
 
 The **isFulfilled** property is a function that return a boolean indicating if the entity value is matching the condition of done of the entity.
 
 > isFulfilled is an **optional** porperty. By default, an entity is fulfilled if the entity value is defined.
+
+For example:
+
+You want to store exactly 3 cities:
+
+```javascript
+cities: {
+  dim: 'city',
+  isFulfilled: cities => cities && cities.length === 3,
+}
+```
+
+You want to retrieve a date later than today:
+
+```javascript
+date: {
+  dim: 'time',
+  isFulfilled: date => date && date > Date.now(),
+}
+```
 
 #### reducer
 
@@ -157,38 +192,29 @@ The **reducer** property is a function that define how to deal with new values f
 
 > reducer is an **optional** property. By default the old value is replaced with the new one.
 
-_isFulfilled and reducer implementations examples_
+For example:
 
-We want to store exactly 3 cities and replace the old ones with the new ones:
+You want to replace the color only if the color is blue:
 
 ```javascript
-cities: {
-  dim: 'city',
-  isFulfilled: cities => cities && cities.length === 3,
-  reducer: (cities, newCity) => [...(cities || []), newCity],
+color: {
+  dim: 'color',
+  reducer: (oldColor, newColor) => newColor === 'blue' ? newColor : oldColor,
 }
 ```
 
-We want to store a date that is greater than the current date:
+You want to replace the age only if is greater than the previous one:
 
 ```javascript
-date: {
-  dim: 'time',
-  isFulfilled: date => date && date > new Date(),
-}
-```
-
-We want to store a positive number and replace it only if the given number is greater than 21:
-
-```javascript
-positiveNumber: {
+number: {
   dim: 'number',
-  isFulfilled: number => number && number > 0,
-  reducer: (oldNumber, newNumber) => newNumber > 21 ? newNumber : oldNumber,
+  reducer: (oldNumber, newNumber) => newNumber > oldNumber ? newNumber : oldNumber,
 }
 ```
 
 ## Hooks
+
+Hooks are parts of a dialog lifecycle, they are very usefull the perform actions before displaying messages or before completing a dialog without overriding complexe methods of the PromptDialog.
 
 ### dialogWillDisplay()
 ```javascript
@@ -208,9 +234,22 @@ async PromptDialog.dialogWillDisplay(
 )
 ```
 
-Allows to perform things before a PromptDialog view is displayed, like API call or actions in the brain.
+The **dialogWillDisplay()** hook is triggered before displaying dialog messages, it allows to perform API call, actions in the brain, computes extra data and pass it to the view.
 
-> For example you can **chaining** a new dialog or **performing** actions on the brain.
+For example you can:
+
+Call a weather api after extracting a location:
+
+```javascript
+async PromptDialog.dialogWillDisplay(adapter, userId, dialogData) {
+	const { lat, long } = dialogData;
+	let weather = null;
+	if (lat && long) {
+	  weather = await axios.get(`https://api.darksky.net/forecast/${API_KEY}/${lat},${long}`);
+	}
+	return weather;
+}
+```
 
 ### dialogWillComplete()
 ```javascript
@@ -230,6 +269,22 @@ async PromptDialog.dialogWillComplete(
 )
 ```
 
-Allows to perform things before a PromptDialog is completed, like chaining with another dialog or actions in the brain.
+The **dialogWillComplete()** hook is triggered before completing the dialog, it allows you to perform actions in the brain or chaining with another dialog.
 
-> For example you can **chaining** a new dialog or **performing** actions on the brain.
+For example you can:
+
+**chaining** a new dialog with the `triggerNext()` method:
+
+```javascript
+async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
+	this.triggerNext('thanks');
+}
+```
+
+**performing** actions on the brain:
+
+```javascript
+async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
+	await this.brain.conversationSet(userId, 'foo', 'bar');
+}
+```
