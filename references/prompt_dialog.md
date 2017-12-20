@@ -43,23 +43,23 @@ TripDialog = {
   namespace: 'trip',
   entities: {
     city: {
-      dim: 'city'
+      dim: 'city',
     },
     accommodation: {
-    	dim: 'accommodation' // use a corpus extractor
+    	dim: 'accommodation', // use a corpus extractor
     },
     personNumber: {
     	dim: 'number',
     	isFulfilled: number => number && number <= 10, // max 10 persons
-    }
+    },
     fromDate: {
-    	dim: 'time'
+    	dim: 'time',
     },
     toDate: {
       dim: 'time',
-      isFulfilled: (toDate, { fromDate }) => toDate > fromDate
-    }
-  }
+      isFulfilled: (toDate, { dialogEntities }) => toDate > dialogEntities.fromDate,
+    },
+  },
 }
 ```
 
