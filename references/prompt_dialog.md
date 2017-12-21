@@ -6,7 +6,7 @@ The PromptDialog uses the extracted entities to decide what to do next.
 
 _For example, you can use a PromptDialog when you want to:_
 
-Configure a car purchase:
+_Configure a car purchase:_
 
 ```javascript
 const { PromptDialog } = require('botfuel-dialog');
@@ -32,7 +32,7 @@ CarDialog = {
 }
 ```
 
-Book a hotel:
+_Book a hotel:_
 
 ```javascript
 const { PromptDialog } = require('botfuel-dialog');
@@ -141,7 +141,7 @@ The **priority** is a number **between 0 and Infinity**, the greater the priorit
 
 > priority is an **optional** property with a default value of 0.
 
-For example, you can have the bot ask for the name of the user first, and then for his/her age:
+_For example, you can have the bot ask for the name of the user first, and then for his/her age:_
 
 ```javascript
 age: {
@@ -160,7 +160,7 @@ The **isFulfilled** property is a function that returns a boolean value indicati
 
 > isFulfilled is an **optional** property. By default, an entity is fulfilled if the entity value is defined.
 
-For example, if you want to store exactly 3 cities:
+_For example, if you want to store exactly 3 cities:_
 
 ```javascript
 cities: {
@@ -169,7 +169,7 @@ cities: {
 }
 ```
 
-Or if you want to retrieve a date later than today:
+_Or if you want to retrieve a date later than today:_
 
 ```javascript
 date: {
@@ -184,7 +184,7 @@ The **reducer** property is a function that defines how to deal with new values 
 
 > reducer is an **optional** property. By default the old value is replaced with the new one.
 
-For example, if you want to replace the color only if the new one extracted is blue:
+_For example, if you want to replace the color only if the new one extracted is blue:_
 
 ```javascript
 color: {
@@ -193,7 +193,7 @@ color: {
 }
 ```
 
-You want to replace the age only if is greater than the previous one:
+_You want to replace the age only if is greater than the previous one:_
 
 ```javascript
 number: {
@@ -227,7 +227,7 @@ async PromptDialog.dialogWillDisplay(
 )
 ```
 
-For example you can call a weather API after extracting a location:
+_For example you can call a weather API after extracting a location:_
 
 ```javascript
 async PromptDialog.dialogWillDisplay(adapter, userId, dialogData) {
@@ -261,7 +261,7 @@ async PromptDialog.dialogWillComplete(
 )
 ```
 
-For example you can, chain a new dialog with the `triggerNext()` method:
+_For example you can, chain a new dialog with the `triggerNext()` method:_
 
 ```javascript
 async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
@@ -269,7 +269,7 @@ async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
 }
 ```
 
-In addition, you can also performing actions in the brain:
+_In addition, you can also performing actions in the brain:_
 
 ```javascript
 async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
