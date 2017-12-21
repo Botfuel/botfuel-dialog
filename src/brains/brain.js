@@ -36,7 +36,7 @@ class Brain {
    * Initializes the brain.
    * @async
    * @private
-   * @returns {void}
+   * @returns {Promise.<void>}
    */
   async init() {
     logger.debug('init');
@@ -46,7 +46,7 @@ class Brain {
    * Empties the brain.
    * @async
    * @abstract
-   * @returns {void}
+   * @returns {Promise.<void>}
    */
   async clean() {
     throw new MissingImplementationError();
@@ -81,7 +81,7 @@ class Brain {
    * Inits a user if necessary (if he does not exist).
    * @async
    * @param {String} userId - the user id
-   * @returns {void}
+   * @returns {Promise.<void>}
    */
   async initUserIfNecessary(userId) {
     logger.debug('initUserIfNecessary', userId);

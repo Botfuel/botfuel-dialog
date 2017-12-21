@@ -57,7 +57,7 @@ class Bot {
    * Initializes the bot.
    * @async
    * @private
-   * @returns {void}
+   * @returns {Promise.<void>}
    */
   async init() {
     await this.brain.init();
@@ -103,7 +103,7 @@ class Bot {
   /**
    * Runs the bot.
    * @async
-   * @returns {void}
+   * @returns {Promise.<void>}
    */
   async run() {
     logger.debug('run');
@@ -119,7 +119,7 @@ class Bot {
    * Plays user messages (only available with the {@link TestAdapter}).
    * @async
    * @param {string[]} userMessages - the user messages
-   * @returns {void}
+   * @returns {Promise.<void>}
    */
   async play(userMessages) {
     logger.debug('play', userMessages);
@@ -134,7 +134,7 @@ class Bot {
   /**
    * Clean the bot brain.
    * @async
-   * @returns {void}
+   * @returns {Promise.<void>}
    */
   async clean() {
     logger.debug('clean');
@@ -150,7 +150,7 @@ class Bot {
    * Responds to the user.
    * @async
    * @param {Object} userMessage - the user message
-   * @returns {void}
+   * @returns {Promise.<void>}
    */
   async respond(userMessage) {
     logger.debug('respond', userMessage);
@@ -172,7 +172,7 @@ class Bot {
    * @async
    * @private
    * @param {Object} userMessage - the user text message
-   * @returns {void}
+   * @returns {Promise.<void>}
    */
   async respondWhenText(userMessage) {
     logger.debug('respondWhenText', userMessage);
