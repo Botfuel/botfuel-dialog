@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-const fs = require('fs');
 const logger = require('logtown')('DialogManager');
+const Resolver = require('./resolver');
 const Dialog = require('./dialogs/dialog');
 const DialogError = require('./errors/dialog-error');
 
@@ -25,58 +25,40 @@ const DialogError = require('./errors/dialog-error');
  * The dialog manager has access to:
  * - the bot {@link Brain}.
  */
-class DialogManager {
+class DialogManager extends Resolver {
   /**
    * @constructor
    * @param {Object} brain - the bot brain
    * @param {Object} config - the bot config
    */
   constructor(brain, config) {
+    super(config, 'dialogs');
     this.brain = brain;
-    this.config = config;
   }
 
-  /**
-   * Gets the dialog path.
-   * @param {String} name - the dialog's name
-   * @returns {String|null} - the dialog path if found or null
-   */
-  getDialogPath(name) {
-    logger.debug('getDialogPath', name);
-    const paths = [
-      `${this.config.path}/src/dialogs/${name}-dialog.${this.config.adapter}`,
-      `${this.config.path}/src/dialogs/${name}-dialog`,
-      `${__dirname}/dialogs/${name}-dialog.${this.config.adapter}`,
-      `${__dirname}/dialogs/${name}-dialog`,
+  /** @inheritdoc */
+  getPaths(name) {
+    logger.debug('getPaths', name);
+    return [
+      `${this.path}/${name}-dialog.${this.config.adapter}.js`,
+      `${this.path}/${name}-dialog.js`,
+      `${this.localPath}/${name}-dialog.${this.config.adapter}.js`,
+      `${this.localPath}/${name}-dialog.js`,
     ];
-    for (const path of paths) {
-      logger.debug('getDialogPath: path', path);
-      if (fs.existsSync(`${path}.js`)) {
-        return path;
-      }
-    }
-    return null;
   }
 
-  /**
-   * Gets the dialog.
-   * @param {Object} dialog - object which has a name
-   * @returns {Dialog} - the dialog instance
-   */
-  getDialog(dialog) {
-    logger.debug('getDialog', dialog);
-    const path = this.getDialogPath(dialog.name);
-    if (path) {
-      const DialogConstructor = require(path);
-      return new DialogConstructor(this.config, this.brain, DialogConstructor.params);
-    }
-    logger.error(`Could not resolve '${dialog.name}' dialog`);
+  /** @inheritdoc */
+  resolutionFailed(name) {
+    logger.error(`Could not resolve '${name}' dialog`);
     throw new DialogError({
-      dialog,
-      message: `Make sure the '${dialog.name}' dialog file exists at ${
-        this.config.path
-      }/src/dialogs/${dialog.name}-dialog.js`,
+      dialog: name,
+      message: `There is no dialog '${name}' at ${process.cwd()}/src/dialogs/${name}-dialog.js`,
     });
+  }
+
+  /** @inheritdoc */
+  resolutionSucceeded(Resolved) {
+    return new Resolved(this.config, this.brain, Resolved.params);
   }
 
   /**
@@ -87,10 +69,8 @@ class DialogManager {
   sortIntents(intents) {
     logger.debug('sortIntents', intents);
     return intents.sort((intent1, intent2) => {
-      const dialog1 = this.getDialog(intent1);
-      const dialog2 = this.getDialog(intent2);
-      const reentrant1 = dialog1.characteristics.reentrant;
-      const reentrant2 = dialog2.characteristics.reentrant;
+      const reentrant1 = this.resolve(intent1.name).characteristics.reentrant;
+      const reentrant2 = this.resolve(intent2.name).characteristics.reentrant;
       if (reentrant1 && !reentrant2) {
         return 1;
       }
@@ -152,14 +132,14 @@ class DialogManager {
     let nb = 0;
     const newDialogs = [];
     for (let i = 0; i < intents.length; i++) {
-      const intent = intents[i];
-      const dialogInstance = this.getDialog(intent);
-      if (dialogInstance.characteristics.reentrant) {
+      const name = intents[i].name;
+      const characteristics = this.resolve(name).characteristics;
+      if (characteristics.reentrant) {
         nb++;
       }
       newDialogs.push({
-        name: intent.name,
-        characteristics: dialogInstance.characteristics,
+        name,
+        characteristics,
         entities,
         blocked: nb > 1,
       });
@@ -277,8 +257,7 @@ class DialogManager {
         entities: [],
       });
     } else {
-      const dialogInstance = this.getDialog(dialog);
-      const action = await dialogInstance.execute(adapter, userId, dialog.entities);
+      const action = await this.resolve(dialog.name).execute(adapter, userId, dialog.entities);
       logger.debug('execute: action', action);
       if (action.name === Dialog.ACTION_WAIT) {
         return dialogs;
@@ -294,13 +273,13 @@ class DialogManager {
    * @param {String} userId - the user id
    * @param {String[]} intents - the intents
    * @param {Object[]} entities - the transient entities
-   * @returns {Promise.<void>}
+   * @returns {void}
    */
   async executeIntents(adapter, userId, intents, entities) {
     logger.debug('execute', userId, intents, entities);
     const dialogs = await this.getDialogs(userId);
     this.updateWithIntents(userId, dialogs, intents, entities);
-    return this.setDialogs(userId, await this.execute(adapter, userId, dialogs));
+    await this.setDialogs(userId, await this.execute(adapter, userId, dialogs));
   }
 
   /**
@@ -308,13 +287,13 @@ class DialogManager {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} newDialogs - the new dialogs
-   * @returns {Promise.<void>}
+   * @returns {void}
    */
   async executeDialogs(adapter, userId, newDialogs) {
     logger.debug('executeWithDialogs', userId, newDialogs);
     const dialogs = await this.getDialogs(userId);
     this.updateWithDialogs(dialogs, newDialogs);
-    return this.setDialogs(userId, await this.execute(adapter, userId, dialogs));
+    await this.setDialogs(userId, await this.execute(adapter, userId, dialogs));
   }
 }
 

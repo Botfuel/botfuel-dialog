@@ -32,11 +32,11 @@ describe('DialogManager', () => {
   });
 
   test('when given a name, it should return the correct path', () => {
-    expect(dm.getDialogPath('test')).toEqual(`${__dirname}/src/dialogs/test-dialog`);
+    expect(dm.getPath('test')).toEqual(`${__dirname}/src/dialogs/test-dialog.js`);
   });
 
   test('when given an unknown name, it should return null', () => {
-    expect(dm.getDialogPath('unknown')).toBe(null);
+    expect(dm.getPath('unknown')).toBe(null);
   });
 
   test('should not crash when no intent', async () => {
