@@ -26,7 +26,7 @@ const PromptDialog = require('./prompt-dialog');
  */
 class ConfirmationDialog extends PromptDialog {
   /** @inheritDoc */
-  async dialogWillComplete(adapter, userId, { matchedEntities, missingEntities }) {
+  async dialogWillComplete(userId, { matchedEntities, missingEntities }) {
     logger.debug('dialogWillComplete', userId, { matchedEntities, missingEntities });
 
     // Clean entities for this dialog so it can be reused later

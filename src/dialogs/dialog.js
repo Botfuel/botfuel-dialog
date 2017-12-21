@@ -145,7 +145,7 @@ class Dialog {
   /**
    * Builds an object that sets the previous dialog as canceled
    * and optionally provides name of the next dialog.
-   * @param {String} dialogName - the name of the next dialog (optional)
+   * @param {String} [dialogName] - the name of the next dialog (optional)
    * @returns {Object} contains
    *   - a newDialog object thas has a name (optional)
    *   - an action set to ACTION_CANCEL
@@ -181,6 +181,31 @@ class Dialog {
     return {
       name: this.ACTION_WAIT,
     };
+  }
+
+  /**
+   * Hook to be overridden before dialog displays.
+   * Returns null by default.
+   * @async
+   * @param {String} userId - the user id
+   * @param {Object} dialogData - the dialog data
+   * @returns {Promise.<*>} the data extended to the display method
+   */
+  async dialogWillDisplay(userId, dialogData) {
+    logger.debug('dialogWillDisplay', userId, dialogData);
+    return null;
+  }
+
+  /**
+   * Hook to be overridden before dialog completes.
+   * Does nothing by default.
+   * @async
+   * @param {String} userId - the user id
+   * @param {Object} dialogData - the dialog data
+   * @returns {Promise.<*>}
+   */
+  async dialogWillComplete(userId, dialogData) {
+    logger.debug('dialogWillComplete', userId, dialogData);
   }
 }
 

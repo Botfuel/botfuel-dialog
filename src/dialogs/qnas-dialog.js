@@ -33,16 +33,21 @@ class QnasDialog extends Dialog {
     super(config, brain, { reentrant: false });
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   async execute(adapter, userId, messageEntities) {
     logger.debug('execute', userId, messageEntities);
-    const qnas = messageEntities[0].value;
+    const qnas = await this.dialogWillComplete(userId, messageEntities);
     logger.debug('execute: qnas', qnas);
     await this.display(adapter, userId, { qnas });
     if (qnas.length === 1) {
       return this.complete();
     }
     return this.wait();
+  }
+
+  /** @inheritDoc */
+  async dialogWillComplete(userId, messageEntities) {
+    return messageEntities[0].value;
   }
 }
 

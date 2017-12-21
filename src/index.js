@@ -16,6 +16,12 @@
 
 const Bot = require('./bot');
 const Classifier = require('./classifier');
+const Adapter = require('./adapters/adapter');
+const BotfuelAdapter = require('./adapters/botfuel-adapter');
+const MessengerAdapter = require('./adapters/messenger-adapter');
+const ShellAdapter = require('./adapters/shell-adapter');
+const TestAdapter = require('./adapters/test-adapter');
+const WebAdapter = require('./adapters/web-adapter');
 const ConfirmationDialog = require('./dialogs/confirmation-dialog');
 const ConfirmationView = require('./views/confirmation-view');
 const CorpusExtractor = require('./extractors/corpus-extractor');
@@ -45,6 +51,12 @@ const UserTextMessage = require('./messages/user-text-message');
 module.exports = {
   Bot,
   Classifier,
+  Adapter,
+  BotfuelAdapter,
+  MessengerAdapter,
+  ShellAdapter,
+  TestAdapter,
+  WebAdapter,
   ConfirmationDialog,
   ConfirmationView,
   CorpusExtractor,

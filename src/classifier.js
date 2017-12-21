@@ -16,6 +16,7 @@
 
 const Fs = require('fs');
 const util = require('util');
+const fsExtra = require('fs-extra');
 const Natural = require('natural');
 const logger = require('logtown')('Classifier');
 const { getConfiguration } = require('./config');
@@ -139,6 +140,10 @@ class Classifier {
    */
   async train() {
     logger.debug('train');
+
+    // Make sure model file exists
+    await fsExtra.ensureFile(this.modelFilename);
+
     this.classifier = new Natural.LogisticRegressionClassifier(this.getStemmer());
     Fs.readdirSync(this.intentDirname, 'utf8')
       .filter(fileName => fileName.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX)
