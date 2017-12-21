@@ -51,7 +51,7 @@ BookHotelDialog = {
     },
     fromDate: {
       dim: 'time',
-      isFulfilled: (fromDate) => fromDate > Date.now(),
+      isFulfilled: fromDate => fromDate && fromDate > Date.now(),
     },
     toDate: {
       dim: 'time',
