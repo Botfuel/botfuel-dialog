@@ -24,7 +24,6 @@ const { getConfiguration } = require('./config');
 const AuthenticationError = require('./errors/authentication-error');
 const DialogError = require('./errors/dialog-error');
 const ViewError = require('./errors/view-error');
-const AdapterError = require('./errors/adapter-error');
 
 const logger = Logger.getLogger('Bot');
 
@@ -48,13 +47,10 @@ class Bot {
     // give informations about env vars
     this.checkEnvVars();
     this.id = process.env.BOTFUEL_APP_TOKEN;
-
-    this.adapterManager = new AdapterManager(this);
-    this.adapter = this.adapterManager.resolve(this.config.adapter);
-
     this.brain = this.getBrain(this.config.brain);
     this.nlu = new Nlu(this.config);
     this.dm = new DialogManager(this.brain, this.config);
+    this.adapter = new AdapterManager(this).resolve(this.config.adapter);
   }
 
   /**
