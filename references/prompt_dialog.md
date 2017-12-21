@@ -1,10 +1,10 @@
 # PromptDialog
 
-**PromptDialog** is a class that allows to prompt users to answer questions.
+**PromptDialog** is a class that allows you to prompt users to answer questions.
 Each question corresponds to an entity. When the user answers the questions, entities are extracted from the answer.
 The PromptDialog uses the extracted entities to decide what to do next.
 
-_For example you can to use a PromptDialog when you want to:_
+_For example, you can use a PromptDialog when you want to:_
 
 Configure a car purchase:
 
@@ -32,21 +32,18 @@ CarDialog = {
 }
 ```
 
-Book a trip in a foreign country:
+Book a hotel:
 
 ```javascript
 const { PromptDialog } = require('botfuel-dialog');
 
-class TripDialog extends PromptDialog {}
+class BookHotelDialog extends PromptDialog {}
 
-TripDialog = {
-  namespace: 'trip',
+BookHotelDialog = {
+  namespace: 'book-hotel',
   entities: {
     city: {
       dim: 'city',
-    },
-    accommodation: {
-    	dim: 'accommodation', // use a corpus extractor
     },
     personNumber: {
     	dim: 'number',
@@ -67,7 +64,7 @@ TripDialog = {
 
 In order to use the PromptDialog, you need to import the class and extend it to your dialog class.
 
-_The following example illustrate a travel dialog_
+_The following example illustrates a travel dialog:_
 
 ```javascript
 const { PromptDialog } = require('botfuel-dialog');
@@ -97,10 +94,10 @@ TravelDialog.params = {
 
 ## Parameters
 
-The PromptDialog have some parameters:
+The PromptDialog has the following parameters:
 
 - The **namespace** is used to identify the dialog in the brain, where things are stored.
-- The **entities** are extracted from users answers by extractors and used to customize the flow of a conversation or to be able to do some actions.
+- The **entities** are extracted from users answers by extractors and used to customize the flow of a conversation or to perform some actions.
 
 _For example:_
 
@@ -119,35 +116,31 @@ _For example:_
 }
 ```
 
-Here is defined a PromptDialog identified by the namespace **travel** which have 3 entities called **departureCity**, **destinationCity** and **date**.
-
 ### Namespace
 
-The namespace is a key used by the brain to store the dialog related data into the brain and access it, the namespace **must be unique**.
+The namespace is a key used by the brain to store the dialog-related data into the brain and access it. The namespace must be unique.
 
-#### Entities
+### Entities
 
-An entity is defined by some properties: **dim**, **priority**, **isFulfilled** and **reducer**.
+An entity is defined by the following properties: **dim**, **priority**, **isFulfilled** and **reducer**.
 
 #### dim
 
-The **dim** property is the dimension of the entity. this dimension is used by an entity extractor or a corpus extractor to extract informations from a user answer.
+The **dimension** defines the type of information expected. It is used by an entity extractor or a corpus extractor to extract information from a user answer.
 
-> dim is a **required** porperty.
+> dim is a **required** property.
 
-There is also a built-in entity dimension `system:boolean` used to extract yes/no answers.
+[Here](https://app.botfuel.io/docs#possible-dimensions) you can find the list of available dimensions used by the **Botfuel NLP entity extraction**.
 
-[Here](https://app.botfuel.io/docs#possible-dimensions) you can find the list of availables dimensions used by the entity extractor of Botfuel.
+There is a built-in entity dimension `system:boolean` used to extract yes/no answers.
 
 #### priority
 
-The **priority** property is a number that give a priority to an entity, greater is the priority earlier will the bot ask for this entity.
+The **priority** is a number **from 0 to Infinity**, greater is the priority earlier will the bot ask for this entity.
 
-> priority is an **optional** porperty with a default value of 0.
+> priority is an **optional** property with a default value of 0.
 
-For example:
-
-You want the bot ask for the name first, then the age of the user:
+For example, you can have the bot ask for the name of the user first, and then for his/her age:
 
 ```javascript
 age: {
@@ -162,13 +155,11 @@ name: {
 
 #### isFulfilled
 
-The **isFulfilled** property is a function that return a boolean indicating if the entity value is matching the condition of done of the entity.
+The **isFulfilled** property is a function that returns a boolean value indicating if the entity value is matching the condition of done of the entity.
 
-> isFulfilled is an **optional** porperty. By default, an entity is fulfilled if the entity value is defined.
+> isFulfilled is an **optional** property. By default, an entity is fulfilled if the entity value is defined.
 
-For example:
-
-You want to store exactly 3 cities:
+For example, if you want to store exactly 3 cities:
 
 ```javascript
 cities: {
@@ -177,7 +168,7 @@ cities: {
 }
 ```
 
-You want to retrieve a date later than today:
+Or if you want to retrieve a date later than today:
 
 ```javascript
 date: {
@@ -188,13 +179,11 @@ date: {
 
 #### reducer
 
-The **reducer** property is a function that define how to deal with new values for the entity.
+The **reducer** property is a function that defines how to deal with new values for the entity.
 
 > reducer is an **optional** property. By default the old value is replaced with the new one.
 
-For example:
-
-You want to replace the color only if the color is blue:
+For example, if you want to replace the color only if the new one extracted is blue:
 
 ```javascript
 color: {
@@ -214,9 +203,12 @@ number: {
 
 ## Hooks
 
-Hooks are parts of a dialog lifecycle, they are very usefull the perform actions before displaying messages or before completing a dialog without overriding complexe methods of the PromptDialog.
+Hooks are very useful for performing actions before displaying messages or before completing a dialog without overriding others methods of the PromptDialog.
 
 ### dialogWillDisplay()
+
+The **dialogWillDisplay()** hook is triggered before displaying dialog messages, it allows to perform API call, actions in the brain, computes extra data and pass it to the view.
+
 ```javascript
 /**
  * Hook to be overridden before dialog displays.
@@ -234,11 +226,7 @@ async PromptDialog.dialogWillDisplay(
 )
 ```
 
-The **dialogWillDisplay()** hook is triggered before displaying dialog messages, it allows to perform API call, actions in the brain, computes extra data and pass it to the view.
-
-For example you can:
-
-Call a weather api after extracting a location:
+For example you can call a weather API after extracting a location:
 
 ```javascript
 async PromptDialog.dialogWillDisplay(adapter, userId, dialogData) {
@@ -252,6 +240,9 @@ async PromptDialog.dialogWillDisplay(adapter, userId, dialogData) {
 ```
 
 ### dialogWillComplete()
+
+The **dialogWillComplete()** hook is triggered before completing the dialog, it allows you to perform actions in the brain or chaining with another dialog.
+
 ```javascript
 /**
  * Hook to be overridden before dialog completes.
@@ -269,11 +260,7 @@ async PromptDialog.dialogWillComplete(
 )
 ```
 
-The **dialogWillComplete()** hook is triggered before completing the dialog, it allows you to perform actions in the brain or chaining with another dialog.
-
-For example you can:
-
-**chaining** a new dialog with the `triggerNext()` method:
+For example you can, chain a new dialog with the `triggerNext()` method:
 
 ```javascript
 async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
@@ -281,7 +268,7 @@ async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
 }
 ```
 
-**performing** actions on the brain:
+In addition, you can also performing actions in the brain:
 
 ```javascript
 async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
