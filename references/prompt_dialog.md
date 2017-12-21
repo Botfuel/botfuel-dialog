@@ -137,7 +137,7 @@ There is a built-in entity dimension `system:boolean` used to extract yes/no ans
 
 #### priority
 
-The **priority** is a number **from 0 to Infinity**, greater is the priority earlier will the bot ask for this entity.
+The **priority** is a number **between 0 and Infinity**, greater is the priority earlier will the bot ask for this entity.
 
 > priority is an **optional** property with a default value of 0.
 
