@@ -26,7 +26,7 @@ class Adapter {
    * @param {Object} bot - the bot
    */
   constructor(bot) {
-    logger.debug('constructor', bot);
+    logger.debug('constructor');
     this.config = bot.config;
     this.bot = bot;
   }
