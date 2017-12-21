@@ -27,8 +27,8 @@ CarDialog = {
     },
     isNew: {
       dim: 'system:boolean'
-    }
-  }
+    },
+  },
 }
 ```
 
@@ -84,12 +84,12 @@ TravelDialog.params = {
       dim: 'city',
       priority: 2,
       isFulfilled: (city, { dialogEntities }) => city & city !== dialogEntities.departure,
-    }
+    },
     date: {
       dim: 'time',
       isFulfilled: date => date && date > Date.now(),
-    }
-  }
+    },
+  },
 }
 ```
 
@@ -113,7 +113,7 @@ _For example:_
       reducer: Function(),
     },
     ...
-  }
+  },
 }
 ```
 
@@ -127,17 +127,17 @@ An entity is defined by the following properties: **dim**, **priority**, **isFul
 
 #### dim
 
-The **dimension** defines the type of information expected. It is used by an entity extractor or a corpus extractor to extract information from a user answer.
+The **dimension** defines the type of information that will be extracted from the user sentence. Dimensions can be pre-defined or user-defined.
 
 > dim is a **required** property.
 
-[Here](https://app.botfuel.io/docs#possible-dimensions) you can find the list of available dimensions used by the **Botfuel NLP entity extraction**.
-
-There is a built-in entity dimension `system:boolean` used to extract yes/no answers.
+The entity extractor based on [**Botfuel NLP entity extraction** web service](http://docs.botfuel.io/api#entity-extraction) supports [31 dimensions](http://docs.botfuel.io/api#possible-dimensions).
+Corpus extractors use user-defined dimensions.
+There is also a built-in entity dimension `system:boolean` used to extract yes/no answers.
 
 #### priority
 
-The **priority** is a number **between 0 and Infinity**, the greater the priority, the earlier the bot will ask for this entity.
+The **priority** is a positive number, the greater the priority, the earlier the bot will ask for this entity.
 
 > priority is an **optional** property with a default value of 0.
 
@@ -145,18 +145,20 @@ _For example, you can have the bot ask for the name of the user first, and then 
 
 ```javascript
 age: {
-  dim: 'city',
+  dim: 'number',
   priority: 1,
 },
 name: {
   dim: 'forename',
   priority: 2,
-}
+},
 ```
 
 #### isFulfilled
 
 The **isFulfilled** property is a function that returns a boolean value indicating if the entity value is matching the condition of done of the entity.
+
+> isFulfilled (entityName, { dialogEntities })
 
 > isFulfilled is an **optional** property. By default, an entity is fulfilled if the entity value is defined.
 
@@ -182,6 +184,8 @@ date: {
 
 The **reducer** property is a function that defines how to deal with new values for the entity.
 
+> reducer (newValue, oldValue)
+
 > reducer is an **optional** property. By default the old value is replaced with the new one.
 
 _For example, if you want to replace the color only if the new one extracted is blue:_
@@ -204,11 +208,11 @@ number: {
 
 ## Hooks
 
-Hooks are very useful for performing actions before displaying messages or before completing a dialog without overriding others methods of the PromptDialog.
+Hooks are very useful for performing actions before displaying messages or before completing a dialog without overriding other methods of the PromptDialog.
 
 ### dialogWillDisplay()
 
-The dialogWillDisplay hook is triggered before displaying dialog messages. It allows you to perform API calls and actions in the brain, as well as attach extra data to the view.
+The `dialogWillDisplay` hook is triggered before displaying dialog messages. It allows you to perform API calls and actions in the brain, returned data will be passed to the view.
 
 ```javascript
 /**
@@ -242,7 +246,7 @@ async PromptDialog.dialogWillDisplay(adapter, userId, dialogData) {
 
 ### dialogWillComplete()
 
-The dialogWillComplete hook is triggered before completing the dialog. It allows you to perform actions in the brain or to execute a specific dialog next.
+The `dialogWillComplete` hook is triggered before completing the dialog. It allows you to perform actions in the brain or to branch to a specific dialog.
 
 ```javascript
 /**
@@ -261,7 +265,7 @@ async PromptDialog.dialogWillComplete(
 )
 ```
 
-_For example you can, chain a new dialog with the `triggerNext()` method:_
+_For example you can branch to a new dialog with the `triggerNext()` method:_
 
 ```javascript
 async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
@@ -269,7 +273,7 @@ async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
 }
 ```
 
-_In addition, you can also performing actions in the brain:_
+_In addition, you can also perform actions in the brain:_
 
 ```javascript
 async PromptDialog.dialogWillComplete(adapter, userId, dialogData) {
