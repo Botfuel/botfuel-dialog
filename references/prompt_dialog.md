@@ -137,7 +137,7 @@ There is a built-in entity dimension `system:boolean` used to extract yes/no ans
 
 #### priority
 
-The **priority** is a number **between 0 and Infinity**, greater is the priority earlier will the bot ask for this entity.
+The **priority** is a number **between 0 and Infinity**, the greater the priority, the earlier the bot will ask for this entity.
 
 > priority is an **optional** property with a default value of 0.
 
@@ -208,7 +208,7 @@ Hooks are very useful for performing actions before displaying messages or befor
 
 ### dialogWillDisplay()
 
-The dialogWillDisplay hook is triggered before displaying dialog messages, it allows to perform API call, actions in the brain, computes extra data and pass it to the view.
+The dialogWillDisplay hook is triggered before displaying dialog messages. It allows you to perform API calls and actions in the brain, as well as attach extra data to the view.
 
 ```javascript
 /**
@@ -242,7 +242,7 @@ async PromptDialog.dialogWillDisplay(adapter, userId, dialogData) {
 
 ### dialogWillComplete()
 
-The dialogWillComplete hook is triggered before completing the dialog, it allows you to perform actions in the brain or chaining with another dialog.
+The dialogWillComplete hook is triggered before completing the dialog. It allows you to perform actions in the brain or to execute a specific dialog next.
 
 ```javascript
 /**
