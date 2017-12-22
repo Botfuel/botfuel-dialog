@@ -14,32 +14,16 @@
  * limitations under the License.
  */
 
-const logger = require('logtown')('AdapterResolver');
-const Resolver = require('./resolver');
+const SdkError = require('./sdk-error');
 
-/**
- * The adapter resolver resolves the adapter at startup.
- */
-class AdapterResolver extends Resolver {
+module.exports = class ResolutionError extends SdkError {
   /**
    * @constructor
-   * @param {Object} bot - the bot
+   * @param {String[]} paths - the paths
+   * @param {Object} name - the name of the object that cannot be resolved
    */
-  constructor(bot) {
-    super(bot.config, 'adapter');
-    this.bot = bot;
+  constructor({ paths, name }) {
+    super(`Could not find ${name} in: ${paths.join(', ')}`);
+    this.name = name;
   }
-
-  /** @inheritdoc */
-  getPaths(name) {
-    logger.debug('getPaths', name);
-    return [`${this.path}/${name}-${this.kind}.js`, `${this.localPath}/${name}-${this.kind}.js`];
-  }
-
-  /** @inheritdoc */
-  resolutionSucceeded(Resolved) {
-    return new Resolved(this.bot);
-  }
-}
-
-module.exports = AdapterResolver;
+};

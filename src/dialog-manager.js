@@ -32,7 +32,7 @@ class DialogManager extends Resolver {
    * @param {Object} config - the bot config
    */
   constructor(brain, config) {
-    super(config, 'dialogs');
+    super(config, 'dialog');
     this.brain = brain;
   }
 
@@ -40,20 +40,11 @@ class DialogManager extends Resolver {
   getPaths(name) {
     logger.debug('getPaths', name);
     return [
-      `${this.path}/${name}-dialog.${this.config.adapter}.js`,
-      `${this.path}/${name}-dialog.js`,
-      `${this.localPath}/${name}-dialog.${this.config.adapter}.js`,
-      `${this.localPath}/${name}-dialog.js`,
+      `${this.path}/${name}-${this.kind}.${this.config.adapter}.js`,
+      `${this.path}/${name}-${this.kind}.js`,
+      `${this.localPath}/${name}-${this.kind}.${this.config.adapter}.js`,
+      `${this.localPath}/${name}-${this.kind}.js`,
     ];
-  }
-
-  /** @inheritdoc */
-  resolutionFailed(name) {
-    logger.error(`Could not resolve '${name}' dialog`);
-    throw new DialogError({
-      dialog: name,
-      message: `There is no dialog '${name}' at ${process.cwd()}/src/dialogs/${name}-dialog.js`,
-    });
   }
 
   /** @inheritdoc */

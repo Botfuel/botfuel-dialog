@@ -16,6 +16,7 @@
 
 const fs = require('fs');
 const logger = require('logtown')('Resolver');
+const ResolutionError = require('./errors/resolution-error');
 
 /**
  * The adapter resolver resolves the adapter at startup.
@@ -28,8 +29,9 @@ class Resolver {
    */
   constructor(config, kind) {
     this.config = config;
-    this.path = `${config.path}/src/${kind}`;
-    this.localPath = `${__dirname}/${kind}`;
+    this.kind = kind;
+    this.path = `${config.path}/src/${kind}s`;
+    this.localPath = `${__dirname}/${kind}s`;
   }
 
   /**
@@ -61,7 +63,11 @@ class Resolver {
       const Resolved = require(path);
       return this.resolutionSucceeded(Resolved);
     }
-    return this.resolutionFailed(name);
+    throw new ResolutionError({
+      kind: this.kind,
+      name,
+      paths: this.getPaths(name),
+    });
   }
 }
 

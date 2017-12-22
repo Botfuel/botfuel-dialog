@@ -16,7 +16,6 @@
 
 const logger = require('logtown')('ViewResolver');
 const Resolver = require('./resolver');
-const ViewError = require('./errors/view-error');
 
 /**
  * The view resolver resolves the view for a given dialog.
@@ -27,27 +26,18 @@ class ViewResolver extends Resolver {
    * @param {Object} config - the bot config
    */
   constructor(config) {
-    super(config, 'views');
+    super(config, 'view');
   }
 
   /** @inheritdoc */
   getPaths(name) {
     logger.debug('getPaths', name);
     return [
-      `${this.path}/${name}-view.${this.config.locale}.js`,
-      `${this.path}/${name}-view.js`,
-      `${this.localPath}/${name}-view.${this.config.locale}.js`,
-      `${this.localPath}/${name}-view.js`,
+      `${this.path}/${name}-${this.kind}.${this.config.locale}.js`,
+      `${this.path}/${name}-${this.kind}.js`,
+      `${this.localPath}/${name}-${this.kind}.${this.config.locale}.js`,
+      `${this.localPath}/${name}-${this.kind}.js`,
     ];
-  }
-
-  /** @inheritdoc */
-  resolutionFailed(name) {
-    logger.error(`Could not resolve '${name}' view`);
-    throw new ViewError({
-      view: name,
-      message: `There is no view '${name}' at ${process.cwd()}/src/views/${name}-view.js`,
-    });
   }
 
   /** @inheritdoc */

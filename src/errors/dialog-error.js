@@ -20,10 +20,10 @@ module.exports = class DialogError extends SdkError {
   /**
    * @constructor
    * @param {String} message - the error message
-   * @param {Object} dialog - the dialog in error
+   * @param {Object} name - the name of the dialog in error
    */
-  constructor({ message, dialog }) {
+  constructor({ message, name }) {
     super(message || 'Unknown DialogError');
-    this.dialog = dialog;
+    this.name = name;
   }
 };
