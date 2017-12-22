@@ -212,7 +212,7 @@ Hooks are very useful for performing actions before displaying messages or befor
 
 ### dialogWillDisplay()
 
-The `dialogWillDisplay` hook is triggered before displaying dialog messages. It allows you to perform API calls and actions in the brain, returned data will be passed to the view.
+The `dialogWillDisplay` hook is triggered before displaying dialog messages. It allows you to perform API calls and actions in the brain, after which the returned data are passed to the view.
 
 ```javascript
 /**
