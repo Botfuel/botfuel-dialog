@@ -16,14 +16,14 @@
 
 const SdkError = require('./sdk-error');
 
-module.exports = class DialogError extends SdkError {
+module.exports = class ResolutionError extends SdkError {
   /**
    * @constructor
-   * @param {String} message - the error message
-   * @param {Object} name - the name of the dialog in error
+   * @param {String[]} paths - the paths
+   * @param {Object} name - the name of the object that cannot be resolved
    */
-  constructor({ message, name }) {
-    super(message || 'Unknown DialogError');
+  constructor({ paths, name }) {
+    super(`Could not find ${name} in: ${paths.join(', ')}`);
     this.name = name;
   }
 };

@@ -15,24 +15,23 @@
  */
 
 const fs = require('fs');
-const logger = require('logtown')('AdapterManager');
-const AdapterError = require('./errors/adapter-error');
+const logger = require('logtown')('Resolver');
+const ResolutionError = require('./errors/resolution-error');
 
 /**
- * The adapter manager resolves the adapter at startup.
+ * The adapter resolver resolves the adapter at startup.
  */
-class AdapterManager {
+class Resolver {
   /**
    * @constructor
-   * @param {Object} bot - the bot using the adapter manager
+   * @param {Object} config - the bot config
+   * @param {String} kind - the kind of objects we want to resolve
    */
-  constructor(bot) {
-    const config = bot.config;
-    logger.debug('constructor', config.path);
-
-    this.bot = bot;
-    this.adaptersPath = `${config.path}/src/adapters`;
-    this.localAdaptersPath = `${__dirname}/adapters`;
+  constructor(config, kind) {
+    this.config = config;
+    this.kind = kind;
+    this.path = `${config.path}/src/${kind}s`;
+    this.localPath = `${__dirname}/${kind}s`;
   }
 
   /**
@@ -42,11 +41,7 @@ class AdapterManager {
    */
   getPath(name) {
     logger.debug('getPath');
-    const paths = [
-      `${this.adaptersPath}/${name}-adapter.js`,
-      `${this.localAdaptersPath}/${name}-adapter.js`,
-    ];
-    for (const path of paths) {
+    for (const path of this.getPaths(name)) {
       logger.debug('getPath: test path', path);
       if (fs.existsSync(path)) {
         logger.debug('getPath: existing path', path);
@@ -65,15 +60,15 @@ class AdapterManager {
     logger.debug('resolve', name);
     const path = this.getPath(name);
     if (path) {
-      const Adapter = require(path);
-      return new Adapter(this.bot);
+      const Resolved = require(path);
+      return this.resolutionSucceeded(Resolved);
     }
-    logger.error(`Could not resolve '${name}' adapter`);
-    throw new AdapterError({
-      message: `there is no adapter '${name}' at ${process.cwd()}/src/adapters/${name}-adapter.js`,
-      adapter: name,
+    throw new ResolutionError({
+      kind: this.kind,
+      name,
+      paths: this.getPaths(name),
     });
   }
 }
 
-module.exports = AdapterManager;
+module.exports = Resolver;

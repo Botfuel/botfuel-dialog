@@ -14,16 +14,32 @@
  * limitations under the License.
  */
 
-const SdkError = require('./sdk-error');
+const logger = require('logtown')('AdapterResolver');
+const Resolver = require('./resolver');
 
-module.exports = class DialogError extends SdkError {
+/**
+ * The adapter resolver resolves the adapter at startup.
+ */
+class AdapterResolver extends Resolver {
   /**
    * @constructor
-   * @param {String} message - the error message
-   * @param {Object} name - the name of the dialog in error
+   * @param {Object} bot - the bot
    */
-  constructor({ message, name }) {
-    super(message || 'Unknown DialogError');
-    this.name = name;
+  constructor(bot) {
+    super(bot.config, 'adapter');
+    this.bot = bot;
   }
-};
+
+  /** @inheritdoc */
+  getPaths(name) {
+    logger.debug('getPaths', name);
+    return [`${this.path}/${name}-${this.kind}.js`, `${this.localPath}/${name}-${this.kind}.js`];
+  }
+
+  /** @inheritdoc */
+  resolutionSucceeded(Resolved) {
+    return new Resolved(this.bot);
+  }
+}
+
+module.exports = AdapterResolver;

@@ -18,12 +18,12 @@ const SdkError = require('./sdk-error');
 
 module.exports = class AdapterError extends SdkError {
   /**
-  * @constructor
-  * @param {String} message - the error message
-  * @param {Object} adapter - the adapter in error
-  */
-  constructor({ message, adapter }) {
+   * @constructor
+   * @param {String} message - the error message
+   * @param {Object} name - the name of the adapter in error
+   */
+  constructor({ message, name }) {
     super(message || 'Unknown AdapterError');
-    this.adapter = adapter;
+    this.name = name;
   }
 };

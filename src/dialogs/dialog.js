@@ -16,7 +16,7 @@
 
 const logger = require('logtown')('Dialog');
 const kebabCase = require('lodash/kebabCase');
-const ViewManager = require('../view-manager');
+const ViewResolver = require('../view-resolver');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 const DialogError = require('../errors/dialog-error');
 
@@ -75,7 +75,7 @@ class Dialog {
     this.brain = brain;
     this.characteristics = characteristics;
     this.parameters = parameters;
-    this.viewManager = new ViewManager(config);
+    this.viewResolver = new ViewResolver(config);
     this.name = this.getName();
   }
 
@@ -98,7 +98,7 @@ class Dialog {
    */
   async display(adapter, userId, data) {
     logger.debug('display', userId, data);
-    const botMessages = this.viewManager
+    const botMessages = this.viewResolver
       .resolve(this.name)
       .renderAsJson(adapter.bot.id, userId, data);
     return adapter.send(botMessages);

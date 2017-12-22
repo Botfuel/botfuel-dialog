@@ -20,10 +20,10 @@ module.exports = class ViewError extends SdkError {
   /**
    * @constructor
    * @param {String} message - the error message
-   * @param {Object} view - the view in error
+   * @param {Object} name - the name of the view in error
    */
-  constructor({ message, view }) {
+  constructor({ message, name }) {
     super(message || 'Unknown ViewError');
-    this.view = view;
+    this.name = name;
   }
 };

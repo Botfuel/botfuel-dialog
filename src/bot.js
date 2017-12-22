@@ -15,7 +15,7 @@
  */
 
 const Logger = require('logtown');
-const AdapterManager = require('./adapter-manager');
+const AdapterResolver = require('./adapter-resolver');
 const DialogManager = require('./dialog-manager');
 const MemoryBrain = require('./brains/memory-brain');
 const MongoBrain = require('./brains/mongo-brain');
@@ -50,7 +50,7 @@ class Bot {
     this.brain = this.getBrain(this.config.brain);
     this.nlu = new Nlu(this.config);
     this.dm = new DialogManager(this.brain, this.config);
-    this.adapter = new AdapterManager(this).resolve(this.config.adapter);
+    this.adapter = new AdapterResolver(this).resolve(this.config.adapter);
   }
 
   /**
@@ -149,19 +149,21 @@ class Bot {
   /**
    * Responds to the user.
    * @async
-   * @param {object} userMessage - the user message
+   * @param {Object} userMessage - the user message
    * @returns {Promise.<void>}
    */
   async respond(userMessage) {
     logger.debug('respond', userMessage);
     switch (userMessage.type) {
       case 'postback':
-        return this.respondWhenPostback(userMessage);
+        await this.respondWhenPostback(userMessage);
+        break;
       case 'image':
-        return this.respondWhenImage(userMessage);
+        await this.respondWhenImage(userMessage);
+        break;
       case 'text':
       default:
-        return this.respondWhenText(userMessage);
+        await this.respondWhenText(userMessage);
     }
   }
 
@@ -169,22 +171,22 @@ class Bot {
    * Computes the responses for a user message of type text.
    * @async
    * @private
-   * @param {object} userMessage - the user text message
+   * @param {Object} userMessage - the user text message
    * @returns {Promise.<void>}
    */
   async respondWhenText(userMessage) {
     logger.debug('respondWhenText', userMessage);
     const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
     logger.debug('respondWhenText: intents, entities', intents, entities);
-    return this.dm.executeIntents(this.adapter, userMessage.user, intents, entities);
+    await this.dm.executeIntents(this.adapter, userMessage.user, intents, entities);
   }
 
   /**
    * Computes the responses for a user message of type postback.
    * @async
    * @private
-   * @param {object} userMessage - the user postback message
-   * @returns {Promise.<void>}
+   * @param {Object} userMessage - the user postback message
+   * @returns {void}
    */
   async respondWhenPostback(userMessage) {
     logger.debug('respondWhenPostback', userMessage);
@@ -192,7 +194,7 @@ class Bot {
       name: userMessage.payload.value.dialog,
       entities: userMessage.payload.value.entities,
     };
-    return this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
+    await this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
   }
 
   /**
@@ -200,7 +202,7 @@ class Bot {
    * @async
    * @private
    * @param {object} userMessage - the user image message
-   * @returns {Promise.<void>}
+   * @returns {void}
    */
   async respondWhenImage(userMessage) {
     logger.debug('respondWhenImage', userMessage);
@@ -208,7 +210,7 @@ class Bot {
       name: 'image',
       entities: [{ url: userMessage.payload.value.url }],
     };
-    return this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
+    await this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
   }
 
   /**
