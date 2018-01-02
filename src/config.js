@@ -25,6 +25,7 @@ const defaultConfig = {
   brain: 'memory',
   intentThreshold: 0.8,
   logger: 'dev',
+  multiIntent: false,
 };
 
 /**

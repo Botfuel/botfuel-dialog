@@ -130,7 +130,7 @@ class Classifier {
     return this.classifier
       .getClassifications(features)
       .filter(intent => intent.value > this.intentThreshold)
-      .slice(0, 2)
+      .slice(0, this.config.multiIntent ? 2 : 1)
       .map(intent => ({ name: intent.label, value: intent.value }));
   }
 
