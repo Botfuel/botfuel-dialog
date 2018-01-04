@@ -648,6 +648,43 @@ describe('PromptDialog', () => {
 
         expect(Object.keys(missingEntities)).toHaveLength(0);
       });
+
+      test('should replace fulfilled entities when the condition is always true', () => {
+        const age = {
+          dim: 'number',
+          values: [{ value: '28', type: 'integer' }],
+          start: 9,
+          end: 11,
+          body: '28',
+        };
+        const newAge = {
+          dim: 'number',
+          values: [{ value: '66', type: 'integer' }],
+          start: 3,
+          end: 5,
+          body: '66',
+        };
+
+        const expectedEntities = {
+          age: {
+            dim: 'number',
+            isFulfilled: () => true,
+          },
+        };
+
+        const { matchedEntities, missingEntities } = prompt.computeEntities(
+          [newAge],
+          expectedEntities,
+          {
+            age,
+          },
+        );
+
+        expect(matchedEntities).toHaveProperty('age');
+        expect(matchedEntities.age).toEqual(newAge);
+
+        expect(Object.keys(missingEntities)).toHaveLength(0);
+      });
     });
   });
 });

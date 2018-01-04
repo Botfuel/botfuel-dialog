@@ -32,3 +32,6 @@ export const filterIntersectingEntities = (entities, entity) => {
 
   return entities.filter(e => !doEntitiesIntersect(e, entity));
 };
+
+export const getEntityInitialValue = initialValue => entity =>
+  (Array.isArray(initialValue) ? [entity] : entity);

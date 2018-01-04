@@ -16,7 +16,7 @@
 
 const omit = require('lodash/omit');
 const logger = require('logtown')('PromptDialog');
-const { filterIntersectingEntities } = require('../utils/entities');
+const { filterIntersectingEntities, getEntityInitialValue } = require('../utils/entities');
 const Dialog = require('./dialog');
 
 /**
@@ -69,26 +69,38 @@ class PromptDialog extends Dialog {
    */
   matchParameterWithCandidates({ dialogParameter, candidates, initialValue }) {
     const sameDimCandidates = candidates.filter(candidate => candidate.dim === dialogParameter.dim);
-    // If parameter is already fulfilled and has a candidate, replace it
-    if (dialogParameter.isFulfilled(initialValue) && sameDimCandidates.length) {
-      initialValue = Array.isArray(initialValue) ? [] : null;
-    }
-    return sameDimCandidates.reduce(
-      ({ newValue, remainingCandidates }, candidate) => {
-        if (dialogParameter.isFulfilled(newValue)) {
-          return { remainingCandidates, newValue };
-        }
-        const reducedValue = dialogParameter.reducer(newValue, candidate);
-        return {
-          remainingCandidates: filterIntersectingEntities(remainingCandidates, candidate),
-          newValue: reducedValue === undefined ? null : reducedValue,
-        };
-      },
-      {
-        remainingCandidates: candidates,
-        newValue: initialValue,
-      },
-    );
+    // Check if the parameter is already fulfilled with its initial value
+    // If so, we replace the fulfilled parameter’s entity
+    // with the first candidate of the same dimension
+    const replaceFulfilledEntity =
+      dialogParameter.isFulfilled(initialValue) && sameDimCandidates.length >= 1;
+    const chosenCandidate = sameDimCandidates[0];
+
+    return (replaceFulfilledEntity
+      ? filterIntersectingEntities(candidates, chosenCandidate)
+      : candidates
+    )
+      .filter(candidate => candidate.dim === dialogParameter.dim)
+      .reduce(
+        ({ newValue, remainingCandidates }, candidate) => {
+          if (dialogParameter.isFulfilled(newValue)) {
+            return { remainingCandidates, newValue };
+          }
+          const reducedValue = dialogParameter.reducer(newValue, candidate);
+          return {
+            remainingCandidates: filterIntersectingEntities(remainingCandidates, candidate),
+            newValue: reducedValue === undefined ? null : reducedValue,
+          };
+        },
+        {
+          remainingCandidates: replaceFulfilledEntity
+            ? filterIntersectingEntities(candidates, chosenCandidate)
+            : candidates,
+          newValue: replaceFulfilledEntity
+            ? getEntityInitialValue(initialValue)(chosenCandidate)
+            : initialValue,
+        },
+      );
   }
 
   /**
