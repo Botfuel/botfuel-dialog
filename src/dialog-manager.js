@@ -80,7 +80,8 @@ class DialogManager extends Resolver {
   getLastDialog(previousDialogs) {
     for (let i = previousDialogs.length - 1; i >= 0; i--) {
       const dialog = previousDialogs[i];
-      if (dialog.characteristics.reentrant) {
+      const dialogInstance = this.resolve(dialog.name);
+      if (dialogInstance.characteristics.reentrant) {
         return dialog;
       }
     }
