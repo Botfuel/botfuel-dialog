@@ -80,7 +80,7 @@ class PromptDialog extends Dialog {
         }
         const reducedValue = dialogParameter.reducer(newValue, candidate);
         return {
-          remainingCandidates: filterIntersectingEntities(candidates, candidate),
+          remainingCandidates: filterIntersectingEntities(remainingCandidates, candidate),
           newValue: reducedValue === undefined ? null : reducedValue,
         };
       },

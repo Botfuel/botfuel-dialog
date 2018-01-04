@@ -597,6 +597,57 @@ describe('PromptDialog', () => {
 
         expect(Object.keys(missingEntities)).toHaveLength(0);
       });
+
+      test('should not replace a fulfilled entity when there are several message entities', () => {
+        const age = {
+          dim: 'number',
+          values: [{ value: '28', type: 'integer' }],
+          start: 9,
+          end: 11,
+          body: '28',
+        };
+        const messageEntities = [
+          {
+            dim: 'number',
+            values: [{ value: '55', type: 'integer' }],
+            start: 0,
+            end: 2,
+            body: '55',
+          },
+          {
+            dim: 'number',
+            values: [{ value: '66', type: 'integer' }],
+            start: 3,
+            end: 5,
+            body: '66',
+          },
+        ];
+
+        const expectedEntities = {
+          age: {
+            dim: 'number',
+          },
+          favoriteNumbers: {
+            dim: 'number',
+            isFulfilled: entity => entity && entity.length === 2,
+            reducer: (oldEntities, newEntity) => [...(oldEntities || []), newEntity],
+          },
+        };
+
+        const { matchedEntities, missingEntities } = prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {
+            age,
+          },
+        );
+
+        expect(matchedEntities).toHaveProperty('favoriteNumbers');
+        expect(matchedEntities.favoriteNumbers).toEqual(messageEntities);
+        expect(matchedEntities.age).toEqual(age);
+
+        expect(Object.keys(missingEntities)).toHaveLength(0);
+      });
     });
   });
 });
