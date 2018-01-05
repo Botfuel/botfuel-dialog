@@ -238,7 +238,7 @@ class DialogManager extends Resolver {
     const dialog = dialogs.stack[dialogs.stack.length - 1];
     if (dialog.blocked) {
       dialog.blocked = false;
-      const confirmationDialogName = this.getDialogPath(`${dialog.name}-confirmation`)
+      const confirmationDialogName = this.resolve(`${dialog.name}-confirmation`)
         ? `${dialog.name}-confirmation`
         : 'confirmation';
       dialogs.stack.push({
