@@ -2,7 +2,7 @@ const logger = require('logtown')('Environment');
 const SdkError = require('../errors/sdk-error');
 
 /**
- * Display environment variables
+ * Logs informations/warnings about environment variables.
  * Raise an exception if BOTFUEL_APP_TOKEN is not set
  * @returns {void}
  */
