@@ -16,14 +16,14 @@
 
 const SdkError = require('./sdk-error');
 
-module.exports = class AdapterError extends SdkError {
+module.exports = class MessageError extends SdkError {
   /**
    * @constructor
    * @param {String} message - the error message
-   * @param {Object} name - the name of the adapter in error
+   * @param {Object} name - the name of the message in error
    */
   constructor({ message, name }) {
-    super(message || 'Unknown AdapterError');
+    super(message || 'Unknown MessageError');
     this.name = name;
   }
 };

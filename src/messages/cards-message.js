@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+const MessageError = require('../errors/message-error');
+const Card = require('./card');
 const Message = require('./message');
 
 /**
@@ -28,6 +30,14 @@ class CardsMessage extends Message {
    */
   constructor(cards, options) {
     super('cards', 'bot', cards, options);
+    for (const card of cards) {
+      if (!(card instanceof Card)) {
+        throw new MessageError({
+          name: 'cards',
+          message: `Object '${JSON.stringify(card)}' should be of type Card'`,
+        });
+      }
+    }
   }
 
   // eslint-disable-next-line require-jsdoc

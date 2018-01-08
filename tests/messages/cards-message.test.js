@@ -18,8 +18,18 @@ const Card = require('../../src/messages/card');
 const CardsMessage = require('../../src/messages/cards-message');
 const Link = require('../../src/messages/link');
 const Postback = require('../../src/messages/postback');
+const MessageError = require('../../src/errors/message-error');
 
 describe('CardsMessage', () => {
+  test('should throw an exception when malformed', async () => {
+    // eslint-disable-next-line require-jsdoc
+    function createMalformedMessage() {
+      // eslint-disable-next-line no-new
+      new CardsMessage([{}]);
+    }
+    expect(createMalformedMessage).toThrow(MessageError);
+  });
+
   test('should generate the proper json', async () => {
     const message = new CardsMessage([
       new Card('Card 1', 'https://image1.jpg', [

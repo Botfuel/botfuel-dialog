@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-const SdkError = require('./sdk-error');
+const ActionsMessage = require('../../src/messages/actions-message');
+const MessageError = require('../../src/errors/message-error');
 
-module.exports = class ViewError extends SdkError {
-  /**
-   * @constructor
-   * @param {String} message - the error message
-   * @param {Object} name - the name of the view in error
-   */
-  constructor({ message, name }) {
-    super(message || 'Unknown ViewError');
-    this.name = name;
-  }
-};
+describe('ActionsMessage', () => {
+  test('should throw an exception when malformed', async () => {
+    // eslint-disable-next-line require-jsdoc
+    function createMalformedMessage() {
+      // eslint-disable-next-line no-new
+      new ActionsMessage([{}]);
+    }
+    expect(createMalformedMessage).toThrow(MessageError);
+  });
+});

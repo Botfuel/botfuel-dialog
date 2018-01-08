@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+const MessageError = require('../errors/message-error');
+const Action = require('./action');
 const Message = require('./message');
 
 /**
@@ -28,6 +30,14 @@ class ActionsMessage extends Message {
    */
   constructor(actions, options) {
     super('actions', 'bot', actions, options);
+    for (const action of actions) {
+      if (!(action instanceof Action)) {
+        throw new MessageError({
+          name: 'actions',
+          message: `Object '${JSON.stringify(action)}' should be of type Action'`,
+        });
+      }
+    }
   }
 
   // eslint-disable-next-line require-jsdoc
