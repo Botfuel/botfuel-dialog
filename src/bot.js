@@ -24,6 +24,7 @@ const { getConfiguration } = require('./config');
 const AuthenticationError = require('./errors/authentication-error');
 const DialogError = require('./errors/dialog-error');
 const ViewError = require('./errors/view-error');
+const { checkEnvironmentVariables } = require('./utils/environment');
 
 const logger = Logger.getLogger('Bot');
 
@@ -44,6 +45,7 @@ class Bot {
   constructor(config) {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
+    checkEnvironmentVariables();
     this.id = process.env.BOTFUEL_APP_TOKEN;
     this.brain = this.getBrain(this.config.brain);
     this.nlu = new Nlu(this.config);

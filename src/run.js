@@ -20,12 +20,10 @@ require('babel-polyfill');
 const logger = require('logtown')('Run');
 const Bot = require('./bot');
 const { resolveConfigFile } = require('./config');
-const { checkEnvironmentVariables } = require('./utils/environment');
 
 (async () => {
   try {
     const config = resolveConfigFile(process.argv[2]);
-    checkEnvironmentVariables();
     await new Bot(config).run();
   } catch (e) {
     logger.error(e.message);
