@@ -44,8 +44,6 @@ class Bot {
   constructor(config) {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
-    // give informations about env vars
-    this.checkEnvVars();
     this.id = process.env.BOTFUEL_APP_TOKEN;
     this.brain = this.getBrain(this.config.brain);
     this.nlu = new Nlu(this.config);
@@ -211,25 +209,6 @@ class Bot {
       entities: [{ url: userMessage.payload.value.url }],
     };
     await this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
-  }
-
-  /**
-   * Logs informations/warnings about environment variables.
-   * @returns {void}
-   */
-  checkEnvVars() {
-    logger.info('BOTFUEL_APP_TOKEN:', process.env.BOTFUEL_APP_TOKEN);
-    logger.info('BOTFUEL_APP_ID:', process.env.BOTFUEL_APP_ID);
-    logger.info('BOTFUEL_APP_KEY:', process.env.BOTFUEL_APP_KEY);
-    if (!process.env.BOTFUEL_APP_TOKEN) {
-      logger.warn('Environment variable BOTFUEL_APP_TOKEN is not defined!');
-    }
-    if (!process.env.BOTFUEL_APP_ID) {
-      logger.warn('Environment variable BOTFUEL_APP_ID is not defined!');
-    }
-    if (!process.env.BOTFUEL_APP_KEY) {
-      logger.warn('Environment variable BOTFUEL_APP_KEY is not defined!');
-    }
   }
 }
 
