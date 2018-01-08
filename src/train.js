@@ -27,6 +27,6 @@ const { resolveConfigFile } = require('./config');
     await new Classifier(config).train();
     logger.info('Training done.');
   } catch (e) {
-    logger.error(e);
+    logger.error(e.message);
   }
 })();

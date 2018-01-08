@@ -28,6 +28,6 @@ const { checkEnvironmentVariables } = require('./utils/environment');
     checkEnvironmentVariables();
     await new Bot(config).run();
   } catch (e) {
-    logger.error(e);
+    logger.error(e.message);
   }
 })();
