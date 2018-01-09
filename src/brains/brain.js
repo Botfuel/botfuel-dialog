@@ -62,7 +62,6 @@ class Brain {
       botId: this.botId,
       userId,
       conversations: [this.getConversationInitValue()],
-      dialogs: { stack: [], previous: [] },
       createdAt: Date.now(),
     };
   }
@@ -73,6 +72,7 @@ class Brain {
    */
   getConversationInitValue() {
     return {
+      dialogs: { stack: [], previous: [] },
       createdAt: Date.now(),
     };
   }
