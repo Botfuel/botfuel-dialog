@@ -21,7 +21,8 @@ const logger = require('logtown')('Run');
 const Bot = require('./bot');
 const { resolveConfigFile } = require('./config');
 
-process.on('unhandledRejection', r => logger.error(r));
+// capture stack trace on unhandled promise rejection
+process.on('unhandledRejection', err => logger.error(err));
 
 (async () => {
   try {
