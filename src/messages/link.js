@@ -23,11 +23,17 @@ const Action = require('./action');
 class Link extends Action {
   /**
    * @constructor
-   * @param {String} text - the link title
-   * @param {String} value - the link url
+   * @param {String} title - the link title
+   * @param {String} url - the link url
    */
-  constructor(text, value) {
-    super('link', text, value);
+  constructor(title, url) {
+    super('link', title, url);
+  }
+
+  /** @inheritDoc */
+  validate() {
+    super.validate();
+    this.validateString(this.type, this.value);
   }
 }
 

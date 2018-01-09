@@ -30,8 +30,17 @@ class CardsMessage extends Message {
    */
   constructor(cards, options) {
     super('cards', 'bot', cards, options);
-    for (const card of cards) {
-      if (!(card instanceof Card)) {
+    this.validate();
+  }
+
+  /** @inheritDoc */
+  validate() {
+    super.validate();
+    this.validateArray('cards', this.value);
+    for (const card of this.value) {
+      if (card instanceof Card) {
+        card.validate();
+      } else {
         throw new MessageError({
           name: 'cards',
           message: `Object '${JSON.stringify(card)}' should be of type Card'`,
@@ -40,7 +49,7 @@ class CardsMessage extends Message {
     }
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   valueAsJson() {
     return this.value.map(card => card.toJson());
   }

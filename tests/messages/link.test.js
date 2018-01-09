@@ -14,28 +14,16 @@
  * limitations under the License.
  */
 
-const Message = require('./message');
+const Link = require('../../src/messages/link');
+const MessageError = require('../../src/errors/message-error');
 
-/**
- * A text message send by the user to the bot.
- * @extends Message
- */
-class UserTextMessage extends Message {
-  /**
-   * @constructor
-   * @param {String} text - the message
-   * @param {Object} [options] - the message options
-   */
-  constructor(text, options) {
-    super('text', 'user', text, options);
-    this.validate();
-  }
-
-  /** @inheritDoc */
-  validate() {
-    super.validate();
-    this.validateString(this.type, this.value);
-  }
-}
-
-module.exports = UserTextMessage;
+describe('Link', () => {
+  test('should throw an exception when malformed url', async () => {
+    // eslint-disable-next-line require-jsdoc
+    function validateInvalidObject() {
+      // eslint-disable-next-line no-new
+      new Link('', null).validate();
+    }
+    expect(validateInvalidObject).toThrow(MessageError);
+  });
+});

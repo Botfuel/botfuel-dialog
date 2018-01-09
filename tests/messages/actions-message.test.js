@@ -20,10 +20,10 @@ const MessageError = require('../../src/errors/message-error');
 describe('ActionsMessage', () => {
   test('should throw an exception when malformed', async () => {
     // eslint-disable-next-line require-jsdoc
-    function createMalformedMessage() {
+    function validateInvalidObject() {
       // eslint-disable-next-line no-new
       new ActionsMessage([{}]);
     }
-    expect(createMalformedMessage).toThrow(MessageError);
+    expect(validateInvalidObject).toThrow(MessageError);
   });
 });

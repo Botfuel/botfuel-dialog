@@ -23,6 +23,8 @@ const Message = require('./message');
  * @extends Message
  */
 class ActionsMessage extends Message {
+  // TODO: fix redundancy with card
+
   /**
    * @constructor
    * @param {Object[]} actions - the actions
@@ -30,17 +32,36 @@ class ActionsMessage extends Message {
    */
   constructor(actions, options) {
     super('actions', 'bot', actions, options);
+    this.validate();
+  }
+
+  /** @inheritDoc */
+  validate() {
+    super.validate();
+    this.validateActions(this.type, this.value);
+  }
+
+  /**
+   * Validates that a value is an array of actions.
+   * @param {String} name - the type of the object being validated
+   * @param {*} actions - the value being validated
+   * @returns {void}
+   */
+  validateActions(name, actions) {
+    this.validateArray(name, actions);
     for (const action of actions) {
-      if (!(action instanceof Action)) {
+      if (action instanceof Action) {
+        action.validate();
+      } else {
         throw new MessageError({
-          name: 'actions',
+          name: this.type,
           message: `Object '${JSON.stringify(action)}' should be of type Action'`,
         });
       }
     }
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   valueAsJson() {
     return this.value.map(action => action.toJson());
   }

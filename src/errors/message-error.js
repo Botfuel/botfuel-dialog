@@ -20,7 +20,7 @@ module.exports = class MessageError extends SdkError {
   /**
    * @constructor
    * @param {String} message - the error message
-   * @param {Object} name - the name of the message in error
+   * @param {String} name - the name of the message in error
    */
   constructor({ message, name }) {
     super(message || 'Unknown MessageError');

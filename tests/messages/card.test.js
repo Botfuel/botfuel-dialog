@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-const Action = require('../../src/messages/action');
+const Card = require('../../src/messages/card');
 const MessageError = require('../../src/errors/message-error');
 
-describe('Action', () => {
-  test('should throw an exception when malformed', async () => {
+describe('Card', () => {
+  test('should throw an exception when malformed string', async () => {
     // eslint-disable-next-line require-jsdoc
     function validateInvalidObject() {
       // eslint-disable-next-line no-new
-      new Action('action', null, null).validate();
+      new Card(null, null, []).validate();
     }
     expect(validateInvalidObject).toThrow(MessageError);
   });
 
-  test('should generate the proper json', async () => {
-    expect(new Action('type', 'text', 'value').toJson()).toEqual({
-      type: 'type',
-      text: 'text',
-      value: 'value',
-    });
+  test('should throw an exception when malformed actions', async () => {
+    // eslint-disable-next-line require-jsdoc
+    function validateInvalidObject() {
+      // eslint-disable-next-line no-new
+      new Card('title', 'http://domain.com', null).validate();
+    }
+    expect(validateInvalidObject).toThrow(MessageError);
   });
 });

@@ -23,11 +23,11 @@ const MessageError = require('../../src/errors/message-error');
 describe('CardsMessage', () => {
   test('should throw an exception when malformed', async () => {
     // eslint-disable-next-line require-jsdoc
-    function createMalformedMessage() {
+    function validateInvalidObject() {
       // eslint-disable-next-line no-new
       new CardsMessage([{}]);
     }
-    expect(createMalformedMessage).toThrow(MessageError);
+    expect(validateInvalidObject).toThrow(MessageError);
   });
 
   test('should generate the proper json', async () => {
