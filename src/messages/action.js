@@ -33,13 +33,18 @@ class Action extends Part {
     this.value = value;
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   toJson() {
     return {
       type: this.type,
       text: this.text,
       value: this.value,
     };
+  }
+
+  /** @inheritDoc */
+  validate() {
+    this.validateString(this.type, this.text);
   }
 }
 

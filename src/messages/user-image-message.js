@@ -23,10 +23,17 @@ const Message = require('./message');
 class UserImageMessage extends Message {
   /**
    * @constructor
-   * @param {String} value - the image url
+   * @param {String} url - the image url
    */
-  constructor(value) {
-    super('image', 'user', value);
+  constructor(url) {
+    super('image', 'user', url);
+    this.validate();
+  }
+
+  /** @inheritDoc */
+  validate() {
+    super.validate();
+    this.validateUrl(this.type, this.value);
   }
 }
 

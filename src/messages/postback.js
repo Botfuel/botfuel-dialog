@@ -30,6 +30,13 @@ class Postback extends Action {
   constructor(text, dialog, entities) {
     super('postback', text, { dialog, entities });
   }
+
+  /** @inheritDoc */
+  validate() {
+    super.validate();
+    this.validateString(this.type, this.value.dialog);
+    this.validateArray(this.type, this.value.entities);
+  }
 }
 
 module.exports = Postback;

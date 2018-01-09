@@ -28,6 +28,16 @@ class QuickrepliesMessage extends Message {
    */
   constructor(texts, options) {
     super('quickreplies', 'bot', texts, options);
+    this.validate();
+  }
+
+  /** @inheritDoc */
+  validate() {
+    super.validate();
+    this.validateArray(this.type, this.value);
+    for (const text of this.value) {
+      this.validateString(this.type, text);
+    }
   }
 }
 
