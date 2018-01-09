@@ -36,6 +36,8 @@ class TestAdapter extends Adapter {
   /** @inheritDoc */
   async play(userMessages) {
     await this.bot.brain.initUserIfNecessary(this.userId);
+    await this.bot.brain.userSet(this.userId, 'profile', { firstName: 'USER_TEST_FIRST_NAME' });
+
     for (const userMessage of userMessages) {
       const userMessageAsJson = userMessage.toJson(this.bot.id, this.userId);
       this.log.push(userMessageAsJson);
