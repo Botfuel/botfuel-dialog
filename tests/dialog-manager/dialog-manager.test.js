@@ -49,28 +49,28 @@ describe('DialogManager', () => {
 
   test('should keep on the stack a dialog which is waiting', async () => {
     await dm.executeIntents(null, TEST_USER, [{ name: 'waiting', value: 1.0 }], []);
-    const user = await dm.brain.getUser(TEST_USER);
-    expect(user.dialogs.stack.length).toBe(1);
+    const dialogs = await dm.brain.conversationGet(TEST_USER, 'dialogs');
+    expect(dialogs.stack.length).toBe(1);
   });
 
   test('should not stack the same dialog twice', async () => {
     await dm.executeIntents(null, TEST_USER, [{ name: 'waiting', value: 1.0 }], []);
     await dm.executeIntents(null, TEST_USER, [{ name: 'waiting', value: 1.0 }], []);
-    const user = await dm.brain.getUser(TEST_USER);
-    expect(user.dialogs.stack.length).toBe(1);
+    const dialogs = await dm.brain.conversationGet(TEST_USER, 'dialogs');
+    expect(dialogs.stack.length).toBe(1);
   });
 
   test('should empty the stack (1)', async () => {
     const adapter = new TestAdapter({ id: TEST_BOT }, {});
     await dm.executeIntents(adapter, TEST_USER, [{ name: 'default', value: 1.0 }], []);
-    const user = await dm.brain.getUser(TEST_USER);
-    expect(user.dialogs.stack.length).toBe(0);
+    const dialogs = await dm.brain.conversationGet(TEST_USER, 'dialogs');
+    expect(dialogs.stack.length).toBe(0);
   });
 
   test('should empty the stack (2)', async () => {
     const adapter = new TestAdapter({ id: TEST_BOT }, {});
     await dm.executeDialogs(adapter, TEST_USER, [{ name: 'default' }]);
-    const user = await dm.brain.getUser(TEST_USER);
-    expect(user.dialogs.stack.length).toBe(0);
+    const dialogs = await dm.brain.conversationGet(TEST_USER, 'dialogs');
+    expect(dialogs.stack.length).toBe(0);
   });
 });
