@@ -126,7 +126,7 @@ class Dialog {
    *   - a newDialog object thas has a name
    *   - an action set to ACTION_NEXT
    */
-  triggerNext(dialogName, dialogEntities) {
+  triggerNext(dialogName, dialogEntities = []) {
     if (!dialogName) {
       throw new DialogError({
         message: 'You must provide a dialogName as a parameter to the nextDialog method.',
