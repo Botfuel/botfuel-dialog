@@ -89,8 +89,9 @@ const brainTest = (brainLabel) => {
   test('get last user conversation', async () => {
     await brain.addUser(USER_ID);
     const conversation = await brain.getLastConversation(USER_ID);
+    const { _dialogs } = conversation;
     expect(conversation).not.toBe(null);
-    expect(conversation.dialogs.stack).toHaveLength(0);
+    expect(_dialogs.stack).toHaveLength(0);
   });
 
   test('set user last conversation key', async () => {
