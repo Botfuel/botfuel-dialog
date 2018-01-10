@@ -72,7 +72,7 @@ class Brain {
    */
   getConversationInitValue() {
     return {
-      dialogs: { stack: [], previous: [] },
+      _dialogs: { stack: [], previous: [] },
       createdAt: Date.now(),
     };
   }
@@ -208,7 +208,7 @@ class Brain {
    * @returns {Promise.<Object>}
    */
   async getDialogs(userId) {
-    return this.conversationGet(userId, 'dialogs');
+    return this.conversationGet(userId, '_dialogs');
   }
 
   /**
@@ -218,7 +218,7 @@ class Brain {
    * @returns {Promise<void>}
    */
   async setDialogs(userId, dialogs) {
-    await this.conversationSet(userId, 'dialogs', dialogs);
+    await this.conversationSet(userId, '_dialogs', dialogs);
   }
 }
 
