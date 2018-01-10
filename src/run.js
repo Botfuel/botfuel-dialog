@@ -17,9 +17,12 @@
 
 require('babel-polyfill');
 
-const logger = require('logtown')('Bot');
+const logger = require('logtown')('Run');
 const Bot = require('./bot');
 const { resolveConfigFile } = require('./config');
+
+// log stack trace on unhandled promise rejection
+process.on('unhandledRejection', err => logger.error(err));
 
 (async () => {
   try {
