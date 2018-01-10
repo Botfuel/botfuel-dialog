@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+const MessageError = require('../errors/message-error');
+const Action = require('./action');
 const Part = require('./part');
 
 /**
@@ -24,23 +26,50 @@ class Card extends Part {
    * @constructor
    * @param {String} title - the title
    * @param {String} imageUrl - the image url
-   * @param {Object[]} buttons - an array of buttons
+   * @param {Object[]} actions - an array of actions
    */
-  constructor(title, imageUrl, buttons) {
+  constructor(title, imageUrl, actions) {
     super();
-    // TODO : this is very Messenger specific, let's generalize it!
     this.title = title;
     this.imageUrl = imageUrl;
-    this.buttons = buttons;
+    this.actions = actions;
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
   toJson() {
+    // TODO : this is very Messenger specific, let's generalize it!
     return {
       title: this.title,
       image_url: this.imageUrl,
-      buttons: this.buttons.map(button => button.toJson()),
+      buttons: this.actions.map(action => action.toJson()),
     };
+  }
+
+  /** @inheritDoc */
+  validate() {
+    this.validateString('card', this.title);
+    this.validateUrl('card', this.imageUrl);
+    this.validateActions('card', this.actions);
+  }
+
+  /**
+   * Validates that a value is an array of actions.
+   * @param {String} name - the type of the object being validated
+   * @param {*} actions - the value being validated
+   * @returns {void}
+   */
+  validateActions(name, actions) {
+    this.validateArray(name, actions);
+    for (const action of actions) {
+      if (action instanceof Action) {
+        action.validate();
+      } else {
+        throw new MessageError({
+          name: 'card',
+          message: `Object '${JSON.stringify(action)}' should be of type Action'`,
+        });
+      }
+    }
   }
 }
 

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-const SdkError = require('./sdk-error');
+const Link = require('../../src/messages/link');
+const MessageError = require('../../src/errors/message-error');
 
-module.exports = class AdapterError extends SdkError {
-  /**
-   * @constructor
-   * @param {String} message - the error message
-   * @param {Object} name - the name of the adapter in error
-   */
-  constructor({ message, name }) {
-    super(message || 'Unknown AdapterError');
-    this.name = name;
-  }
-};
+describe('Link', () => {
+  test('should throw an exception when malformed url', async () => {
+    // eslint-disable-next-line require-jsdoc
+    function validateInvalidObject() {
+      // eslint-disable-next-line no-new
+      new Link('', null).validate();
+    }
+    expect(validateInvalidObject).toThrow(MessageError);
+  });
+});

@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+const ValidObject = require('./valid-object');
+
 /**
  * An abstract message.
  */
-class Message {
+class Message extends ValidObject {
   /**
    * @constructor
    * @param {String} type - the message type
@@ -26,6 +28,7 @@ class Message {
    * @param {Object} [options] - the message options
    */
   constructor(type, sender, value, options) {
+    super();
     this.type = type;
     this.sender = sender;
     this.value = value;
@@ -68,6 +71,12 @@ class Message {
    */
   valueAsJson() {
     return this.value;
+  }
+
+  /** @inheritDoc */
+  validate() {
+    this.validateString(this.type, this.type);
+    this.validateString(this.type, this.sender);
   }
 }
 

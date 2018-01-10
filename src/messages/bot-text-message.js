@@ -23,11 +23,18 @@ const Message = require('./message');
 class BotTextMessage extends Message {
   /**
    * @constructor
-   * @param {String} value - the text value
+   * @param {String} text - the text
    * @param {Object} [options] - the message options
    */
-  constructor(value, options) {
-    super('text', 'bot', value, options);
+  constructor(text, options) {
+    super('text', 'bot', text, options);
+    this.validate();
+  }
+
+  /** @inheritDoc */
+  validate() {
+    super.validate();
+    this.validateString(this.type, this.value);
   }
 }
 

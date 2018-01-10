@@ -15,11 +15,12 @@
  */
 
 const MissingImplementationError = require('../errors/missing-implementation-error');
+const ValidObject = require('./valid-object');
 
 /**
  * A message part.
  */
-class Part {
+class Part extends ValidObject {
   /**
    * Converts the part to json.
    * @abstract

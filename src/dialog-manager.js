@@ -216,7 +216,7 @@ class DialogManager extends Resolver {
 
       default:
         throw new DialogError({
-          dialog: currentDialog,
+          name: currentDialog,
           message: `Unknown action '${name}' in '${currentDialog.name}'`,
         });
     }

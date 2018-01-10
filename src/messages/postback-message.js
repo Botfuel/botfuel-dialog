@@ -28,6 +28,14 @@ class PostbackMessage extends Message {
    */
   constructor(dialog, entities) {
     super('postback', 'user', { dialog, entities });
+    this.validate();
+  }
+
+  /** @inheritDoc */
+  validate() {
+    super.validate();
+    this.validateString(this.type, this.value.dialog);
+    this.validateArray(this.type, this.value.entities);
   }
 }
 

@@ -23,7 +23,7 @@ const Nlu = require('./nlu');
 const { getConfiguration } = require('./config');
 const AuthenticationError = require('./errors/authentication-error');
 const DialogError = require('./errors/dialog-error');
-const ViewError = require('./errors/view-error');
+const ResolutionError = require('./errors/resolution-error');
 
 const logger = Logger.getLogger('Bot');
 
@@ -90,12 +90,10 @@ class Bot {
       logger.error(
         'Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io',
       );
-    } else if (error instanceof ViewError) {
-      const { view } = error;
-      logger.error(`Could not render view '${view}'`);
+    } else if (error instanceof ResolutionError) {
+      logger.error(`Could not resolve '${error.name}'`);
     } else if (error instanceof DialogError) {
-      const { dialog } = error;
-      logger.error(`Could not execute dialog '${dialog}'`);
+      logger.error(`Could not execute dialog '${error.name}'`);
     }
     throw error;
   }
