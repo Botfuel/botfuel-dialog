@@ -14,28 +14,16 @@
  * limitations under the License.
  */
 
-const Message = require('./message');
+const SdkError = require('./sdk-error');
 
-/**
- * A text message send by the user to the bot.
- * @extends Message
- */
-class UserTextMessage extends Message {
+module.exports = class MessageError extends SdkError {
   /**
    * @constructor
-   * @param {String} text - the message
-   * @param {Object} [options] - the message options
+   * @param {String} message - the error message
+   * @param {String} name - the name of the message in error
    */
-  constructor(text, options) {
-    super('text', 'user', text, options);
-    this.validate();
+  constructor({ message, name }) {
+    super(message || 'Unknown MessageError');
+    this.name = name;
   }
-
-  /** @inheritDoc */
-  validate() {
-    super.validate();
-    this.validateString(this.type, this.value);
-  }
-}
-
-module.exports = UserTextMessage;
+};

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+const MessageError = require('../errors/message-error');
+const Card = require('./card');
 const Message = require('./message');
 
 /**
@@ -28,9 +30,26 @@ class CardsMessage extends Message {
    */
   constructor(cards, options) {
     super('cards', 'bot', cards, options);
+    this.validate();
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /** @inheritDoc */
+  validate() {
+    super.validate();
+    this.validateArray('cards', this.value);
+    for (const card of this.value) {
+      if (card instanceof Card) {
+        card.validate();
+      } else {
+        throw new MessageError({
+          name: 'cards',
+          message: `Object '${JSON.stringify(card)}' should be of type Card'`,
+        });
+      }
+    }
+  }
+
+  /** @inheritDoc */
   valueAsJson() {
     return this.value.map(card => card.toJson());
   }

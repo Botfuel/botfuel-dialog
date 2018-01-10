@@ -15,8 +15,18 @@
  */
 
 const BotTextMessage = require('../../src/messages/bot-text-message');
+const MessageError = require('../../src/errors/message-error');
 
 describe('BotTextMessage', () => {
+  test('should throw an exception when malformed', async () => {
+    // eslint-disable-next-line require-jsdoc
+    function validateInvalidObject() {
+      // eslint-disable-next-line no-new
+      new BotTextMessage(null);
+    }
+    expect(validateInvalidObject).toThrow(MessageError);
+  });
+
   test('should generate the proper json', async () => {
     const message = new BotTextMessage('foo');
     expect(message.toJson('BOT', 'USER')).toEqual({
