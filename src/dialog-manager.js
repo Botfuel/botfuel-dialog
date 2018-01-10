@@ -95,7 +95,7 @@ class DialogManager extends Resolver {
    */
   async getDialogs(userId) {
     logger.debug('getDialogs', userId);
-    return this.brain.conversationGet(userId, 'dialogs');
+    return this.brain.getDialogs(userId);
   }
 
   /**
@@ -106,7 +106,7 @@ class DialogManager extends Resolver {
    */
   async setDialogs(userId, dialogs) {
     logger.debug('setDialogs', userId, dialogs);
-    await this.brain.conversationSet(userId, 'dialogs', dialogs);
+    await this.brain.setDialogs(userId, dialogs);
   }
 
   /**

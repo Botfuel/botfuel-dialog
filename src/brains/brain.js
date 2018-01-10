@@ -201,6 +201,25 @@ class Brain {
   isConversationValid(conversation) {
     return conversation !== undefined && Date.now() - conversation.createdAt < this.dayInMs;
   }
+
+  /**
+   * Get dialogs data from the last conversation
+   * @param {String} userId - user id
+   * @returns {Promise.<Object>}
+   */
+  async getDialogs(userId) {
+    return this.conversationGet(userId, 'dialogs');
+  }
+
+  /**
+   * Set dialogs data in the last conversation
+   * @param {String} userId - user id
+   * @param {Object} dialogs - dialogs data of the last conversation
+   * @returns {Promise<void>}
+   */
+  async setDialogs(userId, dialogs) {
+    await this.conversationSet(userId, 'dialogs', dialogs);
+  }
 }
 
 module.exports = Brain;

@@ -133,6 +133,28 @@ const brainTest = (brainLabel) => {
     const brainHasUser = await brain.hasUser(USER_ID);
     expect(brainHasUser).toBe(false);
   });
+
+  test('get last conversation dialogs', async () => {
+    await brain.addUser(USER_ID);
+    await brain.addConversation(USER_ID);
+    const dialogs = await brain.getDialogs(USER_ID);
+    expect(dialogs.stack).toHaveLength(0);
+    expect(dialogs.previous).toHaveLength(0);
+  });
+
+  test('set last conversation dialogs', async () => {
+    const dialogsData = {
+      stack: [{ name: 'greetings', entities: [] }],
+      previous: [],
+    };
+    await brain.addUser(USER_ID);
+    await brain.addConversation(USER_ID);
+    await brain.setDialogs(USER_ID, dialogsData);
+    const dialogs = await brain.getDialogs(USER_ID);
+    expect(dialogs.stack).toHaveLength(1);
+    expect(dialogs.stack[0].name).toBe('greetings');
+    expect(dialogs.previous).toHaveLength(0);
+  });
 };
 
 describe('Brains', () => {
