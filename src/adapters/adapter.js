@@ -16,6 +16,7 @@
 
 const logger = require('logtown')('Adapter');
 const MissingImplementationError = require('../errors/missing-implementation-error');
+const MiddlewareManager = require('../middleware-manager');
 
 /**
  * An adapter adapts the messages to the messaging platform.
@@ -29,6 +30,7 @@ class Adapter {
     logger.debug('constructor');
     this.config = bot.config;
     this.bot = bot;
+    this.middlewareManager = new MiddlewareManager(this);
   }
 
   /**
@@ -65,10 +67,12 @@ class Adapter {
    */
   async send(botMessages) {
     logger.debug('send', botMessages);
-    for (const botMessage of botMessages) {
-      // eslint-disable-next-line no-await-in-loop
-      await this.sendMessage(botMessage);
-    }
+    await this.middlewareManager.in(botMessages, async () => {
+      for (const botMessage of botMessages) {
+        // eslint-disable-next-line no-await-in-loop
+        await this.sendMessage(botMessage);
+      }
+    });
   }
 
   /**
@@ -78,9 +82,11 @@ class Adapter {
    * @returns {Promise.<void>}
    */
   async handleMessage(userMessage) {
-    const userId = userMessage.user;
-    await this.initUserIfNecessary(userId);
-    await this.bot.respond(userMessage);
+    await this.middlewareManager.out(userMessage, async () => {
+      const userId = userMessage.user;
+      await this.initUserIfNecessary(userId);
+      await this.bot.respond(userMessage);
+    });
   }
 
   /**
