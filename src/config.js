@@ -71,6 +71,7 @@ const getConfiguration = (botConfig) => {
 };
 
 module.exports = {
+  defaultConfig,
   resolveConfigFile,
   getConfiguration,
 };
