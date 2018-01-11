@@ -24,8 +24,8 @@ const View = require('./view');
  */
 class PromptView extends View {
   // eslint-disable-next-line require-jsdoc
-  render({ matchedEntities, missingEntities, ...dialogData }) {
-    logger.debug('render', { matchedEntities, missingEntities, dialogData });
+  render({ matchedEntities, missingEntities, dialogData }) {
+    logger.info('render', { matchedEntities, missingEntities, dialogData });
     return this.renderEntities(matchedEntities, missingEntities, dialogData);
   }
 
