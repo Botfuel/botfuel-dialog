@@ -36,9 +36,9 @@ class TestAdapter extends Adapter {
   /** @inheritDoc */
   async play(userMessages) {
     for (const userMessage of userMessages) {
-      // eslint-disable-next-line no-await-in-loop
       const userMessageAsJson = userMessage.toJson(this.bot.id, this.userId);
       this.log.push(userMessageAsJson);
+      // eslint-disable-next-line no-await-in-loop
       await this.handleMessage(userMessageAsJson);
     }
   }
