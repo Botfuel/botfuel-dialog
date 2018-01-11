@@ -34,6 +34,7 @@ class Dialog {
   static ACTION_COMPLETE = 'complete';
   static ACTION_WAIT = 'wait';
   static ACTION_NEXT = 'next';
+  static ACTION_RESET = 'reset';
 
   /**
    * Indicates that this dialog is cancelling the previous one.
@@ -61,6 +62,13 @@ class Dialog {
    */
   get ACTION_NEXT() {
     return Dialog.ACTION_NEXT;
+  }
+
+  /**
+   * Reset dialogs.
+   */
+  get ACTION_RESET() {
+    return Dialog.ACTION_RESET;
   }
 
   /**
@@ -153,6 +161,25 @@ class Dialog {
   cancelPrevious(dialogName) {
     return {
       name: this.ACTION_CANCEL,
+      ...(dialogName && {
+        newDialog: {
+          name: dialogName,
+        },
+      }),
+    };
+  }
+
+  /**
+   * Builds an object that resets the dialogs stack
+   * and optionally provides name of the next dialog.
+   * @param {String} [dialogName] - the name of the next dialog (optional)
+   * @returns {Object} contains
+   *   - a newDialog object thas has a name (optional)
+   *   - an action set to ACTION_RESET
+   */
+  resetDialogs(dialogName) {
+    return {
+      name: this.ACTION_RESET,
       ...(dialogName && {
         newDialog: {
           name: dialogName,
