@@ -48,7 +48,7 @@ class Adapter {
   /**
    * Adapter's method for running the bot.
    * This method is called by the {@link Bot}'s run method.
-   * @abtract
+   * @abstract
    * @async
    * @returns {Promise.<void>}
    */
