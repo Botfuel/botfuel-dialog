@@ -21,7 +21,8 @@ const Classifer = require('../../src/classifier');
 const globalTestDirPath = path.join(process.cwd(), '_tmp_tests');
 const testDirPath = path.join(globalTestDirPath, '_tmp_test_classifier');
 const modelPath = path.join(testDirPath, 'model.json');
-const makeIntentPath = name => path.join(testDirPath, name);
+const intentsDirPath = path.join(testDirPath, 'intents');
+const makeIntentPath = name => path.join(intentsDirPath, name);
 const classifier = new Classifer({ path: __dirname, locale: 'en' });
 
 const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -35,25 +36,55 @@ describe('Classifier', () => {
   describe('isModelUpToDate', async () => {
     beforeAll(async () => {
       await Promise.all([
-        fs.ensureFileSync(makeIntentPath('1.intent')),
-        fs.ensureFileSync(makeIntentPath('2.intent')),
-        fs.ensureFileSync(makeIntentPath('3.intent')),
+        fs.ensureFile(makeIntentPath('1.intent')),
+        fs.ensureFile(makeIntentPath('2.intent')),
+        fs.ensureFile(makeIntentPath('3.intent')),
       ]);
 
       await timeout(1000);
 
-      await fs.ensureFileSync(modelPath);
+      await fs.ensureFile(modelPath);
     });
 
     test('should return true if model is fresher than intents', async () => {
-      const isModelFresh = await classifier.isModelUpToDate(modelPath, testDirPath);
+      const isModelFresh = await classifier.isModelUpToDate(modelPath, intentsDirPath);
       expect(isModelFresh).toBe(true);
     });
 
     test('should return false if model is fresher than intents', async () => {
       await fs.ensureFileSync(makeIntentPath('4.intent'));
-      const isModelFresh = await classifier.isModelUpToDate(modelPath, testDirPath);
+      const isModelFresh = await classifier.isModelUpToDate(modelPath, intentsDirPath);
       expect(isModelFresh).toBe(false);
+    });
+  });
+
+  describe('intentsAndModelExist', async () => {
+    test('should return true if both model and intents dir exist', async () => {
+      await fs.ensureFile(modelPath);
+      await fs.ensureDir(intentsDirPath);
+      const intentsAndModelExist = await classifier.intentsAndModelExist(modelPath, intentsDirPath);
+      expect(intentsAndModelExist).toBe(true);
+    });
+
+    test('should return false if only model file does not exist', async () => {
+      await fs.remove(modelPath);
+      await fs.ensureDir(intentsDirPath);
+      const intentsAndModelExist = await classifier.intentsAndModelExist(modelPath, intentsDirPath);
+      expect(intentsAndModelExist).toBe(false);
+    });
+
+    test('should return false if only intents dir does not exist', async () => {
+      await fs.ensureFile(modelPath);
+      await fs.remove(intentsDirPath);
+      const intentsAndModelExist = await classifier.intentsAndModelExist(modelPath, intentsDirPath);
+      expect(intentsAndModelExist).toBe(false);
+    });
+
+    test('should return false if both model and intents dir do not exist', async () => {
+      await fs.remove(modelPath);
+      await fs.remove(intentsDirPath);
+      const intentsAndModelExist = await classifier.intentsAndModelExist(modelPath, intentsDirPath);
+      expect(intentsAndModelExist).toBe(false);
     });
   });
 
