@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Copyright (c) 2017 - present, Botfuel (https://www.botfuel.io).
  *
@@ -15,18 +14,13 @@
  * limitations under the License.
  */
 
-require('babel-polyfill');
-
-const logger = require('logtown')('Run');
-const Bot = require('./bot');
-const { resolveConfigFile } = require('./config');
-
-(async () => {
-  try {
-    const config = resolveConfigFile(process.argv[2]);
-    await new Bot(config).run();
-  } catch (e) {
-    logger.error(e.message);
-    process.exit(0);
+module.exports = class MissingCredentialsError extends Error {
+  /**
+   * @constructor
+   * @param {String} message - the error message
+   */
+  constructor(message) {
+    super(message || 'Missing credentials!');
+    Error.captureStackTrace(this, this.constructor);
   }
-})();
+};

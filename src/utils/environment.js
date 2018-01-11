@@ -1,25 +1,57 @@
 const logger = require('logtown')('Environment');
-const SdkError = require('../errors/sdk-error');
+const MissingCredentialsError = require('../errors/missing-credentials-error');
+
+const BOTFUEL_ADAPTER = 'botfuel';
+const MONGO_BRAIN = 'mongo';
 
 /**
- * Logs informations/warnings about environment variables.
- * Raise an exception if BOTFUEL_APP_TOKEN is not set
+ * Logs informations/warnings about credentials environment variables.
+ * Throws exceptions when required credentials missing
+ * @param {Object} config - the bot configuration
  * @returns {void}
  */
-export const checkEnvironmentVariables = () => {
-  if (!process.env.BOTFUEL_APP_TOKEN) {
-    throw new SdkError('Environment variable BOTFUEL_APP_TOKEN is not defined!');
+export const checkCredentials = (config) => {
+  const { BOTFUEL_APP_TOKEN, BOTFUEL_APP_ID, BOTFUEL_APP_KEY } = process.env;
+  // Botfuel app token
+  if (!BOTFUEL_APP_TOKEN) {
+    if (config.adapter === BOTFUEL_ADAPTER) {
+      throw new MissingCredentialsError('BOTFUEL_APP_TOKEN is required to use the Webchat.');
+    }
+    if (config.brain === MONGO_BRAIN) {
+      throw new MissingCredentialsError(
+        'BOTFUEL_APP_TOKEN is required to use the Brain with mongodb.',
+      );
+    }
+    logger.warn('Environment variable BOTFUEL_APP_TOKEN is not defined.');
   } else {
-    logger.info('BOTFUEL_APP_TOKEN:', process.env.BOTFUEL_APP_TOKEN);
+    logger.info(`BOTFUEL_APP_TOKEN=${BOTFUEL_APP_TOKEN}`);
   }
-  if (!process.env.BOTFUEL_APP_ID) {
-    logger.warn('Environment variable BOTFUEL_APP_ID is not defined!');
-  } else {
-    logger.info('BOTFUEL_APP_ID:', process.env.BOTFUEL_APP_ID);
+
+  // Botfuel app id/key
+  if (!BOTFUEL_APP_ID || !BOTFUEL_APP_KEY) {
+    if (config.qna) {
+      throw new MissingCredentialsError(
+        'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required to use Botfuel QnA.',
+      );
+    }
+    if (config.spellchecking) {
+      throw new MissingCredentialsError(
+        'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required to use the spellchecking service.',
+      );
+    }
   }
-  if (!process.env.BOTFUEL_APP_KEY) {
-    logger.warn('Environment variable BOTFUEL_APP_KEY is not defined!');
+
+  // Botfuel app id
+  if (!BOTFUEL_APP_ID) {
+    logger.warn('Environment variable BOTFUEL_APP_ID is not defined.');
   } else {
-    logger.info('BOTFUEL_APP_KEY:', process.env.BOTFUEL_APP_KEY);
+    logger.info(`BOTFUEL_APP_ID=${BOTFUEL_APP_ID}`);
+  }
+
+  // Botfuel app key
+  if (!BOTFUEL_APP_KEY) {
+    logger.warn('Environment variable BOTFUEL_APP_KEY is not defined.');
+  } else {
+    logger.info(`BOTFUEL_APP_KEY=${BOTFUEL_APP_KEY}`);
   }
 };
