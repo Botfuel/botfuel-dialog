@@ -72,6 +72,30 @@ class Adapter {
   }
 
   /**
+   * Handles a user message.
+   * @async
+   * @param {Object} userMessage - the user message
+   * @returns {Promise.<void>}
+   */
+  async handleMessage(userMessage) {
+    const userId = userMessage.user;
+    await this.initUserIfNecessary(userId);
+    await this.bot.respond(userMessage);
+  }
+
+  /**
+   * Inits the user if necessary.
+   * Calls the corresponding method of the brain.
+   * Adapters can add specific behaviour.
+   * @async
+   * @param {int} userId - the user id
+   * @returns {Promise.<void>}
+   */
+  async initUserIfNecessary(userId) {
+    await this.bot.brain.initUserIfNecessary(userId);
+  }
+
+  /**
    * Sends a single bot message to the messaging platform.
    * @abstract
    * @async
