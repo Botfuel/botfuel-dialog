@@ -35,7 +35,7 @@ class View {
 
   /**
    * Renders a view as an array of bot messages.
-   * @param {Object} [data] - data used at display time
+   * @param {Object} [data] - dialog data used at display time
    * @returns {Object[]} an array of bot messages
    */
   render() {

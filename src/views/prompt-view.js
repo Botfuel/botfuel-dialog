@@ -24,9 +24,9 @@ const View = require('./view');
  */
 class PromptView extends View {
   // eslint-disable-next-line require-jsdoc
-  render({ matchedEntities, missingEntities }) {
-    logger.debug('render', { matchedEntities, missingEntities });
-    return this.renderEntities(matchedEntities, missingEntities);
+  render({ matchedEntities, missingEntities, dialogData }) {
+    logger.info('render', { matchedEntities, missingEntities, dialogData });
+    return this.renderEntities(matchedEntities, missingEntities, dialogData);
   }
 
   /**
@@ -34,9 +34,11 @@ class PromptView extends View {
    * @private
    * @param {Object[]} matchedEntities - the defined entities
    * @param {String[]} missingEntities - the needed entities
+   * @param {Object} [dialogData] - additional data from dialogWillDisplay hook
    * @returns {Object[]} the bot messages
    */
-  renderEntities(matchedEntities, missingEntities) {
+  renderEntities(matchedEntities, missingEntities, dialogData) {
+    logger.debug('renderEntities', matchedEntities, missingEntities, dialogData);
     const messages = [];
     if (Object.keys(matchedEntities).length !== 0) {
       messages.push(

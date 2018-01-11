@@ -31,7 +31,7 @@ class TextView extends View {
 
   /**
    * Gets the texts used for building the BotTextMessages.
-   * @param {Object} data - data used at display time
+   * @param {Object} data - dialog data used at display time
    * @returns {String[]} an array of strings
    */
   getTexts(data) {
