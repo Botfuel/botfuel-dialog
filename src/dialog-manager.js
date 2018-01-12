@@ -131,7 +131,6 @@ class DialogManager extends Resolver {
       }
       newDialogs.push({
         name,
-        characteristics,
         entities,
         blocked: nb > 1,
       });
@@ -185,13 +184,12 @@ class DialogManager extends Resolver {
   applyAction(dialogs, { name, newDialog }) {
     logger.debug('applyAction', dialogs, { name, newDialog });
     const currentDialog = dialogs.stack[dialogs.stack.length - 1];
-    const previousDialog = dialogs.stack[dialogs.stack.length - 2];
     const date = Date.now();
 
     switch (name) {
       case Dialog.ACTION_CANCEL:
-        logger.debug('applyAction: cancelling previous dialog', previousDialog);
         dialogs = {
+          ...dialogs,
           stack: dialogs.stack.slice(0, -2),
           previous: [...dialogs.previous, { ...currentDialog, date }],
         };
@@ -202,25 +200,30 @@ class DialogManager extends Resolver {
 
       case Dialog.ACTION_COMPLETE:
         return {
+          ...dialogs,
           stack: dialogs.stack.slice(0, -1),
           previous: [...dialogs.previous, { ...currentDialog, date }],
         };
 
       case Dialog.ACTION_NEXT:
         dialogs = {
+          ...dialogs,
           stack: dialogs.stack.slice(0, -1),
           previous: [...dialogs.previous, { ...currentDialog, date }],
         };
         this.updateWithDialogs(dialogs, [newDialog]);
         return dialogs;
 
-      case Dialog.ACTION_RESET:
+      case Dialog.ACTION_NEW_CONVERSATION:
         dialogs = {
+          ...dialogs,
           stack: [],
           previous: [],
+          isNewConversation: true,
         };
-        this.updateWithDialogs(dialogs, [newDialog]);
-        logger.info('applyAction:dialogs', dialogs);
+        if (newDialog) {
+          dialogs.stack.push(newDialog);
+        }
         return dialogs;
 
       default:
@@ -237,7 +240,7 @@ class DialogManager extends Resolver {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} dialogs - the dialogs data
-   * @returns {Promise.<void>}
+   * @returns {Promise.<Object[]>}
    */
   async execute(adapter, userId, dialogs) {
     logger.debug('execute', '<adapter>', userId, dialogs);

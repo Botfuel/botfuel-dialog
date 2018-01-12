@@ -67,7 +67,7 @@ class PromptDialog extends Dialog {
    * remainingCandidates (candidates minus candidates used) and
    * newValue (value we matched with the parameter)
    */
-  matchParameterWithCandidates({ dialogParameter, candidates, initialValue }) {
+  matchParameterWithCandidates({ dialogParameter, candidates = [], initialValue }) {
     const sameDimCandidates = candidates.filter(candidate => candidate.dim === dialogParameter.dim);
     // Check if the parameter is already fulfilled with its initial value
     // If so, we replace the fulfilled parameter’s entity
