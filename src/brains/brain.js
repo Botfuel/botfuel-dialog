@@ -217,6 +217,29 @@ class Brain {
   async setDialogs(userId, dialogs) {
     await this.conversationSet(userId, '_dialogs', dialogs);
   }
+
+  /**
+   * Gets a value for a key within the global scope.
+   * @async
+   * @abstract
+   * @param {String} key - the key
+   * @returns {Promise.<*>} the value
+   */
+  async getValue() {
+    throw new MissingImplementationError();
+  }
+
+  /**
+   * Sets a value for a key within the global scope.
+   * @async
+   * @abstract
+   * @param {String} key - the key
+   * @param {*} value - the value
+   * @returns {Promise.<*>} the new value
+   */
+  async setValue() {
+    throw new MissingImplementationError();
+  }
 }
 
 module.exports = Brain;

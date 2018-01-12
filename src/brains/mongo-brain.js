@@ -16,6 +16,7 @@
 
 const MongoClient = require('mongodb').MongoClient;
 const logger = require('logtown')('MongoBrain');
+const MissingCredentialsError = require('../errors/missing-credentials-error');
 const Brain = require('./brain');
 
 /**
@@ -49,9 +50,13 @@ class MongoBrain extends Brain {
       return process.env.MONGODB_URI;
     }
 
-    // Append app token if present, else generate a random string of size 10
-    return `mongodb://localhost/botfuel-bot-${process.env.BOTFUEL_APP_TOKEN ||
-      `${Math.random().toString(36)}00000000000000000}`.slice(2, 10 + 2)}`;
+    if (!process.env.BOTFUEL_APP_TOKEN) {
+      throw new MissingCredentialsError(
+        'Either MONGODB_URI or BOTFUEL_APP_TOKEN is required to use the Brain with mongodb.',
+      );
+    }
+
+    return `mongodb://localhost/botfuel-bot-${process.env.BOTFUEL_APP_TOKEN}`;
   }
 
   /** @inheritdoc */
@@ -130,6 +135,28 @@ class MongoBrain extends Brain {
   async dropDatabase() {
     logger.debug('dropDatabase');
     await this.db.dropDatabase();
+  }
+
+  /** @inheritdoc */
+  async getValue(key) {
+    const bot = await this.bots.findOne({});
+
+    return bot && bot[key];
+  }
+
+  /** @inheritdoc */
+  async setValue(key, value) {
+    const bot = await this.bots.findOneAndUpdate(
+      {},
+      {
+        $set: { [key]: value },
+      },
+      {
+        upsert: true,
+      },
+    );
+
+    return bot[key];
   }
 }
 
