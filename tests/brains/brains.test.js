@@ -59,9 +59,8 @@ const brainTest = (brainLabel) => {
   test('gets a user', async () => {
     await brain.addUser(USER_ID);
     const user = await brain.getUser(USER_ID);
-    expect(Object.keys(user)).toContain('botId', 'userId', 'conversations', 'dialogs', 'createdAt');
+    expect(Object.keys(user)).toContain('userId', 'conversations', 'dialogs', 'createdAt');
     expect(user.userId).toBe(USER_ID);
-    expect(user.botId).toBe(BOT_ID);
     expect(user.conversations).toHaveLength(1);
   });
 

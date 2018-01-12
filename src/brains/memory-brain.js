@@ -24,9 +24,9 @@ const Brain = require('./brain');
  */
 class MemoryBrain extends Brain {
   /** @inheritdoc */
-  constructor(botId) {
-    logger.debug('constructor', botId);
-    super(botId);
+  constructor() {
+    logger.debug('constructor');
+    super();
     this.users = {};
   }
 

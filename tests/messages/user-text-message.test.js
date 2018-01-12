@@ -19,10 +19,9 @@ const UserTextMessage = require('../../src/messages/user-text-message');
 describe('UserTextMessage', () => {
   test('should generate the proper json', async () => {
     const message = new UserTextMessage('foo');
-    expect(message.toJson('BOT', 'USER')).toEqual({
+    expect(message.toJson('USER')).toEqual({
       type: 'text',
       sender: 'user',
-      bot: 'BOT',
       user: 'USER',
       payload: {
         value: 'foo',

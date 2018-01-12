@@ -16,42 +16,54 @@
 
 const MongoClient = require('mongodb').MongoClient;
 const logger = require('logtown')('MongoBrain');
-const SdkError = require('../errors/sdk-error');
 const Brain = require('./brain');
-
-const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/sdk-brain';
 
 /**
  * Brain with MongoDB storage.
  */
 class MongoBrain extends Brain {
   /** @inheritdoc */
-  constructor(botId) {
-    logger.debug('constructor', botId);
-    super(botId);
+  constructor() {
+    logger.debug('constructor');
+    super();
     this.users = null;
   }
 
   /** @inheritdoc */
   async init() {
     logger.debug('init');
-    this.db = await MongoClient.connect(mongoUri);
+    this.db = await MongoClient.connect(this.getMongoDbUri());
     this.users = this.db.collection('users');
+    this.bots = this.db.collection('bots');
+  }
+
+  /**
+   * Returns the mongoDB connection URI.
+   * @async
+   * @private
+   * @param {Object} userMessage - the user text message
+   * @returns {Promise.<void>}
+   */
+  getMongoDbUri() {
+    if (process.env.MONGODB_URI) {
+      return process.env.MONGODB_URI;
+    }
+
+    // Append app token if present, else generate a random string of size 10
+    return `mongodb://localhost/botfuel-bot-${process.env.BOTFUEL_APP_TOKEN ||
+      `${Math.random().toString(36)}00000000000000000}`.slice(2, 10 + 2)}`;
   }
 
   /** @inheritdoc */
   async clean() {
     logger.debug('clean');
-    if (!this.botId) {
-      throw new SdkError('BOTFUEL_APP_TOKEN environment variable is missing.');
-    }
-    return this.users.deleteMany({ botId: this.botId });
+    return this.users.deleteMany();
   }
 
   /** @inheritdoc */
   async hasUser(userId) {
     logger.debug('hasUser', userId);
-    const user = await this.users.findOne({ botId: this.botId, userId });
+    const user = await this.users.findOne({ userId });
     return user !== null;
   }
 
@@ -65,14 +77,14 @@ class MongoBrain extends Brain {
   /** @inheritdoc */
   async getUser(userId) {
     logger.debug('getUser', userId);
-    return this.users.findOne({ botId: this.botId, userId });
+    return this.users.findOne({ userId });
   }
 
   /** @inheritdoc */
   async userSet(userId, key, value) {
     logger.debug('userSet', userId, key, value);
     const result = await this.users.findOneAndUpdate(
-      { botId: this.botId, userId },
+      { userId },
       { $set: { [key]: value } },
       { returnOriginal: false },
     );
@@ -82,10 +94,7 @@ class MongoBrain extends Brain {
   /** @inheritdoc */
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
-    const user = await this.users.findOne(
-      { botId: this.botId, userId },
-      { conversations: { $slice: 1 } },
-    );
+    const user = await this.users.findOne({ userId }, { conversations: { $slice: 1 } });
     const conversation = user.conversations[0];
     return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
   }
@@ -94,7 +103,7 @@ class MongoBrain extends Brain {
   async addConversation(userId) {
     logger.debug('addConversation', userId);
     const result = await this.users.findOneAndUpdate(
-      { botId: this.botId, userId },
+      { userId },
       { $push: { conversations: { $each: [this.getConversationInitValue()], $position: 0 } } },
       { returnOriginal: false },
     );
@@ -106,7 +115,7 @@ class MongoBrain extends Brain {
     logger.debug('conversationSet', userId, key, value);
     const lastConversation = await this.getLastConversation(userId);
     const result = await this.users.findOneAndUpdate(
-      { botId: this.botId, userId, 'conversations.createdAt': lastConversation.createdAt },
+      { userId, 'conversations.createdAt': lastConversation.createdAt },
       { $set: { [`conversations.0.${key}`]: value } },
       { returnOriginal: false, sort: { 'conversations.createdAt': -1 } },
     );

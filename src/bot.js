@@ -46,7 +46,6 @@ class Bot {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
     checkCredentials(this.config);
-    this.id = process.env.BOTFUEL_APP_TOKEN;
     this.brain = this.getBrain(this.config.brain);
     this.nlu = new Nlu(this.config);
     this.dm = new DialogManager(this.brain, this.config);
@@ -72,10 +71,10 @@ class Bot {
   getBrain(brain) {
     switch (brain) {
       case 'mongo':
-        return new MongoBrain(this.id);
+        return new MongoBrain();
       case 'memory':
       default:
-        return new MemoryBrain(this.id);
+        return new MemoryBrain();
     }
   }
 
