@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const Logger = require('logtown');
 const Bot = require('./bot');
 const Classifier = require('./classifier');
 const Adapter = require('./adapters/adapter');
@@ -49,6 +50,7 @@ const UserImageMessage = require('./messages/user-image-message');
 const UserTextMessage = require('./messages/user-text-message');
 
 module.exports = {
+  Logger: Logger.getLogger,
   Bot,
   Classifier,
   Adapter,
