@@ -42,17 +42,17 @@ class WebAdapter extends Adapter {
    * @returns {void}
    */
   createRoutes(app) {
-    app.post('/webhook', (req, res) => this.handleMessage(req, res));
+    app.post('/webhook', (req, res) => this.handleRequest(req, res));
   }
 
   /**
-   * Webhook used for handling messages.
+   * Webhook used for handling requests.
    * @async
    * @param {Object} req - the request object
    * @param {Object} res - the response object
    * @returns {Promise.<void>}
    */
-  async handleMessage() {
+  async handleRequest() {
     throw new MissingImplementationError();
   }
 

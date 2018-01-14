@@ -58,8 +58,8 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /** @inheritDoc */
-  async handleMessage(req, res) {
-    logger.debug('handleMessage', req.body);
+  async handleRequest(req, res) {
+    logger.debug('handleRequest', req.body);
     const { object, entry } = req.body;
     if (object === 'page') {
       entry.forEach((entryItem) => {
@@ -80,12 +80,6 @@ class MessengerAdapter extends WebAdapter {
   async processEvent(event) {
     logger.debug('processEvent', JSON.stringify(event));
     const { sender, message, postback } = event;
-    const userId = sender.id; // messenger user id
-    // init user if necessary
-    await this.bot.brain.initUserIfNecessary(userId);
-    // check for user profile
-    await this.getUserProfile(userId);
-    // set userMessage
     let userMessage = null;
     if (message) {
       const { text, attachments } = message;
@@ -99,7 +93,13 @@ class MessengerAdapter extends WebAdapter {
       const { dialog, entities } = JSON.parse(postback.payload);
       userMessage = new PostbackMessage(dialog, entities);
     }
-    await this.bot.respond(userMessage.toJson(this.bot.id, userId));
+    await this.handleMessage(userMessage.toJson(this.bot.id, sender.id));
+  }
+
+  /** @inheritDoc */
+  async initUserIfNecessary(userId) {
+    await super.initUserIfNecessary(userId);
+    await this.updateUserProfile(userId);
   }
 
   /** @inheritDoc */
@@ -265,8 +265,8 @@ class MessengerAdapter extends WebAdapter {
    * @param {String} userId - the user id
    * @returns {void}
    */
-  async getUserProfile(userId) {
-    logger.debug('getUserProfile', userId);
+  async updateUserProfile(userId) {
+    logger.debug('updateUserProfile', userId);
     // check for user profile informations
     const userProfile = await this.bot.brain.userGet(userId, 'profile');
     // if not profile informations then get user profile
@@ -287,9 +287,9 @@ class MessengerAdapter extends WebAdapter {
           gender: res.gender,
         };
         await this.bot.brain.userSet(userId, 'profile', profile);
-        logger.debug('getUserProfile: user profile updated with', profile);
+        logger.debug('updateUserProfile: user profile updated with', profile);
       } catch (error) {
-        logger.error('getUserProfile: error', error.message || error.error || error);
+        logger.error('updateUserProfile: error', error.message || error.error || error);
       }
     }
   }

@@ -25,14 +25,10 @@ const CHAT_SERVER_URL = process.env.CHAT_SERVER || 'https://webchat.botfuel.io';
  */
 class BotfuelAdapter extends WebAdapter {
   /** @inheritDoc */
-  async handleMessage(req, res) {
-    logger.debug('handleMessage');
+  async handleRequest(req, res) {
+    logger.debug('handleRequest', req.body);
     res.sendStatus(200);
-    const userMessage = req.body; // the message is already in the expected format
-    logger.debug('handleMessage: userMessage', userMessage);
-    const userId = userMessage.user;
-    await this.bot.brain.initUserIfNecessary(userId);
-    await this.bot.respond(userMessage);
+    await this.handleMessage(req.body);
   }
 
   /** @inheritDoc */
