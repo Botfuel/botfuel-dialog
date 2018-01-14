@@ -28,16 +28,18 @@ class MiddlewareManager {
    * @param {Function[]} [outMiddlewares] - an optional array of middlewares
    */
   constructor(bot, inMiddlewares, outMiddlewares) {
+    logger.debug('constructor', bot, inMiddlewares, outMiddlewares);
     this.inMiddlewares = inMiddlewares || [];
     this.outMiddlewares = outMiddlewares || [];
     if (bot.config) {
-      const middlewaresPath = `${bot.config.path}/src/middlewares.js`;
-      if (fs.pathExistsSync(middlewaresPath)) {
-        const middlewares = require(middlewaresPath);
-        inMiddlewares = middlewares.inMiddlewares || inMiddlewares;
-        outMiddlewares = middlewares.outMiddlewares || outMiddlewares;
+      const middlewarePath = `${bot.config.path}/src/middlewares.js`;
+      if (fs.pathExistsSync(middlewarePath)) {
+        const middleware = require(middlewarePath);
+        this.inMiddlewares = middleware.in || this.inMiddlewares;
+        this.outMiddlewares = middleware.out || this.outMiddlewares;
       }
     }
+    logger.debug('constructor', this.inMiddlewares, this.outMiddlewares);
   }
 
   /**
@@ -48,8 +50,8 @@ class MiddlewareManager {
    * @returns {Promise.<void>}
    */
   async in(context, callback) {
-    logger.debug('in', context, callback);
-    await this.inRun(context, callback, 0);
+    logger.debug('in', context);
+    await this.inRun(context, callback, 0, async () => {});
   }
 
   /**
@@ -63,14 +65,17 @@ class MiddlewareManager {
    * independently of the completion of the middlewares
    * @returns {Promise.<void>}
    */
-  async inRun(context, callback, index, done = async () => {}) {
-    logger.debug('inRun', context, callback, index, done);
+  async inRun(context, callback, index, done) {
+    logger.debug('inRun', context, index);
     if (this.inMiddlewares.length === index) {
+      logger.debug('inRun: calling callback');
       await callback();
+      logger.debug('inRun: calling done');
       await done();
     } else {
       const middleware = this.inMiddlewares[index];
-      const next = async d => this.inRun(context, callback, index + 1, d);
+      const next = async d => await this.inRun(context, callback, index + 1, d);
+      logger.debug('inRun: calling middleware');
       await middleware(context, next, done);
     }
   }
@@ -83,8 +88,8 @@ class MiddlewareManager {
    * @returns {Promise.<void>}
    */
   async out(context, callback) {
-    logger.debug('out', context, callback);
-    await this.outRun(context, callback, 0);
+    logger.debug('out', context);
+    await this.outRun(context, callback, 0, async () => {});
   }
 
   /**
@@ -92,20 +97,23 @@ class MiddlewareManager {
    * @async
    * @private
    * @param {Object} context - the context
-   * @param {Object} callback - this function is executed only when the middlewares complete
+   * @param {Object} callback - this function is executed only when middlewares complete
    * @param {int} index - the index
    * @param {Object} done - this function is executed at the end,
    * independently of the completion of the middlewares
    * @returns {Promise.<void>}
    */
-  async outRun(context, callback, index, done = async () => {}) {
-    logger.debug('outRun', context, callback, index, done);
+  async outRun(context, callback, index, done) {
+    logger.debug('outRun', context, index);
     if (this.outMiddlewares.length === index) {
+      logger.debug('outRun: calling callback');
       await callback();
+      logger.debug('outRun: calling done');
       await done();
     } else {
       const middleware = this.outMiddlewares[index];
-      const next = async d => this.outRun(context, callback, index + 1, d);
+      const next = async d => await this.outRun(context, callback, index + 1, d);
+      logger.debug('outRun: calling middleware');
       await middleware(context, next, done);
     }
   }
