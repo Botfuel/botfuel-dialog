@@ -37,16 +37,14 @@ class Message extends ValidObject {
 
   /**
    * Converts a message to json and adds to it the bot and user ids.
-   * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @returns {Object} the json message
    */
-  toJson(botId, userId) {
+  toJson(userId) {
     if (this.options === undefined || this.options === null) {
       return {
         type: this.type,
         sender: this.sender,
-        bot: botId,
         user: userId,
         payload: {
           value: this.valueAsJson(),
@@ -56,7 +54,6 @@ class Message extends ValidObject {
     return {
       type: this.type,
       sender: this.sender,
-      bot: botId,
       user: userId,
       payload: {
         value: this.valueAsJson(),
