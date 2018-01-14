@@ -41,10 +41,9 @@ describe('CardsMessage', () => {
         new Postback('Buy', 'products', [{ dim: 'product', value: '2' }]),
       ]),
     ]);
-    expect(message.toJson('BOT', 'USER')).toEqual({
+    expect(message.toJson('USER')).toEqual({
       type: 'cards',
       sender: 'bot',
-      bot: 'BOT',
       user: 'USER',
       payload: {
         value: [

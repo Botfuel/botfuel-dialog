@@ -23,19 +23,18 @@ const MissingImplementationError = require('../errors/missing-implementation-err
 class View {
   /**
    * Renders a view as an array of json objects.
-   * @param {String} botId - the bot id
    * @param {String} userId - the user id
    * @param {Object} [data] - data used at display time
    * @returns {Object[]} the messages as an array json objects
    */
-  renderAsJson(botId, userId, data) {
-    logger.debug('renderAsJson', botId, userId, data);
-    return this.render(data).map(msg => msg.toJson(botId, userId));
+  renderAsJson(userId, data) {
+    logger.debug('renderAsJson', userId, data);
+    return this.render(data).map(msg => msg.toJson(userId));
   }
 
   /**
    * Renders a view as an array of bot messages.
-   * @param {Object} [data] - data used at display time
+   * @param {Object} [data] - dialog data used at display time
    * @returns {Object[]} an array of bot messages
    */
   render() {

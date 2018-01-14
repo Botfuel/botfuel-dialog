@@ -15,12 +15,18 @@
  */
 
 const DialogManager = require('../../src/dialog-manager');
+const Dialog = require('../../src/dialogs/dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const TestAdapter = require('../../src/adapters/test-adapter');
 const BotTextMessage = require('../../src/messages/bot-text-message');
 
 const TEST_USER = '1';
 const TEST_BOT = process.env.BOTFUEL_APP_TOKEN;
+
+const greetingsDialog = { name: 'greetings', entities: [] };
+const thanksDialog = { name: 'thanks', entities: [] };
+const travelDialog = { name: 'travel', entities: [] };
+const travelCancelDialog = { name: 'travel-cancel', entities: [] };
 
 describe('DialogManager', () => {
   const brain = new MemoryBrain(TEST_BOT);
@@ -72,5 +78,105 @@ describe('DialogManager', () => {
     await dm.executeDialogs(adapter, TEST_USER, [{ name: 'default' }]);
     const dialogs = await dm.brain.getDialogs(TEST_USER);
     expect(dialogs.stack.length).toBe(0);
+  });
+
+  describe('DialogManager.applyAction', () => {
+    describe('Action cancel', () => {
+      let dialogs;
+
+      beforeEach(() => {
+        dialogs = {
+          stack: [travelDialog, travelCancelDialog],
+          previous: [],
+        };
+      });
+
+      test('should cancel the two last dialogs', async () => {
+        const action = { name: Dialog.ACTION_CANCEL };
+        dialogs = dm.applyAction(dialogs, action);
+        expect(dialogs.stack.length).toBe(0);
+        expect(dialogs.previous.length).toBe(1);
+      });
+
+      test('should cancel the two last dialogs and add the newDialog', async () => {
+        const action = { name: Dialog.ACTION_CANCEL, newDialog: thanksDialog };
+        dialogs = dm.applyAction(dialogs, action);
+        expect(dialogs.stack.length).toBe(1);
+        expect(dialogs.stack[0].name).toBe(thanksDialog.name);
+        expect(dialogs.previous.length).toBe(1);
+      });
+    });
+
+    describe('Action complete', () => {
+      let dialogs;
+
+      beforeEach(() => {
+        dialogs = {
+          stack: [thanksDialog, greetingsDialog],
+          previous: [],
+        };
+      });
+
+      test('should complete the current dialog', async () => {
+        const action = { name: Dialog.ACTION_COMPLETE };
+        dialogs = dm.applyAction(dialogs, action);
+        expect(dialogs.stack.length).toBe(1);
+        expect(dialogs.stack[0].name).toBe(thanksDialog.name);
+        expect(dialogs.previous.length).toBe(1);
+        expect(dialogs.previous[0].name).toBe(greetingsDialog.name);
+      });
+    });
+
+    describe('Action next', () => {
+      let dialogs;
+
+      beforeAll(() => {
+        dialogs = {
+          stack: [greetingsDialog],
+          previous: [],
+        };
+        const action = { name: Dialog.ACTION_NEXT, newDialog: travelDialog };
+        dialogs = dm.applyAction(dialogs, action);
+      });
+
+      test('should complete the current dialog', async () => {
+        expect(dialogs.previous.length).toBe(1);
+        expect(dialogs.previous[0].name).toBe(greetingsDialog.name);
+      });
+
+      test('should add the next dialog to the stack', async () => {
+        expect(dialogs.stack.length).toBe(1);
+        expect(dialogs.stack[0].name).toBe(travelDialog.name);
+      });
+    });
+
+    describe('Action new conversation', () => {
+      let dialogs;
+
+      beforeEach(() => {
+        dialogs = {
+          stack: [greetingsDialog, travelDialog],
+          previous: [thanksDialog],
+        };
+      });
+
+      test('should start a new empty conversation', async () => {
+        const action = { name: Dialog.ACTION_NEW_CONVERSATION };
+        dialogs = dm.applyAction(dialogs, action);
+        expect(dialogs.stack.length).toBe(0);
+        expect(dialogs.previous.length).toBe(0);
+      });
+
+      test('should start a new conversation with a dialog', async () => {
+        const action = {
+          name: Dialog.ACTION_NEW_CONVERSATION,
+          newDialog: travelDialog,
+        };
+        dialogs = dm.applyAction(dialogs, action);
+        expect(dialogs.stack.length).toBe(1);
+        expect(dialogs.stack[0].name).toBe(travelDialog.name);
+        expect(dialogs.previous.length).toBe(0);
+      });
+    });
   });
 });

@@ -29,6 +29,7 @@ process.on('unhandledRejection', err => logger.error(err));
     const config = resolveConfigFile(process.argv[2]);
     await new Bot(config).run();
   } catch (e) {
-    logger.error(e);
+    logger.error(e.message);
+    process.exit(0);
   }
 })();

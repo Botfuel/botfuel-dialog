@@ -68,6 +68,17 @@ class Classifier {
   async init() {
     logger.debug('init');
 
+    const intentsAndModelExist = await this.intentsAndModelExist(
+      this.modelFilename,
+      this.intentDirname,
+    );
+
+    // If no model file or no intent file, just warn
+    if (!intentsAndModelExist) {
+      logger.warn('No intents directory or model file');
+      return null;
+    }
+
     const isModelUpToDate = await this.isModelUpToDate(this.modelFilename, this.intentDirname);
 
     if (!isModelUpToDate) {
@@ -107,6 +118,23 @@ class Classifier {
     return fileStats
       .map(file => file.mtimeMs)
       .every(timestamp => timestamp < modelLastModifiedTime);
+  }
+
+  /**
+   * Checks the model file and intents directory exist
+   * @param {String} modelFilePath - the model file path
+   * @param {String} intentsDirPath - the intents dir path
+   * @returns {Boolean} true if the model file and intents directory exist, false if not
+   */
+  async intentsAndModelExist(modelFilePath, intentsDirPath) {
+    logger.debug('intentsAndModelExist');
+
+    const [intentDirExists, modelFileExists] = await Promise.all([
+      fsExtra.pathExists(intentsDirPath),
+      fsExtra.pathExists(modelFilePath),
+    ]);
+
+    return intentDirExists && modelFileExists;
   }
 
   /**

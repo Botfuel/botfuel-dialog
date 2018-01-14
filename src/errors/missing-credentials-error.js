@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-const UserTextMessage = require('../../src/messages/user-text-message');
-
-describe('UserTextMessage', () => {
-  test('should generate the proper json', async () => {
-    const message = new UserTextMessage('foo');
-    expect(message.toJson('USER')).toEqual({
-      type: 'text',
-      sender: 'user',
-      user: 'USER',
-      payload: {
-        value: 'foo',
-      },
-    });
-  });
-});
+module.exports = class MissingCredentialsError extends Error {
+  /**
+   * @constructor
+   * @param {String} message - the error message
+   */
+  constructor(message) {
+    super(message || 'Missing credentials!');
+    Error.captureStackTrace(this, this.constructor);
+  }
+};

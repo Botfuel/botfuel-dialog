@@ -22,7 +22,6 @@ const MEMORY_BRAIN_LABEL = 'memory';
 const MONGO_BRAIN_LABEL = 'mongo';
 
 // bot + user ids
-const BOT_ID = 'BOT_TEST';
 const USER_ID = 'USER_TEST';
 
 const brainTest = (brainLabel) => {
@@ -31,12 +30,12 @@ const brainTest = (brainLabel) => {
   beforeEach(async () => {
     switch (brainLabel) {
       case MONGO_BRAIN_LABEL:
-        brain = new MongoBrain(BOT_ID);
+        brain = new MongoBrain();
         await brain.init();
         break;
       case MEMORY_BRAIN_LABEL:
       default:
-        brain = new MemoryBrain(BOT_ID);
+        brain = new MemoryBrain();
     }
   });
 
@@ -59,9 +58,8 @@ const brainTest = (brainLabel) => {
   test('gets a user', async () => {
     await brain.addUser(USER_ID);
     const user = await brain.getUser(USER_ID);
-    expect(Object.keys(user)).toContain('botId', 'userId', 'conversations', 'dialogs', 'createdAt');
+    expect(Object.keys(user)).toContain('userId', 'conversations', 'dialogs', 'createdAt');
     expect(user.userId).toBe(USER_ID);
-    expect(user.botId).toBe(BOT_ID);
     expect(user.conversations).toHaveLength(1);
   });
 
@@ -155,6 +153,12 @@ const brainTest = (brainLabel) => {
     expect(dialogs.stack).toHaveLength(1);
     expect(dialogs.stack[0].name).toBe('greetings');
     expect(dialogs.previous).toHaveLength(0);
+  });
+
+  test('should set and get value', async () => {
+    await brain.setValue('test', 'hello');
+    const value = await brain.getValue('test');
+    expect(value).toEqual('hello');
   });
 };
 
