@@ -131,7 +131,6 @@ class DialogManager extends Resolver {
       }
       newDialogs.push({
         name,
-        characteristics,
         entities,
         blocked: nb > 1,
       });
@@ -180,18 +179,17 @@ class DialogManager extends Resolver {
    * @param {Object} dialogs - the dialogs object to be updated
    * @param {String} action - an action that indicates
    * how should the stack and previous dialogs be updated
-   * @returns {Promise.<Object>} The new dialogs object with its stack and previous arrays updated
+   * @returns {Object} The new dialogs object with its stack and previous arrays updated
    */
   applyAction(dialogs, { name, newDialog }) {
     logger.debug('applyAction', dialogs, { name, newDialog });
     const currentDialog = dialogs.stack[dialogs.stack.length - 1];
-    const previousDialog = dialogs.stack[dialogs.stack.length - 2];
     const date = Date.now();
 
     switch (name) {
       case Dialog.ACTION_CANCEL:
-        logger.debug('applyAction: cancelling previous dialog', previousDialog);
         dialogs = {
+          ...dialogs,
           stack: dialogs.stack.slice(0, -2),
           previous: [...dialogs.previous, { ...currentDialog, date }],
         };
@@ -202,16 +200,30 @@ class DialogManager extends Resolver {
 
       case Dialog.ACTION_COMPLETE:
         return {
+          ...dialogs,
           stack: dialogs.stack.slice(0, -1),
           previous: [...dialogs.previous, { ...currentDialog, date }],
         };
 
       case Dialog.ACTION_NEXT:
         dialogs = {
+          ...dialogs,
           stack: dialogs.stack.slice(0, -1),
           previous: [...dialogs.previous, { ...currentDialog, date }],
         };
         this.updateWithDialogs(dialogs, [newDialog]);
+        return dialogs;
+
+      case Dialog.ACTION_NEW_CONVERSATION:
+        dialogs = {
+          ...dialogs,
+          stack: [],
+          previous: [],
+          isNewConversation: true,
+        };
+        if (newDialog) {
+          dialogs.stack.push(newDialog);
+        }
         return dialogs;
 
       default:
@@ -228,7 +240,7 @@ class DialogManager extends Resolver {
    * @param {Adapter} adapter - the adapter
    * @param {String} userId - the user id
    * @param {Object[]} dialogs - the dialogs data
-   * @returns {Promise.<void>}
+   * @returns {Promise.<Object[]>}
    */
   async execute(adapter, userId, dialogs) {
     logger.debug('execute', '<adapter>', userId, dialogs);
@@ -251,10 +263,11 @@ class DialogManager extends Resolver {
     } else {
       const action = await this.resolve(dialog.name).execute(adapter, userId, dialog.entities);
       logger.debug('execute: action', action);
-      if (action.name === Dialog.ACTION_WAIT) {
+      if (action.name !== Dialog.ACTION_WAIT) {
+        dialogs = await this.applyAction(dialogs, action);
+      } else {
         return dialogs;
       }
-      dialogs = await this.applyAction(dialogs, action);
     }
     return this.execute(adapter, userId, dialogs);
   }

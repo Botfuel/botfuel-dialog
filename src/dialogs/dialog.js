@@ -34,6 +34,7 @@ class Dialog {
   static ACTION_COMPLETE = 'complete';
   static ACTION_WAIT = 'wait';
   static ACTION_NEXT = 'next';
+  static ACTION_NEW_CONVERSATION = 'new_conversation';
 
   /**
    * Indicates that this dialog is cancelling the previous one.
@@ -61,6 +62,13 @@ class Dialog {
    */
   get ACTION_NEXT() {
     return Dialog.ACTION_NEXT;
+  }
+
+  /**
+   * Reset dialogs.
+   */
+  get ACTION_NEW_CONVERSATION() {
+    return Dialog.ACTION_NEW_CONVERSATION;
   }
 
   /**
@@ -162,6 +170,27 @@ class Dialog {
   }
 
   /**
+   * Builds an action's object that starts a new conversation
+   * and optionally provides name of the next dialog to start with.
+   * @param {String} [dialogName] - the name of the next dialog (optional)
+   * @param {Object[]} [dialogEntities] - the entities for the next dialog
+   * @returns {Object} contains
+   *   - an action set to ACTION_NEW_CONVERSATION
+   *   - a newDialog object thas has a name (optional)
+   */
+  startNewConversation(dialogName, dialogEntities = []) {
+    return {
+      name: this.ACTION_NEW_CONVERSATION,
+      ...(dialogName && {
+        newDialog: {
+          name: dialogName,
+          entities: dialogEntities,
+        },
+      }),
+    };
+  }
+
+  /**
    * Builds an object that sets current dialog as completed.
    * @returns {Object} contains
    *   - an action set to ACTION_COMPLETE
@@ -187,8 +216,8 @@ class Dialog {
    * Hook to be overridden before dialog displays.
    * Returns null by default.
    * @async
-   * @param {String} userId - the user id
-   * @param {Object} dialogData - the dialog data
+   * @param {String} [userId] - the user id
+   * @param {Object} [dialogData] - the dialog data
    * @returns {Promise.<*>} the data extended to the display method
    */
   async dialogWillDisplay(userId, dialogData) {
@@ -200,8 +229,8 @@ class Dialog {
    * Hook to be overridden before dialog completes.
    * Does nothing by default.
    * @async
-   * @param {String} userId - the user id
-   * @param {Object} dialogData - the dialog data
+   * @param {String} [userId] - the user id
+   * @param {Object} [dialogData] - the dialog data
    * @returns {Promise.<*>}
    */
   async dialogWillComplete(userId, dialogData) {

@@ -218,6 +218,10 @@ class Brain {
    * @returns {Promise<void>}
    */
   async setDialogs(userId, dialogs) {
+    if (dialogs.isNewConversation) {
+      await this.addConversation(userId);
+      delete dialogs.isNewConversation;
+    }
     await this.conversationSet(userId, '_dialogs', dialogs);
   }
 }
