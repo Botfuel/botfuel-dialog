@@ -74,7 +74,7 @@ class MiddlewareManager {
       await done();
     } else {
       const middleware = this.inMiddlewares[index];
-      const next = async d => await this.inRun(context, callback, index + 1, d);
+      const next = async d => this.inRun(context, callback, index + 1, d);
       logger.debug('inRun: calling middleware');
       await middleware(context, next, done);
     }
@@ -112,7 +112,7 @@ class MiddlewareManager {
       await done();
     } else {
       const middleware = this.outMiddlewares[index];
-      const next = async d => await this.outRun(context, callback, index + 1, d);
+      const next = async d => this.outRun(context, callback, index + 1, d);
       logger.debug('outRun: calling middleware');
       await middleware(context, next, done);
     }
