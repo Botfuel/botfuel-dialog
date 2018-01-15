@@ -99,7 +99,7 @@ class MessengerAdapter extends WebAdapter {
       const { dialog, entities } = JSON.parse(postback.payload);
       userMessage = new PostbackMessage(dialog, entities);
     }
-    await this.bot.respond(userMessage.toJson(this.bot.id, userId));
+    await this.bot.respond(userMessage.toJson(userId));
   }
 
   /** @inheritDoc */
