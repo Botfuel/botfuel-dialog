@@ -34,7 +34,7 @@ describe('MessengerAdapter', () => {
         new Postback('Buy', 'products', [{ dim: 'product', value: '2' }]),
       ]),
     ]);
-    expect(new MessengerAdapter({}).adapt(message.toJson('BOT', 'USER'))).toEqual({
+    expect(new MessengerAdapter({}).adapt(message.toJson('USER'))).toEqual({
       attachment: {
         type: 'template',
         payload: {

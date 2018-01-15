@@ -33,7 +33,9 @@ class BotfuelAdapter extends WebAdapter {
 
   /** @inheritDoc */
   getUri(botMessage) {
-    return `${CHAT_SERVER_URL}/bots/${this.bot.id}/users/${botMessage.user}/conversation/messages`;
+    return `${CHAT_SERVER_URL}/bots/${process.env.BOTFUEL_APP_TOKEN}/users/${
+      botMessage.user
+    }/conversation/messages`;
   }
 
   /** @inheritDoc */

@@ -45,7 +45,7 @@ class ShellAdapter extends Adapter {
   async run() {
     logger.debug('run');
     const botMessage = new BotTextMessage('onboarding');
-    await this.send([botMessage.toJson(this.bot.id, this.userId)]);
+    await this.send([botMessage.toJson(this.userId)]);
     this.rl.on('line', async (input) => {
       const userMessage = new UserTextMessage(input).toJson(this.bot.id, this.userId);
       await this.handleMessage(userMessage);

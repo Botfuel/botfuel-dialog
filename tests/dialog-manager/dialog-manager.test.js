@@ -46,11 +46,9 @@ describe('DialogManager', () => {
   });
 
   test('should not crash when no intent', async () => {
-    const adapter = new TestAdapter({ id: TEST_BOT });
+    const adapter = new TestAdapter({});
     await dm.executeIntents(adapter, TEST_USER, [], []);
-    expect(adapter.log).toEqual([
-      new BotTextMessage('Not understood.').toJson(TEST_BOT, TEST_USER),
-    ]);
+    expect(adapter.log).toEqual([new BotTextMessage('Not understood.').toJson(TEST_USER)]);
   });
 
   test('should keep on the stack a dialog which is waiting', async () => {
@@ -67,14 +65,14 @@ describe('DialogManager', () => {
   });
 
   test('should empty the stack (1)', async () => {
-    const adapter = new TestAdapter({ id: TEST_BOT });
+    const adapter = new TestAdapter({});
     await dm.executeIntents(adapter, TEST_USER, [{ name: 'default', value: 1.0 }], []);
     const dialogs = await dm.brain.getDialogs(TEST_USER);
     expect(dialogs.stack.length).toBe(0);
   });
 
   test('should empty the stack (2)', async () => {
-    const adapter = new TestAdapter({ id: TEST_BOT });
+    const adapter = new TestAdapter({});
     await dm.executeDialogs(adapter, TEST_USER, [{ name: 'default' }]);
     const dialogs = await dm.brain.getDialogs(TEST_USER);
     expect(dialogs.stack.length).toBe(0);
