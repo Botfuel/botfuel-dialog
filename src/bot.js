@@ -195,6 +195,26 @@ class Bot {
   }
 
   /**
+   * Set isMuted to true
+   * @async
+   * @private
+   * @returns {void}
+   */
+  async mute() {
+    return this.brain.setValue('isMuted', true);
+  }
+
+  /**
+   * Set isMuted to false
+   * @async
+   * @private
+   * @returns {void}
+   */
+  async unmute() {
+    return this.brain.setValue('isMuted', false);
+  }
+
+  /**
    * Computes the responses for a user message of type image.
    * @async
    * @private
