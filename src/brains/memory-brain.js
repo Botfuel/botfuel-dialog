@@ -24,16 +24,18 @@ const Brain = require('./brain');
  */
 class MemoryBrain extends Brain {
   /** @inheritdoc */
-  constructor(botId) {
-    logger.debug('constructor', botId);
-    super(botId);
+  constructor() {
+    logger.debug('constructor');
+    super();
     this.users = {};
+    this.bot = {};
   }
 
   /** @inheritdoc */
   async clean() {
     logger.debug('clean');
     this.users = {};
+    this.bot = {};
   }
 
   /** @inheritdoc */
@@ -92,6 +94,17 @@ class MemoryBrain extends Brain {
     logger.debug('conversationSet', { conversation });
     conversation[key] = value;
     return conversation;
+  }
+
+  /** @inheritdoc */
+  async getValue(key) {
+    return this.bot[key];
+  }
+
+  /** @inheritdoc */
+  async setValue(key, value) {
+    this.bot[key] = value;
+    return value;
   }
 }
 

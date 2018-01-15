@@ -29,10 +29,9 @@ describe('BotTextMessage', () => {
 
   test('should generate the proper json', async () => {
     const message = new BotTextMessage('foo');
-    expect(message.toJson('BOT', 'USER')).toEqual({
+    expect(message.toJson('USER')).toEqual({
       type: 'text',
       sender: 'bot',
-      bot: 'BOT',
       user: 'USER',
       payload: {
         value: 'foo',

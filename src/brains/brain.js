@@ -24,10 +24,8 @@ const MissingImplementationError = require('../errors/missing-implementation-err
 class Brain {
   /**
    * @constructor
-   * @param {String} botId - the bot id
    */
-  constructor(botId) {
-    this.botId = botId;
+  constructor() {
     // TODO: get from config or default value below
     this.dayInMs = 86400000; // One day in milliseconds
   }
@@ -59,7 +57,6 @@ class Brain {
    */
   getUserInitValue(userId) {
     return {
-      botId: this.botId,
       userId,
       conversations: [this.getConversationInitValue()],
       createdAt: Date.now(),
@@ -218,7 +215,34 @@ class Brain {
    * @returns {Promise<void>}
    */
   async setDialogs(userId, dialogs) {
+    if (dialogs.isNewConversation) {
+      await this.addConversation(userId);
+      delete dialogs.isNewConversation;
+    }
     await this.conversationSet(userId, '_dialogs', dialogs);
+  }
+
+  /**
+   * Gets a value for a key within the global scope.
+   * @async
+   * @abstract
+   * @param {String} key - the key
+   * @returns {Promise.<*>} the value
+   */
+  async getValue() {
+    throw new MissingImplementationError();
+  }
+
+  /**
+   * Sets a value for a key within the global scope.
+   * @async
+   * @abstract
+   * @param {String} key - the key
+   * @param {*} value - the value
+   * @returns {Promise.<*>} the new value
+   */
+  async setValue() {
+    throw new MissingImplementationError();
   }
 }
 
