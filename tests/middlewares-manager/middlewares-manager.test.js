@@ -19,7 +19,7 @@
 const MiddlewareManager = require('../../src/middleware-manager');
 
 describe('MiddlewaresManager', () => {
-  test('when given a name, it should return the correct path', async () => {
+  test('that it should run the middlewares in the correct order', async () => {
     const mm = new MiddlewareManager(
       {},
       [
