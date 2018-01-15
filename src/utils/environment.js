@@ -10,7 +10,7 @@ const MONGO_BRAIN = 'mongo';
  * @param {Object} config - the bot configuration
  * @returns {void}
  */
-export const checkCredentials = (config) => {
+const checkCredentials = (config) => {
   const { BOTFUEL_APP_TOKEN, BOTFUEL_APP_ID, BOTFUEL_APP_KEY } = process.env;
   // Botfuel app token
   if (!BOTFUEL_APP_TOKEN) {
@@ -55,3 +55,5 @@ export const checkCredentials = (config) => {
     logger.info(`BOTFUEL_APP_KEY=${BOTFUEL_APP_KEY}`);
   }
 };
+
+module.exports = { checkCredentials };
