@@ -154,6 +154,12 @@ class Classifier {
    */
   async compute(sentence, entities) {
     logger.debug('compute', sentence, entities);
+
+    // The bot has no intent
+    if (!this.classifier) {
+      return [];
+    }
+
     const features = this.computeFeatures(sentence, entities);
     return this.classifier
       .getClassifications(features)
