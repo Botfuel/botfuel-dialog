@@ -22,9 +22,9 @@ const TextView = require('./text-view');
  * @extends TextView
  */
 class DefaultView extends TextView {
-  // eslint-disable-next-line require-jsdoc
-  getTexts(data) {
-    logger.debug('getTexts', data);
+  /** @inheritDoc */
+  getTexts(userMessage, data) {
+    logger.debug('getTexts', userMessage, data);
     return ["Je n'ai pas compris."];
   }
 }

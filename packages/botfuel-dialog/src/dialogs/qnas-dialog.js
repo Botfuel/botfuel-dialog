@@ -34,11 +34,11 @@ class QnasDialog extends Dialog {
   }
 
   /** @inheritDoc */
-  async execute(adapter, userId, messageEntities) {
-    logger.debug('execute', userId, messageEntities);
-    const qnas = await this.dialogWillComplete(userId, messageEntities);
+  async execute(adapter, userMessage, messageEntities) {
+    logger.debug('execute', userMessage, messageEntities);
+    const qnas = await this.dialogWillComplete(userMessage, messageEntities);
     logger.debug('execute: qnas', qnas);
-    await this.display(adapter, userId, { qnas });
+    await this.display(adapter, userMessage, { qnas });
     if (qnas.length === 1) {
       return this.complete();
     }
@@ -46,7 +46,7 @@ class QnasDialog extends Dialog {
   }
 
   /** @inheritDoc */
-  async dialogWillComplete(userId, messageEntities) {
+  async dialogWillComplete(userMessage, messageEntities) {
     return messageEntities[0].value;
   }
 }

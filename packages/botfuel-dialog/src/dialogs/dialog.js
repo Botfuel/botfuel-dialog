@@ -99,14 +99,14 @@ class Dialog {
    * Displays messages by resolving the view associated to the dialog.
    * @async
    * @param {Adapter} adapter - the adapter
-   * @param {String} userId - the user id
+   * @param {Object} userMessage - the user message
    * used by the view to customize its behaviour
    * @param {Object} [data] - data used at display time
    * @returns {Promise.<void>}
    */
-  async display(adapter, userId, data) {
-    logger.debug('display', userId, data);
-    const botMessages = this.viewResolver.resolve(this.name).renderAsJson(userId, data);
+  async display(adapter, userMessage, data) {
+    logger.debug('display', userMessage, data);
+    const botMessages = this.viewResolver.resolve(this.name).renderAsJson(userMessage, data);
     return adapter.send(botMessages);
   }
 
@@ -115,7 +115,7 @@ class Dialog {
    * @abstract
    * @async
    * @param {Adapter} adapter - the adapter
-   * @param {String} userId - the user id
+   * @param {Object} userMessage - the user message
    * @param {String[]} messageEntities - the message entities
    * @returns {Promise.<Object>}
    */
@@ -214,12 +214,12 @@ class Dialog {
    * Hook to be overridden before dialog displays.
    * Returns null by default.
    * @async
-   * @param {String} [userId] - the user id
+   * @param {Object} [userMessage] - the user message
    * @param {Object} [dialogData] - the dialog data
    * @returns {Promise.<*>} the data extended to the display method
    */
-  async dialogWillDisplay(userId, dialogData) {
-    logger.debug('dialogWillDisplay', userId, dialogData);
+  async dialogWillDisplay(userMessage, dialogData) {
+    logger.debug('dialogWillDisplay', userMessage, dialogData);
     return null;
   }
 
@@ -227,12 +227,12 @@ class Dialog {
    * Hook to be overridden before dialog completes.
    * Does nothing by default.
    * @async
-   * @param {String} [userId] - the user id
+   * @param {Object} [userMessage] - the user message
    * @param {Object} [dialogData] - the dialog data
    * @returns {Promise.<*>}
    */
-  async dialogWillComplete(userId, dialogData) {
-    logger.debug('dialogWillComplete', userId, dialogData);
+  async dialogWillComplete(userMessage, dialogData) {
+    logger.debug('dialogWillComplete', userMessage, dialogData);
   }
 }
 

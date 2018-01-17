@@ -88,10 +88,8 @@ class Adapter {
    */
   async handleMessage(userMessage) {
     logger.debug('handleMessage', userMessage);
-    const userId = userMessage.user;
-    await this.initUserIfNecessary(userId);
+    await this.initUserIfNecessary(userMessage.user);
     const context = {
-      user: userId,
       brain: this.bot.brain,
       userMessage,
     };

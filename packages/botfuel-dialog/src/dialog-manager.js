@@ -238,12 +238,12 @@ class DialogManager extends Resolver {
    * Executes the dialogs.
    * @async
    * @param {Adapter} adapter - the adapter
-   * @param {String} userId - the user id
+   * @param {Object} userMessage - the user message
    * @param {Object[]} dialogs - the dialogs data
    * @returns {Promise.<Object[]>}
    */
-  async execute(adapter, userId, dialogs) {
-    logger.debug('execute', '<adapter>', userId, dialogs);
+  async execute(adapter, userMessage, dialogs) {
+    logger.debug('execute', userMessage, dialogs);
     if (dialogs.stack.length === 0) {
       return dialogs;
     }
@@ -261,7 +261,9 @@ class DialogManager extends Resolver {
         entities: [],
       });
     } else {
-      const action = await this.resolve(dialog.name).execute(adapter, userId, dialog.entities);
+      const action = await this
+              .resolve(dialog.name)
+              .execute(adapter, userMessage.user, dialog.entities);
       logger.debug('execute: action', action);
       if (action.name !== Dialog.ACTION_WAIT) {
         dialogs = await this.applyAction(dialogs, action);
@@ -269,36 +271,38 @@ class DialogManager extends Resolver {
         return dialogs;
       }
     }
-    return this.execute(adapter, userId, dialogs);
+    return this.execute(adapter, userMessage, dialogs);
   }
 
   /**
    * Populates and executes the stack.
    * @param {Adapter} adapter - the adapter
-   * @param {String} userId - the user id
+   * @param {Object} userMessage - the user message
    * @param {String[]} intents - the intents
    * @param {Object[]} entities - the transient entities
    * @returns {void}
    */
-  async executeIntents(adapter, userId, intents, entities) {
-    logger.debug('execute', userId, intents, entities);
+  async executeIntents(adapter, userMessage, intents, entities) {
+    logger.debug('execute', userMessage, intents, entities);
+    const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithIntents(userId, dialogs, intents, entities);
-    await this.setDialogs(userId, await this.execute(adapter, userId, dialogs));
+    await this.setDialogs(userId, await this.execute(adapter, userMessage, dialogs));
   }
 
   /**
    * Populates and executes the stack.
    * @param {Adapter} adapter - the adapter
-   * @param {String} userId - the user id
+   * @param {Object} userMessage - the user message
    * @param {Object[]} newDialogs - the new dialogs
    * @returns {void}
    */
-  async executeDialogs(adapter, userId, newDialogs) {
-    logger.debug('executeWithDialogs', userId, newDialogs);
+  async executeDialogs(adapter, userMessage, newDialogs) {
+    logger.debug('executeWithDialogs', userMessage, newDialogs);
+    const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithDialogs(dialogs, newDialogs);
-    await this.setDialogs(userId, await this.execute(adapter, userId, dialogs));
+    await this.setDialogs(userId, await this.execute(adapter, userMessage, dialogs));
   }
 }
 
