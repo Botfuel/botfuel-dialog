@@ -9,7 +9,9 @@
     "url": "https://github.com/Botfuel/botfuel-dialog"
   },
   "license": "Apache-2.0",
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "bin": {
     "botfuel-run": "./build/run.js",
     "botfuel-train": "./build/train.js",
@@ -17,15 +19,17 @@
   },
   "scripts": {
     "compile": "rm -rf build; babel src --out-dir build; cp -r src/corpora/*.txt build/corpora/",
-    "test":
-      "BOTFUEL_APP_TOKEN=TEST_BOT MONGODB_URI=mongodb://localhost/sdk-brain-test jest --testPathPattern='botfuel-dialog/tests' --forceExit",
+    "test": "BOTFUEL_APP_TOKEN=TEST_BOT MONGODB_URI=mongodb://localhost/sdk-brain-test jest --testPathPattern='botfuel-dialog/tests' --forceExit",
     "style": "eslint src; eslint tests",
     "test-samples": "./scripts/test-samples.sh",
     "docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose",
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": ["prettier-eslint --write \"{src,tests}/**/*.js\"", "git add"]
+    "*.js": [
+      "prettier-eslint --write \"{src,tests}/**/*.js\"",
+      "git add"
+    ]
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",

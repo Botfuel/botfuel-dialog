@@ -17,13 +17,13 @@
     "style": "eslint src; eslint tests"
   },
   "dependencies": {
-    "botfuel-dialog": "latest",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
+    "botfuel-dialog": "latest",
     "chalk": "^2.3.0"
   },
   "devDependencies": {
