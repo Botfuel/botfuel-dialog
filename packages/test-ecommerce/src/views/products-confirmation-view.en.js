@@ -5,9 +5,9 @@ class ProductsConfirmationView extends ConfirmationView {
     super({
       dialogQuestion: 'Do you still want to purchase a car?',
       dialogConfirmed: 'You still want to purchase a car.',
-      dialogDiscarded: 'You don\'t want to purchase a car anymore.',
+      dialogDiscarded: "You don't want to purchase a car anymore.",
     });
   }
 }
 
-module.exports = ConfirmationView;
+module.exports = ProductsConfirmationView;
