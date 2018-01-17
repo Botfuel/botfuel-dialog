@@ -31,6 +31,7 @@ bower_components
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/*
+packages/botfuel-dialog/build/*
 
 # Dependency directories
 node_modules/
@@ -67,3 +68,6 @@ typings/
 samples
 docs
 _tmp_tests
+
+# NPM specific
+package-lock.json

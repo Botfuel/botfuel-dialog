@@ -14,13 +14,15 @@ If you have any issue or question, feel free to [open a ticket](https://github.c
 ## Run the tests
 
 ### Unit tests
+
 ```shell
-npm test
+yarn unit-test
 ```
 
-### Samples
-```
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm run test-samples
+### Unit & integration tests
+
+```shell
+BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
 
 ## License

@@ -1,15 +1,13 @@
-[![Build Status](https://travis-ci.org/Botfuel/sample-botfuel-dialog-complexdialogs.svg?branch=master)](https://travis-ci.org/Botfuel/sample-botfuel-dialog-complexdialogs)
+# test-complexdialogs
 
-# sample-botfuel-dialog-complexdialogs
-
-This sample bot illustrates complex dialogs that include digressions, multi-intents, and random access navigation.
+This bot tests complex dialogs that include digressions, multi-intents, and random access navigation.
 
 ## Run the bot
 
 To run this sample in your terminal:
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm start
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn start
 ```
 
 ## Train the model
@@ -17,13 +15,13 @@ BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm start
 Each time you update the intent files, you have to re-train the model with the following command:
 
 ```shell
-npm run train
+yarn run train
 ```
 
 ## Run the tests
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
 
 ## Clean the brain
@@ -31,13 +29,13 @@ BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test
 To empty the brain of your bot:
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> npm run clean
+BOTFUEL_APP_TOKEN=<...> yarn run clean
 ```
 
 ## Need help ?
 
-- See [**Getting Started**](https://docs.botfuel.io/dialog/getting-started) to learn how to run a bot in minutes.
-- See [**Concepts**](https://docs.botfuel.io/dialog/concepts) for explanations about the internals of the SDK.
+* See [**Getting Started**](https://docs.botfuel.io/dialog/getting-started) to learn how to run a bot in minutes.
+* See [**Concepts**](https://docs.botfuel.io/dialog/concepts) for explanations about the internals of the SDK.
 
 ## License
 
