@@ -19,7 +19,7 @@
 const MiddlewareManager = require('../../src/middleware-manager');
 
 describe('MiddlewaresManager', () => {
-  test('that it should run the middlewares in the correct order', async () => {
+  test('that it runs the middlewares in the correct order when all are exectuted', async () => {
     const mm = new MiddlewareManager(
       {},
       [
@@ -53,5 +53,30 @@ describe('MiddlewaresManager', () => {
       'middleware0: done',
       'middleware1: done',
     ]);
+  });
+
+  test('that it runs the middlewares in the correct order when not all are executed', async () => {
+    const mm = new MiddlewareManager(
+      {},
+      [
+        async (context, next, done) => {
+          context.log.push('middleware0: work');
+          context.log.push('middleware0: done');
+          done();
+        },
+        async (context, next, done) => {
+          context.log.push('middleware1: work');
+          await next(async () => {
+            context.log.push('middleware1: next');
+            await done();
+            context.log.push('middleware1: done');
+          });
+        },
+      ],
+      [],
+    );
+    const context = { log: [] };
+    await mm.in(context, null);
+    expect(context.log).toEqual(['middleware0: work', 'middleware0: done']);
   });
 });
