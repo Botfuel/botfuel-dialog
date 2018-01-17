@@ -1,0 +1,2 @@
+automatic,auto
+manual

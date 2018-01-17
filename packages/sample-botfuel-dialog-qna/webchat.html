@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+</head>
+
+<body>
+  Webchat
+  <script src="https://cdn.jsdelivr.net/npm/botfuel-webchat-client@3.0.4"></script>
+  <script>
+    BotfuelWebChat.init({
+      appToken: '<YOUR_BOTFUEL_APP_TOKEN>',
+      theme: {
+        colors: {
+          main: '#244891',
+          primary: '#0084f4'
+        }
+      },
+      size: { width: 500, height: 600 },
+      startOpen: false,
+      startFullScreen: false
+    });
+  </script>
+</body>
+
+</html>

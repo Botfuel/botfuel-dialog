@@ -6,7 +6,10 @@ services:
 notifications:
   slack: botfuel:m19mrLajAVq0CkYHceYCGnL9
 script:
-- npm run style
-- npm test
+- yarn run style
+- yarn test
 after_success:
 - bash <(curl -s https://codecov.io/bash) -e TRAVIS_NODE_VERSION
+env:
+  global:
+    secure: NzK9H+2oAP7la1UM5FXkFfO67ATjTNmPSC7EpsLzvrpkqjGzeuUIn13DBwcwHtHQLGpe+/NgV6wn7v8uvBwZmgVw77H4NT2ruKtbVOhQ02LJdNx930ZqIi/sw3BB4js7Iqu0b8BwIGvqMafSq5SBPKmFirDfc1HQlgKOxW8tnlt8gtKiCLVRwBWpizD+lxiweffXX7+qFJyu7pwL4otgjF2sIA3PD+aRDNTvM5Fzsv0aQ/f7JGOcssx0Il47nK+zW5O0mjeBzZYnbXGiT0SJIkzi2dtNyDhiSZmW8gCzOfzHf7OKsDbrUbf2SDfWyYwBOukgp7KMQjoJKFqgILXWwMRHrwGvcOD+RAgmUBxHy/oExyGLBWSIOkl45AK++cwXHV6hK39IF8dcOAqDzAEdVkn63mifgQbbEqizV7U6A4V/0x2tQAmRCSNtjygIz83CeCNvrUC9MQkWdKMWBuhNdyUwC+5aBVZ+RhyFlHUQOjFWFV/f2fWmRW/UFeLAH0mNEtFIWcjoxdiNYx4bhLSOMd2fP2A0VGLO1jfN/9ODjbSt9gN8p264fS+rZGN98z2yahdxojmd3j8YinWD4ZguearpOLtJF8i8YrQSAL5gCILlaMYaUZGF8QFB4yHWj6RmDLEyPgXkM0HXPOgAMtXD6fJ/o5v4ChDZ5jLYhPSmu+k=
