@@ -87,13 +87,15 @@ class Adapter {
    * @returns {Promise.<void>}
    */
   async handleMessage(userMessage) {
+    logger.debug('handleMessage', userMessage);
+    const userId = userMessage.user;
+    await this.initUserIfNecessary(userId);
     const context = {
-      user: userMessage.user,
+      user: userId,
       brain: this.bot.brain,
       userMessage,
     };
     await this.middlewareManager.in(context, async () => {
-      await this.initUserIfNecessary(userMessage.user);
       await this.bot.respond(userMessage);
     });
   }
@@ -107,6 +109,7 @@ class Adapter {
    * @returns {Promise.<void>}
    */
   async initUserIfNecessary(userId) {
+    logger.debug('initUserIfNecessary', userId);
     await this.bot.brain.initUserIfNecessary(userId);
   }
 
