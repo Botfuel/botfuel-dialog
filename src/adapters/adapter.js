@@ -67,7 +67,12 @@ class Adapter {
    */
   async send(botMessages) {
     logger.debug('send', botMessages);
-    await this.middlewareManager.out({ brain: this.bot.brain, botMessages }, async () => {
+    const context = {
+      user: botMessages[0].user,
+      brain: this.bot.brain,
+      botMessages,
+    };
+    await this.middlewareManager.out(context, async () => {
       for (const botMessage of botMessages) {
         // eslint-disable-next-line no-await-in-loop
         await this.sendMessage(botMessage);
@@ -82,9 +87,13 @@ class Adapter {
    * @returns {Promise.<void>}
    */
   async handleMessage(userMessage) {
-    await this.middlewareManager.in({ brain: this.bot.brain, userMessage }, async () => {
-      const userId = userMessage.user;
-      await this.initUserIfNecessary(userId);
+    const context = {
+      user: userMessage.user,
+      brain: this.bot.brain,
+      userMessage,
+    };
+    await this.middlewareManager.in(context, async () => {
+      await this.initUserIfNecessary(userMessage.user);
       await this.bot.respond(userMessage);
     });
   }
