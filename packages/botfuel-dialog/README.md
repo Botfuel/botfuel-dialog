@@ -25,6 +25,14 @@ yarn unit-test
 BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
 
+### Publish on NPM
+
+```shell
+BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn release
+```
+
+Publishing requires credentials because it runs integration tests beforehand.
+
 ## License
 
 See the [**License**](LICENSE.md) file.
