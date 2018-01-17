@@ -16,6 +16,7 @@
 
 const logger = require('logtown')('Adapter');
 const MissingImplementationError = require('../errors/missing-implementation-error');
+const MiddlewareManager = require('../middleware-manager');
 
 /**
  * An adapter adapts the messages to the messaging platform.
@@ -27,8 +28,9 @@ class Adapter {
    */
   constructor(bot) {
     logger.debug('constructor');
-    this.config = bot.config;
     this.bot = bot;
+    this.config = bot.config;
+    this.middlewareManager = new MiddlewareManager(bot);
   }
 
   /**
@@ -48,7 +50,7 @@ class Adapter {
   /**
    * Adapter's method for running the bot.
    * This method is called by the {@link Bot}'s run method.
-   * @abtract
+   * @abstract
    * @async
    * @returns {Promise.<void>}
    */
@@ -65,10 +67,38 @@ class Adapter {
    */
   async send(botMessages) {
     logger.debug('send', botMessages);
-    for (const botMessage of botMessages) {
-      // eslint-disable-next-line no-await-in-loop
-      await this.sendMessage(botMessage);
-    }
+    await this.middlewareManager.out(botMessages, async () => {
+      for (const botMessage of botMessages) {
+        // eslint-disable-next-line no-await-in-loop
+        await this.sendMessage(botMessage);
+      }
+    });
+  }
+
+  /**
+   * Handles a user message.
+   * @async
+   * @param {Object} userMessage - the user message
+   * @returns {Promise.<void>}
+   */
+  async handleMessage(userMessage) {
+    await this.middlewareManager.in(userMessage, async () => {
+      const userId = userMessage.user;
+      await this.initUserIfNecessary(userId);
+      await this.bot.respond(userMessage);
+    });
+  }
+
+  /**
+   * Inits the user if necessary.
+   * Calls the corresponding method of the brain.
+   * Adapters can add specific behaviour.
+   * @async
+   * @param {int} userId - the user id
+   * @returns {Promise.<void>}
+   */
+  async initUserIfNecessary(userId) {
+    await this.bot.brain.initUserIfNecessary(userId);
   }
 
   /**

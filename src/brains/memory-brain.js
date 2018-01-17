@@ -59,7 +59,7 @@ class MemoryBrain extends Brain {
   async getUser(userId) {
     logger.debug('getUser', userId);
     if (!await this.hasUser(userId)) {
-      throw new Error('User not exists');
+      throw new Error('User does not exist');
     }
     return this.users[userId];
   }

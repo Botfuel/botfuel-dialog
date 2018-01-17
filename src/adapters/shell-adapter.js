@@ -44,25 +44,12 @@ class ShellAdapter extends Adapter {
   // eslint-disable-next-line require-jsdoc
   async run() {
     logger.debug('run');
-    await this.bot.brain.initUserIfNecessary(this.userId);
     const botMessage = new BotTextMessage('onboarding');
     await this.send([botMessage.toJson(this.userId)]);
     this.rl.on('line', async (input) => {
-      await this.runWhenUserInput({ payload: input });
+      const userMessage = new UserTextMessage(input).toJson(this.userId);
+      await this.handleMessage(userMessage);
     });
-  }
-
-  /**
-   * Runs recursively for each user input.
-   * @async
-   * @private
-   * @param {Object} userInput - the user input
-   * @returns {Promise.<void>}
-   */
-  async runWhenUserInput(userInput) {
-    logger.debug('runWhenUserInput', userInput);
-    const userMessage = new UserTextMessage(userInput.payload);
-    await this.bot.respond(userMessage.toJson(this.userId));
   }
 
   /** @inheritDoc */

@@ -1,4 +1,5 @@
-git@github.com:Botfuel/sample-botfuel-dialog-ecommerce
 git@github.com:Botfuel/sample-botfuel-dialog-complexdialogs
-git@github.com:Botfuel/sample-botfuel-dialog-qna
 git@github.com:Botfuel/sample-botfuel-dialog-complexentities
+git@github.com:Botfuel/sample-botfuel-dialog-ecommerce
+git@github.com:Botfuel/sample-botfuel-dialog-extrafeatures
+git@github.com:Botfuel/sample-botfuel-dialog-qna
