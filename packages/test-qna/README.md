@@ -14,7 +14,7 @@ To be able to use Botfuel Webchat with your bot you need to configure your Botfu
 If you want to use your bot locally with the Webchat, you have to expose your local machine to the web.
 You can do this with [ngrok](https://ngrok.com/) for example.
 
-Then run the sample in your terminal:
+Then run the bot in your terminal:
 
 ```shell
 BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn start botfuel-config

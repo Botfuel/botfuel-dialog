@@ -4,7 +4,7 @@ This bot tests handling more complex uses of entities in dialogs. This includes 
 
 ## Run the bot
 
-To run this sample in your terminal:
+To run this bot in your terminal:
 
 ```shell
 BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn start
