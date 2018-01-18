@@ -4,10 +4,6 @@
   "private": true,
   "author": "sysadmin@botfuel.io",
   "description": "Sample bot using botfuel-dialog and illustrating complex dialogs entities",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Botfuel/sample-botfuel-dialog-complexentities"
-  },
   "license": "Apache-2.0",
   "scripts": {
     "start": "botfuel-run",
