@@ -1,4 +1,4 @@
-/* eslint prefer-arrow-callback: "off" */
+/* eslint prefer-arrow-callback: 'off' */
 
 const expect = require('expect.js');
 const {
