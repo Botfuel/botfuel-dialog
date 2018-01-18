@@ -71,3 +71,6 @@ _tmp_tests
 
 # NPM specific
 package-lock.json
+
+#MacOS
+.DS_Store
