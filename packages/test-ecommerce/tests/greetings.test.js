@@ -1,4 +1,4 @@
-/* eslint prefer-arrow-callback: "off" */
+/* eslint prefer-arrow-callback: 'off' */
 
 const expect = require('expect.js');
 const { Bot, BotTextMessage, UserTextMessage } = require('botfuel-dialog');
@@ -9,11 +9,10 @@ describe('Greetings', function () {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('Hello')]);
-    expect(bot.adapter.log).to.eql(
-      [new UserTextMessage('Hello'), new BotTextMessage('Hello human!')].map(msg =>
-        msg.toJson(userId),
-      ),
-    );
+    expect(bot.adapter.log).to.eql([
+      new UserTextMessage('Hello'),
+      new BotTextMessage('Hello human!'),
+    ].map(msg => msg.toJson(userId)));
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).to.be(userId);

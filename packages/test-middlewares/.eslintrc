@@ -1,0 +1,22 @@
+{
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "plugins": ["node", "mocha"],
+  "extends": ["eslint:recommended", "airbnb"],
+  "parserOptions": { "ecmaVersion": 8 },
+  "rules": {
+    "class-methods-use-this": "off",
+    "func-names": "off",
+    "global-require": "off",
+    "import/no-dynamic-require": "off",
+    "import/order": ["error"],
+    "jsx-a11y/href-no-hash": "off",
+    "mocha/no-exclusive-tests": "error",
+    "no-console": "off",
+    "no-param-reassign": "off",
+    "no-restricted-syntax": "off",
+    "strict": 0
+  }
+}
