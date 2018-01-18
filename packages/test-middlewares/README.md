@@ -1,13 +1,13 @@
-# sample-botfuel-dialog-extrafeatures
+# test-middlewares
 
-This sample bot illustrates extra features such as middlewares.
+This sample bot illustrates middlewares.
 
 ## Run the bot
 
 To run this sample in your terminal:
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm start
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn start
 ```
 
 ## Train the model
@@ -15,13 +15,13 @@ BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm start
 Each time you update the intent files, you have to re-train the model with the following command:
 
 ```shell
-npm run train
+yarn run train
 ```
 
 ## Run the tests
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
 
 ## Clean the brain
@@ -29,7 +29,7 @@ BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test
 To empty the brain of your bot:
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> npm run clean
+BOTFUEL_APP_TOKEN=<...> yarn run clean
 ```
 
 ## Need help ?

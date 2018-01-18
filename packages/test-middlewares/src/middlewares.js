@@ -5,7 +5,7 @@ module.exports = {
       if (muted) {
         done();
       } else {
-        next(done);
+        next();
       }
     },
   ],
