@@ -6,7 +6,7 @@
     "style": "lerna run style",
     "pretest": "yarn run bootstrap",
     "release":
-      "lerna run test && lerna run compile --scope botfuel-dialog && lerna publish",
+      "lerna run test && lerna run compile --scope botfuel-dialog && lerna publish --conventional-commits --changelog-preset=angular",
     "unit-test": "lerna run test --scope botfuel-dialog",
     "test": "lerna run test"
   },
