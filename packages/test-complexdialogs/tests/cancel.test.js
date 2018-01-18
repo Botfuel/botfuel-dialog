@@ -26,7 +26,6 @@ describe('Canceling', function () {
         new BotTextMessage('Hello human!'),
       ].map(msg => msg.toJson(userId)),
     );
-
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).to.be(userId);
@@ -35,7 +34,7 @@ describe('Canceling', function () {
     expect(dialogs.previous.length).to.be(2);
     expect(dialogs.previous[0].name).to.be('cancel');
     expect(dialogs.previous[1].name).to.be('greetings');
-  });
+  }, 15000);
 
   it('should not cancel the previous dialog if user says no', async function () {
     const bot = new Bot(config);
@@ -60,7 +59,6 @@ describe('Canceling', function () {
         new BotTextMessage('Which transmission?'),
       ].map(msg => msg.toJson(userId)),
     );
-
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).to.be(userId);
@@ -68,7 +66,7 @@ describe('Canceling', function () {
     expect(dialogs.stack).to.have.length(1);
     expect(dialogs.previous.length).to.be(1);
     expect(dialogs.previous[0].name).to.be('cancel');
-  });
+  }, 15000);
 
   it('should reset memory of the cancel dialog if user already canceled once', async function () {
     const bot = new Bot(config);
@@ -103,7 +101,6 @@ describe('Canceling', function () {
         new BotTextMessage('Hello again human!'),
       ].map(msg => msg.toJson(userId)),
     );
-
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).to.be(userId);
@@ -114,5 +111,5 @@ describe('Canceling', function () {
     expect(dialogs.previous[1].name).to.be('greetings');
     expect(dialogs.previous[2].name).to.be('cancel');
     expect(dialogs.previous[3].name).to.be('greetings');
-  });
+  }, 15000);
 });

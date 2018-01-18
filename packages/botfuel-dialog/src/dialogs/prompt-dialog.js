@@ -219,7 +219,7 @@ class PromptDialog extends Dialog {
     );
     logger.debug('execute', { missingEntities, matchedEntities });
     await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
-    const dialogData = await this.dialogWillDisplay(userId, {
+    const dialogData = await this.dialogWillDisplay(userMessage, {
       missingEntities,
       matchedEntities,
     });
