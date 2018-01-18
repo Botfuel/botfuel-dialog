@@ -27,7 +27,7 @@ describe('PromptView', () => {
       test('should display the matched entities', () => {
         expect(
           view.render({
-            user: null
+            user: null,
           }, {
             matchedEntities: { name1: {}, name2: {} },
             missingEntities: {},
@@ -40,7 +40,7 @@ describe('PromptView', () => {
       test('should display the missing entities', () => {
         expect(
           view.render({
-            user: null
+            user: null,
           }, {
             matchedEntities: {},
             missingEntities: { name1: {}, name2: {} },

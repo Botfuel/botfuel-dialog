@@ -27,7 +27,7 @@ describe('QnasView', () => {
       test('should display no postback', () => {
         expect(
           view.render({
-            user: null
+            user: null,
           }, {
             qnas: [],
           }),
@@ -39,7 +39,7 @@ describe('QnasView', () => {
       test('should display answer', () => {
         expect(
           view.render({
-            user: null
+            user: null,
           }, {
             qnas: [
               {
@@ -55,7 +55,7 @@ describe('QnasView', () => {
       test('should display 2 postbacks', () => {
         expect(
           view.render({
-            user: null
+            user: null,
           }, {
             qnas: [
               {

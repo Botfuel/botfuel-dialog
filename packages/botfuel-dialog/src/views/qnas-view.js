@@ -43,7 +43,7 @@ class QnasView extends View {
   renderAnswer(answer) {
     logger.debug('renderAnswer', answer);
     return [
-      new BotTextMessage(answer)
+      new BotTextMessage(answer),
     ];
   }
 
