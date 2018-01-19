@@ -38,7 +38,7 @@ describe('Disgressions', function () {
       expect(lastConversation.travel.city.body).to.be('Paris');
       expect(lastConversation.travel.time.body).to.be('tomorrow');
     });
-  });
+  }, 15000);
 
   describe('Two turns', () => {
     it('should handle two turn digressions', async function () {
@@ -80,5 +80,5 @@ describe('Disgressions', function () {
       expect(lastConversation.name).to.have.property('name');
       expect(lastConversation.name.name.body).to.be('John');
     });
-  });
+  }, 15000);
 });

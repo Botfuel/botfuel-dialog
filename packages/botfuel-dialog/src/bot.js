@@ -175,7 +175,7 @@ class Bot {
     logger.debug('respondWhenText', userMessage);
     const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
     logger.debug('respondWhenText: intents, entities', intents, entities);
-    await this.dm.executeIntents(this.adapter, userMessage.user, intents, entities);
+    await this.dm.executeIntents(this.adapter, userMessage, intents, entities);
   }
 
   /**
@@ -191,7 +191,7 @@ class Bot {
       name: userMessage.payload.value.dialog,
       entities: userMessage.payload.value.entities,
     };
-    await this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
+    await this.dm.executeDialogs(this.adapter, userMessage, [dialog]);
   }
 
   /**
@@ -207,7 +207,7 @@ class Bot {
       name: 'image',
       entities: [{ url: userMessage.payload.value.url }],
     };
-    await this.dm.executeDialogs(this.adapter, userMessage.user, [dialog]);
+    await this.dm.executeDialogs(this.adapter, userMessage, [dialog]);
   }
 }
 

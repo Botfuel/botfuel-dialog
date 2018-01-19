@@ -23,19 +23,20 @@ const View = require('./view');
  * @extends View
  */
 class TextView extends View {
-  // eslint-disable-next-line require-jsdoc
-  render(data) {
-    logger.debug('render', data);
-    return this.getTexts(data).map(text => new BotTextMessage(text));
+  /** @inheritDoc */
+  render(userMessage, data) {
+    logger.debug('render', userMessage, data);
+    return this.getTexts(userMessage, data).map(text => new BotTextMessage(text));
   }
 
   /**
    * Gets the texts used for building the BotTextMessages.
+   * @param {Object} userMessage - the user message
    * @param {Object} data - dialog data used at display time
    * @returns {String[]} an array of strings
    */
-  getTexts(data) {
-    logger.debug('getTexts', data);
+  getTexts(userMessage, data) {
+    logger.debug('getTexts', userMessage, data);
     return [];
   }
 }

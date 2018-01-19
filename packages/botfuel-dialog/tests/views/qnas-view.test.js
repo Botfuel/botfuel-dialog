@@ -27,6 +27,8 @@ describe('QnasView', () => {
       test('should display no postback', () => {
         expect(
           view.render({
+            user: null,
+          }, {
             qnas: [],
           }),
         ).toEqual([new BotTextMessage('What do you mean?'), new ActionsMessage([])]);
@@ -37,7 +39,13 @@ describe('QnasView', () => {
       test('should display answer', () => {
         expect(
           view.render({
-            qnas: [{ answer: 'answer' }],
+            user: null,
+          }, {
+            qnas: [
+              {
+                answer: 'answer',
+              },
+            ],
           }),
         ).toEqual([new BotTextMessage('answer')]);
       });
@@ -47,6 +55,8 @@ describe('QnasView', () => {
       test('should display 2 postbacks', () => {
         expect(
           view.render({
+            user: null,
+          }, {
             qnas: [
               {
                 answer: 'answer1',

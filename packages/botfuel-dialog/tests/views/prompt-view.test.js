@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// require('../../src/logger-manager').configure({ logger: 'botfuel'});
+
 const PromptView = require('../../src/views/prompt-view');
 const BotTextMessage = require('../../src/messages/bot-text-message');
 
@@ -25,6 +27,8 @@ describe('PromptView', () => {
       test('should display the matched entities', () => {
         expect(
           view.render({
+            user: null,
+          }, {
             matchedEntities: { name1: {}, name2: {} },
             missingEntities: {},
           }),
@@ -36,6 +40,8 @@ describe('PromptView', () => {
       test('should display the missing entities', () => {
         expect(
           view.render({
+            user: null,
+          }, {
             matchedEntities: {},
             missingEntities: { name1: {}, name2: {} },
           }),

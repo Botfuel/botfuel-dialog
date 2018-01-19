@@ -201,12 +201,13 @@ class PromptDialog extends Dialog {
    * Executes the dialog.
    * @async
    * @param {Adapter} adapter - the adapter
-   * @param {String} userId - the user id
+   * @param {Object} userMessage - the user message
    * @param {Object[]} candidates - the message entities extracted from the message
    * @returns {Promise.<Object>} an action
    */
-  async execute(adapter, userId, candidates) {
-    logger.debug('execute', userId, candidates);
+  async execute(adapter, userMessage, candidates) {
+    logger.debug('execute', userMessage, candidates);
+    const userId = userMessage.user;
     const dialogEntities =
       (await this.brain.conversationGet(userId, this.parameters.namespace)) || {};
     logger.debug('execute: dialogEntities', dialogEntities);
@@ -218,13 +219,13 @@ class PromptDialog extends Dialog {
     );
     logger.debug('execute', { missingEntities, matchedEntities });
     await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
-    const dialogData = await this.dialogWillDisplay(userId, {
+    const dialogData = await this.dialogWillDisplay(userMessage, {
       missingEntities,
       matchedEntities,
     });
-    await this.display(adapter, userId, { matchedEntities, missingEntities, dialogData });
+    await this.display(adapter, userMessage, { matchedEntities, missingEntities, dialogData });
     if (Object.keys(missingEntities).length === 0) {
-      const result = await this.dialogWillComplete(userId, {
+      const result = await this.dialogWillComplete(userMessage, {
         matchedEntities,
         missingEntities,
       });

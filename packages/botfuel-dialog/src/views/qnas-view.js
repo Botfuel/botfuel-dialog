@@ -25,9 +25,9 @@ const View = require('./view');
  * @extends View
  */
 class QnasView extends View {
-  // eslint-disable-next-line require-jsdoc
-  render(data) {
-    logger.debug('render', data);
+  /** @inheritDoc */
+  render(userMessage, data) {
+    logger.debug('render', userMessage, data);
     if (data.qnas.length === 1) {
       return this.renderAnswer(data.qnas[0].answer);
     }
@@ -42,7 +42,9 @@ class QnasView extends View {
    */
   renderAnswer(answer) {
     logger.debug('renderAnswer', answer);
-    return [new BotTextMessage(answer)];
+    return [
+      new BotTextMessage(answer),
+    ];
   }
 
   /**
@@ -58,11 +60,18 @@ class QnasView extends View {
         new Postback(qna.questions[0], 'qnas', [
           {
             dim: 'qnas',
-            value: [{ answer: qna.answer }],
+            value: [
+              {
+                answer: qna.answer,
+              },
+            ],
           },
         ]),
     );
-    return [new BotTextMessage('What do you mean?'), new ActionsMessage(postbacks)];
+    return [
+      new BotTextMessage('What do you mean?'),
+      new ActionsMessage(postbacks),
+    ];
   }
 }
 
