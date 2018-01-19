@@ -18,7 +18,7 @@ describe('Qna', () => {
     expect(bot.adapter.log).to.eql(
       [
         new UserTextMessage('Where is bryan ?'),
-        new BotTextMessage('I’m sorry, I did not understood your question. Please reach us at contact@my-sample-compagny.com for further assistance.'),
+        new BotTextMessage('I’m sorry, I did not understand your question. Please reach us at contact@my-sample-compagny.com for further assistance.'),
       ].map(msg =>
         msg.toJson(userId),
       ),

@@ -33,6 +33,5 @@ typings/
 .idea
 =======
 bin/run-webchat.sh
-bin/test.sh
 webchat.html
 >>>>>>> 22ee72f... Update QnA bot

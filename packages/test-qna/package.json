@@ -6,10 +6,14 @@
   "description": "Bot testing botfuel-dialog and qna",
   "license": "Apache-2.0",
   "scripts": {
-    "start": "botfuel-run",
+    "start": "bin/run-webchat.sh",
     "train": "botfuel-train",
     "clean": "botfuel-clean",
+<<<<<<< HEAD
     "test": "BOTFUEL_APP_TOKEN=TEST_BOT mocha --timeout 30000 --require babel-polyfill --require babel-register tests/*.js",
+=======
+    "test": "mocha --timeout 30000 --require babel-polyfill --require babel-register tests/*.js",
+>>>>>>> f8c3124... Run tests both locally and by travis
     "style": "eslint src; eslint tests"
   },
   "dependencies": {
@@ -34,7 +38,8 @@
     "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-react": "^7.1.0",
     "expect.js": "^0.3.1",
-    "mocha": "^3.5.1"
+    "mocha": "^3.5.1",
+    "sinon": "^4.1.5"
   },
   "engines": {
     "node": "8.x"

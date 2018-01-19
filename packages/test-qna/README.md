@@ -8,7 +8,7 @@ This sample bot illustrates how you can implement a bot with [Botfuel QnA](https
 Each time you update the intent files, you have to re-train the model with the following command:
 
 ```shell
-npm run train
+yarn run train
 ```
 
 
@@ -18,10 +18,9 @@ To be able to use Botfuel Webchat with your bot you need to configure your Botfu
 1. Go to the Botfuel [developer portal](https://app.botfuel.io/apps).
 2. Find your application in the list and click the *Webchat* button. If you don't see this button, change your plan to enable the Webchat option.
 3. Click on the _Configuration_ tab and configure the bot endpoint and the allowed origins.
-4. Copy `webchat.html` to `webchat-sample.html`. Go back to your app details and copy your `APP_TOKEN`, then replace the `<YOUR_BOTFUEL_APP_TOKEN>` value in the `webchat.html`. Proceed likewise to create `bin/run-webchat.sh` and `bin/test.sh` by copying `BOTFUEL_APP_TOKEN`, `BOTFUEL_APP_ID`and `BOTFUEL_APP_KEY`.
+4. Copy `webchat.html` to `webchat-sample.html`. Go back to your app details and copy your `APP_TOKEN`, then replace the `<YOUR_BOTFUEL_APP_TOKEN>` value in the `webchat.html`. Proceed likewise to create `bin/run-webchat.sh` by copying `BOTFUEL_APP_TOKEN`, `BOTFUEL_APP_ID`and `BOTFUEL_APP_KEY`.
 
-If you want to use your bot locally with the Webchat, you have to expose your local machine to the web.
-You can do this with [ngrok](https://ngrok.com/) for example.
+If you want to use your bot locally with the Webchat, you have to expose your local machine to the web. You can do this with [ngrok](https://ngrok.com/) for example.
 
 Then run the sample in your terminal:
 
@@ -33,7 +32,7 @@ yarn start
 ## Run the tests
 
 ```shell
-yarn test
+BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> yarn test
 ```
 
 
@@ -42,7 +41,7 @@ yarn test
 To empty the brain of your bot:
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> yarn run clean
+yarn run clean
 ```
 
 

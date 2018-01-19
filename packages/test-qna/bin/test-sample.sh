@@ -1,1 +1,0 @@
-BOTFUEL_APP_TOKEN=<YOUR_BOTFUEL_APP_TOKEN> BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> mocha --timeout 30000 --require babel-polyfill --require babel-register tests/*.js
