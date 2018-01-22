@@ -22,6 +22,7 @@ yarn unit-test
 ### Unit & integration tests
 
 ```shell
+yarn bootstrap
 BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
 

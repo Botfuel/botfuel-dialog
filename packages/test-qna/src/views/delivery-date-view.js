@@ -1,7 +1,7 @@
 const { TextView, BotTextMessage } = require('botfuel-dialog');
 
 class DeliveryDateView extends TextView {
-  render(data) {
+  render(userMessage, data) {
     const { date } = data;
     const dateStr = date.toISOString().split('T')[0];
 

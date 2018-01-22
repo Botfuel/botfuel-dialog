@@ -9,11 +9,7 @@
     "start": "botfuel-run",
     "train": "botfuel-train",
     "clean": "botfuel-clean",
-<<<<<<< HEAD
-    "test": "BOTFUEL_APP_TOKEN=TEST_BOT mocha --timeout 30000 --require babel-polyfill --require babel-register tests/*.js",
-=======
     "test": "mocha --timeout 30000 --require babel-polyfill --require babel-register tests/*.js",
->>>>>>> f8c3124... Run tests both locally and by travis
     "style": "eslint src; eslint tests"
   },
   "dependencies": {
