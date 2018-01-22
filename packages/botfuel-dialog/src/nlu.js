@@ -137,34 +137,15 @@ class Nlu {
       }
       const qnaResult = await this.computeWithQna(sentence);
       logger.debug('compute: qnaResult', qnaResult);
-      return qnaResult.intents.length > 0
-        ? qnaResult
-        : { intents: [], entities: classifierResult.entities };
+      if (qnaResult.intents.length > 0) {
+        return qnaResult;
+      }
+      return {
+        intents: [],
+        entities: classifierResult.entities,
+      };
     }
     return this.computeWithClassifier(sentence);
-  }
-
-  /**
-   * Builds the QnA result.
-   * @param {Object[]} qnas - a non empty array of qnas
-   * @returns {Object} the result
-   */
-  buildResult(qnas) {
-    logger.debug('buildResult', qnas);
-    return {
-      intents: [
-        {
-          name: 'qnas',
-          value: 1.0,
-        },
-      ],
-      entities: [
-        {
-          dim: 'qnas',
-          value: qnas,
-        },
-      ],
-    };
   }
 
   /**
@@ -177,13 +158,27 @@ class Nlu {
     try {
       const qnas = await this.qna.getMatchingQnas({ sentence });
       logger.debug('computeWithQna: qnas', qnas);
-      if (
-        (this.config.qna.strict && qnas.length === 1) ||
-        (!this.config.qna.strict && qnas.length > 0)
-      ) {
-        return this.buildResult(qnas);
+      //const strict = strict;
+      //logger.debug('computeWithQna: strict', strict);
+      if ((this.config.qna.strict && qnas.length === 1) || (!this.config.qna.strict && qnas.length > 0)) {
+        return {
+          intents: [
+            {
+              name: 'qnas',
+              value: 1.0,
+            },
+          ],
+          entities: [
+            {
+              dim: 'qnas',
+              value: qnas,
+            },
+          ],
+        };
       }
-      return { intents: [] };
+      return {
+        intents: [],
+      };
     } catch (error) {
       logger.error('Could not classify with QnA!');
       if (error.statusCode === 403) {
@@ -204,7 +199,10 @@ class Nlu {
     logger.debug('computeWithClassifier: entities', entities);
     const intents = await this.classifier.compute(sentence, entities);
     logger.debug('computeWithClassifier: intents', intents);
-    return { intents, entities };
+    return {
+      intents,
+      entities,
+    };
   }
 
   /**
