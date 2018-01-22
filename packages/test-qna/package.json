@@ -6,7 +6,7 @@
   "description": "Bot testing botfuel-dialog and qna",
   "license": "Apache-2.0",
   "scripts": {
-    "start": "bin/run-webchat.sh",
+    "start": "botfuel-run",
     "train": "botfuel-train",
     "clean": "botfuel-clean",
 <<<<<<< HEAD
