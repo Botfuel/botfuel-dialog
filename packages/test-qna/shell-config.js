@@ -1,6 +1,6 @@
 module.exports = {
   qna: {
-    when: 'before',
+    when: 'after',
   },
   intentThreshold: 0.75,
 };
