@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-const fs = require('fs-extra');
 const Logger = require('logtown');
 const AdapterResolver = require('./adapter-resolver');
 const DialogManager = require('./dialog-manager');
@@ -51,11 +50,6 @@ class Bot {
     this.nlu = new Nlu(this.config);
     this.dm = new DialogManager(this.brain, this.config);
     this.adapter = new AdapterResolver(this).resolve(this.config.adapter);
-    this.intentFilter = async intents => intents.filter(intent => intent.value > this.config.intentThreshold);
-    const intentFilterPath = `${this.config.path}/src/intent-filter.js`;
-    if (fs.pathExistsSync(intentFilterPath)) {
-      this.intentFilter = require(intentFilterPath);
-    }
   }
 
   /**
@@ -179,12 +173,10 @@ class Bot {
    */
   async respondWhenText(userMessage) {
     logger.debug('respondWhenText', userMessage);
-    const result = await this.nlu.compute(userMessage.payload.value);
-    logger.debug('respondWhenText: result', result);
-    const entities = result.entities;
-    let  intents = result.intents;
-    intents = await this.intentFilter(intents, { brain: this.brain, userMessage });
-    intents = intents.slice(0, this.config.multiIntent ? 2 : 1);
+    const { intents, entities } = await this.nlu.compute(userMessage.payload.value, {
+      brain: this.brain,
+      userMessage,
+    });
     logger.debug('respondWhenText: intents, entities', intents, entities);
     await this.dm.executeIntents(this.adapter, userMessage, intents, entities);
   }

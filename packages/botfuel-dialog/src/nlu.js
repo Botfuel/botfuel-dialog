@@ -15,6 +15,7 @@
  */
 
 const fs = require('fs');
+const fsExtra = require('fs-extra');
 const dir = require('node-dir');
 const Qna = require('botfuel-qna-sdk');
 const Spellchecking = require('botfuel-nlp-sdk').Spellchecking;
@@ -39,6 +40,12 @@ class Nlu {
     this.qna = null;
     this.spellchecking = null;
     this.classifier = null;
+    this.intentFilter = async intents => intents
+      .filter(intent => intent.value > config.intentThreshold);
+    const intentFilterPath = `${this.config.path}/src/intent-filter.js`;
+    if (fsExtra.pathExistsSync(intentFilterPath)) {
+      this.intentFilter = require(intentFilterPath);
+    }
   }
 
   /**
@@ -110,9 +117,10 @@ class Nlu {
   /**
    * Computes intents and entities.
    * @param {String} sentence - the sentence
+   * @param {Object} [context] - an optional context (brain and userMessage)
    * @returns {Promise} a promise with entities and intents
    */
-  async compute(sentence) {
+  async compute(sentence, context) {
     logger.debug('compute', sentence);
     if (this.config.spellchecking) {
       logger.debug('compute: spellchecking');
@@ -122,21 +130,16 @@ class Nlu {
       logger.debug('compute: qna', this.config.qna);
       if (this.config.qna.when === 'before') {
         const qnaResult = await this.computeWithQna(sentence);
-        logger.debug('compute: qnaResult', qnaResult);
         if (qnaResult.intents.length > 0) {
           return qnaResult;
         }
-        const classifierResult = await this.computeWithClassifier(sentence);
-        logger.debug('compute: classifierResult', classifierResult);
-        return classifierResult;
+        return this.computeWithClassifier(sentence, context);
       }
-      const classifierResult = await this.computeWithClassifier(sentence);
-      logger.debug('compute: classifierResult', classifierResult);
+      const classifierResult = await this.computeWithClassifier(sentence, context);
       if (classifierResult.intents.length > 0) {
         return classifierResult;
       }
       const qnaResult = await this.computeWithQna(sentence);
-      logger.debug('compute: qnaResult', qnaResult);
       if (qnaResult.intents.length > 0) {
         return qnaResult;
       }
@@ -158,9 +161,8 @@ class Nlu {
     try {
       const qnas = await this.qna.getMatchingQnas({ sentence });
       logger.debug('computeWithQna: qnas', qnas);
-      //const strict = strict;
-      //logger.debug('computeWithQna: strict', strict);
-      if ((this.config.qna.strict && qnas.length === 1) || (!this.config.qna.strict && qnas.length > 0)) {
+      const strict = this.config.qna.strict;
+      if ((strict && qnas.length === 1) || (!strict && qnas.length > 0)) {
         return {
           intents: [
             {
@@ -191,13 +193,16 @@ class Nlu {
   /**
    * Computes intents and entities using the classifier.
    * @param {String} sentence - the user sentence
+   * @param {Object} [context] - an optional context (brain and userMessage)
    * @returns {Promise.<Object>}
    */
-  async computeWithClassifier(sentence) {
+  async computeWithClassifier(sentence, context) {
     logger.debug('computeWithClassifier', sentence);
     const entities = await this.extractor.compute(sentence);
     logger.debug('computeWithClassifier: entities', entities);
-    const intents = await this.classifier.compute(sentence, entities);
+    let intents = await this.classifier.compute(sentence, entities);
+    intents = await this.intentFilter(intents, context);
+    intents = intents.slice(0, this.config.multiIntent ? 2 : 1);
     logger.debug('computeWithClassifier: intents', intents);
     return {
       intents,
