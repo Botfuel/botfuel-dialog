@@ -173,7 +173,10 @@ class Bot {
    */
   async respondWhenText(userMessage) {
     logger.debug('respondWhenText', userMessage);
-    const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
+    const { intents, entities } = await this.nlu.compute(userMessage.payload.value, {
+      brain: this.brain,
+      userMessage,
+    });
     logger.debug('respondWhenText: intents, entities', intents, entities);
     await this.dm.executeIntents(this.adapter, userMessage, intents, entities);
   }

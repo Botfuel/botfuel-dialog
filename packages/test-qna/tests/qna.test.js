@@ -9,7 +9,6 @@ const {
 } = require('botfuel-dialog');
 const config = require('../test-config');
 
-
 describe('Qna', () => {
   it('should respond when not understood', async function () {
     const bot = new Bot(config);

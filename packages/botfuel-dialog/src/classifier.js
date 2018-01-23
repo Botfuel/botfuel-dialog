@@ -36,8 +36,6 @@ class Classifier {
   constructor(config) {
     this.config = getConfiguration(config);
     logger.debug('constructor', config);
-    this.locale = this.config.locale;
-    this.intentThreshold = this.config.intentThreshold;
     this.modelFilename = `${this.config.path}/models/model.json`;
     this.intentDirname = `${this.config.path}/src/intents`;
     this.classifier = null;
@@ -49,7 +47,7 @@ class Classifier {
    * @returns {*|Stemmer} - the stemmer
    */
   getStemmer() {
-    switch (this.locale) {
+    switch (this.config.locale) {
       case 'fr':
         return Natural.PorterStemmerFr;
       case 'es':
@@ -67,25 +65,20 @@ class Classifier {
    */
   async init() {
     logger.debug('init');
-
     const intentsAndModelExist = await this.intentsAndModelExist(
       this.modelFilename,
       this.intentDirname,
     );
-
     // If no model file or no intent file, just warn
     if (!intentsAndModelExist) {
       logger.warn('No intents directory or model file');
       return null;
     }
-
     const isModelUpToDate = await this.isModelUpToDate(this.modelFilename, this.intentDirname);
-
     if (!isModelUpToDate) {
       logger.warn('Your model is not up-to-date.');
       logger.warn('Train it by running: ./node_modules/.bin/botfuel-train <CONFIG_FILE>');
     }
-
     return new Promise((resolve, reject) => {
       Natural.LogisticRegressionClassifier.load(this.modelFilename, null, (err, classifier) => {
         if (err !== null) {
@@ -105,7 +98,6 @@ class Classifier {
    */
   async isModelUpToDate(modelFilePath, intentsDirPath) {
     logger.debug('isModelUpToDate');
-
     const intentFiles = Fs.readdirSync(intentsDirPath, 'utf8');
     const filteredIntents = intentFiles.filter(
       file => file.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX,
@@ -114,7 +106,6 @@ class Classifier {
       fsStat(modelFilePath),
       ...filteredIntents.map(intentFile => fsStat(`${intentsDirPath}/${intentFile}`)),
     ]);
-
     return fileStats
       .map(file => file.mtimeMs)
       .every(timestamp => timestamp < modelLastModifiedTime);
@@ -128,12 +119,10 @@ class Classifier {
    */
   async intentsAndModelExist(modelFilePath, intentsDirPath) {
     logger.debug('intentsAndModelExist');
-
     const [intentDirExists, modelFileExists] = await Promise.all([
       fsExtra.pathExists(intentsDirPath),
       fsExtra.pathExists(modelFilePath),
     ]);
-
     return intentDirExists && modelFileExists;
   }
 
@@ -154,18 +143,17 @@ class Classifier {
    */
   async compute(sentence, entities) {
     logger.debug('compute', sentence, entities);
-
     // The bot has no intent
     if (!this.classifier) {
       return [];
     }
-
     const features = this.computeFeatures(sentence, entities);
-    return this.classifier
-      .getClassifications(features)
-      .filter(intent => intent.value > this.intentThreshold)
-      .slice(0, this.config.multiIntent ? 2 : 1)
-      .map(intent => ({ name: intent.label, value: intent.value }));
+    return this
+      .classifier.getClassifications(features)
+      .map(intent => ({
+        name: intent.label,
+        value: intent.value,
+      }));
   }
 
   /**
@@ -174,10 +162,8 @@ class Classifier {
    */
   async train() {
     logger.debug('train');
-
     // Make sure model file exists
     await fsExtra.ensureFile(this.modelFilename);
-
     this.classifier = new Natural.LogisticRegressionClassifier(this.getStemmer());
     Fs.readdirSync(this.intentDirname, 'utf8')
       .filter(fileName => fileName.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX)

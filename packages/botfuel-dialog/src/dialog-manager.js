@@ -54,14 +54,14 @@ class DialogManager extends Resolver {
 
   /**
    * Sorts intents
-   * @param {Object[]} intents - the intents
+   * @param {Object[]} intents - the intent names
    * @returns {Object[]} the sorted intents
    */
   sortIntents(intents) {
     logger.debug('sortIntents', intents);
     return intents.sort((intent1, intent2) => {
-      const reentrant1 = this.resolve(intent1.name).characteristics.reentrant;
-      const reentrant2 = this.resolve(intent2.name).characteristics.reentrant;
+      const reentrant1 = this.resolve(intent1).characteristics.reentrant;
+      const reentrant2 = this.resolve(intent2).characteristics.reentrant;
       if (reentrant1 && !reentrant2) {
         return 1;
       }
@@ -124,7 +124,7 @@ class DialogManager extends Resolver {
     let nb = 0;
     const newDialogs = [];
     for (let i = 0; i < intents.length; i++) {
-      const name = intents[i].name;
+      const name = intents[i];
       const characteristics = this.resolve(name).characteristics;
       if (characteristics.reentrant) {
         nb++;
