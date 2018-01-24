@@ -15,5 +15,7 @@ describe('Mute', function () {
       new BotTextMessage('Muted!'),
       new UserTextMessage('What\'s up'),
     ].map(msg => msg.toJson(userId)));
+    const isMuted = await bot.brain.userGet(userId, '_isMuted');
+    expect(isMuted).to.be(true);
   });
 });
