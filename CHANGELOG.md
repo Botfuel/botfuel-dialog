@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.7.1"></a>
+## [1.7.1](https://github.com/Botfuel/botfuel-dialog/compare/v1.7.0...v1.7.1) (2018-01-24)
+
+
+### Bug Fixes
+
+* Fix mute dialog + test in test-middlewares ([d1d88d9](https://github.com/Botfuel/botfuel-dialog/commit/d1d88d9))
+
+
+
+
 <a name="1.7.0"></a>
 # [1.7.0](https://github.com/Botfuel/botfuel-dialog/compare/v1.6.0...v1.7.0) (2018-01-23)
 
