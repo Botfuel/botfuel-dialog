@@ -24,8 +24,7 @@ const defaultConfig = {
   adapter: 'shell',
   brain: 'memory',
   intentThreshold: 0.8,
-  conversationDuration: 86400000, // One day in milliseconds
-  logger: 'dev',
+  logger: 'info',
   multiIntent: false,
 };
 
