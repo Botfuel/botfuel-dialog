@@ -24,7 +24,7 @@ const defaultConfig = {
   adapter: 'shell',
   brain: 'memory',
   intentThreshold: 0.8,
-  logger: 'dev',
+  logger: 'info',
   multiIntent: false,
 };
 
