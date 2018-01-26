@@ -29,12 +29,12 @@ const brainTest = (brainLabel) => {
   beforeEach(async () => {
     switch (brainLabel) {
       case MONGO_BRAIN_LABEL:
-        brain = new MongoBrain({ conversationDuration: 86400000 });
+        brain = new MongoBrain();
         await brain.init();
         break;
       case MEMORY_BRAIN_LABEL:
       default:
-        brain = new MemoryBrain({ conversationDuration: 86400000 });
+        brain = new MemoryBrain();
     }
   });
 
@@ -162,9 +162,9 @@ const brainTest = (brainLabel) => {
 };
 
 describe('Brains', () => {
- // describe('MongoBrain', () => {
- //   brainTest(MONGO_BRAIN_LABEL);
- // });
+  describe('MongoBrain', () => {
+    brainTest(MONGO_BRAIN_LABEL);
+  });
   describe('MemoryBrain', () => {
     brainTest(MEMORY_BRAIN_LABEL);
   });

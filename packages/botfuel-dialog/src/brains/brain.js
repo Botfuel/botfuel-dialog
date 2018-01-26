@@ -26,7 +26,7 @@ class Brain {
    * @constructor
    * @param {Object} config - the config
    */
-  constructor(config) {
+  constructor(config = { conversationDuration: 86400000 }) {
     this.conversationDuration = config.conversationDuration;
   }
 

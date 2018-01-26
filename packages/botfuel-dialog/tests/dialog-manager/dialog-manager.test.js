@@ -30,7 +30,7 @@ const travelDialog = { name: 'travel', entities: [] };
 const travelCancelDialog = { name: 'travel-cancel', entities: [] };
 
 describe('DialogManager', () => {
-  const brain = new MemoryBrain({ conversationDuration: 86400000 });
+  const brain = new MemoryBrain();
   const dm = new DialogManager(brain, { path: __dirname, locale: 'en' });
 
   beforeEach(async () => {
