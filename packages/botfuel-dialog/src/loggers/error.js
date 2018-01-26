@@ -29,11 +29,10 @@ const transports = [
   }),
 ];
 
-const options = { exitOnError: false };
+const options = {
+  exitOnError: false
+};
 
 module.exports = {
   wrapper: new WinstonWrapper(transports, options),
-  config: {
-    disable: ['warn', 'info', 'verbose', 'debug', 'silly'],
-  },
 };

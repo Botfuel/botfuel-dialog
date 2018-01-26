@@ -25,37 +25,14 @@ const transports = [
     timestamp: true,
     handleExceptions: true,
     align: false,
-    level: 'info',
+    level: 'debug',
   }),
 ];
 
-const options = { exitOnError: false };
+const options = {
+  exitOnError: false
+};
 
 module.exports = {
   wrapper: new WinstonWrapper(transports, options),
-  config: {
-    namespaces: {
-      Brain: {
-        disable: ['debug'],
-      },
-      MongoBrain: {
-        disable: ['debug'],
-      },
-      MemoryBrain: {
-        disable: ['debug'],
-      },
-      WsExtractor: {
-        disable: ['debug'],
-      },
-      CompositeExtractor: {
-        disable: ['debug'],
-      },
-      PromptView: {
-        disable: ['debug'],
-      },
-      QnasView: {
-        disable: ['debug'],
-      },
-    },
-  },
 };
