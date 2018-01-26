@@ -46,7 +46,7 @@ class Bot {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
     checkCredentials(this.config);
-    this.brain = this.getBrain(this.config.brain);
+    this.brain = this.getBrain(this.config);
     this.nlu = new Nlu(this.config);
     this.dm = new DialogManager(this.brain, this.config);
     this.adapter = new AdapterResolver(this).resolve(this.config.adapter);
@@ -65,16 +65,16 @@ class Bot {
 
   /**
    * Gets brain instance
-   * @param {string} brain - brain name
+   * @param {Object} config - the config
    * @returns {Brain}
    */
-  getBrain(brain) {
-    switch (brain) {
+  getBrain(config) {
+    switch (config.brain) {
       case 'mongo':
-        return new MongoBrain();
+        return new MongoBrain(config);
       case 'memory':
       default:
-        return new MemoryBrain();
+        return new MemoryBrain(config);
     }
   }
 
