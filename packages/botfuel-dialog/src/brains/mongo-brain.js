@@ -24,9 +24,9 @@ const Brain = require('./brain');
  */
 class MongoBrain extends Brain {
   /** @inheritdoc */
-  constructor() {
+  constructor(config) {
     logger.debug('constructor');
-    super();
+    super(config);
     this.users = null;
   }
 

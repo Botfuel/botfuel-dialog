@@ -23,7 +23,6 @@ const TestAdapter = require('../../src/adapters/test-adapter');
 const BotTextMessage = require('../../src/messages/bot-text-message');
 
 const TEST_USER = '1';
-const TEST_BOT = process.env.BOTFUEL_APP_TOKEN;
 
 const greetingsDialog = { name: 'greetings', entities: [] };
 const thanksDialog = { name: 'thanks', entities: [] };
@@ -31,7 +30,7 @@ const travelDialog = { name: 'travel', entities: [] };
 const travelCancelDialog = { name: 'travel-cancel', entities: [] };
 
 describe('DialogManager', () => {
-  const brain = new MemoryBrain(TEST_BOT);
+  const brain = new MemoryBrain();
   const dm = new DialogManager(brain, { path: __dirname, locale: 'en' });
 
   beforeEach(async () => {

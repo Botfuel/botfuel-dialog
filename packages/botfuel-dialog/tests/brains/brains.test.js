@@ -21,7 +21,6 @@ const MongoBrain = require('../../src/brains/mongo-brain');
 const MEMORY_BRAIN_LABEL = 'memory';
 const MONGO_BRAIN_LABEL = 'mongo';
 
-// bot + user ids
 const USER_ID = 'USER_TEST';
 
 const brainTest = (brainLabel) => {
