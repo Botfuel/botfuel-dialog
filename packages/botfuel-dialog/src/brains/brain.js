@@ -24,10 +24,10 @@ const MissingImplementationError = require('../errors/missing-implementation-err
 class Brain {
   /**
    * @constructor
+   * @param {Object} config - the config
    */
-  constructor() {
-    // TODO: get from config or default value below
-    this.dayInMs = 86400000; // One day in milliseconds
+  constructor(config) {
+    this.conversationDuration = config.conversationDuration;
   }
 
   /**
@@ -196,7 +196,8 @@ class Brain {
    * @returns {Boolean}
    */
   isConversationValid(conversation) {
-    return conversation !== undefined && Date.now() - conversation.createdAt < this.dayInMs;
+    return conversation !== undefined
+      && Date.now() - conversation.createdAt < this.conversationDuration;
   }
 
   /**
