@@ -13,6 +13,8 @@ describe('Greetings', function () {
       new UserTextMessage('Hello'),
       new BotTextMessage('Hello human!'),
     ].map(msg => msg.toJson(userId)));
+    console.log(bot.brain);
+
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).to.be(userId);

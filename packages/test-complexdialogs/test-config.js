@@ -1,6 +1,6 @@
 module.exports = {
   adapter: 'test',
-  intentThreshold: 0.75,
+  conversationDuration: 86400000,
   logger: 'error',
   multiIntent: true,
 };
