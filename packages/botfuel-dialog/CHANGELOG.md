@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.8.1"></a>
+## [1.8.1](https://github.com/Botfuel/botfuel-dialog/compare/v1.8.0...v1.8.1) (2018-02-01)
+
+
+### Bug Fixes
+
+* Check for bot message when extracting user ([1c95274](https://github.com/Botfuel/botfuel-dialog/commit/1c95274))
+* Fix compile command ([743affd](https://github.com/Botfuel/botfuel-dialog/commit/743affd))
+
+
+
+
 <a name="1.8.0"></a>
 # [1.8.0](https://github.com/Botfuel/botfuel-dialog/compare/v1.7.1...v1.8.0) (2018-02-01)
 
