@@ -50,22 +50,22 @@ describe('Qna', () => {
   it('should respond with many qnas when question not fully understood', async function () {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
-    await bot.play([new UserTextMessage('How can I purchase?')]);
+    await bot.play([new UserTextMessage('get an invoice')]);
     expect(bot.adapter.log).to.eql(
       [
-        new UserTextMessage('How can I purchase?'),
+        new UserTextMessage('get an invoice'),
         new BotTextMessage('What do you mean?'),
         new ActionsMessage([
-          new Postback('What are your accepted payment options?', 'qnas', [
+          new Postback('Will I get an invoice?', 'qnas', [
             {
               dim: 'qnas',
-              value: [{ answer: 'You can pay for your purchase with Visa, Mastercard or using a PayPal account.' }],
+              value: [{ answer: 'The invoice for your purchase will be sent along with your goods. You can also download an electronic version from your account.' }],
             },
           ]),
-          new Postback('I need assistance.', 'qnas', [
+          new Postback('Can I get an invoice ?', 'qnas', [
             {
               dim: 'qnas',
-              value: [{ answer: 'Please reach us at contact@my-sample-compagny.com for further assistance.' }],
+              value: [{ answer: 'Of curse! The invoice for your purchase will be sent along with your goods. You can also download an electronic version from your account.' }],
             },
           ]),
         ]),
