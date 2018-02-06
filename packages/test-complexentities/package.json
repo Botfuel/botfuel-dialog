@@ -1,6 +1,6 @@
 {
   "name": "sample-botfuel-dialog-complexentities",
-  "version": "1.8.0",
+  "version": "1.8.2",
   "private": true,
   "author": "sysadmin@botfuel.io",
   "description": "Sample bot using botfuel-dialog and illustrating complex dialogs entities",
