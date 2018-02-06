@@ -1,6 +1,6 @@
 # Botfuel Dialog
 
-[![Build Status](https://travis-ci.com/Botfuel/botfuel-dialog.svg?token=DzdpA2xzqKcvBPt7ExGD&branch=master)](https://travis-ci.com/Botfuel/botfuel-dialog)
+[![Build Status](https://travis-ci.org/Botfuel/botfuel-dialog.svg?branch=master)](https://travis-ci.org/Botfuel/botfuel-dialog)
 
 Build highly conversational bots with Botfuel Dialog.
 
