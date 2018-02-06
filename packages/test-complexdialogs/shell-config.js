@@ -15,6 +15,6 @@
  */
 
 module.exports = {
-  logger: 'debug',
+  logger: 'info',
   multiIntent: true,
 };
