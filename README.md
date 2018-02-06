@@ -23,7 +23,7 @@ yarn unit-test
 
 ```shell
 yarn bootstrap
-BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
 
 ## License
