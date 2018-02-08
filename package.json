@@ -6,7 +6,7 @@
     "pretest": "yarn run bootstrap",
     "release": "lerna run test && lerna run compile --scope botfuel-dialog && lerna publish --conventional-commits --changelog-preset=angular",
     "unit-test": "BOTFUEL_APP_TOKEN=TEST_BOT jest packages/botfuel-dialog",
-    "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest --forceExit",
+    "test": "jest --forceExit",
     "precommit": "lint-staged"
   },
   "lint-staged": {
