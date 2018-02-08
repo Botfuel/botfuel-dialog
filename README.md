@@ -13,18 +13,42 @@ If you have any issue or question, feel free to [open a ticket](https://github.c
 
 ## Run the tests
 
+### Running all the tests
+
+Run botfuel-dialog and each test packages (integration) tests:
+
+```shell
+BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
+```
+
 ### Unit tests
+
+Run only the botfuel-dialog tests:
 
 ```shell
 yarn unit-test
 ```
 
-### Unit & integration tests
+### Integration tests
 
 ```shell
-yarn bootstrap
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
+BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/<PACKAGE_NAME>
 ```
+
+Example:
+
+```shell
+BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/test-qna
+```
+
+By default, integration tests are run using fixtures.
+To register new fixtures, add `REPLAY=record` to the test command:
+
+```shell
+REPLAY=record BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
+```
+
+This will make real API calls and create new fixtures.
 
 ## License
 
