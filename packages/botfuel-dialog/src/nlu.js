@@ -148,7 +148,7 @@ class Nlu {
         entities: classifierResult.entities,
       };
     }
-    return this.computeWithClassifier(sentence);
+    return this.computeWithClassifier(sentence, context);
   }
 
   /**
