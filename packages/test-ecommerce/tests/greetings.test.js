@@ -15,16 +15,15 @@
  */
 /* eslint prefer-arrow-callback: 'off' */
 
-const expect = require('expect.js');
 const { Bot, BotTextMessage, UserTextMessage } = require('botfuel-dialog');
 const config = require('../test-config');
 
-describe('Greetings', function () {
-  it('should respond to Hello', async function () {
+describe('Greetings', () => {
+  test('should respond to Hello', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('Hello')]);
-    expect(bot.adapter.log).to.eql([
+    expect(bot.adapter.log).toEqual([
       new UserTextMessage('Hello'),
       new BotTextMessage('Hello human!'),
     ].map(msg => msg.toJson(userId)));
@@ -32,10 +31,10 @@ describe('Greetings', function () {
 
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.userId).to.be(userId);
-    expect(user.conversations.length).to.be(1);
-    expect(dialogs.stack).to.be.empty();
-    expect(dialogs.previous.length).to.be(1);
-    expect(dialogs.previous[0].name).to.be('greetings');
+    expect(user.userId).toBe(userId);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack).toHaveLength(0);
+    expect(dialogs.previous.length).toBe(1);
+    expect(dialogs.previous[0].name).toBe('greetings');
   });
 });

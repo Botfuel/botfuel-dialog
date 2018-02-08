@@ -19,4 +19,5 @@ module.exports = {
   conversationDuration: 86400000,
   logger: 'error',
   multiIntent: true,
+  path: __dirname,
 };

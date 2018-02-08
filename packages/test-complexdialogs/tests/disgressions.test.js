@@ -15,13 +15,12 @@
  */
 /* eslint-disable prefer-arrow-callback */
 
-const expect = require('expect.js');
 const { Bot, BotTextMessage, UserTextMessage } = require('botfuel-dialog');
 const config = require('../test-config');
 
-describe('Disgressions', function () {
+describe('Disgressions', () => {
   describe('One turn', () => {
-    it('should handle digressions', async function () {
+    test('should handle digressions', async () => {
       const bot = new Bot(config);
       const userId = bot.adapter.userId;
       await bot.play([
@@ -29,7 +28,7 @@ describe('Disgressions', function () {
         new UserTextMessage('Hello'),
         new UserTextMessage('tomorrow'),
       ]);
-      expect(bot.adapter.log).to.eql([
+      expect(bot.adapter.log).toEqual([
         new UserTextMessage('I am leaving from Paris'),
         new BotTextMessage('Entities defined: city'),
         new BotTextMessage('Entities needed: time'),
@@ -45,18 +44,18 @@ describe('Disgressions', function () {
       const user = await bot.brain.getUser(userId);
       const dialogs = await bot.brain.getDialogs(userId);
       const lastConversation = await bot.brain.getLastConversation(userId);
-      expect(user.conversations.length).to.be(1);
-      expect(dialogs.stack).to.be.empty();
-      expect(lastConversation).to.have.property('travel');
-      expect(lastConversation.travel).to.have.property('city');
-      expect(lastConversation.travel).to.have.property('time');
-      expect(lastConversation.travel.city.body).to.be('Paris');
-      expect(lastConversation.travel.time.body).to.be('tomorrow');
+      expect(user.conversations.length).toBe(1);
+      expect(dialogs.stack).toHaveLength(0);
+      expect(lastConversation).toHaveProperty('travel');
+      expect(lastConversation.travel).toHaveProperty('city');
+      expect(lastConversation.travel).toHaveProperty('time');
+      expect(lastConversation.travel.city.body).toBe('Paris');
+      expect(lastConversation.travel.time.body).toBe('tomorrow');
     });
   }, 15000);
 
   describe('Two turns', () => {
-    it('should handle two turn digressions', async function () {
+    test('should handle two turn digressions', async () => {
       const bot = new Bot(config);
       const userId = bot.adapter.userId;
       await bot.play([
@@ -65,7 +64,7 @@ describe('Disgressions', function () {
         new UserTextMessage('John'),
         new UserTextMessage('tomorrow'),
       ]);
-      expect(bot.adapter.log).to.eql([
+      expect(bot.adapter.log).toEqual([
         new UserTextMessage('I leave from Paris'),
         new BotTextMessage('Entities defined: city'),
         new BotTextMessage('Entities needed: time'),
@@ -85,15 +84,15 @@ describe('Disgressions', function () {
       const user = await bot.brain.getUser(bot.adapter.userId);
       const dialogs = await bot.brain.getDialogs(userId);
       const lastConversation = await bot.brain.getLastConversation(bot.adapter.userId);
-      expect(user.conversations.length).to.be(1);
-      expect(dialogs.stack).to.be.empty();
-      expect(lastConversation).to.have.property('travel');
-      expect(lastConversation.travel).to.have.property('city');
-      expect(lastConversation.travel).to.have.property('time');
-      expect(lastConversation.travel.city.body).to.be('Paris');
-      expect(lastConversation.travel.time.body).to.be('tomorrow');
-      expect(lastConversation.name).to.have.property('name');
-      expect(lastConversation.name.name.body).to.be('John');
+      expect(user.conversations.length).toBe(1);
+      expect(dialogs.stack).toHaveLength(0);
+      expect(lastConversation).toHaveProperty('travel');
+      expect(lastConversation.travel).toHaveProperty('city');
+      expect(lastConversation.travel).toHaveProperty('time');
+      expect(lastConversation.travel.city.body).toBe('Paris');
+      expect(lastConversation.travel.time.body).toBe('tomorrow');
+      expect(lastConversation.name).toHaveProperty('name');
+      expect(lastConversation.name.name.body).toBe('John');
     });
   }, 15000);
 });

@@ -1,0 +1,26 @@
+POST /qna/api/v1/bots/classify
+host: api.botfuel.io
+accept: application/json
+content-type: application/json
+body: {\"sentence\":\"Do you ship to France?\"}
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Wed, 07 Feb 2018 15:06:15 GMT
+content-type: application/json
+content-length: 258
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[
+  {
+    "answer": "Your purchase can be shipped worldwide. However, delivery charges may vary.", 
+    "probability": 1, 
+    "questions": [
+      "Do you ship worldwide?", 
+      "Do you ship to Europe?", 
+      "What is your shipping policy?"
+    ]
+  }
+]

@@ -9,22 +9,15 @@
     "start": "botfuel-run shell-config.js",
     "train": "botfuel-train",
     "clean": "botfuel-clean",
-    "test": "mocha --timeout 30000 --require babel-polyfill --require babel-register tests/*.js",
+    "test": "jest",
     "style": "eslint src; eslint tests"
   },
   "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-stage-2": "^6.24.1",
-    "botfuel-dialog": "latest",
-    "chalk": "^2.3.0"
+    "botfuel-dialog": "latest"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
-    "babel-register": "^6.26.0",
+    "babel-jest": "^21.2.0",
     "eslint": "3.19.0",
     "eslint-config-airbnb": "^15.0.1",
     "eslint-plugin-babel": "^4.1.1",
@@ -32,9 +25,7 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-node": "^5.1.0",
-    "eslint-plugin-react": "^7.1.0",
-    "expect.js": "^0.3.1",
-    "mocha": "^3.5.1"
+    "eslint-plugin-react": "^7.1.0"
   },
   "engines": {
     "node": "8.x"
