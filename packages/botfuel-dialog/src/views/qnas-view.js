@@ -42,9 +42,7 @@ class QnasView extends View {
    */
   renderAnswer(answer) {
     logger.debug('renderAnswer', answer);
-    return [
-      new BotTextMessage(answer),
-    ];
+    return [new BotTextMessage(answer)];
   }
 
   /**
@@ -68,10 +66,7 @@ class QnasView extends View {
           },
         ]),
     );
-    return [
-      new BotTextMessage('What do you mean?'),
-      new ActionsMessage(postbacks),
-    ];
+    return [new BotTextMessage('What do you mean?'), new ActionsMessage(postbacks)];
   }
 }
 

@@ -26,11 +26,14 @@ describe('QnasView', () => {
     describe('when no qnas', () => {
       test('should display no postback', () => {
         expect(
-          view.render({
-            user: null,
-          }, {
-            qnas: [],
-          }),
+          view.render(
+            {
+              user: null,
+            },
+            {
+              qnas: [],
+            },
+          ),
         ).toEqual([new BotTextMessage('What do you mean?'), new ActionsMessage([])]);
       });
     });
@@ -38,15 +41,18 @@ describe('QnasView', () => {
     describe('when 1 qna', () => {
       test('should display answer', () => {
         expect(
-          view.render({
-            user: null,
-          }, {
-            qnas: [
-              {
-                answer: 'answer',
-              },
-            ],
-          }),
+          view.render(
+            {
+              user: null,
+            },
+            {
+              qnas: [
+                {
+                  answer: 'answer',
+                },
+              ],
+            },
+          ),
         ).toEqual([new BotTextMessage('answer')]);
       });
     });
@@ -54,20 +60,23 @@ describe('QnasView', () => {
     describe('when 2 qnas', () => {
       test('should display 2 postbacks', () => {
         expect(
-          view.render({
-            user: null,
-          }, {
-            qnas: [
-              {
-                answer: 'answer1',
-                questions: ['question1a'],
-              },
-              {
-                answer: 'answer2',
-                questions: ['question2a'],
-              },
-            ],
-          }),
+          view.render(
+            {
+              user: null,
+            },
+            {
+              qnas: [
+                {
+                  answer: 'answer1',
+                  questions: ['question1a'],
+                },
+                {
+                  answer: 'answer2',
+                  questions: ['question2a'],
+                },
+              ],
+            },
+          ),
         ).toEqual([
           new BotTextMessage('What do you mean?'),
           new ActionsMessage([

@@ -15,7 +15,6 @@
  */
 /* eslint prefer-arrow-callback: 'off' */
 
-const expect = require('expect.js');
 const {
   Bot,
   BotTextMessage,
@@ -28,19 +27,19 @@ const {
 } = require('botfuel-dialog');
 const config = require('../test-config');
 
-describe('Products', function () {
-  it('should understand the click on the buy button', async function () {
+describe('Products', () => {
+  test('should understand the click on the buy button', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([
       new UserTextMessage('Show me the products.'),
       new PostbackMessage('products', [{ dim: 'product', values: ['top hat'] }]),
     ]);
-    expect(bot.adapter.log[0]).to.eql(new UserTextMessage('Show me the products.').toJson(userId));
-    expect(bot.adapter.log[1]).to.eql(
+    expect(bot.adapter.log[0]).toEqual(new UserTextMessage('Show me the products.').toJson(userId));
+    expect(bot.adapter.log[1]).toEqual(
       new BotTextMessage('Which product do you want to buy?').toJson(userId),
     );
-    expect(bot.adapter.log[2]).to.eql(
+    expect(bot.adapter.log[2]).toEqual(
       new CardsMessage([
         new Card(
           'Top hat',
@@ -74,18 +73,18 @@ describe('Products', function () {
         ),
       ]).toJson(userId),
     );
-    expect(bot.adapter.log[3]).to.eql(
+    expect(bot.adapter.log[3]).toEqual(
       new PostbackMessage('products', [{ dim: 'product', values: ['top hat'] }]).toJson(userId),
     );
-    expect(bot.adapter.log[4]).to.eql(
+    expect(bot.adapter.log[4]).toEqual(
       new BotTextMessage('You just bought the top hat, good choice!').toJson(userId),
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.userId).to.be(userId);
-    expect(user.conversations.length).to.be(1);
-    expect(dialogs.stack).to.be.empty();
-    expect(dialogs.previous.length).to.be(1);
-    expect(dialogs.previous[0].name).to.be('products');
+    expect(user.userId).toBe(userId);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack).toHaveLength(0);
+    expect(dialogs.previous.length).toBe(1);
+    expect(dialogs.previous[0].name).toBe('products');
   });
 });

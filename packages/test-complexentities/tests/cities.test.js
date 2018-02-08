@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-const expect = require('expect.js');
 const { Bot, BotTextMessage, UserTextMessage } = require('botfuel-dialog');
 const config = require('../test-config');
 
 describe('CitiesDialog', () => {
-  it('should keep prompting until it has all 5 cities', async () => {
+  test('should keep prompting until it has all 5 cities', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([
@@ -28,7 +27,7 @@ describe('CitiesDialog', () => {
       new UserTextMessage('Lille'),
       new UserTextMessage('Lyon'),
     ]);
-    expect(bot.adapter.log).to.eql(
+    expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('My favorite cities are Paris and Marseille'),
         new BotTextMessage('Cool, so you like Paris, Marseille'),
@@ -45,15 +44,15 @@ describe('CitiesDialog', () => {
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.conversations.length).to.be(1);
-    expect(dialogs.stack).to.be.empty();
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack).toHaveLength(0);
     const lastConversation = await bot.brain.getLastConversation(userId);
-    expect(lastConversation).to.have.property('cities');
-    expect(lastConversation.cities).to.have.property('favoriteCities');
-    expect(lastConversation.cities.favoriteCities).to.have.length(5);
+    expect(lastConversation).toHaveProperty('cities');
+    expect(lastConversation.cities).toHaveProperty('favoriteCities');
+    expect(lastConversation.cities.favoriteCities).toHaveLength(5);
   });
 
-  it('should replace cities with a new list if it already has 5 cities', async () => {
+  test('should replace cities with a new list if it already has 5 cities', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([
@@ -63,7 +62,7 @@ describe('CitiesDialog', () => {
       new UserTextMessage('Lyon'),
       new UserTextMessage('My favorite cities are Paris and Nice'),
     ]);
-    expect(bot.adapter.log).to.eql(
+    expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('My favorite cities are Paris and Marseille'),
         new BotTextMessage('Cool, so you like Paris, Marseille'),
@@ -83,11 +82,11 @@ describe('CitiesDialog', () => {
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.conversations.length).to.be(1);
-    expect(dialogs.stack).to.not.be.empty();
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack).not.toHaveLength(0);
     const lastConversation = await bot.brain.getLastConversation(userId);
-    expect(lastConversation).to.have.property('cities');
-    expect(lastConversation.cities).to.have.property('favoriteCities');
-    expect(lastConversation.cities.favoriteCities).to.have.length(2);
+    expect(lastConversation).toHaveProperty('cities');
+    expect(lastConversation.cities).toHaveProperty('favoriteCities');
+    expect(lastConversation.cities.favoriteCities).toHaveLength(2);
   });
 });

@@ -148,12 +148,10 @@ class Classifier {
       return [];
     }
     const features = this.computeFeatures(sentence, entities);
-    return this
-      .classifier.getClassifications(features)
-      .map(intent => ({
-        name: intent.label,
-        value: intent.value,
-      }));
+    return this.classifier.getClassifications(features).map(intent => ({
+      name: intent.label,
+      value: intent.value,
+    }));
   }
 
   /**

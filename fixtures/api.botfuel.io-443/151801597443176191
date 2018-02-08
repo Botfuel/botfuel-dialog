@@ -1,0 +1,27 @@
+POST /qna/api/v1/bots/classify
+host: api.botfuel.io
+accept: application/json
+content-type: application/json
+body: {\"sentence\":\"Hello\"}
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Wed, 07 Feb 2018 15:06:14 GMT
+content-type: application/json
+content-length: 232
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[
+  {
+    "answer": "Hello! I can provide you with information about our payment and shipping policies.", 
+    "probability": 1, 
+    "questions": [
+      "Hello", 
+      "Hi", 
+      "Good morning", 
+      "What's up?"
+    ]
+  }
+]

@@ -40,9 +40,8 @@ class Nlu {
     this.qna = null;
     this.spellchecking = null;
     this.classifier = null;
-    this.intentFilter = async intents => intents
-      .filter(intent => intent.value > config.intentThreshold)
-      .map(intent => intent.name);
+    this.intentFilter = async intents =>
+      intents.filter(intent => intent.value > config.intentThreshold).map(intent => intent.name);
     const intentFilterPath = `${this.config.path}/src/intent-filter.js`;
     if (fsExtra.pathExistsSync(intentFilterPath)) {
       this.intentFilter = require(intentFilterPath);
@@ -165,9 +164,7 @@ class Nlu {
       const strict = this.config.qna.strict;
       if ((strict && qnas.length === 1) || (!strict && qnas.length > 0)) {
         return {
-          intents: [
-            'qnas',
-          ],
+          intents: ['qnas'],
           entities: [
             {
               dim: 'qnas',

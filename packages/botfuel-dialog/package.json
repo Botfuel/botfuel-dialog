@@ -19,7 +19,7 @@
   },
   "scripts": {
     "compile": "rm -rf build; ../../node_modules/.bin/babel src --out-dir build; cp -r src/corpora/*.txt build/corpora/",
-    "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest --testPathPattern='botfuel-dialog/tests' --forceExit",
+    "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest",
     "style": "eslint src; eslint tests",
     "docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose",
     "precommit": "lint-staged"
@@ -76,7 +76,8 @@
     "prettier": "^1.9.2",
     "prettier-eslint": "^8.3.1",
     "prettier-eslint-cli": "^4.6.1",
-    "regenerator-runtime": "^0.11.1"
+    "regenerator-runtime": "^0.11.1",
+    "replay": "^2.1.4"
   },
   "engines": {
     "node": "8.x"

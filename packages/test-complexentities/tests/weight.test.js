@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-const expect = require('expect.js');
 const { Bot, BotTextMessage, UserTextMessage } = require('botfuel-dialog');
 const config = require('../test-config');
 
 describe('WeightDialog', () => {
-  it('should replace the highest priority entity when all are fulfilled', async () => {
+  test('should replace the highest priority entity when all are fulfilled', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([
@@ -28,7 +27,7 @@ describe('WeightDialog', () => {
       new UserTextMessage('99kg'),
       new UserTextMessage('I weight 7kg'),
     ]);
-    expect(bot.adapter.log).to.eql(
+    expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('I weight 77kg'),
         new BotTextMessage('Cool, so you weigh 77'),
