@@ -30,7 +30,7 @@ const transports = [
 ];
 
 const options = {
-  exitOnError: false
+  exitOnError: false,
 };
 
 module.exports = {

@@ -16,7 +16,6 @@
 
 const { PromptView } = require('botfuel-dialog');
 
-class CarView extends PromptView {
-}
+class CarView extends PromptView {}
 
 module.exports = CarView;

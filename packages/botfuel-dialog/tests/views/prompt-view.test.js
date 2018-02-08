@@ -26,12 +26,15 @@ describe('PromptView', () => {
     describe('when matched entities only', () => {
       test('should display the matched entities', () => {
         expect(
-          view.render({
-            user: null,
-          }, {
-            matchedEntities: { name1: {}, name2: {} },
-            missingEntities: {},
-          }),
+          view.render(
+            {
+              user: null,
+            },
+            {
+              matchedEntities: { name1: {}, name2: {} },
+              missingEntities: {},
+            },
+          ),
         ).toEqual([new BotTextMessage('Entities defined: name1, name2')]);
       });
     });
@@ -39,12 +42,15 @@ describe('PromptView', () => {
     describe('when missing entities only', () => {
       test('should display the missing entities', () => {
         expect(
-          view.render({
-            user: null,
-          }, {
-            matchedEntities: {},
-            missingEntities: { name1: {}, name2: {} },
-          }),
+          view.render(
+            {
+              user: null,
+            },
+            {
+              matchedEntities: {},
+              missingEntities: { name1: {}, name2: {} },
+            },
+          ),
         ).toEqual([
           new BotTextMessage('Entities needed: name1, name2'),
           new BotTextMessage('Which name1?'),

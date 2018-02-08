@@ -1,5 +1,4 @@
 # Botfuel Dialog
-
 [![Build Status](https://travis-ci.org/Botfuel/botfuel-dialog.svg?branch=master)](https://travis-ci.org/Botfuel/botfuel-dialog)
 
 Build highly conversational bots with Botfuel Dialog.
@@ -19,34 +18,53 @@ If you have any issue or question, feel free to [open a ticket](https://github.c
 
 ## Contribute to Botfuel Dialog
 In addition to your feedback, we also welcome your contributions.
+In the following, we will use `yarn` as a package manager.
 
 ### Clone the repository
 ```shell
 git clone git@github.com:Botfuel/botfuel-dialog.git
 ```
+
 ### Install
 ```shell
-npm run install
+yarn install
 ```
 
 #### Issue with node-gyp and Python v3.x
-Install Python v2.7 (https://www.python.org/downloads/release/python-2713/).
+Install [Python v2.7](https://www.python.org/downloads/release/python-2714/).
 ```shell
-npm install --python=/path/to/python2.7
+yarn config set python /path/to/python2.7 -g
+yarn install
 ```
 
 ### Run the tests
 Botfuel Dialog comes with unit and integration tests.
 
 #### Run the unit tests only
-```shel
+```shell
 npm run unit-test
 ```
 
-#### Run all tests (unit & integration tests)
+#### Run integration tests
 ```shell
-npm run bootstrap
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm run test
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/<PACKAGE_NAME>
+```
+
+Example:
+```shell
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/test-qna
+```
+
+By default, integration tests are run using fixtures.
+To register new fixtures, add `REPLAY=record` to the test command:
+```shell
+REPLAY=record BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
+```
+This will make real API calls and create new fixtures.
+
+#### Running all the tests
+```shell
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
 
 ## License

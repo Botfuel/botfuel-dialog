@@ -15,16 +15,15 @@
  */
 /* eslint-disable prefer-arrow-callback */
 
-const expect = require('expect.js');
 const { Bot, BotTextMessage, UserTextMessage } = require('botfuel-dialog');
 const config = require('../test-config');
 
 describe('Multiple intents', () => {
-  it('should understand multiple one-turn intents in the same sentence', async function () {
+  test('should understand multiple one-turn intents in the same sentence', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('Hello bot. This is great.')]);
-    expect(bot.adapter.log).to.eql(
+    expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('Hello bot. This is great.'),
         new BotTextMessage('Hello human!'),
@@ -33,16 +32,16 @@ describe('Multiple intents', () => {
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.conversations.length).to.be(1);
-    expect(dialogs.stack.length).to.be(0);
-    expect(dialogs.previous.length).to.be(2);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack.length).toBe(0);
+    expect(dialogs.previous.length).toBe(2);
   });
 
-  it('should understand multiple intents in the same sentence', async function () {
+  test('should understand multiple intents in the same sentence', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('Hello bot. I leave from Paris.')]);
-    expect(bot.adapter.log).to.eql(
+    expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('Hello bot. I leave from Paris.'),
         new BotTextMessage('Hello human!'),
@@ -53,19 +52,19 @@ describe('Multiple intents', () => {
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.conversations.length).to.be(1);
-    expect(dialogs.stack.length).to.be(1);
-    expect(dialogs.previous.length).to.be(1);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack.length).toBe(1);
+    expect(dialogs.previous.length).toBe(1);
   });
 
-  it('should understand two prompts in the same sentence (1)', async function () {
+  test('should understand two prompts in the same sentence (1)', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([
       new UserTextMessage('I leave tomorrow from Paris. I want to buy a car.'),
       new UserTextMessage('Yes'),
     ]);
-    expect(bot.adapter.log).to.eql(
+    expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('I leave tomorrow from Paris. I want to buy a car.'),
         new BotTextMessage('Entities defined: time, city'),
@@ -79,12 +78,12 @@ describe('Multiple intents', () => {
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.conversations.length).to.be(1);
-    expect(dialogs.stack.length).to.be(1);
-    expect(dialogs.previous.length).to.be(2);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack.length).toBe(1);
+    expect(dialogs.previous.length).toBe(2);
   });
 
-  it('should understand two prompts in the same sentence (2)', async function () {
+  test('should understand two prompts in the same sentence (2)', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([
@@ -92,7 +91,7 @@ describe('Multiple intents', () => {
       new UserTextMessage('tomorrow'),
       new UserTextMessage('Yes'),
     ]);
-    expect(bot.adapter.log).to.eql(
+    expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('I leave from Paris. I want to buy a car.'),
         new BotTextMessage('Entities defined: city'),
@@ -110,24 +109,22 @@ describe('Multiple intents', () => {
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.conversations.length).to.be(1);
-    expect(dialogs.stack.length).to.be(1);
-    expect(dialogs.previous.length).to.be(2);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack.length).toBe(1);
+    expect(dialogs.previous.length).toBe(2);
   });
 
-  it('should forget about previous confirmation', async function () {
+  test('should forget about previous confirmation', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
-    await bot.play(
-      [
-        new UserTextMessage('I leave from Paris. I want to buy a car.'),
-        new UserTextMessage('tomorrow'),
-        new UserTextMessage('No'),
-        new UserTextMessage('I leave from Paris. I want to buy a car.'),
-        new UserTextMessage('Yes'),
-      ],
-    );
-    expect(bot.adapter.log).to.eql(
+    await bot.play([
+      new UserTextMessage('I leave from Paris. I want to buy a car.'),
+      new UserTextMessage('tomorrow'),
+      new UserTextMessage('No'),
+      new UserTextMessage('I leave from Paris. I want to buy a car.'),
+      new UserTextMessage('Yes'),
+    ]);
+    expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('I leave from Paris. I want to buy a car.'),
         new BotTextMessage('Entities defined: city'),
@@ -150,8 +147,8 @@ describe('Multiple intents', () => {
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.conversations.length).to.be(1);
-    expect(dialogs.stack.length).to.be(1);
-    expect(dialogs.previous.length).to.be(4);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack.length).toBe(1);
+    expect(dialogs.previous.length).toBe(4);
   });
 });

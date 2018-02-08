@@ -1,4 +1,4 @@
- /**
+/**
  * Copyright (c) 2017 - present, Botfuel (https://www.botfuel.io).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

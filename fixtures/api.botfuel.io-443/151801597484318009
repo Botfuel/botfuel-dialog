@@ -1,0 +1,27 @@
+POST /qna/api/v1/bots/classify
+host: api.botfuel.io
+accept: application/json
+content-type: application/json
+body: {\"sentence\":\"A have a problem on the website.\"}
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Wed, 07 Feb 2018 15:06:14 GMT
+content-type: application/json
+content-length: 274
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[
+  {
+    "answer": "Please reach us at contact@my-sample-compagny.com for further assistance.", 
+    "probability": 1, 
+    "questions": [
+      "I need assistance.", 
+      "I never received my purchase.", 
+      "I have a problem.", 
+      "I want a refund."
+    ]
+  }
+]

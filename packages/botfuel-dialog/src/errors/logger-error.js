@@ -18,10 +18,10 @@ const SdkError = require('./sdk-error');
 
 module.exports = class LoggerError extends SdkError {
   /**
-  * @constructor
-  * @param {String} message - the error message
-  * @param {Object} logger - the dialog in error
-  */
+   * @constructor
+   * @param {String} message - the error message
+   * @param {Object} logger - the dialog in error
+   */
   constructor({ message, logger }) {
     super(message || 'Unknown LoggerError');
     this.logger = logger;

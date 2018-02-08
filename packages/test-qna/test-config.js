@@ -19,4 +19,5 @@ module.exports = {
   conversationDuration: 86400000,
   qna: {},
   logger: 'error',
+  path: __dirname,
 };
