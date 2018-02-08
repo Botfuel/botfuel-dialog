@@ -41,23 +41,13 @@ class Message extends ValidObject {
    * @returns {Object} the json message
    */
   toJson(userId) {
-    if (this.options === undefined || this.options === null) {
-      return {
-        type: this.type,
-        sender: this.sender,
-        user: userId,
-        payload: {
-          value: this.valueAsJson(),
-        },
-      };
-    }
     return {
       type: this.type,
       sender: this.sender,
       user: userId,
       payload: {
         value: this.valueAsJson(),
-        options: this.options,
+        ...!!this.options && { options: this.options }
       },
     };
   }
