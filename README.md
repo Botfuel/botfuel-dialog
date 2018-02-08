@@ -30,7 +30,7 @@ npm run install
 ```
 
 #### Issue with node-gyp and Python v3.x
-Install python v2.7 (https://www.python.org/downloads/release/python-2713/).
+Install Python v2.7 (https://www.python.org/downloads/release/python-2713/).
 ```shell
 npm install --python=/path/to/python2.7
 ```
