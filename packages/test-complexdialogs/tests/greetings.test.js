@@ -19,53 +19,48 @@ const { Bot, BotTextMessage, UserTextMessage } = require('botfuel-dialog');
 const config = require('../test-config');
 
 describe('GreetingsDialog', () => {
-  test(
-    'should have the proper interaction when the bot not understand',
-    async () => {
-      const bot = new Bot(config);
-      const userId = bot.adapter.userId;
-      await bot.play([
-        new UserTextMessage('Hello bot!'),
-        new UserTextMessage('What\'s the weather today ?'),
-      ]);
-      expect(bot.adapter.log).toEqual([
+  test('should have the proper interaction when the bot not understand', async () => {
+    const bot = new Bot(config);
+    const userId = bot.adapter.userId;
+    await bot.play([
+      new UserTextMessage('Hello bot!'),
+      new UserTextMessage("What's the weather today ?"),
+    ]);
+    expect(bot.adapter.log).toEqual(
+      [
         new UserTextMessage('Hello bot!'),
         new BotTextMessage('Hello human!'),
-        new UserTextMessage('What\'s the weather today ?'),
+        new UserTextMessage("What's the weather today ?"),
         new BotTextMessage('Not understood.'),
-      ].map(msg => msg.toJson(userId)));
-      const user = await bot.brain.getUser(userId);
-      const dialogs = await bot.brain.getDialogs(userId);
-      expect(user.conversations.length).toBe(1);
-      expect(dialogs.stack).toHaveLength(0);
-      expect(dialogs.previous.length).toBe(2);
-      expect(dialogs.previous[0].name).toBe('greetings');
-      expect(dialogs.previous[1].name).toBe('default');
-    }
-  );
+      ].map(msg => msg.toJson(userId)),
+    );
+    const user = await bot.brain.getUser(userId);
+    const dialogs = await bot.brain.getDialogs(userId);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack).toHaveLength(0);
+    expect(dialogs.previous.length).toBe(2);
+    expect(dialogs.previous[0].name).toBe('greetings');
+    expect(dialogs.previous[1].name).toBe('default');
+  });
 
-  test(
-    'should say something different when greeting for the second time',
-    async () => {
-      const bot = new Bot(config);
-      const userId = bot.adapter.userId;
-      await bot.play([
-        new UserTextMessage('Hello bot!'),
-        new UserTextMessage('Hello bot!'),
-      ]);
-      expect(bot.adapter.log).toEqual([
+  test('should say something different when greeting for the second time', async () => {
+    const bot = new Bot(config);
+    const userId = bot.adapter.userId;
+    await bot.play([new UserTextMessage('Hello bot!'), new UserTextMessage('Hello bot!')]);
+    expect(bot.adapter.log).toEqual(
+      [
         new UserTextMessage('Hello bot!'),
         new BotTextMessage('Hello human!'),
         new UserTextMessage('Hello bot!'),
         new BotTextMessage('Hello again human!'),
-      ].map(msg => msg.toJson(userId)));
-      const user = await bot.brain.getUser(userId);
-      const dialogs = await bot.brain.getDialogs(userId);
-      expect(user.conversations.length).toBe(1);
-      expect(dialogs.stack).toHaveLength(0);
-      expect(dialogs.previous.length).toBe(2);
-      expect(dialogs.previous[0].name).toBe('greetings');
-      expect(dialogs.previous[1].name).toBe('greetings');
-    }
-  );
+      ].map(msg => msg.toJson(userId)),
+    );
+    const user = await bot.brain.getUser(userId);
+    const dialogs = await bot.brain.getDialogs(userId);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack).toHaveLength(0);
+    expect(dialogs.previous.length).toBe(2);
+    expect(dialogs.previous[0].name).toBe('greetings');
+    expect(dialogs.previous[1].name).toBe('greetings');
+  });
 });

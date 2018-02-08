@@ -19,34 +19,40 @@ const { Bot, BotTextMessage, UserTextMessage } = require('botfuel-dialog');
 const config = require('../test-config');
 
 describe('Canceling', () => {
-  test('should cancel the previous dialog', async () => {
-    const bot = new Bot(config);
-    const userId = bot.adapter.userId;
-    await bot.play([
-      new UserTextMessage('I want to buy a blue car.'),
-      new UserTextMessage('I want to cancel.'),
-      new UserTextMessage('Yes.'),
-    ]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('I want to buy a blue car.'),
-      new BotTextMessage('Entities defined: color'),
-      new BotTextMessage('Entities needed: transmission'),
-      new BotTextMessage('Which transmission?'),
-      new UserTextMessage('I want to cancel.'),
-      new BotTextMessage('Are you sure you want to cancel?'),
-      new UserTextMessage('Yes.'),
-      new BotTextMessage('Dialog canceled!'),
-      new BotTextMessage('Hello human!'),
-    ].map(msg => msg.toJson(userId)));
-    const user = await bot.brain.getUser(userId);
-    const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.userId).toBe(userId);
-    expect(user.conversations.length).toBe(1);
-    expect(dialogs.stack).toHaveLength(0);
-    expect(dialogs.previous.length).toBe(2);
-    expect(dialogs.previous[0].name).toBe('cancel');
-    expect(dialogs.previous[1].name).toBe('greetings');
-  }, 15000);
+  test(
+    'should cancel the previous dialog',
+    async () => {
+      const bot = new Bot(config);
+      const userId = bot.adapter.userId;
+      await bot.play([
+        new UserTextMessage('I want to buy a blue car.'),
+        new UserTextMessage('I want to cancel.'),
+        new UserTextMessage('Yes.'),
+      ]);
+      expect(bot.adapter.log).toEqual(
+        [
+          new UserTextMessage('I want to buy a blue car.'),
+          new BotTextMessage('Entities defined: color'),
+          new BotTextMessage('Entities needed: transmission'),
+          new BotTextMessage('Which transmission?'),
+          new UserTextMessage('I want to cancel.'),
+          new BotTextMessage('Are you sure you want to cancel?'),
+          new UserTextMessage('Yes.'),
+          new BotTextMessage('Dialog canceled!'),
+          new BotTextMessage('Hello human!'),
+        ].map(msg => msg.toJson(userId)),
+      );
+      const user = await bot.brain.getUser(userId);
+      const dialogs = await bot.brain.getDialogs(userId);
+      expect(user.userId).toBe(userId);
+      expect(user.conversations.length).toBe(1);
+      expect(dialogs.stack).toHaveLength(0);
+      expect(dialogs.previous.length).toBe(2);
+      expect(dialogs.previous[0].name).toBe('cancel');
+      expect(dialogs.previous[1].name).toBe('greetings');
+    },
+    15000,
+  );
 
   test(
     'should not cancel the previous dialog if user says no',
@@ -58,19 +64,21 @@ describe('Canceling', () => {
         new UserTextMessage('I want to cancel.'),
         new UserTextMessage('No.'),
       ]);
-      expect(bot.adapter.log).toEqual([
-        new UserTextMessage('I want to buy a blue car.'),
-        new BotTextMessage('Entities defined: color'),
-        new BotTextMessage('Entities needed: transmission'),
-        new BotTextMessage('Which transmission?'),
-        new UserTextMessage('I want to cancel.'),
-        new BotTextMessage('Are you sure you want to cancel?'),
-        new UserTextMessage('No.'),
-        new BotTextMessage('Resuming dialog...'),
-        new BotTextMessage('Entities defined: color'),
-        new BotTextMessage('Entities needed: transmission'),
-        new BotTextMessage('Which transmission?'),
-      ].map(msg => msg.toJson(userId)));
+      expect(bot.adapter.log).toEqual(
+        [
+          new UserTextMessage('I want to buy a blue car.'),
+          new BotTextMessage('Entities defined: color'),
+          new BotTextMessage('Entities needed: transmission'),
+          new BotTextMessage('Which transmission?'),
+          new UserTextMessage('I want to cancel.'),
+          new BotTextMessage('Are you sure you want to cancel?'),
+          new UserTextMessage('No.'),
+          new BotTextMessage('Resuming dialog...'),
+          new BotTextMessage('Entities defined: color'),
+          new BotTextMessage('Entities needed: transmission'),
+          new BotTextMessage('Which transmission?'),
+        ].map(msg => msg.toJson(userId)),
+      );
       const user = await bot.brain.getUser(userId);
       const dialogs = await bot.brain.getDialogs(userId);
       expect(user.userId).toBe(userId);
@@ -79,7 +87,7 @@ describe('Canceling', () => {
       expect(dialogs.previous.length).toBe(1);
       expect(dialogs.previous[0].name).toBe('cancel');
     },
-    15000
+    15000,
   );
 
   test(
@@ -95,26 +103,28 @@ describe('Canceling', () => {
         new UserTextMessage('I want to cancel.'),
         new UserTextMessage('Yes.'),
       ]);
-      expect(bot.adapter.log).toEqual([
-        new UserTextMessage('I want to buy a blue car.'),
-        new BotTextMessage('Entities defined: color'),
-        new BotTextMessage('Entities needed: transmission'),
-        new BotTextMessage('Which transmission?'),
-        new UserTextMessage('I want to cancel.'),
-        new BotTextMessage('Are you sure you want to cancel?'),
-        new UserTextMessage('Yes.'),
-        new BotTextMessage('Dialog canceled!'),
-        new BotTextMessage('Hello human!'),
-        new UserTextMessage('I want to buy a blue car.'),
-        new BotTextMessage('Entities defined: color'),
-        new BotTextMessage('Entities needed: transmission'),
-        new BotTextMessage('Which transmission?'),
-        new UserTextMessage('I want to cancel.'),
-        new BotTextMessage('Are you sure you want to cancel?'),
-        new UserTextMessage('Yes.'),
-        new BotTextMessage('Dialog canceled!'),
-        new BotTextMessage('Hello again human!'),
-      ].map(msg => msg.toJson(userId)));
+      expect(bot.adapter.log).toEqual(
+        [
+          new UserTextMessage('I want to buy a blue car.'),
+          new BotTextMessage('Entities defined: color'),
+          new BotTextMessage('Entities needed: transmission'),
+          new BotTextMessage('Which transmission?'),
+          new UserTextMessage('I want to cancel.'),
+          new BotTextMessage('Are you sure you want to cancel?'),
+          new UserTextMessage('Yes.'),
+          new BotTextMessage('Dialog canceled!'),
+          new BotTextMessage('Hello human!'),
+          new UserTextMessage('I want to buy a blue car.'),
+          new BotTextMessage('Entities defined: color'),
+          new BotTextMessage('Entities needed: transmission'),
+          new BotTextMessage('Which transmission?'),
+          new UserTextMessage('I want to cancel.'),
+          new BotTextMessage('Are you sure you want to cancel?'),
+          new UserTextMessage('Yes.'),
+          new BotTextMessage('Dialog canceled!'),
+          new BotTextMessage('Hello again human!'),
+        ].map(msg => msg.toJson(userId)),
+      );
       const user = await bot.brain.getUser(userId);
       const dialogs = await bot.brain.getDialogs(userId);
       expect(user.userId).toBe(userId);
@@ -126,6 +136,6 @@ describe('Canceling', () => {
       expect(dialogs.previous[2].name).toBe('cancel');
       expect(dialogs.previous[3].name).toBe('greetings');
     },
-    15000
+    15000,
   );
 });

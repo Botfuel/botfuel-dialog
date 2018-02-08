@@ -26,14 +26,16 @@ describe('GuessDialog', () => {
       new UserTextMessage('Your favorite color is red'),
       new UserTextMessage('Your favorite color is green'),
     ]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('Your favorite color is blue'),
-      new BotTextMessage('Nope! Guess again.'),
-      new UserTextMessage('Your favorite color is red'),
-      new BotTextMessage('Congratulations! My favorite color is red.'),
-      new UserTextMessage('Your favorite color is green'),
-      new BotTextMessage('Nope! Guess again.'),
-    ].map(msg => msg.toJson(userId)));
+    expect(bot.adapter.log).toEqual(
+      [
+        new UserTextMessage('Your favorite color is blue'),
+        new BotTextMessage('Nope! Guess again.'),
+        new UserTextMessage('Your favorite color is red'),
+        new BotTextMessage('Congratulations! My favorite color is red.'),
+        new UserTextMessage('Your favorite color is green'),
+        new BotTextMessage('Nope! Guess again.'),
+      ].map(msg => msg.toJson(userId)),
+    );
 
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);

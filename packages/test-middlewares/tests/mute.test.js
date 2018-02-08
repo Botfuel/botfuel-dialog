@@ -23,12 +23,14 @@ describe('Mute', () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('Mute')]);
-    await bot.play([new UserTextMessage('What\'s up')]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('Mute'),
-      new BotTextMessage('Muted!'),
-      new UserTextMessage('What\'s up'),
-    ].map(msg => msg.toJson(userId)));
+    await bot.play([new UserTextMessage("What's up")]);
+    expect(bot.adapter.log).toEqual(
+      [
+        new UserTextMessage('Mute'),
+        new BotTextMessage('Muted!'),
+        new UserTextMessage("What's up"),
+      ].map(msg => msg.toJson(userId)),
+    );
     const isMuted = await bot.brain.userGet(userId, '_isMuted');
     expect(isMuted).toBe(true);
   });

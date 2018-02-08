@@ -261,9 +261,7 @@ class DialogManager extends Resolver {
         entities: [],
       });
     } else {
-      const action = await this
-        .resolve(dialog.name)
-        .execute(adapter, userMessage, dialog.entities);
+      const action = await this.resolve(dialog.name).execute(adapter, userMessage, dialog.entities);
       logger.debug('execute: action', action);
       if (action.name !== Dialog.ACTION_WAIT) {
         dialogs = await this.applyAction(dialogs, action);

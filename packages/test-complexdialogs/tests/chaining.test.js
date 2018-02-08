@@ -23,11 +23,13 @@ describe('Chaining', () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('I want to buy a blue automatic car.')]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('I want to buy a blue automatic car.'),
-      new BotTextMessage('Entities defined: color, transmission'),
-      new BotTextMessage("You're welcome!"),
-    ].map(msg => msg.toJson(userId)));
+    expect(bot.adapter.log).toEqual(
+      [
+        new UserTextMessage('I want to buy a blue automatic car.'),
+        new BotTextMessage('Entities defined: color, transmission'),
+        new BotTextMessage("You're welcome!"),
+      ].map(msg => msg.toJson(userId)),
+    );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).toBe(userId);

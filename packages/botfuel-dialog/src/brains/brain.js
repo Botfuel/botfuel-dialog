@@ -196,8 +196,9 @@ class Brain {
    * @returns {Boolean}
    */
   isConversationValid(conversation) {
-    return conversation !== undefined
-      && Date.now() - conversation.createdAt < this.conversationDuration;
+    return (
+      conversation !== undefined && Date.now() - conversation.createdAt < this.conversationDuration
+    );
   }
 
   /**

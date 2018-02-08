@@ -23,9 +23,11 @@ describe('Blank', () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('')]);
-    expect(bot.adapter.log).toEqual([new UserTextMessage(''), new BotTextMessage('Not understood.')].map(
-      msg => msg.toJson(userId)
-    ));
+    expect(bot.adapter.log).toEqual(
+      [new UserTextMessage(''), new BotTextMessage('Not understood.')].map(msg =>
+        msg.toJson(userId),
+      ),
+    );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).toBe(userId);
@@ -35,26 +37,25 @@ describe('Blank', () => {
     expect(dialogs.previous[0].name).toBe('default');
   });
 
-  test(
-    'should handle blank input when previous dialog is not understood',
-    async () => {
-      const bot = new Bot(config);
-      const userId = bot.adapter.userId;
-      await bot.play([new UserTextMessage(''), new UserTextMessage('')]);
-      expect(bot.adapter.log).toEqual([
+  test('should handle blank input when previous dialog is not understood', async () => {
+    const bot = new Bot(config);
+    const userId = bot.adapter.userId;
+    await bot.play([new UserTextMessage(''), new UserTextMessage('')]);
+    expect(bot.adapter.log).toEqual(
+      [
         new UserTextMessage(''),
         new BotTextMessage('Not understood.'),
         new UserTextMessage(''),
         new BotTextMessage('Not understood.'),
-      ].map(msg => msg.toJson(userId)));
-      const user = await bot.brain.getUser(userId);
-      const dialogs = await bot.brain.getDialogs(userId);
-      expect(user.userId).toBe(userId);
-      expect(user.conversations.length).toBe(1);
-      expect(dialogs.stack).toHaveLength(0);
-      expect(dialogs.previous.length).toBe(2);
-      expect(dialogs.previous[0].name).toBe('default');
-      expect(dialogs.previous[1].name).toBe('default');
-    }
-  );
+      ].map(msg => msg.toJson(userId)),
+    );
+    const user = await bot.brain.getUser(userId);
+    const dialogs = await bot.brain.getDialogs(userId);
+    expect(user.userId).toBe(userId);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack).toHaveLength(0);
+    expect(dialogs.previous.length).toBe(2);
+    expect(dialogs.previous[0].name).toBe('default');
+    expect(dialogs.previous[1].name).toBe('default');
+  });
 });

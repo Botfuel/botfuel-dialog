@@ -23,11 +23,11 @@ describe('Greetings', () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('Hello')]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('Hello'),
-      new BotTextMessage('Hello human!'),
-    ].map(msg => msg.toJson(userId)));
-    console.log(bot.brain);
+    expect(bot.adapter.log).toEqual(
+      [new UserTextMessage('Hello'), new BotTextMessage('Hello human!')].map(msg =>
+        msg.toJson(userId),
+      ),
+    );
 
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);

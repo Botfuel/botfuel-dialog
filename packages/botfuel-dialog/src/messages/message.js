@@ -47,7 +47,7 @@ class Message extends ValidObject {
       user: userId,
       payload: {
         value: this.valueAsJson(),
-        ...!!this.options && { options: this.options }
+        ...(!!this.options && { options: this.options }),
       },
     };
   }

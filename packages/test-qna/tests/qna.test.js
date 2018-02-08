@@ -29,12 +29,14 @@ describe('Qna', () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('Where is bryan ?')]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('Where is bryan ?'),
-      new BotTextMessage(
-        'I’m sorry, I did not understand your question. Please reach us at contact@my-sample-compagny.com for further assistance.'
-      ),
-    ].map(msg => msg.toJson(userId)));
+    expect(bot.adapter.log).toEqual(
+      [
+        new UserTextMessage('Where is bryan ?'),
+        new BotTextMessage(
+          'I’m sorry, I did not understand your question. Please reach us at contact@my-sample-compagny.com for further assistance.',
+        ),
+      ].map(msg => msg.toJson(userId)),
+    );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).toBe(userId);
@@ -44,13 +46,12 @@ describe('Qna', () => {
     expect(dialogs.previous[0].name).toBe('default');
   });
 
-  test(
-    'should respond with many qnas when question not fully understood',
-    async () => {
-      const bot = new Bot(config);
-      const userId = bot.adapter.userId;
-      await bot.play([new UserTextMessage('get an invoice')]);
-      expect(bot.adapter.log).toEqual([
+  test('should respond with many qnas when question not fully understood', async () => {
+    const bot = new Bot(config);
+    const userId = bot.adapter.userId;
+    await bot.play([new UserTextMessage('get an invoice')]);
+    expect(bot.adapter.log).toEqual(
+      [
         new UserTextMessage('get an invoice'),
         new BotTextMessage('What do you mean?'),
         new ActionsMessage([
@@ -77,27 +78,29 @@ describe('Qna', () => {
             },
           ]),
         ]),
-      ].map(msg => msg.toJson(userId)));
-      const user = await bot.brain.getUser(userId);
-      const dialogs = await bot.brain.getDialogs(userId);
-      expect(user.userId).toBe(userId);
-      expect(user.conversations.length).toBe(1);
-      expect(dialogs.stack.length).toBe(1);
-      expect(dialogs.stack[0].name).toBe('qnas');
-      expect(dialogs.previous).toHaveLength(0);
-    }
-  );
+      ].map(msg => msg.toJson(userId)),
+    );
+    const user = await bot.brain.getUser(userId);
+    const dialogs = await bot.brain.getDialogs(userId);
+    expect(user.userId).toBe(userId);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack.length).toBe(1);
+    expect(dialogs.stack[0].name).toBe('qnas');
+    expect(dialogs.previous).toHaveLength(0);
+  });
 
   test('should respond to hello', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('Hello')]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('Hello'),
-      new BotTextMessage(
-        'Hello! I can provide you with information about our payment and shipping policies.'
-      ),
-    ].map(msg => msg.toJson(userId)));
+    expect(bot.adapter.log).toEqual(
+      [
+        new UserTextMessage('Hello'),
+        new BotTextMessage(
+          'Hello! I can provide you with information about our payment and shipping policies.',
+        ),
+      ].map(msg => msg.toJson(userId)),
+    );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).toBe(userId);
@@ -110,15 +113,15 @@ describe('Qna', () => {
   test('should respond to invoice question', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
-    await bot.play([
-      new UserTextMessage('Could you send me an invoice please?'),
-    ]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('Could you send me an invoice please?'),
-      new BotTextMessage(
-        'The invoice for your purchase will be sent along with your goods. You can also download an electronic version from your account.'
-      ),
-    ].map(msg => msg.toJson(userId)));
+    await bot.play([new UserTextMessage('Could you send me an invoice please?')]);
+    expect(bot.adapter.log).toEqual(
+      [
+        new UserTextMessage('Could you send me an invoice please?'),
+        new BotTextMessage(
+          'The invoice for your purchase will be sent along with your goods. You can also download an electronic version from your account.',
+        ),
+      ].map(msg => msg.toJson(userId)),
+    );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).toBe(userId);
@@ -132,12 +135,14 @@ describe('Qna', () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('A have a problem on the website.')]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('A have a problem on the website.'),
-      new BotTextMessage(
-        'Please reach us at contact@my-sample-compagny.com for further assistance.'
-      ),
-    ].map(msg => msg.toJson(userId)));
+    expect(bot.adapter.log).toEqual(
+      [
+        new UserTextMessage('A have a problem on the website.'),
+        new BotTextMessage(
+          'Please reach us at contact@my-sample-compagny.com for further assistance.',
+        ),
+      ].map(msg => msg.toJson(userId)),
+    );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).toBe(userId);
@@ -151,12 +156,14 @@ describe('Qna', () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('Can I pay in bitcoins?')]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('Can I pay in bitcoins?'),
-      new BotTextMessage(
-        'You can pay for your purchase with Visa, Mastercard or using a PayPal account.'
-      ),
-    ].map(msg => msg.toJson(userId)));
+    expect(bot.adapter.log).toEqual(
+      [
+        new UserTextMessage('Can I pay in bitcoins?'),
+        new BotTextMessage(
+          'You can pay for your purchase with Visa, Mastercard or using a PayPal account.',
+        ),
+      ].map(msg => msg.toJson(userId)),
+    );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).toBe(userId);
@@ -170,12 +177,14 @@ describe('Qna', () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
     await bot.play([new UserTextMessage('Do you ship to France?')]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('Do you ship to France?'),
-      new BotTextMessage(
-        'Your purchase can be shipped worldwide. However, delivery charges may vary.'
-      ),
-    ].map(msg => msg.toJson(userId)));
+    expect(bot.adapter.log).toEqual(
+      [
+        new UserTextMessage('Do you ship to France?'),
+        new BotTextMessage(
+          'Your purchase can be shipped worldwide. However, delivery charges may vary.',
+        ),
+      ].map(msg => msg.toJson(userId)),
+    );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.userId).toBe(userId);

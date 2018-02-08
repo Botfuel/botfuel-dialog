@@ -27,19 +27,21 @@ describe('CitiesDialog', () => {
       new UserTextMessage('Lille'),
       new UserTextMessage('Lyon'),
     ]);
-    expect(bot.adapter.log).toEqual([
-      new UserTextMessage('My favorite cities are Paris and Marseille'),
-      new BotTextMessage('Cool, so you like Paris, Marseille'),
-      new BotTextMessage('Can you give me 3 more cities you like?'),
-      new UserTextMessage('Toulouse'),
-      new BotTextMessage('Cool, so you like Paris, Marseille, Toulouse'),
-      new BotTextMessage('Can you give me 2 more cities you like?'),
-      new UserTextMessage('Lille'),
-      new BotTextMessage('Cool, so you like Paris, Marseille, Toulouse, Lille'),
-      new BotTextMessage('Can you give me 1 more cities you like?'),
-      new UserTextMessage('Lyon'),
-      new BotTextMessage('Cool, so you like Paris, Marseille, Toulouse, Lille, Lyon'),
-    ].map(msg => msg.toJson(userId)));
+    expect(bot.adapter.log).toEqual(
+      [
+        new UserTextMessage('My favorite cities are Paris and Marseille'),
+        new BotTextMessage('Cool, so you like Paris, Marseille'),
+        new BotTextMessage('Can you give me 3 more cities you like?'),
+        new UserTextMessage('Toulouse'),
+        new BotTextMessage('Cool, so you like Paris, Marseille, Toulouse'),
+        new BotTextMessage('Can you give me 2 more cities you like?'),
+        new UserTextMessage('Lille'),
+        new BotTextMessage('Cool, so you like Paris, Marseille, Toulouse, Lille'),
+        new BotTextMessage('Can you give me 1 more cities you like?'),
+        new UserTextMessage('Lyon'),
+        new BotTextMessage('Cool, so you like Paris, Marseille, Toulouse, Lille, Lyon'),
+      ].map(msg => msg.toJson(userId)),
+    );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user.conversations.length).toBe(1);
@@ -50,19 +52,18 @@ describe('CitiesDialog', () => {
     expect(lastConversation.cities.favoriteCities).toHaveLength(5);
   });
 
-  test(
-    'should replace cities with a new list if it already has 5 cities',
-    async () => {
-      const bot = new Bot(config);
-      const userId = bot.adapter.userId;
-      await bot.play([
-        new UserTextMessage('My favorite cities are Paris and Marseille'),
-        new UserTextMessage('Toulouse'),
-        new UserTextMessage('Lille'),
-        new UserTextMessage('Lyon'),
-        new UserTextMessage('My favorite cities are Paris and Nice'),
-      ]);
-      expect(bot.adapter.log).toEqual([
+  test('should replace cities with a new list if it already has 5 cities', async () => {
+    const bot = new Bot(config);
+    const userId = bot.adapter.userId;
+    await bot.play([
+      new UserTextMessage('My favorite cities are Paris and Marseille'),
+      new UserTextMessage('Toulouse'),
+      new UserTextMessage('Lille'),
+      new UserTextMessage('Lyon'),
+      new UserTextMessage('My favorite cities are Paris and Nice'),
+    ]);
+    expect(bot.adapter.log).toEqual(
+      [
         new UserTextMessage('My favorite cities are Paris and Marseille'),
         new BotTextMessage('Cool, so you like Paris, Marseille'),
         new BotTextMessage('Can you give me 3 more cities you like?'),
@@ -77,15 +78,15 @@ describe('CitiesDialog', () => {
         new UserTextMessage('My favorite cities are Paris and Nice'),
         new BotTextMessage('Cool, so you like Paris, Nice'),
         new BotTextMessage('Can you give me 3 more cities you like?'),
-      ].map(msg => msg.toJson(userId)));
-      const user = await bot.brain.getUser(userId);
-      const dialogs = await bot.brain.getDialogs(userId);
-      expect(user.conversations.length).toBe(1);
-      expect(dialogs.stack).not.toHaveLength(0);
-      const lastConversation = await bot.brain.getLastConversation(userId);
-      expect(lastConversation).toHaveProperty('cities');
-      expect(lastConversation.cities).toHaveProperty('favoriteCities');
-      expect(lastConversation.cities.favoriteCities).toHaveLength(2);
-    }
-  );
+      ].map(msg => msg.toJson(userId)),
+    );
+    const user = await bot.brain.getUser(userId);
+    const dialogs = await bot.brain.getDialogs(userId);
+    expect(user.conversations.length).toBe(1);
+    expect(dialogs.stack).not.toHaveLength(0);
+    const lastConversation = await bot.brain.getLastConversation(userId);
+    expect(lastConversation).toHaveProperty('cities');
+    expect(lastConversation.cities).toHaveProperty('favoriteCities');
+    expect(lastConversation.cities.favoriteCities).toHaveLength(2);
+  });
 });

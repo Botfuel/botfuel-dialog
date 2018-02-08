@@ -21,7 +21,9 @@ class DeliveryDateView extends TextView {
     const { date } = data;
     const dateStr = date.toISOString().split('T')[0];
 
-    const response = new BotTextMessage(`If you purchase today before 10pm, you purchase will be delivered by ${dateStr}.`);
+    const response = new BotTextMessage(
+      `If you purchase today before 10pm, you purchase will be delivered by ${dateStr}.`,
+    );
 
     return [response];
   }

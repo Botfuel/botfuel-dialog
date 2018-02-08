@@ -1,20 +1,32 @@
 {
   "private": true,
   "scripts": {
-    "bootstrap":
-      "lerna bootstrap && lerna run compile --scope botfuel-dialog && lerna link --force-local",
+    "bootstrap": "lerna bootstrap && lerna run compile --scope botfuel-dialog && lerna link --force-local",
     "style": "lerna run style",
     "pretest": "yarn run bootstrap",
-    "release":
-      "lerna run test && lerna run compile --scope botfuel-dialog && lerna publish --conventional-commits --changelog-preset=angular",
+    "release": "lerna run test && lerna run compile --scope botfuel-dialog && lerna publish --conventional-commits --changelog-preset=angular",
     "unit-test": "BOTFUEL_APP_TOKEN=TEST_BOT jest packages/botfuel-dialog",
-    "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest --forceExit"
+    "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest --forceExit",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier-eslint --write \"{src,tests}/**/*.js\"",
+      "git add"
+    ]
   },
   "devDependencies": {
+    "husky": "^0.14.3",
     "istanbul-api": "^1.2.1",
     "istanbul-lib-coverage": "^1.1.1",
     "lerna": "^2.7.1",
+    "lint-staged": "^6.1.0",
+    "prettier": "^1.10.2",
+    "prettier-eslint": "^8.8.1",
+    "prettier-eslint-cli": "^4.7.0",
     "replay": "^2.1.4"
   },
-  "workspaces": ["packages/*"]
+  "workspaces": [
+    "packages/*"
+  ]
 }

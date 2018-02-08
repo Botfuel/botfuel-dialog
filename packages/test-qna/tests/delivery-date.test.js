@@ -27,17 +27,15 @@ describe('Delivery date', () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
 
-    await bot.play([
-      new UserTextMessage('What is the expected delivery date?'),
-    ]);
+    await bot.play([new UserTextMessage('What is the expected delivery date?')]);
 
     expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('What is the expected delivery date?'),
         new BotTextMessage(
-          'If you purchase today before 10pm, you purchase will be delivered by 2018-01-12.'
+          'If you purchase today before 10pm, you purchase will be delivered by 2018-01-12.',
         ),
-      ].map(msg => msg.toJson(userId))
+      ].map(msg => msg.toJson(userId)),
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
