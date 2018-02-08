@@ -42,7 +42,7 @@ Botfuel Dialog comes with unit and integration tests.
 
 #### Run the unit tests only
 ```shell
-npm run unit-test
+yarn run unit-test
 ```
 
 #### Run integration tests
