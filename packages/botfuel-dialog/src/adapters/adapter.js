@@ -71,6 +71,7 @@ class Adapter {
       user: botMessages[0] && botMessages[0].user,
       brain: this.bot.brain,
       botMessages,
+      config: this.bot.config,
     };
     await this.middlewareManager.out(context, async () => {
       for (const botMessage of botMessages) {
@@ -92,6 +93,7 @@ class Adapter {
     const context = {
       brain: this.bot.brain,
       userMessage,
+      config: this.bot.config,
     };
     await this.middlewareManager.in(context, async () => {
       await this.bot.respond(userMessage);
