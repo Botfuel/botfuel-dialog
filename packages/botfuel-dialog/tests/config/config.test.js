@@ -27,7 +27,6 @@ describe('Config', () => {
 
   test('should return a valid configuration when one provided', () => {
     const config = getConfiguration({ adapter: 'botfuel', outOfScope: true });
-    console.log('Config return in test', config);
     expect(config.adapter).toEqual('botfuel');
     expect(config.outOfScope).toBe(undefined);
   });
