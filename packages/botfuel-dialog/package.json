@@ -40,6 +40,7 @@
     "express": "^4.15.4",
     "fs": "0.0.1-security",
     "fs-extra": "^4.0.2",
+    "handlebars": "^4.0.11",
     "lodash": "^4.17.4",
     "logtown": "2.1.1",
     "logtown-winston": "^1.0.0",

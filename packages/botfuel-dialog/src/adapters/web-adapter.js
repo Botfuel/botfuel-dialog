@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
+const fs = require('fs');
 const express = require('express');
 const rp = require('request-promise-native');
 const bodyParser = require('body-parser');
 const logger = require('logtown')('WebAdapter');
+const Handlebars = require('handlebars');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 const Adapter = require('./adapter');
 
 /**
- * Generic web adapter (to be subclassed).
+ * Generic web adapter (to be subclassed), it serves:
+ * - /webhook : requests to the bot
+ * - /static: static files under src/static
+ * - /templates: handlebars templates under src/templates
  * @extends Adapter
  */
 class WebAdapter extends Adapter {
@@ -31,6 +36,7 @@ class WebAdapter extends Adapter {
     logger.debug('run');
     const app = express();
     app.use(bodyParser.json());
+    app.use('/static', express.static('src/static'));
     this.createRoutes(app);
     const port = process.env.PORT || process.env.BOTFUEL_ADAPTER_PORT || 5000;
     app.listen(port, () => logger.debug('run: listening on port', port));
@@ -42,11 +48,13 @@ class WebAdapter extends Adapter {
    * @returns {void}
    */
   createRoutes(app) {
+    logger.debug('createRoutes');
     app.post('/webhook', (req, res) => this.handleRequest(req, res));
+    app.get('/templates/:id', (req, res) => this.handleTemplate(req, res));
   }
 
   /**
-   * Webhook used for handling requests.
+   * Webhook used for handling requests to the bot.
    * @async
    * @param {Object} req - the request object
    * @param {Object} res - the response object
@@ -54,6 +62,25 @@ class WebAdapter extends Adapter {
    */
   async handleRequest() {
     throw new MissingImplementationError();
+  }
+
+  /**
+   * Webhook used for handling template requests.
+   * @async
+   * @param {Object} req - the request object
+   * @param {Object} res - the response object
+   * @returns {Promise.<void>}
+   */
+  async handleTemplate(req, res) {
+    logger.info('handleTemplate');
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    fs.readFile(`src/templates/${req.params.id}.handlebars`, 'utf8', (err, data) => {
+      if (err) {
+        throw err;
+      } else {
+        res.end(Handlebars.compile(data)(req.query));
+      }
+    });
   }
 
   /** @inheritDoc */
