@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const uuidv1 = require('uuid/v1');
 const rp = require('request-promise-native');
 const logger = require('logtown')('MessengerAdapter');
 const PostbackMessage = require('../messages/postback-message');
@@ -292,6 +293,18 @@ class MessengerAdapter extends WebAdapter {
         logger.error('updateUserProfile: error', error.message || error.error || error);
       }
     }
+  }
+
+  /** @inheritDoc */
+  addProperties(message) {
+    return extend(
+      {
+        id: uuidv1(),
+        channel: 'messenger',
+        timestamp: Date.now(),
+      },
+      message,
+    );
   }
 }
 

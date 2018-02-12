@@ -47,6 +47,11 @@ class TestAdapter extends Adapter {
   async sendMessage(botMessage) {
     this.log.push(botMessage);
   }
+
+  /** @inheritDoc */
+  addProperties(message) {
+    return message;
+  }
 }
 
 module.exports = TestAdapter;

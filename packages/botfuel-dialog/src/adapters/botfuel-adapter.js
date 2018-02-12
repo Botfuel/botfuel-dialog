@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+const { extend } = require('lodash');
+const uuidv1 = require('uuid/v1');
 const logger = require('logtown')('BotfuelAdapter');
 const WebAdapter = require('./web-adapter');
 
@@ -46,6 +48,18 @@ class BotfuelAdapter extends WebAdapter {
   /** @inheritDoc */
   getBody(botMessage) {
     return botMessage;
+  }
+
+  /** @inheritDoc */
+  addProperties(message) {
+    return extend(
+      {
+        id: uuidv1(),
+        channel: 'botfuel',
+        timestamp: Date.now(),
+      },
+      message,
+    );
   }
 }
 

@@ -57,6 +57,18 @@ class ShellAdapter extends Adapter {
     // eslint-disable-next-line no-console
     console.log(chalk.hex('#16a085')(`${DELIMITER}${botMessage.payload.value}`));
   }
+
+  /** @inheritDoc */
+  addProperties(message) {
+    return extend(
+      {
+        id: uuidv1(),
+        channel: 'shell',
+        timestamp: Date.now(),
+      },
+      message,
+    );
+  }
 }
 
 module.exports = ShellAdapter;

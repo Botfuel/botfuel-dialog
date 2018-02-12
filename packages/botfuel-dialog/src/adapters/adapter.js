@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const { extend } = require('lodash');
 const logger = require('logtown')('Adapter');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 const MiddlewareManager = require('../middleware-manager');
@@ -75,7 +76,7 @@ class Adapter {
     await this.middlewareManager.out(context, async () => {
       for (const botMessage of botMessages) {
         // eslint-disable-next-line no-await-in-loop
-        await this.sendMessage(botMessage);
+        await this.sendMessage(this.addProperties(botMessage));
       }
     });
   }
@@ -94,7 +95,7 @@ class Adapter {
       userMessage,
     };
     await this.middlewareManager.in(context, async () => {
-      await this.bot.respond(userMessage);
+      await this.bot.respond(this.addProperties(userMessage));
     });
   }
 
@@ -118,7 +119,18 @@ class Adapter {
    * @param {Object} botMessage - the bot message
    * @returns {Promise.<void>}
    */
-  async sendMessage() {
+  async sendMessage(botMessage) {
+    logger.debug('sendMessage', botMessage);
+    throw new MissingImplementationError();
+  }
+
+  /**
+   * Adds properties to messages before they are sent
+   * @param {Object} message - bot or user message
+   * @returns {Object} the message extended with properties
+   */
+  addProperties(message) {
+    logger.debug('addProperties', message);
     throw new MissingImplementationError();
   }
 }
