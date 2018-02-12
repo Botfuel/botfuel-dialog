@@ -37,7 +37,7 @@ const whitelist = Object.keys(defaultConfig).concat(['qna', 'spellchecking']);
  * @param {String} configFileName - the bot config file name/path
  * @returns {Object} the contents of the bot config file
  */
-const resolveConfigFile = (configFileName = null) => {
+const resolveConfigFile = (configFileName) => {
   // configure the logger with default configuration first the be able to log errors
   LoggerManager.configure(defaultConfig);
 
@@ -69,7 +69,7 @@ const getConfiguration = (botConfig = {}) => {
   // get the config by extending defaultConfig with botConfig
   const config = Object.assign(
     defaultConfig,
-    omitBy(botConfig, (val, key) => whitelist.indexOf(key) === -1),
+    omitBy(botConfig, (val, key) => !whitelist.includes(key)),
   );
   // reconfigure the logger with the final config
   LoggerManager.configure(config);
