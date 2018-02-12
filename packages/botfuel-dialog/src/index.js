@@ -48,6 +48,7 @@ const PostbackMessage = require('./messages/postback-message');
 const QuickrepliesMessage = require('./messages/quickreplies-message');
 const UserImageMessage = require('./messages/user-image-message');
 const UserTextMessage = require('./messages/user-text-message');
+const QnasView = require('./views/qnas-view');
 
 module.exports = {
   Logger: Logger.getLogger,
@@ -84,4 +85,5 @@ module.exports = {
   QuickrepliesMessage,
   UserImageMessage,
   UserTextMessage,
+  QnasView,
 };
