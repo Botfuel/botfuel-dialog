@@ -55,7 +55,7 @@ class BotfuelAdapter extends WebAdapter {
     return extend(
       {
         id: uuidv1(),
-        channel: 'botfuel',
+        adapter: 'botfuel',
         timestamp: Date.now(),
       },
       message,

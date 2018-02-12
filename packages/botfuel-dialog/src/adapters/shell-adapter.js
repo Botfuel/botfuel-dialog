@@ -63,7 +63,7 @@ class ShellAdapter extends Adapter {
     return extend(
       {
         id: uuidv1(),
-        channel: 'shell',
+        adapter: 'shell',
         timestamp: Date.now(),
       },
       message,

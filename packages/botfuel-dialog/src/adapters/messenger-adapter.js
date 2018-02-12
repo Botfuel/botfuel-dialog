@@ -300,7 +300,7 @@ class MessengerAdapter extends WebAdapter {
     return extend(
       {
         id: uuidv1(),
-        channel: 'messenger',
+        adapter: 'messenger',
         timestamp: Date.now(),
       },
       message,
