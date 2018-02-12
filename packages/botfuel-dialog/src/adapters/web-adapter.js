@@ -16,6 +16,7 @@
 
 const fs = require('fs');
 const express = require('express');
+const exphbs = require('express-handlebars');
 const rp = require('request-promise-native');
 const bodyParser = require('body-parser');
 const logger = require('logtown')('WebAdapter');
@@ -37,6 +38,10 @@ class WebAdapter extends Adapter {
     const app = express();
     app.use(bodyParser.json());
     app.use('/static', express.static('src/static'));
+    const hbs = exphbs.create({});
+    app.engine('handlebars', hbs.engine);
+    app.set('view engine', 'handlebars');
+    app.set('views', 'src/templates');
     this.createRoutes(app);
     const port = process.env.PORT || process.env.BOTFUEL_ADAPTER_PORT || 5000;
     app.listen(port, () => logger.debug('run: listening on port', port));
@@ -72,13 +77,13 @@ class WebAdapter extends Adapter {
    * @returns {Promise.<void>}
    */
   async handleTemplate(req, res) {
-    logger.info('handleTemplate');
-    res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    fs.readFile(`src/templates/${req.params.id}.handlebars`, 'utf8', (err, data) => {
+    logger.debug('handleTemplate', { id: req.params.id, query: req.query });
+    res.render(req.params.id, req.query, (err, html) => {
       if (err) {
-        throw err;
+        logger.error(`Could not render the handlebars template: ${req.params.id}`);
+        res.status(400).send(err);
       } else {
-        res.end(Handlebars.compile(data)(req.query));
+        res.status(200).send(html);
       }
     });
   }
