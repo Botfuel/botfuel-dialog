@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.9.0"></a>
+# [1.9.0](https://github.com/Botfuel/botfuel-dialog/compare/v1.8.3...v1.9.0) (2018-02-12)
+
+
+### Bug Fixes
+
+* Expose QnasView ([14d4167](https://github.com/Botfuel/botfuel-dialog/commit/14d4167))
+
+
+### Features
+
+* Expose config in middlewares context ([40973da](https://github.com/Botfuel/botfuel-dialog/commit/40973da))
+* Handlebars templates support: route /templates serves files under src/templates ([19bcbdf](https://github.com/Botfuel/botfuel-dialog/commit/19bcbdf))
+
+
+
+
 <a name="1.8.3"></a>
 ## [1.8.3](https://github.com/Botfuel/botfuel-dialog/compare/v1.8.2...v1.8.3) (2018-02-09)
 
