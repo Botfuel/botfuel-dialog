@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v1.9.0...v2.0.0) (2018-02-13)
+
+
+### Features
+
+* Add spanish boolean corpus ([46b4dd8](https://github.com/Botfuel/botfuel-dialog/commit/46b4dd8))
+* Standardized dialog hooks ([80f1e45](https://github.com/Botfuel/botfuel-dialog/commit/80f1e45))
+
+
+* Merge pull request #111 from Botfuel/hooks ([adaaa3e](https://github.com/Botfuel/botfuel-dialog/commit/adaaa3e)), closes [#111](https://github.com/Botfuel/botfuel-dialog/issues/111)
+
+
+### BREAKING CHANGES
+
+* Standardized dialog hooks
+
+
+
+
 <a name="1.9.0"></a>
 # [1.9.0](https://github.com/Botfuel/botfuel-dialog/compare/v1.8.3...v1.9.0) (2018-02-12)
 
