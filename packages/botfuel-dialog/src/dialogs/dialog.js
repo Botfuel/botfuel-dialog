@@ -124,13 +124,12 @@ class Dialog {
   }
 
   /**
-   * Builds an object that sets the current dialog as completed
-   * and provides the name of the next dialog.
-   * @param {String} dialogName - the name of the next dialog
+   * Builds an action
+   * indicating that the current dialog is completed and
+   * providing the name of the next dialog to execute.
+   * @param {String} dialogName - the name of the next dialog to execute
    * @param {Object[]} dialogEntities - the entities for the next dialog
-   * @returns {Object} contains
-   *   - a newDialog object thas has a name
-   *   - an action set to ACTION_NEXT
+   * @returns {Object} the action object
    */
   triggerNext(dialogName, dialogEntities = []) {
     if (!dialogName) {
@@ -138,7 +137,6 @@ class Dialog {
         message: 'You must provide a dialogName as a parameter to the nextDialog method.',
       });
     }
-
     return {
       newDialog: {
         name: dialogName,
@@ -149,12 +147,11 @@ class Dialog {
   }
 
   /**
-   * Builds an object that sets the previous dialog as canceled
-   * and optionally provides name of the next dialog.
+   * Builds an action
+   * indicating that the previous dialog is canceled and
+   * optionally providing the name of the next dialog.
    * @param {String} [dialogName] - the name of the next dialog (optional)
-   * @returns {Object} contains
-   *   - a newDialog object thas has a name (optional)
-   *   - an action set to ACTION_CANCEL
+   * @returns {Object} the action object
    */
   cancelPrevious(dialogName) {
     return {
@@ -168,13 +165,12 @@ class Dialog {
   }
 
   /**
-   * Builds an action's object that starts a new conversation
-   * and optionally provides name of the next dialog to start with.
+   * Builds an action
+   * indicating that a new conversation should be started and
+   * optionally providing the name of the next dialog.
    * @param {String} [dialogName] - the name of the next dialog (optional)
    * @param {Object[]} [dialogEntities] - the entities for the next dialog
-   * @returns {Object} contains
-   *   - an action set to ACTION_NEW_CONVERSATION
-   *   - a newDialog object thas has a name (optional)
+   * @returns {Object} the action object
    */
   startNewConversation(dialogName, dialogEntities = []) {
     return {
@@ -189,9 +185,9 @@ class Dialog {
   }
 
   /**
-   * Builds an object that sets current dialog as completed.
-   * @returns {Object} contains
-   *   - an action set to ACTION_COMPLETE
+   * Builds an action
+   * indicating that the current dialog is completed.
+   * @returns {Object} the action object
    */
   complete() {
     return {
@@ -200,9 +196,9 @@ class Dialog {
   }
 
   /**
-   * Builds an object that indicates that current dialog should wait.
-   * @returns {Object} contains
-   *   - an action set to ACTION_WAIT
+   * Builds an action
+   * indicating that current dialog should wait.
+   * @returns {Object} the action object
    */
   wait() {
     return {
@@ -216,7 +212,7 @@ class Dialog {
    * @async
    * @param {Object} [userMessage] - the user message
    * @param {Object} [dialogData] - the dialog data
-   * @returns {Promise.<*>} the data extended to the display method
+   * @returns {Promise.<*>} some data (will be passed to the display method with the extraData key)
    */
   async dialogWillDisplay(userMessage, dialogData) {
     logger.debug('dialogWillDisplay', userMessage, dialogData);
