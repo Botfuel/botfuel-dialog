@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-const uuidv1 = require('uuid/v1');
 const rp = require('request-promise-native');
+const uuidv4 = require('uuid/v4');
+const { extend } = require('lodash');
 const logger = require('logtown')('MessengerAdapter');
 const PostbackMessage = require('../messages/postback-message');
 const UserImageMessage = require('../messages/user-image-message');
@@ -299,7 +300,7 @@ class MessengerAdapter extends WebAdapter {
   addProperties(message) {
     return extend(
       {
-        id: uuidv1(),
+        id: uuidv4(),
         adapter: 'messenger',
         timestamp: Date.now(),
       },

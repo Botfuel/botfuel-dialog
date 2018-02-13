@@ -17,6 +17,7 @@
 /* eslint-disable quotes */
 
 const MessengerAdapter = require('../../src/adapters/messenger-adapter');
+const BotTextMessage = require('../../src/messages/bot-text-message');
 const Card = require('../../src/messages/card');
 const CardsMessage = require('../../src/messages/cards-message');
 const Link = require('../../src/messages/link');
@@ -76,5 +77,22 @@ describe('MessengerAdapter', () => {
         },
       },
     });
+  });
+
+  test('should add properties to the json message', async () => {
+    const message = new BotTextMessage('message');
+    const extended = new MessengerAdapter({}).addProperties(message.toJson('USER'));
+    expect(Object.keys(extended)).toEqual([
+      'id',
+      'adapter',
+      'timestamp',
+      'type',
+      'sender',
+      'user',
+      'payload',
+    ]);
+    expect(extended).toHaveProperty('user', 'USER');
+    expect(extended).toHaveProperty('payload.value', 'message');
+    expect(extended).toHaveProperty('adapter', 'messenger');
   });
 });
