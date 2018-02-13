@@ -15,6 +15,7 @@
  */
 
 const path = require('path');
+const { omitBy } = require('lodash');
 const logger = require('logtown')('Config');
 const LoggerManager = require('./logger-manager');
 
@@ -26,7 +27,10 @@ const defaultConfig = {
   intentThreshold: 0.8,
   logger: 'info',
   multiIntent: false,
+  conversationDuration: 86400000, // in ms
 };
+
+const whitelist = Object.keys(defaultConfig).concat(['qna', 'spellchecking']);
 
 /**
  * Returns the contents of the bot config file
@@ -61,9 +65,12 @@ const resolveConfigFile = (configFileName) => {
  * @param {Object} botConfig - the bot config
  * @returns {Object} the configuration
  */
-const getConfiguration = (botConfig) => {
+const getConfiguration = (botConfig = {}) => {
   // get the config by extending defaultConfig with botConfig
-  const config = Object.assign(defaultConfig, botConfig);
+  const config = Object.assign(
+    defaultConfig,
+    omitBy(botConfig, (val, key) => !whitelist.includes(key)),
+  );
   // reconfigure the logger with the final config
   LoggerManager.configure(config);
   // return default config extended by bot config
