@@ -100,7 +100,6 @@ class Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
-   * used by the view to customize its behaviour
    * @param {Object} [data] - data used at display time
    * @returns {Promise.<void>}
    */
