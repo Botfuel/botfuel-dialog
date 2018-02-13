@@ -22,6 +22,13 @@ const {
   Postback,
   CardsMessage,
 } = require('botfuel-dialog');
+const PRODUCTS = require('../../PRODUCTS.json');
+
+const productToCard = (key, product) =>
+  new Card(product.title, product.imageUrl, [
+    new Link('Details', product.link),
+    new Postback('Buy', 'products', [{ dim: 'product', values: [key] }]),
+  ]);
 
 class ProductsView extends PromptView {
   renderEntities(messageEntities, missingEntities) {
@@ -42,38 +49,9 @@ class ProductsView extends PromptView {
   }
 
   static getCardsProducts() {
-    return new CardsMessage([
-      new Card(
-        'Top hat',
-        'https://images-na.ssl-images-amazon.com/images/I/51qyodDiK-L._SY355_.jpg',
-        [
-          new Link('Details', 'https://www.amazon.com/Beistle-Satin-Sleek-Top-Hat/dp/B0051BH6IM'),
-          new Postback('Buy', 'products', [{ dim: 'product', values: ['top hat'] }]),
-        ],
-      ),
-      new Card(
-        'Cowboy hat',
-        'https://images-na.ssl-images-amazon.com/images/I/71NAi8yEZRL._UX522_.jpg',
-        [
-          new Link(
-            'Details',
-            'https://www.amazon.co.uk/Leather-Australian-Cowboy-Aussie-brown/dp/B0094J2H0O',
-          ),
-          new Postback('Buy', 'products', [{ dim: 'product', values: ['cowboy hat'] }]),
-        ],
-      ),
-      new Card(
-        'Detective hat',
-        'https://images-na.ssl-images-amazon.com/images/I/71DyzluYzQL._UL1001_.jpg',
-        [
-          new Link(
-            'Details',
-            'https://www.amazon.com/Unisex-Sherlock-Holmes-Detective-Deerstalker/dp/B016A3J3N0',
-          ),
-          new Postback('Buy', 'products', [{ dim: 'product', values: ['detective hat'] }]),
-        ],
-      ),
-    ]);
+    return new CardsMessage(
+      ['top hat', 'cowboy hat', 'detective hat'].map(key => productToCard(key, PRODUCTS[key])),
+    );
   }
 }
 

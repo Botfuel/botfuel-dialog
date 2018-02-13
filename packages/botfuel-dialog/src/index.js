@@ -41,6 +41,7 @@ const WsExtractor = require('./extractors/ws-extractor');
 const Link = require('./messages/link');
 const ActionsMessage = require('./messages/actions-message');
 const BotTextMessage = require('./messages/bot-text-message');
+const BotImageMessage = require('./messages/bot-image-message');
 const Card = require('./messages/card');
 const CardsMessage = require('./messages/cards-message');
 const Postback = require('./messages/postback');
@@ -78,6 +79,7 @@ module.exports = {
   Link,
   ActionsMessage,
   BotTextMessage,
+  BotImageMessage,
   Card,
   CardsMessage,
   Postback,
