@@ -22,8 +22,7 @@ describe('Mute', () => {
   test('should mute the bot', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
-    await bot.play([new UserTextMessage('Mute')]);
-    await bot.play([new UserTextMessage("What's up")]);
+    await bot.play([new UserTextMessage('Mute'), new UserTextMessage("What's up")]);
     expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('Mute'),

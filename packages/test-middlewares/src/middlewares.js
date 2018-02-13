@@ -19,9 +19,9 @@ module.exports = {
     async (context, next, done) => {
       const muted = await context.brain.userGet(context.userMessage.user, '_isMuted');
       if (muted) {
-        done();
+        await done();
       } else {
-        next();
+        await next();
       }
     },
   ],
