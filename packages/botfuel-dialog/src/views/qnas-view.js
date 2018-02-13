@@ -26,12 +26,12 @@ const View = require('./view');
  */
 class QnasView extends View {
   /** @inheritDoc */
-  render(userMessage, data) {
-    logger.debug('render', userMessage, data);
-    if (data.qnas.length === 1) {
-      return this.renderAnswer(data.qnas[0].answer);
+  render(userMessage, { qnas }) {
+    logger.debug('render', userMessage, qnas);
+    if (qnas.length === 1) {
+      return this.renderAnswer(qnas[0].answer);
     }
-    return this.renderQuestions(data.qnas);
+    return this.renderQuestions(qnas);
   }
 
   /**

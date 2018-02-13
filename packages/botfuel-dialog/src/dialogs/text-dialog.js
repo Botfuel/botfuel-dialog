@@ -22,22 +22,14 @@ const Dialog = require('./dialog');
  * @extends Dialog
  */
 class TextDialog extends Dialog {
-  /**
-   * @constructor
-   * @param {Object} config - the bot config
-   * @param {class} brain - the bot brain
-   */
-  constructor(config, brain) {
-    super(config, brain, { reentrant: false });
-  }
-
   /** @inheritDoc */
   async execute(adapter, userMessage, messageEntities) {
     logger.debug('execute', userMessage, messageEntities);
-    const data = await this.dialogWillDisplay(userMessage, messageEntities);
-    await this.display(adapter, userMessage, data);
-    const result = await this.dialogWillComplete(userMessage, messageEntities);
-    return result || this.complete();
+    const extraData = await this.dialogWillDisplay(userMessage, messageEntities);
+    const dialogData = { messageEntities, extraData };
+    await this.display(adapter, userMessage, dialogData);
+    const action = await this.dialogWillComplete(userMessage, dialogData);
+    return action || this.complete();
   }
 }
 

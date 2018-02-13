@@ -24,9 +24,9 @@ const View = require('./view');
  */
 class PromptView extends View {
   /** @inheritDoc */
-  render(userMessage, { matchedEntities, missingEntities, dialogData }) {
-    logger.debug('render', userMessage, { matchedEntities, missingEntities, dialogData });
-    return this.renderEntities(matchedEntities, missingEntities, dialogData);
+  render(userMessage, { matchedEntities, missingEntities, extraData }) {
+    logger.debug('render', userMessage, { matchedEntities, missingEntities, extraData });
+    return this.renderEntities(matchedEntities, missingEntities, extraData);
   }
 
   /**
@@ -34,11 +34,11 @@ class PromptView extends View {
    * @private
    * @param {Object[]} matchedEntities - the defined entities
    * @param {String[]} missingEntities - the needed entities
-   * @param {Object} [dialogData] - additional data from dialogWillDisplay hook
+   * @param {Object} [extraData] - additional data from dialogWillDisplay hook
    * @returns {Object[]} the bot messages
    */
-  renderEntities(matchedEntities, missingEntities, dialogData) {
-    logger.debug('renderEntities', matchedEntities, missingEntities, dialogData);
+  renderEntities(matchedEntities, missingEntities, extraData) {
+    logger.debug('renderEntities', matchedEntities, missingEntities, extraData);
     const messages = [];
     if (Object.keys(matchedEntities).length !== 0) {
       messages.push(
