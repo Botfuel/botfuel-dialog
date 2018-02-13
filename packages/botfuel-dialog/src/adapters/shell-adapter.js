@@ -16,8 +16,6 @@
 
 const readline = require('readline');
 const chalk = require('chalk');
-const uuidv4 = require('uuid/v4');
-const { extend } = require('lodash');
 const logger = require('logtown')('ShellAdapter');
 const BotTextMessage = require('../messages/bot-text-message');
 const UserTextMessage = require('../messages/user-text-message');
@@ -61,15 +59,13 @@ class ShellAdapter extends Adapter {
   }
 
   /** @inheritDoc */
-  addProperties(message) {
-    return extend(
-      {
-        id: uuidv4(),
-        adapter: 'shell',
-        timestamp: Date.now(),
-      },
-      message,
-    );
+  extendMessage(message) {
+    return {
+      id: this.getMessageUUID(),
+      timestamp: this.getMessageTimestamp(),
+      adapter: 'shell',
+      ...message,
+    };
   }
 }
 

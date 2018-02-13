@@ -81,11 +81,11 @@ describe('MessengerAdapter', () => {
 
   test('should add properties to the json message', async () => {
     const message = new BotTextMessage('message');
-    const extended = new MessengerAdapter({}).addProperties(message.toJson('USER'));
+    const extended = new MessengerAdapter({}).extendMessage(message.toJson('USER'));
     expect(Object.keys(extended)).toEqual([
       'id',
-      'adapter',
       'timestamp',
+      'adapter',
       'type',
       'sender',
       'user',

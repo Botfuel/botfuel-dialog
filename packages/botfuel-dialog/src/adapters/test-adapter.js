@@ -49,7 +49,7 @@ class TestAdapter extends Adapter {
   }
 
   /** @inheritDoc */
-  addProperties(message) {
+  extendMessage(message) {
     return message;
   }
 }

@@ -16,16 +16,28 @@
 
 /* eslint-disable quotes */
 
-const TestAdapter = require('../../src/adapters/test-adapter');
+const Adapter = require('../../src/adapters/adapter');
 const BotTextMessage = require('../../src/messages/bot-text-message');
 
-describe('TestAdapter', () => {
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+describe('Adapter', () => {
   test('should add properties to the json message', async () => {
     const message = new BotTextMessage('message');
-    const extended = new TestAdapter({}).extendMessage(message.toJson('USER'));
-    expect(Object.keys(extended)).toEqual(['type', 'sender', 'user', 'payload']);
-    expect(extended).not.toHaveProperty('id');
+    const extended = new Adapter({}).extendMessage(message.toJson('USER'));
+    expect(Object.keys(extended)).toEqual(['id', 'timestamp', 'type', 'sender', 'user', 'payload']);
+    expect(extended).toHaveProperty('user', 'USER');
+    expect(extended).toHaveProperty('payload.value', 'message');
     expect(extended).not.toHaveProperty('adapter');
-    expect(extended).not.toHaveProperty('timestamp');
+  });
+
+  test('should generate an uuid', async () => {
+    const uuid = new Adapter({}).getMessageUUID();
+    expect(uuid).toMatch(UUID_REGEX);
+  });
+
+  test('should generate a timestamp', async () => {
+    const timestamp = new Adapter({}).getMessageTimestamp();
+    expect(typeof timestamp).toBe('number');
   });
 });

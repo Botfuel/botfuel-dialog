@@ -22,11 +22,11 @@ const BotTextMessage = require('../../src/messages/bot-text-message');
 describe('ShellAdapter', () => {
   test('should add properties to the json message', async () => {
     const message = new BotTextMessage('message');
-    const extended = new ShellAdapter({}).addProperties(message.toJson('USER'));
+    const extended = new ShellAdapter({}).extendMessage(message.toJson('USER'));
     expect(Object.keys(extended)).toEqual([
       'id',
-      'adapter',
       'timestamp',
+      'adapter',
       'type',
       'sender',
       'user',

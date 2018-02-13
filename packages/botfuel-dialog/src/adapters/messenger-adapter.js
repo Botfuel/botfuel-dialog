@@ -15,8 +15,6 @@
  */
 
 const rp = require('request-promise-native');
-const uuidv4 = require('uuid/v4');
-const { extend } = require('lodash');
 const logger = require('logtown')('MessengerAdapter');
 const PostbackMessage = require('../messages/postback-message');
 const UserImageMessage = require('../messages/user-image-message');
@@ -297,15 +295,13 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /** @inheritDoc */
-  addProperties(message) {
-    return extend(
-      {
-        id: uuidv4(),
-        adapter: 'messenger',
-        timestamp: Date.now(),
-      },
-      message,
-    );
+  extendMessage(message) {
+    return {
+      id: this.getMessageUUID(),
+      timestamp: this.getMessageTimestamp(),
+      adapter: 'messenger',
+      ...message,
+    };
   }
 }
 
