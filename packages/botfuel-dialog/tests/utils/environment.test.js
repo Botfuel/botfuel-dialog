@@ -21,6 +21,13 @@ const MissingCredentialsError = require('../../src/errors/missing-credentials-er
 const buildConfig = configPart => Object.assign({}, defaultConfig, configPart);
 
 describe('Environment utils', () => {
+  describe('When BOTFUEL_APP_TOKEN, BOTFUEL_APP_KEY, BOTFUEL_APP_ID are defined', () => {
+    test('should not throw an error when using spellchecking or qna', async () => {
+      const config = buildConfig({ qna: true, spellchecking: true });
+      expect(() => checkCredentials(config)).not.toThrowError(MissingCredentialsError);
+    });
+  });
+
   describe('When BOTFUEL_APP_TOKEN is not defined', () => {
     beforeAll(() => {
       delete process.env.BOTFUEL_APP_TOKEN;
@@ -46,14 +53,17 @@ describe('Environment utils', () => {
 
     test('should throw an error when using botfuel QnA', async () => {
       const config = buildConfig({ qna: true });
-      const f = () => checkCredentials(config);
-      expect(f).toThrowError(MissingCredentialsError);
+      expect(() => checkCredentials(config)).toThrowError(MissingCredentialsError);
     });
 
     test('should throw an error when using spellchecking service', async () => {
       const config = buildConfig({ spellchecking: true });
-      const f = () => checkCredentials(config);
-      expect(f).toThrowError(MissingCredentialsError);
+      expect(() => checkCredentials(config)).toThrowError(MissingCredentialsError);
+    });
+
+    test('should not throw an error when not using spellchecking or qna', async () => {
+      const config = buildConfig({});
+      expect(() => checkCredentials(config)).not.toThrowError(MissingCredentialsError);
     });
   });
 
@@ -72,6 +82,11 @@ describe('Environment utils', () => {
       const config = buildConfig({ spellchecking: true });
       const f = () => checkCredentials(config);
       expect(f).toThrowError(MissingCredentialsError);
+    });
+
+    test('should not throw an error when not using spellchecking or qna', async () => {
+      const config = buildConfig({});
+      expect(() => checkCredentials(config)).not.toThrowError(MissingCredentialsError);
     });
   });
 });
