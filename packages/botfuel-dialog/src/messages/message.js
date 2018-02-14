@@ -27,7 +27,7 @@ class Message extends ValidObject {
    * @param {*} value - the message value
    * @param {Object} [options] - the message options
    */
-  constructor(type, sender, value, options) {
+  constructor(type, sender, value, options = null) {
     super();
     this.type = type;
     this.sender = sender;
