@@ -63,15 +63,17 @@ class Adapter {
    * Iterates over the bot messages and send them to the messaging platform.
    * @async
    * @param {Object[]} botMessages - the bot messages
+   * @param {Object} userMessage - the user message
    * @returns {Promise.<void>}
    */
-  async send(botMessages) {
+  async send(botMessages, userMessage) {
     logger.debug('send', botMessages);
     const context = {
       user: botMessages[0] && botMessages[0].user,
       brain: this.bot.brain,
       botMessages,
       config: this.bot.config,
+      userMessage,
     };
     await this.middlewareManager.out(context, async () => {
       for (const botMessage of botMessages) {
