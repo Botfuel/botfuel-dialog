@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const uuidv4 = require('uuid/v4');
 const logger = require('logtown')('Adapter');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 const MiddlewareManager = require('../middleware-manager');
@@ -29,7 +30,6 @@ class Adapter {
   constructor(bot) {
     logger.debug('constructor');
     this.bot = bot;
-    this.config = bot.config;
     this.middlewareManager = new MiddlewareManager(bot);
   }
 
@@ -78,7 +78,7 @@ class Adapter {
     await this.middlewareManager.out(context, async () => {
       for (const botMessage of botMessages) {
         // eslint-disable-next-line no-await-in-loop
-        await this.sendMessage(botMessage);
+        await this.sendMessage(this.extendMessage(botMessage));
       }
     });
   }
@@ -98,7 +98,7 @@ class Adapter {
       config: this.bot.config,
     };
     await this.middlewareManager.in(context, async () => {
-      await this.bot.respond(userMessage);
+      await this.bot.respond(this.extendMessage(userMessage));
     });
   }
 
@@ -122,8 +122,41 @@ class Adapter {
    * @param {Object} botMessage - the bot message
    * @returns {Promise.<void>}
    */
-  async sendMessage() {
+  async sendMessage(botMessage) {
+    logger.debug('sendMessage', botMessage);
     throw new MissingImplementationError();
+  }
+
+  /**
+   * Extends a message with extra properties
+   * @param {Object} message - bot or user message
+   * @returns {Object} the message extended with properties
+   */
+  extendMessage(message) {
+    logger.debug('extendMessage', message);
+    return {
+      id: this.getMessageUUID(),
+      timestamp: this.getMessageTimestamp(),
+      ...message,
+    };
+  }
+
+  /**
+   * Generates an uuid
+   * @returns {String} the uuid
+   */
+  getMessageUUID() {
+    logger.debug('getMessageUUID');
+    return uuidv4();
+  }
+
+  /**
+   * Generates a timestamp
+   * @returns {Number} the timestamp
+   */
+  getMessageTimestamp() {
+    logger.debug('getMessageTimestamp');
+    return Date.now();
   }
 }
 
