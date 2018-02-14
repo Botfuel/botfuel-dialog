@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-const fs = require('fs');
 const express = require('express');
 const exphbs = require('express-handlebars');
 const rp = require('request-promise-native');
 const bodyParser = require('body-parser');
 const logger = require('logtown')('WebAdapter');
-const Handlebars = require('handlebars');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 const Adapter = require('./adapter');
 
@@ -44,7 +42,7 @@ class WebAdapter extends Adapter {
     app.set('views', 'src/templates');
     this.createRoutes(app);
     const port = process.env.PORT || process.env.BOTFUEL_ADAPTER_PORT || 5000;
-    app.listen(port, () => logger.debug('run: listening on port', port));
+    app.listen(port, () => logger.info('run: listening on port', port));
   }
 
   /**
