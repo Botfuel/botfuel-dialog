@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-const Card = require('../../src/messages/card');
-const MessageError = require('../../src/errors/message-error');
+const Part = require('../../src/messages/part');
+const MissingImplementationError = require('../../src/errors/missing-implementation-error');
 
-describe('Card', () => {
-  test('should throw an exception when malformed string', async () => {
-    expect(() => new Card(null, null, []).validate()).toThrow(MessageError);
-  });
-
-  test('should throw an exception when malformed actions', async () => {
-    expect(() => new Card('title', 'http://domain.com', null).validate()).toThrow(MessageError);
-    expect(() => new Card('title', 'http://domain.com', ['not an action']).validate()).toThrow(
-      MessageError,
-    );
+describe('Part', () => {
+  test('should throw a missing implementation error', () => {
+    expect(() => new Part().toJson()).toThrow(MissingImplementationError);
   });
 });

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 - present, Botfuel (https://www.botfuel.io).
+ * Copyright (c) 2017 - present, Userfuel (https://www.botfuel.io).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,26 @@
  * limitations under the License.
  */
 
-const ActionsMessage = require('../../src/messages/actions-message');
-const Link = require('../../src/messages/link');
+const QuickrepliesMessage = require('../../src/messages/quickreplies-message');
 const MessageError = require('../../src/errors/message-error');
 
-describe('ActionsMessage', () => {
+describe('QuickrepliesMessage', () => {
   test('should throw an exception when malformed', async () => {
-    expect(() => new ActionsMessage([{}])).toThrow(MessageError);
+    expect(() => new QuickrepliesMessage("I'm not an array")).toThrow(MessageError);
+    expect(() => new QuickrepliesMessage(['message', 1])).toThrow(MessageError);
   });
 
   test('should generate the proper json', async () => {
-    const message = new ActionsMessage([new Link('Botfuel', 'https://www.botfuel.io/en')]);
+    const message = new QuickrepliesMessage(['yes', 'no'], { text: 'Are you an adult ?' });
     expect(message.toJson('USER')).toEqual({
-      type: 'actions',
+      type: 'quickreplies',
       sender: 'bot',
       user: 'USER',
       payload: {
-        value: [
-          {
-            type: 'link',
-            text: 'Botfuel',
-            value: 'https://www.botfuel.io/en',
-          },
-        ],
+        value: ['yes', 'no'],
+        options: {
+          text: 'Are you an adult ?',
+        },
       },
     });
   });
