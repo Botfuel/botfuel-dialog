@@ -34,7 +34,7 @@ BOTFUEL_APP_TOKEN=<...> yarn run clean
 
 ## Need help ?
 
-* See [**Getting Started**](https://docs.botfuel.io/dialog/getting-started) to learn how to run a bot in minutes.
+* See [**Getting Started**](https://docs.botfuel.io/dialog/tutorials/getting-started) to learn how to run a bot in minutes.
 * See [**Concepts**](https://docs.botfuel.io/dialog/concepts) for explanations about the internals of the SDK.
 
 ## License
