@@ -196,9 +196,10 @@ class Nlu {
     const entities = await this.extractor.compute(sentence);
     logger.debug('computeWithClassifier: entities', entities);
     let intents = await this.classifier.compute(sentence, entities);
+    logger.debug('computeWithClassifier: non filtered intents', intents);
     intents = await this.intentFilter(intents, context);
     intents = intents.slice(0, this.config.multiIntent ? 2 : 1);
-    logger.debug('computeWithClassifier: intents', intents);
+    logger.debug('computeWithClassifier: filtered intents', intents);
     return {
       intents,
       entities,
