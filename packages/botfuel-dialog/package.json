@@ -1,6 +1,6 @@
 {
   "name": "botfuel-dialog",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel Dialog",
@@ -49,6 +49,7 @@
     "node-dir": "^0.1.17",
     "request": "^2.82.0",
     "request-promise-native": "^1.0.5",
+    "uuid": "^3.2.1",
     "valid-url": "^1.0.9",
     "winston": "^2.4.0"
   },

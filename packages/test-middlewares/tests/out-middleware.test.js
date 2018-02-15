@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint prefer-arrow-callback: 'off' */
 
-module.exports = {
-  in: [
-    async (context, next, done) => {
-      const muted = await context.brain.userGet(context.userMessage.user, '_isMuted');
-      if (muted) {
-        await done();
-      } else {
-        await next();
-      }
-    },
-  ],
-  out: [
-    async (context, next) => {
-      await context.brain.userSet(context.userMessage.user, 'isOutMiddlewareWorking', true);
-      await next();
-    },
-  ],
-};
+const { Bot, UserTextMessage } = require('botfuel-dialog');
+const config = require('../test-config');
+
+describe('Out ', () => {
+  test('should set brain isOutMiddlewareWorking to true', async () => {
+    const bot = new Bot(config);
+    const userId = bot.adapter.userId;
+    await bot.play([new UserTextMessage('Hello')]);
+    expect(await bot.brain.userGet(userId, 'isOutMiddlewareWorking')).toBe(true);
+  });
+});
