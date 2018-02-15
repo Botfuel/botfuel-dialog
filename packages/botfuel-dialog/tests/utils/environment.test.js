@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const sinon = require('sinon');
 const { checkCredentials } = require('../../src/utils/environment');
 const { defaultConfig } = require('../../src/config');
 const MissingCredentialsError = require('../../src/errors/missing-credentials-error');
@@ -21,9 +22,15 @@ const MissingCredentialsError = require('../../src/errors/missing-credentials-er
 const buildConfig = configPart => Object.assign({}, defaultConfig, configPart);
 
 describe('Environment utils', () => {
+  const sandbox = sinon.sandbox.create();
+
+  afterAll(() => {
+    sandbox.restore();
+  });
+
   describe('When BOTFUEL_APP_TOKEN is not defined', () => {
-    beforeAll(() => {
-      delete process.env.BOTFUEL_APP_TOKEN;
+    beforeEach(() => {
+      sandbox.stub(process, 'env').value({ BOTFUEL_APP_TOKEN: undefined });
     });
 
     test('should throw an error when using botfuel adapter', async () => {
@@ -40,8 +47,8 @@ describe('Environment utils', () => {
   });
 
   describe('When BOTFUEL_APP_ID is not defined', () => {
-    beforeAll(() => {
-      delete process.env.BOTFUEL_APP_ID;
+    beforeEach(() => {
+      sandbox.stub(process, 'env').value({ BOTFUEL_APP_ID: undefined });
     });
 
     test('should throw an error when using botfuel QnA', async () => {
@@ -58,8 +65,8 @@ describe('Environment utils', () => {
   });
 
   describe('When BOTFUEL_APP_KEY is not defined', () => {
-    beforeAll(() => {
-      delete process.env.BOTFUEL_APP_KEY;
+    beforeEach(() => {
+      sandbox.stub(process, 'env').value({ BOTFUEL_APP_KEY: undefined });
     });
 
     test('should throw an error when using botfuel QnA', async () => {
