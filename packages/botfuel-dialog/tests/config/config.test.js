@@ -45,4 +45,8 @@ describe('Config', () => {
     const resolved = resolveConfigFile();
     expect(resolved).toEqual({});
   });
+
+  test('should throw an error when file not exists', () => {
+    expect(() => resolveConfigFile('invalid')).toThrow();
+  });
 });
