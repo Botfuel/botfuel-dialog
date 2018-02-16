@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+const sinon = require('sinon');
+const Brain = require('../../src/brains/brain');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const MongoBrain = require('../../src/brains/mongo-brain');
+const MissingCredentialsError = require('../../src/errors/missing-credentials-error');
 
 // db label
 const MEMORY_BRAIN_LABEL = 'memory';
@@ -24,7 +27,14 @@ const MONGO_BRAIN_LABEL = 'mongo';
 const USER_ID = 'USER_TEST';
 
 const brainTest = (brainLabel) => {
+  let sandbox;
   let brain;
+
+  beforeAll(() => {
+    if (brainLabel === MONGO_BRAIN_LABEL) {
+      sandbox = sinon.sandbox.create();
+    }
+  });
 
   beforeEach(async () => {
     switch (brainLabel) {
@@ -45,11 +55,18 @@ const brainTest = (brainLabel) => {
   afterAll(async () => {
     if (brainLabel === MONGO_BRAIN_LABEL) {
       await brain.dropDatabase();
+      sandbox.restore();
     }
   });
 
   test('adds a user', async () => {
     await brain.addUser(USER_ID);
+    const brainHasUser = await brain.hasUser(USER_ID);
+    expect(brainHasUser).toBe(true);
+  });
+
+  test('adds a user if not exists', async () => {
+    await brain.initUserIfNecessary(USER_ID);
     const brainHasUser = await brain.hasUser(USER_ID);
     expect(brainHasUser).toBe(true);
   });
@@ -85,6 +102,15 @@ const brainTest = (brainLabel) => {
 
   test('get last user conversation', async () => {
     await brain.addUser(USER_ID);
+    const conversation = await brain.getLastConversation(USER_ID);
+    const { _dialogs } = conversation;
+    expect(conversation).not.toBe(null);
+    expect(_dialogs.stack).toHaveLength(0);
+  });
+
+  test('get last user conversation when no conversation', async () => {
+    await brain.addUser(USER_ID);
+    await brain.userSet(USER_ID, 'conversations', []);
     const conversation = await brain.getLastConversation(USER_ID);
     const { _dialogs } = conversation;
     expect(conversation).not.toBe(null);
@@ -154,11 +180,57 @@ const brainTest = (brainLabel) => {
     expect(dialogs.previous).toHaveLength(0);
   });
 
+  test('start a new conversation', async () => {
+    const dialogsData = {
+      isNewConversation: true,
+      stack: [{ name: 'greetings', entities: [] }],
+      previous: [],
+    };
+    await brain.addUser(USER_ID);
+    await brain.addConversation(USER_ID);
+    await brain.setDialogs(USER_ID, dialogsData);
+    const dialogs = await brain.getDialogs(USER_ID);
+    const conversations = await brain.userGet(USER_ID, 'conversations');
+    expect(conversations.length).toEqual(3);
+    expect(dialogs.stack).toHaveLength(1);
+    expect(dialogs.stack[0].name).toBe('greetings');
+    expect(dialogs.previous).toHaveLength(0);
+  });
+
   test('should set and get value', async () => {
     await brain.setValue('test', 'hello');
     const value = await brain.getValue('test');
     expect(value).toEqual('hello');
   });
+
+  test('should throw an error when adding a user that already exists', async () => {
+    try {
+      await brain.addUser(USER_ID);
+      await brain.addUser(USER_ID);
+    } catch (e) {
+      expect(e.message).toEqual('An user with this id for this bot already exists');
+    }
+  });
+
+  test('should throw an error when getting a non existing user', async () => {
+    try {
+      await brain.getUser(USER_ID);
+    } catch (e) {
+      expect(e.message).toEqual('User does not exist');
+    }
+  });
+
+  if (brainLabel === MONGO_BRAIN_LABEL) {
+    test('should return the env var mongodb uri provided', () => {
+      sandbox.stub(process, 'env').value({ MONGODB_URI: 'mongodb://localhost/test' });
+      expect(brain.getMongoDbUri()).toEqual('mongodb://localhost/test');
+    });
+
+    test('should throw an error when no botfuel app token provided', () => {
+      sandbox.stub(process, 'env').value({ BOTFUEL_APP_TOKEN: undefined });
+      expect(() => brain.getMongoDbUri()).toThrow(MissingCredentialsError);
+    });
+  }
 };
 
 describe('Brains', () => {
@@ -167,5 +239,94 @@ describe('Brains', () => {
   });
   describe('MemoryBrain', () => {
     brainTest(MEMORY_BRAIN_LABEL);
+  });
+  describe('Brain', () => {
+    describe('Should throw missing implementation error for methods', () => {
+      test('setValue', async () => {
+        try {
+          await new Brain().setValue();
+        } catch (e) {
+          expect(e.message).toEqual('Not implemented!');
+        }
+      });
+
+      test('getValue', async () => {
+        try {
+          await new Brain().getValue();
+        } catch (e) {
+          expect(e.message).toEqual('Not implemented!');
+        }
+      });
+
+      test('conversationSet', async () => {
+        try {
+          await new Brain().conversationSet();
+        } catch (e) {
+          expect(e.message).toEqual('Not implemented!');
+        }
+      });
+
+      test('userSet', async () => {
+        try {
+          await new Brain().userSet();
+        } catch (e) {
+          expect(e.message).toEqual('Not implemented!');
+        }
+      });
+
+      test('getUser', async () => {
+        try {
+          await new Brain().getUser();
+        } catch (e) {
+          expect(e.message).toEqual('Not implemented!');
+        }
+      });
+
+      test('addConversation', async () => {
+        try {
+          await new Brain().addConversation();
+        } catch (e) {
+          expect(e.message).toEqual('Not implemented!');
+        }
+      });
+
+      test('getLastConversation', async () => {
+        try {
+          await new Brain().getLastConversation();
+        } catch (e) {
+          expect(e.message).toEqual('Not implemented!');
+        }
+      });
+
+      test('addUser', async () => {
+        try {
+          await new Brain().addUser();
+        } catch (e) {
+          expect(e.message).toEqual('Not implemented!');
+        }
+      });
+
+      test('hasUser', async () => {
+        try {
+          await new Brain().hasUser();
+        } catch (e) {
+          expect(e.message).toEqual('Not implemented!');
+        }
+      });
+
+      test('clean', async () => {
+        try {
+          await new Brain().clean();
+        } catch (e) {
+          expect(e.message).toEqual('Not implemented!');
+        }
+      });
+    });
+
+    describe('Should no throw error for methods', () => {
+      test('init', async () => {
+        expect(async () => await new Brain().init()).not.toThrow();
+      });
+    });
   });
 });
