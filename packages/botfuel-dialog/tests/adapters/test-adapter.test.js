@@ -16,16 +16,29 @@
 
 /* eslint-disable quotes */
 
+const Bot = require('../../src/bot');
 const TestAdapter = require('../../src/adapters/test-adapter');
 const BotTextMessage = require('../../src/messages/bot-text-message');
+const UserTextMessage = require('../../src/messages/user-text-message');
+
+const userId = 'USER_TEST';
 
 describe('TestAdapter', () => {
   test('should add properties to the json message', async () => {
     const message = new BotTextMessage('message');
-    const extended = new TestAdapter({}).extendMessage(message.toJson('USER'));
+    const extended = new TestAdapter({}).extendMessage(message.toJson(userId));
     expect(Object.keys(extended)).toEqual(['type', 'sender', 'user', 'payload']);
     expect(extended).not.toHaveProperty('id');
     expect(extended).not.toHaveProperty('adapter');
     expect(extended).not.toHaveProperty('timestamp');
+  });
+
+  test('should play user messages', async () => {
+    const messages = [new UserTextMessage('message1'), new UserTextMessage('message2')];
+    const bot = new Bot({ adapter: 'test' });
+    await bot.init();
+    await bot.adapter.play(messages);
+    const conversation = await bot.brain.getLastConversation(userId);
+    expect(conversation._dialogs.previous.length).toBe(2);
   });
 });
