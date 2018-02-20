@@ -325,7 +325,7 @@ describe('Brains', () => {
 
     describe('Should no throw error for methods', () => {
       test('init', async () => {
-        expect(async () => await new Brain().init()).not.toThrow();
+        expect(async () => new Brain().init()).not.toThrow();
       });
     });
   });

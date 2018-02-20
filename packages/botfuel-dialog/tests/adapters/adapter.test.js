@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-/* eslint-disable quotes */
+/* eslint-disable quotes, no-underscore-dangle */
 
 const Bot = require('../../src/bot');
 const Adapter = require('../../src/adapters/adapter');

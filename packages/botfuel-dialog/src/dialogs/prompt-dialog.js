@@ -53,7 +53,8 @@ class PromptDialog extends Dialog {
    * Attempt to match an entity parameter with raw entities candidates extracted from a message.
    * We apply the reducer function to a raw entity candidate until we run out of candidates or
    * if the isFulfilled condition is met.
-   * @param {Object} dialogParameter - entity parameter we want to match with one or more raw entities
+   * @param {Object} dialogParameter - entity parameter we want to match with one or
+   * more raw entities
    * @param {Array<Object>} candidates - array of raw entities extracted
    * from a message: {
    *     dim: String,
