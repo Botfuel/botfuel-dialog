@@ -1,0 +1,16 @@
+GET /nlp/entity-extraction?sentence=Ask%20me%20a%20question.&dimensions=color
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Wed, 14 Feb 2018 13:04:28 GMT
+content-type: application/json; charset=utf-8
+transfer-encoding: chunked
+connection: close
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-origin: *
+access-control-allow-headers: content-type, origin, accept, Botfuel-Bot-Locale
+via: 1.1 vegur
+
+[]
