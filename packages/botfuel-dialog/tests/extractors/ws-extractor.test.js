@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
+const sinon = require('sinon');
 const WsExtractor = require('../../src/extractors/ws-extractor');
 const MissingCredentialsError = require('../../src/errors/missing-credentials-error');
-const AuthenticationError = require('../../src/errors/authentication-error');
 
 describe('WsExtractor', () => {
+  const sandbox = sinon.sandbox.create();
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   test('should properly extract', async () => {
     const extractor = new WsExtractor({ locale: 'en' });
     const entities = await extractor.compute('I leave from Paris');
@@ -39,12 +45,12 @@ describe('WsExtractor', () => {
   });
 
   test('should throw an error when missing credentials', async () => {
-    delete process.env.BOTFUEL_APP_ID;
+    sandbox.stub(process, 'env').value({ BOTFUEL_APP_ID: undefined });
     expect(() => new WsExtractor({ locale: 'en' })).toThrow(MissingCredentialsError);
   });
 
   test('should throw an error when not valid credentials', async () => {
-    process.env.BOTFUEL_APP_ID = 'FakeId';
+    sandbox.stub(process, 'env').value({ BOTFUEL_APP_ID: 'FakeId', BOTFUEL_APP_KEY: 'FakeKey' });
     try {
       await new WsExtractor({ locale: 'en' }).compute('I leave from London');
     } catch (e) {

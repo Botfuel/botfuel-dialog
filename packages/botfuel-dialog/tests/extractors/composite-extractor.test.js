@@ -16,8 +16,6 @@
 
 const CompositeExtractor = require('../../src/extractors/composite-extractor');
 const WsExtractor = require('../../src/extractors/ws-extractor');
-const MissingCredentialsError = require('../../src/errors/missing-credentials-error');
-const AuthenticationError = require('../../src/errors/authentication-error');
 
 describe('CompositeExtractor', () => {
   test('should properly extract', async () => {
@@ -38,20 +36,4 @@ describe('CompositeExtractor', () => {
       },
     ]);
   });
-
-  /**
-  test('should throw an error when missing credentials', async () => {
-    delete process.env.BOTFUEL_APP_ID;
-    expect(() => new WsExtractor({ locale: 'en' })).toThrow(MissingCredentialsError);
-  });
-
-  test('should throw an error when not valid credentials', async () => {
-    process.env.BOTFUEL_APP_ID = 'FakeId';
-    try {
-      await new WsExtractor({ locale: 'en' }).compute('I leave from London');
-    } catch (e) {
-      expect(e.message).toMatch('Could not authenticate!');
-    }
-  });
-   * */
 });
