@@ -53,7 +53,7 @@ class PromptDialog extends Dialog {
    * Attempt to match an entity parameter with raw entities candidates extracted from a message.
    * We apply the reducer function to a raw entity candidate until we run out of candidates or
    * if the isFulfilled condition is met.
-   * @param {Object} parameter - entity parameter we want to match with one or more raw entities
+   * @param {Object} dialogParameter - entity parameter we want to match with one or more raw entities
    * @param {Array<Object>} candidates - array of raw entities extracted
    * from a message: {
    *     dim: String,
@@ -175,12 +175,18 @@ class PromptDialog extends Dialog {
           });
           logger.debug('computeEntities: after matchParameterWithCandidates', {
             newValue,
-            remainingCandidates,
+            newRemainingCandidates,
           });
-          const isFulfilled = dialogParameter.isFulfilled(newValue, { dialogEntities });
+          const newDialogEntities = {
+            ...matchedEntities,
+            [name]: newValue,
+          };
+          const isFulfilled = dialogParameter.isFulfilled(newValue, {
+            dialogEntities: newDialogEntities,
+          });
           return {
             // Store the found entities here as a { <entityName>: <entity> } map
-            matchedEntities: { ...matchedEntities, [name]: newValue },
+            matchedEntities: newDialogEntities,
             remainingCandidates: newRemainingCandidates,
             // If an entity matching the one we are expecting was found,
             // remove it from missing entities

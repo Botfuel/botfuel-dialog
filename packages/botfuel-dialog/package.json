@@ -1,6 +1,6 @@
 {
   "name": "botfuel-dialog",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel Dialog",
@@ -78,7 +78,8 @@
     "prettier-eslint": "^8.3.1",
     "prettier-eslint-cli": "^4.6.1",
     "regenerator-runtime": "^0.11.1",
-    "replay": "^2.1.4"
+    "replay": "^2.1.4",
+    "sinon": "^4.3.0"
   },
   "engines": {
     "node": "8.x"

@@ -1,10 +1,10 @@
 # Botfuel Dialog
 
-[![Build Status](https://travis-ci.org/Botfuel/botfuel-dialog.svg?branch=master)](https://travis-ci.org/Botfuel/botfuel-dialog)
+[![CircleCI](https://circleci.com/gh/Botfuel/botfuel-dialog.svg?style=svg)](https://circleci.com/gh/Botfuel/botfuel-dialog)
 
 Build highly conversational bots with Botfuel Dialog.
 
-Read [**Getting Started**](https://docs.botfuel.io/dialog/getting-started) to learn how to run a bot in minutes.
+Read [**Getting Started**](https://docs.botfuel.io/dialog/tutorials/getting-started) to learn how to run a bot in minutes.
 See some [sample bots](https://github.com/topics/botfuel-dialog-samples) written with Botfuel Dialog.
 
 For more explanations about the internals of Botfuel Dialog, see [**Concepts**](https://docs.botfuel.io/dialog/concepts).
