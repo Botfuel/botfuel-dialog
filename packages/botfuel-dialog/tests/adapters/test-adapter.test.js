@@ -21,12 +21,11 @@ const TestAdapter = require('../../src/adapters/test-adapter');
 const BotTextMessage = require('../../src/messages/bot-text-message');
 const UserTextMessage = require('../../src/messages/user-text-message');
 
-const userId = 'USER_TEST';
-
 describe('TestAdapter', () => {
   test('should add properties to the json message', async () => {
     const message = new BotTextMessage('message');
-    const extended = new TestAdapter({}).extendMessage(message.toJson(userId));
+    const adapter = new TestAdapter({});
+    const extended = adapter.extendMessage(message.toJson(adapter.userId));
     expect(Object.keys(extended)).toEqual(['type', 'sender', 'user', 'payload']);
     expect(extended).not.toHaveProperty('id');
     expect(extended).not.toHaveProperty('adapter');
@@ -38,7 +37,7 @@ describe('TestAdapter', () => {
     const bot = new Bot({ adapter: 'test' });
     await bot.init();
     await bot.adapter.play(messages);
-    const conversation = await bot.brain.getLastConversation(userId);
+    const conversation = await bot.brain.getLastConversation(bot.adapter.userId);
     expect(conversation._dialogs.previous.length).toBe(2);
   });
 });
