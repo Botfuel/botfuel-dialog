@@ -15,13 +15,11 @@
  */
 
 const Fs = require('fs');
-const util = require('util');
+const crypto = require('crypto');
 const fsExtra = require('fs-extra');
 const Natural = require('natural');
 const logger = require('logtown')('Classifier');
 const { getConfiguration } = require('./config');
-
-const fsStat = util.promisify(Fs.stat);
 
 const INTENT_SUFFIX = '.intent';
 
@@ -37,6 +35,7 @@ class Classifier {
     this.config = getConfiguration(config);
     logger.debug('constructor', config);
     this.modelFilename = `${this.config.path}/models/model.json`;
+    this.modelMetadataFilename = `${this.config.path}/models/.metadata`;
     this.intentDirname = `${this.config.path}/src/intents`;
     this.classifier = null;
     this.getStemmer().attach();
@@ -99,16 +98,39 @@ class Classifier {
   async isModelUpToDate(modelFilePath, intentsDirPath) {
     logger.debug('isModelUpToDate');
     const intentFiles = Fs.readdirSync(intentsDirPath, 'utf8');
-    const filteredIntents = intentFiles.filter(
-      file => file.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX,
-    );
-    const [{ mtimeMs: modelLastModifiedTime }, ...fileStats] = await Promise.all([
-      fsStat(modelFilePath),
-      ...filteredIntents.map(intentFile => fsStat(`${intentsDirPath}/${intentFile}`)),
-    ]);
-    return fileStats
-      .map(file => file.mtimeMs)
-      .every(timestamp => timestamp < modelLastModifiedTime);
+    const intentsMap = intentFiles
+      .filter(file => file.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX)
+      .map(fileName => ({
+        fileName,
+        intentName: fileName.substring(0, fileName.length - INTENT_SUFFIX.length),
+      }))
+      .reduce(
+        (map, intent) =>
+          Object.assign(map, {
+            [intent.intentName]: Fs.readFileSync(
+              `${intentsDirPath}/${intent.fileName}`,
+              'utf8',
+            ).toString(),
+          }),
+        {},
+      );
+
+    const hash = crypto
+      .createHash('sha256')
+      .update(JSON.stringify(intentsMap))
+      .digest('hex');
+
+    try {
+      const storedHash = Fs.readFileSync(this.modelMetadataFilename, 'utf8').toString();
+
+      return hash === storedHash;
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        return false;
+      }
+
+      throw err;
+    }
   }
 
   /**
@@ -162,6 +184,8 @@ class Classifier {
     logger.debug('train');
     // Make sure model file exists
     await fsExtra.ensureFile(this.modelFilename);
+    const intentsMap = {};
+
     this.classifier = new Natural.LogisticRegressionClassifier(this.getStemmer());
     Fs.readdirSync(this.intentDirname, 'utf8')
       .filter(fileName => fileName.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX)
@@ -169,16 +193,30 @@ class Classifier {
         logger.debug('train: filename', fileName);
         const intent = fileName.substring(0, fileName.length - INTENT_SUFFIX.length);
         logger.debug('train: intent', intent);
-        return Fs.readFileSync(`${this.intentDirname}/${fileName}`, 'utf8')
-          .toString()
-          .split('\n')
-          .map((line) => {
-            logger.debug('train: line', line);
-            const features = this.computeFeatures(line, null); // TODO: compute also entities
-            logger.debug('train: features', features);
-            return this.classifier.addDocument(features, intent);
-          });
+
+        const content = Fs.readFileSync(`${this.intentDirname}/${fileName}`, 'utf8').toString();
+
+        return content.split('\n').map((line) => {
+          logger.debug('train: line', line);
+          const features = this.computeFeatures(line, null); // TODO: compute also entities
+          logger.debug('train: features', features);
+
+          intentsMap[intent] = content;
+
+          return this.classifier.addDocument(features, intent);
+        });
       });
+
+    // Write hash of all intents files in .metadata
+    await fsExtra.ensureFile(this.modelMetadataFilename);
+    await fsExtra.writeFile(
+      this.modelMetadataFilename,
+      crypto
+        .createHash('sha256')
+        .update(JSON.stringify(intentsMap))
+        .digest('hex'),
+    );
+
     logger.debug('train: training');
     this.classifier.train();
     logger.debug('train: trained');
