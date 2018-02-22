@@ -80,26 +80,52 @@ class MongoBrain extends Brain {
   }
 
   /** @inheritdoc */
-  async getUser(userId) {
+  async getUser(userId, ...params) {
     logger.debug('getUser', userId);
-    return this.users.findOne({ userId });
+
+    const user = await this.users.findOne({ userId }, ...params);
+
+    if (!user) {
+      throw new Error('User does not exist');
+    }
+
+    return user;
+  }
+
+  /**
+   * Wraps mongodb findOneAndUpdate and throws if user does not exist
+   * @async
+   * @abstract
+   * @param {String} userId - user id
+   * @returns {Promise.<Object>} the user
+   */
+  async findUserAndUpdate(...params) {
+    const user = await this.users.findOneAndUpdate(...params);
+
+    if (!user) {
+      throw new Error('User does not exist');
+    }
+
+    return user;
   }
 
   /** @inheritdoc */
   async userSet(userId, key, value) {
     logger.debug('userSet', userId, key, value);
-    const result = await this.users.findOneAndUpdate(
+    const result = await this.findUserAndUpdate(
       { userId },
       { $set: { [key]: value } },
       { returnOriginal: false },
     );
+
     return result.value;
   }
 
   /** @inheritdoc */
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
-    const user = await this.users.findOne({ userId }, { conversations: { $slice: 1 } });
+    const user = await this.getUser(userId, { conversations: { $slice: 1 } });
+
     const conversation = user.conversations[0];
     return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
   }
@@ -107,11 +133,12 @@ class MongoBrain extends Brain {
   /** @inheritdoc */
   async addConversation(userId) {
     logger.debug('addConversation', userId);
-    const result = await this.users.findOneAndUpdate(
+    const result = await this.findUserAndUpdate(
       { userId },
       { $push: { conversations: { $each: [this.getConversationInitValue()], $position: 0 } } },
       { returnOriginal: false },
     );
+
     return result.value.conversations[0];
   }
 
@@ -119,11 +146,12 @@ class MongoBrain extends Brain {
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
     const lastConversation = await this.getLastConversation(userId);
-    const result = await this.users.findOneAndUpdate(
+    const result = await this.findUserAndUpdate(
       { userId, 'conversations.createdAt': lastConversation.createdAt },
       { $set: { [`conversations.0.${key}`]: value } },
       { returnOriginal: false, sort: { 'conversations.createdAt': -1 } },
     );
+
     return result.value.conversations[0];
   }
 
