@@ -17,7 +17,8 @@
 module.exports = {
   in: [
     async (context, next, done) => {
-      const muted = await context.brain.userGet(context.userMessage.user, '_isMuted');
+      const { user, brain, userMessage, config } = context; // eslint-disable-line no-unused-vars
+      const muted = await brain.userGet(user, '_isMuted');
       if (muted) {
         await done();
       } else {
@@ -27,7 +28,8 @@ module.exports = {
   ],
   out: [
     async (context, next) => {
-      await context.brain.userSet(context.userMessage.user, 'isOutMiddlewareWorking', true);
+      const { user, brain, botMessages, config, userMessage } = context; // eslint-disable-line no-unused-vars
+      await brain.userSet(user, 'isOutMiddlewareWorking', true);
       await next();
     },
   ],
