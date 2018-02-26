@@ -69,7 +69,7 @@ class Adapter {
   async send(botMessages, userMessage) {
     logger.debug('send', botMessages);
     const context = {
-      user: botMessages[0] && botMessages[0].user,
+      user: userMessage.user,
       brain: this.bot.brain,
       botMessages,
       config: this.bot.config,
@@ -93,6 +93,7 @@ class Adapter {
     logger.debug('handleMessage', userMessage);
     await this.initUserIfNecessary(userMessage.user);
     const context = {
+      user: userMessage.user,
       brain: this.bot.brain,
       userMessage,
       config: this.bot.config,
