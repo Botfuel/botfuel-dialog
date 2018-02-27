@@ -28,7 +28,7 @@ class MiddlewareManager {
    * @param {Function[]} [outMiddlewares] - an optional array of middlewares
    */
   constructor(bot, inMiddlewares, outMiddlewares) {
-    logger.debug('constructor', bot, inMiddlewares, outMiddlewares);
+    logger.debug('constructor', inMiddlewares, outMiddlewares);
     this.inMiddlewares = inMiddlewares || [];
     this.outMiddlewares = outMiddlewares || [];
     if (bot.config) {
