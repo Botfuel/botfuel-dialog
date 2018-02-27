@@ -42,8 +42,8 @@ class DialogManager extends Resolver {
     return [
       `${this.path}/${name}-${this.kind}.${this.config.adapter}.js`,
       `${this.path}/${name}-${this.kind}.js`,
-      `${this.localPath}/${name}-${this.kind}.${this.config.adapter}.js`,
-      `${this.localPath}/${name}-${this.kind}.js`,
+      `${this.kindSdkPath}/${name}-${this.kind}.${this.config.adapter}.js`,
+      `${this.kindSdkPath}/${name}-${this.kind}.js`,
     ];
   }
 

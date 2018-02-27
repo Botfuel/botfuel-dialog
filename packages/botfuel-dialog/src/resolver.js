@@ -31,7 +31,7 @@ class Resolver {
     this.config = config;
     this.kind = kind;
     this.path = `${config.path}/src/${kind}s`;
-    this.localPath = `${__dirname}/${kind}s`;
+    this.kindSdkPath = `${__dirname}/${kind}s`;
   }
 
   /**
