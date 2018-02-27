@@ -26,6 +26,7 @@ const defaultConfig = {
   brain: 'memory',
   intentThreshold: 0.8,
   logger: 'info',
+  nlu: 'botfuel',
   multiIntent: false,
   conversationDuration: 86400000, // in ms
 };
