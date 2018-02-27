@@ -15,6 +15,7 @@
  */
 
 const Logger = require('logtown');
+const Spellchecking = require('botfuel-nlp-sdk').Spellchecking;
 const AdapterResolver = require('./adapter-resolver');
 const DialogManager = require('./dialog-manager');
 const MemoryBrain = require('./brains/memory-brain');
@@ -47,6 +48,7 @@ class Bot {
     logger.debug('constructor', this.config);
     checkCredentials(this.config);
     this.brain = this.getBrain(this.config);
+    this.spellchecking = null;
     this.nlu = new Nlu(this.config);
     this.dm = new DialogManager(this.brain, this.config);
     this.adapter = new AdapterResolver(this).resolve(this.config.adapter);
@@ -59,8 +61,22 @@ class Bot {
    * @returns {Promise.<void>}
    */
   async init() {
+    // Brain
     await this.brain.init();
+    // NLU
     await this.nlu.init();
+    // Spellchecking
+    if (this.config.spellchecking) {
+      if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
+        logger.error(
+          'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!',
+        );
+      }
+      this.spellchecking = new Spellchecking({
+        appId: process.env.BOTFUEL_APP_ID,
+        appKey: process.env.BOTFUEL_APP_KEY,
+      });
+    }
   }
 
   /**
@@ -173,7 +189,11 @@ class Bot {
    */
   async respondWhenText(userMessage) {
     logger.debug('respondWhenText', userMessage);
-    const { intents, entities } = await this.nlu.compute(userMessage.payload.value, {
+    let sentence = userMessage.payload.value;
+    if (this.config.spellchecking) {
+      sentence = (await this.spellcheck(sentence, this.config.spellchecking)).correctSentence;
+    }
+    const { intents, entities } = await this.nlu.compute(sentence, {
       brain: this.brain,
       userMessage,
     });
@@ -211,6 +231,27 @@ class Bot {
       entities: [{ url: userMessage.payload.value.url }],
     };
     await this.dm.executeDialogs(this.adapter, userMessage, [dialog]);
+  }
+
+  /**
+   * Spellchecks a sentence.
+   * @param {String} sentence - a sentence
+   * @param {String} key - a dictionary key
+   * @returns {Object} the spellchecking result
+   */
+  async spellcheck(sentence, key) {
+    logger.debug('spellcheck', sentence, key);
+    try {
+      const result = await this.spellchecking.compute({ sentence, key });
+      logger.debug('spellcheck: result', result);
+      return result;
+    } catch (error) {
+      logger.error('spellcheck: error');
+      if (error.statusCode === 403) {
+        throw new AuthenticationError();
+      }
+      throw error;
+    }
   }
 }
 

@@ -18,7 +18,6 @@ const fs = require('fs');
 const fsExtra = require('fs-extra');
 const dir = require('node-dir');
 const Qna = require('botfuel-qna-sdk');
-const Spellchecking = require('botfuel-nlp-sdk').Spellchecking;
 const logger = require('logtown')('Nlu');
 const AuthenticationError = require('./errors/authentication-error');
 const Classifier = require('./classifier');
@@ -38,7 +37,6 @@ class Nlu {
     this.config = config;
     this.extractor = null;
     this.qna = null;
-    this.spellchecking = null;
     this.classifier = null;
     this.intentFilter = async intents =>
       intents.filter(intent => intent.value > config.intentThreshold).map(intent => intent.name);
@@ -100,18 +98,6 @@ class Nlu {
         appKey: process.env.BOTFUEL_APP_KEY,
       });
     }
-    // Spellchecking
-    if (this.config.spellchecking) {
-      if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
-        logger.error(
-          'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!',
-        );
-      }
-      this.spellchecking = new Spellchecking({
-        appId: process.env.BOTFUEL_APP_ID,
-        appKey: process.env.BOTFUEL_APP_KEY,
-      });
-    }
   }
 
   /**
@@ -122,10 +108,6 @@ class Nlu {
    */
   async compute(sentence, context) {
     logger.debug('compute', sentence);
-    if (this.config.spellchecking) {
-      logger.debug('compute: spellchecking');
-      sentence = (await this.spellcheck(sentence, this.config.spellchecking)).correctSentence;
-    }
     if (this.config.qna) {
       logger.debug('compute: qna', this.config.qna);
       if (this.config.qna.when === 'before') {
@@ -204,27 +186,6 @@ class Nlu {
       intents,
       entities,
     };
-  }
-
-  /**
-   * Spellchecks a sentence.
-   * @param {String} sentence - a sentence
-   * @param {String} key - a dictionary key
-   * @returns {Object} the spellchecking result
-   */
-  async spellcheck(sentence, key) {
-    try {
-      logger.debug('spellcheck', sentence, key);
-      const result = await this.spellchecking.compute({ sentence, key });
-      logger.debug('spellcheck: result', result);
-      return result;
-    } catch (error) {
-      logger.error('Could not spellcheck!');
-      if (error.statusCode === 403) {
-        throw new AuthenticationError();
-      }
-      throw error;
-    }
   }
 }
 
