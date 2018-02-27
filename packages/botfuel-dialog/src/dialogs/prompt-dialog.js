@@ -16,7 +16,7 @@
 
 const omit = require('lodash/omit');
 const logger = require('logtown')('PromptDialog');
-const { filterIntersectingEntities, getEntityInitialValue } = require('../utils/entities');
+const { filterIntersectingEntities } = require('../utils/entities');
 const Dialog = require('./dialog');
 
 /**
@@ -73,35 +73,28 @@ class PromptDialog extends Dialog {
     // Check if the parameter is already fulfilled with its initial value
     // If so, we replace the fulfilled parameter’s entity
     // with the first candidate of the same dimension
-    const replaceFulfilledEntity =
-      parameter.isFulfilled(initialValue) && sameDimCandidates.length >= 1;
-    const chosenCandidate = sameDimCandidates[0];
-
-    return (replaceFulfilledEntity
-      ? filterIntersectingEntities(candidates, chosenCandidate)
-      : candidates
-    )
-      .filter(candidate => candidate.dim === parameter.dim)
-      .reduce(
-        ({ newValue, remainingCandidates }, candidate) => {
-          if (parameter.isFulfilled(newValue)) {
-            return { remainingCandidates, newValue };
-          }
-          const reducedValue = parameter.reducer(newValue, candidate);
-          return {
-            remainingCandidates: filterIntersectingEntities(remainingCandidates, candidate),
-            newValue: reducedValue === undefined ? null : reducedValue,
-          };
-        },
-        {
-          remainingCandidates: replaceFulfilledEntity
-            ? filterIntersectingEntities(candidates, chosenCandidate)
-            : candidates,
-          newValue: replaceFulfilledEntity
-            ? getEntityInitialValue(initialValue)(chosenCandidate)
-            : initialValue,
-        },
-      );
+    const replace = parameter.isFulfilled(initialValue) && sameDimCandidates.length >= 1;
+    if (replace) {
+      const chosenCandidate = sameDimCandidates[0];
+      candidates = filterIntersectingEntities(candidates, chosenCandidate);
+      if (Array.isArray(initialValue)) {
+        initialValue = [chosenCandidate];
+      } else {
+        initialValue = chosenCandidate;
+      }
+    }
+    return candidates.filter(candidate => candidate.dim === parameter.dim).reduce(
+      ({ newValue, remainingCandidates }, candidate) => {
+        if (parameter.isFulfilled(newValue)) {
+          return { newValue, remainingCandidates };
+        }
+        return {
+          newValue: parameter.reducer(newValue, candidate),
+          remainingCandidates: filterIntersectingEntities(remainingCandidates, candidate),
+        };
+      },
+      { newValue: initialValue, remainingCandidates: candidates },
+    );
   }
 
   /**
