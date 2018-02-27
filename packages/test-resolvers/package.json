@@ -1,0 +1,33 @@
+{
+  "name": "test-resolvers",
+  "version": "2.1.4",
+  "private": true,
+  "author": "sysadmin@botfuel.io",
+  "description": "Provide minimal examples for resolutions of brains, dialogs, intents, nlus, views",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "botfuel-run",
+    "train": "botfuel-train",
+    "clean": "botfuel-clean",
+    "test": "jest",
+    "style": "eslint src; eslint tests"
+  },
+  "dependencies": {
+    "botfuel-dialog": "latest"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "babel-jest": "^21.2.0",
+    "eslint": "3.19.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-plugin-babel": "^4.1.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-mocha": "^4.11.0",
+    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-react": "^7.1.0"
+  },
+  "engines": {
+    "node": "8.x"
+  }
+}
