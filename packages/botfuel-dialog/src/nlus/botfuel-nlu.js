@@ -18,28 +18,26 @@ const fs = require('fs');
 const fsExtra = require('fs-extra');
 const dir = require('node-dir');
 const Qna = require('botfuel-qna-sdk');
-const logger = require('logtown')('Nlu');
-const AuthenticationError = require('./errors/authentication-error');
-const Classifier = require('./classifier');
-const BooleanExtractor = require('./extractors/boolean-extractor');
-const CompositeExtractor = require('./extractors/composite-extractor');
+const logger = require('logtown')('BotfuelNlu');
+const AuthenticationError = require('../errors/authentication-error');
+const Classifier = require('../classifier');
+const BooleanExtractor = require('../extractors/boolean-extractor');
+const CompositeExtractor = require('../extractors/composite-extractor');
+const Nlu = require('./nlu');
 
 /**
  * A nlu module (could be replaced by an external one).
  */
-class Nlu {
-  /**
-   * @constructor
-   * @param {Object} config - the bot config
-   */
-  constructor(config) {
-    logger.debug('constructor', config);
-    this.config = config;
+class BotfuelNlu extends Nlu {
+  /** @inheritdoc */
+  constructor(nluConfig) {
+    logger.debug('constructor', nluConfig);
+    super(nluConfig);
     this.extractor = null;
     this.qna = null;
     this.classifier = null;
     this.intentFilter = async intents =>
-      intents.filter(intent => intent.value > config.intentThreshold).map(intent => intent.name);
+      intents.filter(intent => intent.value > nluConfig.intentThreshold).map(intent => intent.name);
     const intentFilterPath = `${this.config.path}/src/intent-filter.js`;
     if (fsExtra.pathExistsSync(intentFilterPath)) {
       this.intentFilter = require(intentFilterPath);
@@ -75,12 +73,11 @@ class Nlu {
     return extractors;
   }
 
-  /**
-   * Initializes the Nlu module.
-   * @returns {Promise.<void>}
-   */
+  /** @inheritdoc */
   async init() {
     logger.debug('init');
+    super.init();
+
     // Extractors
     this.extractor = new CompositeExtractor({
       extractors: this.getExtractors(`${this.config.path}/src/extractors`),
@@ -100,12 +97,7 @@ class Nlu {
     }
   }
 
-  /**
-   * Computes intents and entities.
-   * @param {String} sentence - the sentence
-   * @param {Object} [context] - an optional context (brain and userMessage)
-   * @returns {Promise} a promise with entities and intents
-   */
+  /** @inheritdoc */
   async compute(sentence, context) {
     logger.debug('compute', sentence);
     if (this.config.qna) {
@@ -189,4 +181,4 @@ class Nlu {
   }
 }
 
-module.exports = Nlu;
+module.exports = BotfuelNlu;

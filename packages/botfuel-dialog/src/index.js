@@ -32,7 +32,8 @@ const FileCorpus = require('./corpora/file-corpus');
 const Brain = require('./brains/brain');
 const MemoryBrain = require('./brains/memory-brain');
 const MongoBrain = require('./brains/mongo-brain');
-const Nlu = require('./nlu');
+const Nlu = require('./nlus/nlu');
+const BotfuelNlu = require('./nlus/botfuel-nlu');
 const PromptDialog = require('./dialogs/prompt-dialog');
 const PromptView = require('./views/prompt-view');
 const TextDialog = require('./dialogs/text-dialog');
@@ -55,6 +56,7 @@ const QnasView = require('./views/qnas-view');
 module.exports = {
   Logger: Logger.getLogger,
   Bot,
+  BotfuelNlu,
   Brain,
   Classifier,
   Adapter,
