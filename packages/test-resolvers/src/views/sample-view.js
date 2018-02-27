@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-module.exports = {
-  adapter: 'test',
-  brain: 'custom',
-  conversationDuration: 86400000,
-  logger: 'error',
-  nlu: 'custom',
-  path: __dirname,
-};
+const { TextView } = require('botfuel-dialog');
+
+class SampleView extends TextView {
+  getTexts() {
+    return ['Hello human!'];
+  }
+}
+
+module.exports = SampleView;

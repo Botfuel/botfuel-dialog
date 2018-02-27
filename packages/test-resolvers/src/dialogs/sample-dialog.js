@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-module.exports = {
-  adapter: 'test',
-  brain: 'custom',
-  conversationDuration: 86400000,
-  logger: 'error',
-  nlu: 'custom',
-  path: __dirname,
-};
+const { TextDialog } = require('botfuel-dialog');
+
+class SampleDialog extends TextDialog {}
+
+module.exports = SampleDialog;

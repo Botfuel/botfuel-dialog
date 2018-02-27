@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-module.exports = {
-  adapter: 'test',
-  brain: 'custom',
-  conversationDuration: 86400000,
-  logger: 'error',
-  nlu: 'custom',
-  path: __dirname,
-};
+const { MemoryBrain } = require('botfuel-dialog');
+
+class CustomBrain extends MemoryBrain {
+  constructor(config) {
+    super(config);
+    this.secretSauce = true;
+  }
+}
+
+module.exports = CustomBrain;
