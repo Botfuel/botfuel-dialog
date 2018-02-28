@@ -23,11 +23,11 @@ const MissingImplementationError = require('../errors/missing-implementation-err
 class Nlu {
   /**
    * @constructor
-   * @param {Object} nluConfig - the NLU configuration (config.nlu)
+   * @param {Object} config - the configuration
    */
-  constructor(nluConfig) {
-    logger.debug('constructor', nluConfig);
-    this.nluConfig = nluConfig;
+  constructor(config) {
+    logger.debug('constructor', config);
+    this.config = config;
   }
 
   /**

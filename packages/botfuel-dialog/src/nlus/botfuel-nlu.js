@@ -30,14 +30,16 @@ const Nlu = require('./nlu');
  */
 class BotfuelNlu extends Nlu {
   /** @inheritdoc */
-  constructor(nluConfig) {
-    logger.debug('constructor', nluConfig);
-    super(nluConfig);
+  constructor(config) {
+    logger.debug('constructor', config);
+    super(config);
     this.extractor = null;
     this.qna = null;
     this.classifier = null;
     this.intentFilter = async intents =>
-      intents.filter(intent => intent.value > nluConfig.intentThreshold).map(intent => intent.name);
+      intents
+        .filter(intent => intent.value > config.nlu.intentThreshold)
+        .map(intent => intent.name);
     const intentFilterPath = `${this.config.path}/src/intent-filter.js`;
     if (fsExtra.pathExistsSync(intentFilterPath)) {
       this.intentFilter = require(intentFilterPath);
@@ -86,7 +88,7 @@ class BotfuelNlu extends Nlu {
     this.classifier = new Classifier(this.config);
     await this.classifier.init();
     // QnA
-    if (this.config.qna) {
+    if (this.config.nlu.qna) {
       if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
         logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the QnA service!');
       }
@@ -100,9 +102,9 @@ class BotfuelNlu extends Nlu {
   /** @inheritdoc */
   async compute(sentence, context) {
     logger.debug('compute', sentence);
-    if (this.config.qna) {
-      logger.debug('compute: qna', this.config.qna);
-      if (this.config.qna.when === 'before') {
+    if (this.config.nlu.qna) {
+      logger.debug('compute: qna', this.config.nlu.qna);
+      if (this.config.nlu.qna.when === 'before') {
         const qnaResult = await this.computeWithQna(sentence);
         if (qnaResult.intents.length > 0) {
           return qnaResult;
@@ -135,7 +137,7 @@ class BotfuelNlu extends Nlu {
     try {
       const qnas = await this.qna.getMatchingQnas({ sentence });
       logger.debug('computeWithQna: qnas', qnas);
-      const strict = this.config.qna.strict;
+      const strict = this.config.nlu.qna.strict;
       if ((strict && qnas.length === 1) || (!strict && qnas.length > 0)) {
         return {
           intents: ['qnas'],

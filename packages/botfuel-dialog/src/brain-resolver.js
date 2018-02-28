@@ -38,7 +38,7 @@ class BrainResolver extends Resolver {
 
   /** @inheritdoc */
   resolutionSucceeded(Resolved) {
-    return new Resolved(this.bot.config.brain);
+    return new Resolved(this.bot.config);
   }
 }
 

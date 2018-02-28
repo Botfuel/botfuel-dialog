@@ -15,8 +15,9 @@
  */
 
 module.exports = {
-  adapter: 'test',
-  conversationDuration: 86400000,
+  adapter: {
+    name: 'test',
+  },
   spellchecking: 'EN_1',
   logger: 'error',
   path: __dirname,

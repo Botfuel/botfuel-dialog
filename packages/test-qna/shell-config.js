@@ -15,8 +15,11 @@
  */
 
 module.exports = {
-  qna: {
-    when: 'after',
+  nlu: {
+    name: 'botfuel',
+    intentThreshold: 0.75,
+    qna: {
+      when: 'after',
+    },
   },
-  intentThreshold: 0.75,
 };

@@ -15,6 +15,8 @@
  */
 
 module.exports = {
-  adapter: 'messenger',
+  adapter: {
+    name: 'messenger',
+  },
   // logger: 'botfuel',
 };

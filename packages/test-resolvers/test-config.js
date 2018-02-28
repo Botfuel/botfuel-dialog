@@ -15,10 +15,18 @@
  */
 
 module.exports = {
-  adapter: 'test',
-  brain: 'custom',
-  conversationDuration: 86400000,
+  adapter: {
+    name: 'test',
+  },
+  brain: {
+    name: 'custom',
+    brainSecretSauce: 42,
+  },
   logger: 'error',
-  nlu: 'custom',
+  nlu: {
+    name: 'custom',
+    intentThreshold: 0.75,
+    nluSecretSauce: 43,
+  },
   path: __dirname,
 };

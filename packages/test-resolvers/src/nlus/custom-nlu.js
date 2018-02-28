@@ -19,7 +19,7 @@ const { BotfuelNlu } = require('botfuel-dialog');
 class CustomNlu extends BotfuelNlu {
   constructor(config) {
     super(config);
-    this.secretSauce = true;
+    this.secretSauce = config.nlu.nluSecretSauce;
   }
 }
 

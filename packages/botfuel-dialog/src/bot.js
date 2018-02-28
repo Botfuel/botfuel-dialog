@@ -46,11 +46,11 @@ class Bot {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
     checkCredentials(this.config);
-    this.brain = new BrainResolver(this).resolve(this.config.brain);
+    this.brain = new BrainResolver(this).resolve(this.config.brain.name);
     this.spellchecking = null;
-    this.nlu = new NluResolver(this).resolve(this.config.nlu);
+    this.nlu = new NluResolver(this).resolve(this.config.nlu.name);
     this.dm = new DialogManager(this.brain, this.config);
-    this.adapter = new AdapterResolver(this).resolve(this.config.adapter);
+    this.adapter = new AdapterResolver(this).resolve(this.config.adapter.name);
   }
 
   /**

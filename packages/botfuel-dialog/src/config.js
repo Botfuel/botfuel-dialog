@@ -22,13 +22,19 @@ const LoggerManager = require('./logger-manager');
 const defaultConfig = {
   path: process.cwd(),
   locale: 'en',
-  adapter: 'shell',
-  brain: 'memory',
-  intentThreshold: 0.8,
+  adapter: {
+    name: 'shell',
+  },
+  brain: {
+    name: 'memory',
+    conversationDuration: 86400000, // one day in ms
+  },
   logger: 'info',
-  nlu: 'botfuel',
+  nlu: {
+    name: 'botfuel',
+    intentThreshold: 0.8,
+  },
   multiIntent: false,
-  conversationDuration: 86400000, // in ms
 };
 
 const whitelist = Object.keys(defaultConfig).concat(['qna', 'spellchecking']);

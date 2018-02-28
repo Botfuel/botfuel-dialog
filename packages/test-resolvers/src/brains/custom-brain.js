@@ -19,7 +19,7 @@ const { MemoryBrain } = require('botfuel-dialog');
 class CustomBrain extends MemoryBrain {
   constructor(config) {
     super(config);
-    this.secretSauce = true;
+    this.secretSauce = config.brain.brainSecretSauce;
   }
 }
 

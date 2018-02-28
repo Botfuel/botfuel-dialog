@@ -22,13 +22,13 @@ describe('Resolutions', () => {
   test('should resolve brain', async () => {
     const bot = new Bot(config);
 
-    expect(bot.brain.secretSauce).toBe(true);
+    expect(bot.brain.secretSauce).toBe(42);
   });
 
   test('should resolve nlu', async () => {
     const bot = new Bot(config);
 
-    expect(bot.nlu.secretSauce).toBe(true);
+    expect(bot.nlu.secretSauce).toBe(43);
   });
 
   test('should respond to simple dialog with custom brain and nlu', async () => {
