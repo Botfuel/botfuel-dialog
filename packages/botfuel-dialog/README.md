@@ -35,7 +35,7 @@ yarn unit-test
 BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/<PACKAGE_NAME>
 ```
 
-Example: 
+Example:
 
 ```shell
 BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/test-qna
@@ -60,4 +60,4 @@ Publishing requires credentials because it runs integration tests beforehand.
 
 ## License
 
-See the [**License**](LICENSE.md) file.
+See the [**License**](packages/botfuel-dialog/LICENSE.md) file.
