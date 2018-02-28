@@ -33,12 +33,12 @@ class BrainResolver extends Resolver {
   /** @inheritdoc */
   getPaths(name) {
     logger.debug('getPaths', name);
-    return [`${this.path}/${name}-${this.kind}.js`, `${this.kindSdkPath}/${name}-${this.kind}.js`];
+    return [`${this.botPath}/${name}-${this.kind}.js`, `${this.sdkPath}/${name}-${this.kind}.js`];
   }
 
   /** @inheritdoc */
   resolutionSucceeded(Resolved) {
-    return new Resolved(this.bot.config);
+    return new Resolved(this.bot.config.brain);
   }
 }
 
