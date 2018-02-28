@@ -62,7 +62,8 @@ describe('Qna', () => {
               value: [
                 {
                   answer:
-                    'The invoice for your purchase will be sent along with your goods. You can also download an electronic version from your account.',
+                    'The invoice for your purchase will be sent along with your goods.
+                    You can also download an electronic version from your account.',
                 },
               ],
             },
@@ -73,7 +74,8 @@ describe('Qna', () => {
               value: [
                 {
                   answer:
-                    'Of curse! The invoice for your purchase will be sent along with your goods. You can also download an electronic version from your account.',
+                    'Of curse! The invoice for your purchase will be sent along with your goods.
+                    You can also download an electronic version from your account.',
                 },
               ],
             },
