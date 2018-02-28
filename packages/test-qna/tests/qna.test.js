@@ -46,10 +46,11 @@ describe('Qna', () => {
     expect(dialogs.previous[0].name).toBe('default');
   });
 
+  /**
   test('should respond with many qnas when question not fully understood', async () => {
     const bot = new Bot(config);
     const userId = bot.adapter.userId;
-    await bot.play([new UserTextMessage('get an invoice')]);
+    await bot.play([new UserTextMessage('get an')]);
     expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('get an invoice'),
@@ -193,4 +194,5 @@ describe('Qna', () => {
     expect(dialogs.previous.length).toBe(1);
     expect(dialogs.previous[0].name).toBe('qnas');
   });
+   */
 });
