@@ -66,7 +66,7 @@ const brainTest = (brainLabel) => {
   });
 
   test('adds a user if not exists', async () => {
-    await brain.initUserIfNecessary(USER_ID);
+    await brain.addUserIfNecessary(USER_ID);
     const brainHasUser = await brain.hasUser(USER_ID);
     expect(brainHasUser).toBe(true);
   });
@@ -242,17 +242,17 @@ describe('Brains', () => {
   });
   describe('Brain', () => {
     describe('Should throw missing implementation error for methods', () => {
-      test('setValue', async () => {
+      test('botSet', async () => {
         try {
-          await new Brain().setValue();
+          await new Brain().botSet();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
       });
 
-      test('getValue', async () => {
+      test('botGet', async () => {
         try {
-          await new Brain().getValue();
+          await new Brain().botGet();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
