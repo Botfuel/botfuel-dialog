@@ -26,7 +26,7 @@ const CompositeExtractor = require('../extractors/composite-extractor');
 const Nlu = require('./nlu');
 
 /**
- * A nlu module (could be replaced by an external one).
+ * Sample NLU module using NaturalJS.
  */
 class BotfuelNlu extends Nlu {
   /** @inheritdoc */

@@ -18,7 +18,7 @@ const logger = require('logtown')('Nlu');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 
 /**
- * A nlu module (could be replaced by an external one).
+ * Abstract class for a Natural Language Understanding (NLU) module.
  */
 class Nlu {
   /**
@@ -41,8 +41,9 @@ class Nlu {
   /**
    * Computes intents and entities.
    * @param {String} sentence - the sentence
-   * @param {Object} [context] - an optional context (brain and userMessage)
-   * @returns {Promise} a promise with entities and intents
+   * @param {Object} context - { brain, userMessage }
+   * @returns {Promise} a promise of { intents, entities } where intents is
+   *  of the form [ 'intent-name' ] and entities is of the form [ { dim, value } ]
    */
   async compute() {
     throw new MissingImplementationError();
