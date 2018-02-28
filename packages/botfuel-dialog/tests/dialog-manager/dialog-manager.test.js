@@ -35,7 +35,7 @@ describe('DialogManager', () => {
 
   beforeEach(async () => {
     await brain.clean();
-    await brain.initUserIfNecessary(TEST_USER);
+    await brain.addUserIfNecessary(TEST_USER);
   });
 
   test('when given a name, it should return the correct path', () => {

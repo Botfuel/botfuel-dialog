@@ -100,12 +100,12 @@ class MemoryBrain extends Brain {
   }
 
   /** @inheritdoc */
-  async getValue(key) {
+  async botGet(key) {
     return this.bot[key];
   }
 
   /** @inheritdoc */
-  async setValue(key, value) {
+  async botSet(key, value) {
     this.bot[key] = value;
     return value;
   }
