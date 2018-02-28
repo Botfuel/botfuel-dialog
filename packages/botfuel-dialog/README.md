@@ -60,4 +60,4 @@ Publishing requires credentials because it runs integration tests beforehand.
 
 ## License
 
-See the [**License**](packages/botfuel-dialog/LICENSE.md) file.
+See the [**License**](LICENSE.md) file.
