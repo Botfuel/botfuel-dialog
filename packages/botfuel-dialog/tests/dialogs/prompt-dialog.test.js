@@ -685,6 +685,40 @@ describe('PromptDialog', () => {
 
         expect(Object.keys(missingEntities)).toHaveLength(0);
       });
+
+      test('should complete the dialog when the last entity is fulfilled subsequently', () => {
+        const age = {
+          dim: 'number',
+          values: [{ value: 18, type: 'integer' }],
+          start: 9,
+          end: 10,
+          body: '25',
+        };
+        const wantAlcohol = {
+          dim: 'system:boolean',
+          values: [{ value: true, type: 'boolean' }],
+          start: 3,
+          end: 4,
+          body: 'yes',
+        };
+
+        const expectedEntities = {
+          age: {
+            dim: 'number',
+          },
+          wantAlcohol: {
+            dim: 'number',
+            isFulfilled: (entity, { dialogEntities }) =>
+              entity && dialogEntities.age && dialogEntities.age.values[0].value >= 18,
+          },
+        };
+
+        const { missingEntities } = prompt.computeEntities([age], expectedEntities, {
+          wantAlcohol,
+        });
+
+        expect(Object.keys(missingEntities)).toHaveLength(0);
+      });
     });
   });
 });

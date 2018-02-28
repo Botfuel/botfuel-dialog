@@ -35,7 +35,7 @@ yarn unit-test
 BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/<PACKAGE_NAME>
 ```
 
-Example: 
+Example:
 
 ```shell
 BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/test-qna
