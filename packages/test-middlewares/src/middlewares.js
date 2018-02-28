@@ -17,7 +17,7 @@
 module.exports = {
   in: [
     async (context, next, done) => {
-      const muted = await context.brain.userGet(context.userMessage.user, '_isMuted');
+      const muted = await context.brain.userGet(context.user, '_isMuted');
       if (muted) {
         await done();
       } else {
@@ -27,7 +27,7 @@ module.exports = {
   ],
   out: [
     async (context, next) => {
-      await context.brain.userSet(context.userMessage.user, 'isOutMiddlewareWorking', true);
+      await context.brain.userSet(context.user, 'isOutMiddlewareWorking', true);
       await next();
     },
   ],

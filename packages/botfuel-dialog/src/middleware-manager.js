@@ -50,7 +50,6 @@ class MiddlewareManager {
    * @returns {Promise.<void>}
    */
   async in(context, callback) {
-    logger.debug('in', context);
     await this.inRun(context, callback, 0, async () => {});
   }
 
@@ -66,7 +65,6 @@ class MiddlewareManager {
    * @returns {Promise.<void>}
    */
   async inRun(context, callback, index, done) {
-    logger.debug('inRun', context, index);
     if (this.inMiddlewares.length === index) {
       logger.debug('inRun: calling callback');
       await callback();
@@ -88,7 +86,6 @@ class MiddlewareManager {
    * @returns {Promise.<void>}
    */
   async out(context, callback) {
-    logger.debug('out', context);
     await this.outRun(context, callback, 0, async () => {});
   }
 
@@ -104,7 +101,6 @@ class MiddlewareManager {
    * @returns {Promise.<void>}
    */
   async outRun(context, callback, index, done) {
-    logger.debug('outRun', context, index);
     if (this.outMiddlewares.length === index) {
       logger.debug('outRun: calling callback');
       await callback();
