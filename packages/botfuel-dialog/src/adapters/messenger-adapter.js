@@ -97,8 +97,8 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /** @inheritDoc */
-  async initUserIfNecessary(userId) {
-    await super.initUserIfNecessary(userId);
+  async addUserIfNecessary(userId) {
+    await super.addUserIfNecessary(userId);
     await this.updateUserProfile(userId);
   }
 

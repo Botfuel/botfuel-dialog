@@ -64,24 +64,13 @@ class Brain {
   }
 
   /**
-   * Gets the init value for creating a new conversation.
-   * @returns {Object}
-   */
-  getConversationInitValue() {
-    return {
-      _dialogs: { stack: [], previous: [] },
-      createdAt: Date.now(),
-    };
-  }
-
-  /**
-   * Inits a user if necessary (if he does not exist).
+   * Adds a user if necessary (if he does not exist).
    * @async
    * @param {String} userId - the user id
    * @returns {Promise.<void>}
    */
-  async initUserIfNecessary(userId) {
-    logger.debug('initUserIfNecessary', userId);
+  async addUserIfNecessary(userId) {
+    logger.debug('addUserIfNecessary', userId);
     const userExists = await this.hasUser(userId);
     if (!userExists) {
       await this.addUser(userId);
@@ -117,6 +106,17 @@ class Brain {
    */
   async getUser() {
     throw new MissingImplementationError();
+  }
+
+  /**
+   * Gets the init value for creating a new conversation.
+   * @returns {Object}
+   */
+  getConversationInitValue() {
+    return {
+      _dialogs: { stack: [], previous: [] },
+      createdAt: Date.now(),
+    };
   }
 
   /**
@@ -231,7 +231,7 @@ class Brain {
    * @param {String} key - the key
    * @returns {Promise.<*>} the value
    */
-  async getValue() {
+  async botGet() {
     throw new MissingImplementationError();
   }
 
@@ -243,7 +243,7 @@ class Brain {
    * @param {*} value - the value
    * @returns {Promise.<*>} the new value
    */
-  async setValue() {
+  async botSet() {
     throw new MissingImplementationError();
   }
 }
