@@ -27,7 +27,6 @@ const defaultConfig = {
   },
   brain: {
     name: 'memory',
-    conversationDuration: 86400000, // one day in ms
   },
   logger: 'info',
   nlu: {
@@ -37,7 +36,7 @@ const defaultConfig = {
   multiIntent: false,
 };
 
-const whitelist = Object.keys(defaultConfig).concat(['qna', 'spellchecking']);
+const whitelist = Object.keys(defaultConfig).concat(['spellchecking']);
 
 /**
  * Returns the contents of the bot config file
@@ -77,6 +76,9 @@ const getConfiguration = (botConfig = {}) => {
     defaultConfig,
     omitBy(botConfig, (val, key) => !whitelist.includes(key)),
   );
+
+  config.brain.conversationDuration = config.brain.conversationDuration || 86400000; // one day in ms
+
   // reconfigure the logger with the final config
   LoggerManager.configure(config);
   // return default config extended by bot config

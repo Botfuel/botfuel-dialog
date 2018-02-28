@@ -24,13 +24,19 @@ const BotTextMessage = require('../../src/messages/bot-text-message');
 
 const TEST_USER = '1';
 
+const BRAIN_CONFIG = {
+  brain: {
+    conversationDuration: 86400000, // one day in ms
+  },
+};
+
 const greetingsDialog = { name: 'greetings', entities: [] };
 const thanksDialog = { name: 'thanks', entities: [] };
 const travelDialog = { name: 'travel', entities: [] };
 const travelCancelDialog = { name: 'travel-cancel', entities: [] };
 
 describe('DialogManager', () => {
-  const brain = new MemoryBrain();
+  const brain = new MemoryBrain(BRAIN_CONFIG);
   const dm = new DialogManager(brain, { path: __dirname, locale: 'en' });
 
   beforeEach(async () => {

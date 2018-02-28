@@ -27,10 +27,7 @@ class Brain {
    * @param {Object} config - the config
    */
   constructor(config) {
-    this.conversationDuration =
-      config && config.brain && config.brain.conversationDuration
-        ? config.brain.conversationDuration
-        : 86400000;
+    this.conversationDuration = config.brain.conversationDuration;
   }
 
   /**

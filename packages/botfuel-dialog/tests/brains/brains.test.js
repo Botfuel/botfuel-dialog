@@ -26,6 +26,12 @@ const MONGO_BRAIN_LABEL = 'mongo';
 
 const USER_ID = 'USER_TEST';
 
+const BRAIN_CONFIG = {
+  brain: {
+    conversationDuration: 86400000, // one day in ms
+  },
+};
+
 const brainTest = (brainLabel) => {
   let sandbox;
   let brain;
@@ -39,12 +45,12 @@ const brainTest = (brainLabel) => {
   beforeEach(async () => {
     switch (brainLabel) {
       case MONGO_BRAIN_LABEL:
-        brain = new MongoBrain();
+        brain = new MongoBrain(BRAIN_CONFIG);
         await brain.init();
         break;
       case MEMORY_BRAIN_LABEL:
       default:
-        brain = new MemoryBrain();
+        brain = new MemoryBrain(BRAIN_CONFIG);
     }
   });
 
