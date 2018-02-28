@@ -14,31 +14,18 @@
  * limitations under the License.
  */
 
-const Message = require('./message');
+const Logger = require('logtown');
+const LoggerManager = require('../../src/logger-manager');
+const LoggerError = require('../../src/errors/logger-error');
 
-/**
- * A message containing quick replies.
- * @extends Message
- */
-class QuickrepliesMessage extends Message {
-  /**
-   * @constructor
-   * @param {String[]} texts - the array of texts
-   * @param {Object} [options] - the message options
-   */
-  constructor(texts, options) {
-    super('quickreplies', 'bot', texts, options);
-    this.validate();
-  }
+describe('LoggerManager', () => {
+  test('should throw an error when logger not exists', () => {
+    expect(() => LoggerManager.configure({ path: './', logger: 'invalid' })).toThrow(LoggerError);
+  });
 
-  /** @inheritDoc */
-  validate() {
-    super.validate();
-    this.validateArray(this.type, this.value);
-    for (const text of this.value) {
-      this.validateString(this.type, text);
-    }
-  }
-}
-
-module.exports = QuickrepliesMessage;
+  test('should resolve an existing logger', () => {
+    LoggerManager.configure({ path: __dirname, logger: 'test-logger' });
+    const logger = Logger.getLogger('test-logger');
+    expect(logger.id).toEqual('test-logger');
+  });
+});

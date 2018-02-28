@@ -14,31 +14,16 @@
  * limitations under the License.
  */
 
-const Message = require('./message');
+const MissingCredentialsError = require('../../src/errors/missing-credentials-error');
 
-/**
- * A message containing quick replies.
- * @extends Message
- */
-class QuickrepliesMessage extends Message {
-  /**
-   * @constructor
-   * @param {String[]} texts - the array of texts
-   * @param {Object} [options] - the message options
-   */
-  constructor(texts, options) {
-    super('quickreplies', 'bot', texts, options);
-    this.validate();
-  }
+describe('MissingCredentialsError', () => {
+  test('should have the correct message when no parameters', async () => {
+    const error = new MissingCredentialsError();
+    expect(error.message).toEqual('Missing credentials!');
+  });
 
-  /** @inheritDoc */
-  validate() {
-    super.validate();
-    this.validateArray(this.type, this.value);
-    for (const text of this.value) {
-      this.validateString(this.type, text);
-    }
-  }
-}
-
-module.exports = QuickrepliesMessage;
+  test('should have the correct name and message when parameters', async () => {
+    const error = new MissingCredentialsError('Error message');
+    expect(error.message).toEqual('Error message');
+  });
+});

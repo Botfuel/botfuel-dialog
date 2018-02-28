@@ -14,31 +14,14 @@
  * limitations under the License.
  */
 
-const Message = require('./message');
+const View = require('../../src/views/view');
+const MissingImplementationError = require('../../src/errors/missing-implementation-error');
 
-/**
- * A message containing quick replies.
- * @extends Message
- */
-class QuickrepliesMessage extends Message {
-  /**
-   * @constructor
-   * @param {String[]} texts - the array of texts
-   * @param {Object} [options] - the message options
-   */
-  constructor(texts, options) {
-    super('quickreplies', 'bot', texts, options);
-    this.validate();
-  }
-
-  /** @inheritDoc */
-  validate() {
-    super.validate();
-    this.validateArray(this.type, this.value);
-    for (const text of this.value) {
-      this.validateString(this.type, text);
-    }
-  }
-}
-
-module.exports = QuickrepliesMessage;
+describe('View', () => {
+  test('should throw a missing implementation error', () => {
+    const view = new View();
+    expect(() => {
+      view.render();
+    }).toThrowError(MissingImplementationError);
+  });
+});

@@ -14,31 +14,16 @@
  * limitations under the License.
  */
 
-const Message = require('./message');
+/* eslint-disable quotes */
 
-/**
- * A message containing quick replies.
- * @extends Message
- */
-class QuickrepliesMessage extends Message {
-  /**
-   * @constructor
-   * @param {String[]} texts - the array of texts
-   * @param {Object} [options] - the message options
-   */
-  constructor(texts, options) {
-    super('quickreplies', 'bot', texts, options);
-    this.validate();
-  }
+const WebAdapter = require('../../src/adapters/web-adapter');
 
-  /** @inheritDoc */
-  validate() {
-    super.validate();
-    this.validateArray(this.type, this.value);
-    for (const text of this.value) {
-      this.validateString(this.type, text);
+describe('WebAdapter', () => {
+  test('should throw a missing implementation error', async () => {
+    try {
+      await new WebAdapter({}).handleRequest();
+    } catch (e) {
+      expect(e.message).toEqual('Not implemented!');
     }
-  }
-}
-
-module.exports = QuickrepliesMessage;
+  });
+});

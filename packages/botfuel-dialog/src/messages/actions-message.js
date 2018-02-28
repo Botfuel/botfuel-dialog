@@ -28,7 +28,7 @@ class ActionsMessage extends Message {
   /**
    * @constructor
    * @param {Object[]} actions - the actions
-   * @param {Object} options - the message options
+   * @param {Object} [options] - the message options
    */
   constructor(actions, options) {
     super('actions', 'bot', actions, options);

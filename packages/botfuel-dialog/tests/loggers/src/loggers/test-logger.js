@@ -14,31 +14,26 @@
  * limitations under the License.
  */
 
-const Message = require('./message');
+const WinstonWrapper = require('logtown-winston');
+const winston = require('winston');
 
-/**
- * A message containing quick replies.
- * @extends Message
- */
-class QuickrepliesMessage extends Message {
-  /**
-   * @constructor
-   * @param {String[]} texts - the array of texts
-   * @param {Object} [options] - the message options
-   */
-  constructor(texts, options) {
-    super('quickreplies', 'bot', texts, options);
-    this.validate();
-  }
+const transports = [
+  new winston.transports.Console({
+    json: false,
+    colorize: true,
+    prettyPrint: true,
+    timestamp: true,
+    handleExceptions: true,
+    align: false,
+    level: 'debug',
+  }),
+];
 
-  /** @inheritDoc */
-  validate() {
-    super.validate();
-    this.validateArray(this.type, this.value);
-    for (const text of this.value) {
-      this.validateString(this.type, text);
-    }
-  }
-}
+const options = {
+  exitOnError: false,
+};
 
-module.exports = QuickrepliesMessage;
+module.exports = {
+  wrapper: new WinstonWrapper(transports, options),
+  config: {},
+};

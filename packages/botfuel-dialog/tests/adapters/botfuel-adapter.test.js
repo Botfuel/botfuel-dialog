@@ -19,10 +19,12 @@
 const BotfuelAdapter = require('../../src/adapters/botfuel-adapter');
 const BotTextMessage = require('../../src/messages/bot-text-message');
 
+const userId = 'USER';
+
 describe('BotfuelAdapter', () => {
   test('should add properties to the json message', async () => {
     const message = new BotTextMessage('message');
-    const extended = new BotfuelAdapter({}).extendMessage(message.toJson('USER'));
+    const extended = new BotfuelAdapter({}).extendMessage(message.toJson(userId));
     expect(Object.keys(extended)).toEqual([
       'id',
       'timestamp',
@@ -35,5 +37,26 @@ describe('BotfuelAdapter', () => {
     expect(extended).toHaveProperty('user', 'USER');
     expect(extended).toHaveProperty('payload.value', 'message');
     expect(extended).toHaveProperty('adapter', 'botfuel');
+  });
+
+  test('should return the correct uri', () => {
+    const botMessage = new BotTextMessage('message').toJson(userId);
+    const uri = new BotfuelAdapter({}).getUri(botMessage);
+    expect(uri).toEqual(
+      `https://webchat.botfuel.io/bots/${
+        process.env.BOTFUEL_APP_TOKEN
+      }/users/USER/conversation/messages`,
+    );
+  });
+
+  test('should return the message body', () => {
+    const botMessage = new BotTextMessage('message').toJson(userId);
+    const body = new BotfuelAdapter({}).getBody(botMessage);
+    expect(body).toEqual(botMessage);
+  });
+
+  test('should return an empty object for the query string', () => {
+    const qs = new BotfuelAdapter({}).getQs();
+    expect(qs).toEqual({});
   });
 });

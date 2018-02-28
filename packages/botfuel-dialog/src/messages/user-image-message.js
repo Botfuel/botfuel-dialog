@@ -24,9 +24,10 @@ class UserImageMessage extends Message {
   /**
    * @constructor
    * @param {String} url - the image url
+   * @param {Object} [options] - the message options
    */
-  constructor(url) {
-    super('image', 'user', url);
+  constructor(url, options) {
+    super('image', 'user', url, options);
     this.validate();
   }
 

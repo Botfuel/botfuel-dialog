@@ -19,20 +19,13 @@ const MessageError = require('../../src/errors/message-error');
 
 describe('Card', () => {
   test('should throw an exception when malformed string', async () => {
-    // eslint-disable-next-line require-jsdoc
-    function validateInvalidObject() {
-      // eslint-disable-next-line no-new
-      new Card(null, null, []).validate();
-    }
-    expect(validateInvalidObject).toThrow(MessageError);
+    expect(() => new Card(null, null, []).validate()).toThrow(MessageError);
   });
 
   test('should throw an exception when malformed actions', async () => {
-    // eslint-disable-next-line require-jsdoc
-    function validateInvalidObject() {
-      // eslint-disable-next-line no-new
-      new Card('title', 'http://domain.com', null).validate();
-    }
-    expect(validateInvalidObject).toThrow(MessageError);
+    expect(() => new Card('title', 'http://domain.com', null).validate()).toThrow(MessageError);
+    expect(() => new Card('title', 'http://domain.com', ['not an action']).validate()).toThrow(
+      MessageError,
+    );
   });
 });

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 - present, Botfuel (https://www.botfuel.io).
+ * Copyright (c) 2017 - present, Userfuel (https://www.botfuel.io).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-const ActionsMessage = require('../../src/messages/actions-message');
-const Link = require('../../src/messages/link');
+const PostbackMessage = require('../../src/messages/postback-message');
 const MessageError = require('../../src/errors/message-error');
 
-describe('ActionsMessage', () => {
-  test('should throw an exception when malformed', async () => {
-    expect(() => new ActionsMessage([{}])).toThrow(MessageError);
+describe('PostbackMessage', () => {
+  test('should throw an exception dialog name is not a string', async () => {
+    expect(() => new PostbackMessage(123, [])).toThrow(MessageError);
+  });
+
+  test('should throw an exception when entities are not an array', async () => {
+    expect(() => new PostbackMessage('greetings', 'hello')).toThrow(MessageError);
   });
 
   test('should generate the proper json', async () => {
-    const message = new ActionsMessage([new Link('Botfuel', 'https://www.botfuel.io/en')]);
+    const message = new PostbackMessage('greetings', []);
     expect(message.toJson('USER')).toEqual({
-      type: 'actions',
-      sender: 'bot',
+      type: 'postback',
+      sender: 'user',
       user: 'USER',
       payload: {
-        value: [
-          {
-            type: 'link',
-            text: 'Botfuel',
-            value: 'https://www.botfuel.io/en',
-          },
-        ],
+        value: {
+          dialog: 'greetings',
+          entities: [],
+        },
       },
     });
   });

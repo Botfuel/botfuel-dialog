@@ -24,9 +24,10 @@ class BotImageMessage extends Message {
   /**
    * @constructor
    * @param {String} url - the image url
+   * @param {Object} [options] - the message options
    */
-  constructor(url) {
-    super('image', 'bot', url);
+  constructor(url, options) {
+    super('image', 'bot', url, options);
     this.validate();
   }
 

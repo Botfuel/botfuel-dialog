@@ -25,9 +25,10 @@ class PostbackMessage extends Message {
    * @constructor
    * @param {String} dialog - the postback dialog name
    * @param {Object[]} entities - the dialog entities
+   * @param {Object} [options] - the message options
    */
-  constructor(dialog, entities) {
-    super('postback', 'user', { dialog, entities });
+  constructor(dialog, entities, options) {
+    super('postback', 'user', { dialog, entities }, options);
     this.validate();
   }
 

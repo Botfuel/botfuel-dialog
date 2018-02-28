@@ -14,31 +14,14 @@
  * limitations under the License.
  */
 
-const Message = require('./message');
+const Extractor = require('../../src/extractors/extractor');
 
-/**
- * A message containing quick replies.
- * @extends Message
- */
-class QuickrepliesMessage extends Message {
-  /**
-   * @constructor
-   * @param {String[]} texts - the array of texts
-   * @param {Object} [options] - the message options
-   */
-  constructor(texts, options) {
-    super('quickreplies', 'bot', texts, options);
-    this.validate();
-  }
-
-  /** @inheritDoc */
-  validate() {
-    super.validate();
-    this.validateArray(this.type, this.value);
-    for (const text of this.value) {
-      this.validateString(this.type, text);
+describe('Extractor', () => {
+  test('should throw an missing implementation error', async () => {
+    try {
+      await new Extractor({ locale: 'en' }).compute();
+    } catch (e) {
+      expect(e.message).toMatch('Not implemented!');
     }
-  }
-}
-
-module.exports = QuickrepliesMessage;
+  });
+});

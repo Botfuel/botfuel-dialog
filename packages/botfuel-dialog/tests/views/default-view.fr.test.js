@@ -14,31 +14,17 @@
  * limitations under the License.
  */
 
-const Message = require('./message');
+const DefaultView = require('../../src/views/default-view.fr');
+const BotTextMessage = require('../../src/messages/bot-text-message');
 
-/**
- * A message containing quick replies.
- * @extends Message
- */
-class QuickrepliesMessage extends Message {
-  /**
-   * @constructor
-   * @param {String[]} texts - the array of texts
-   * @param {Object} [options] - the message options
-   */
-  constructor(texts, options) {
-    super('quickreplies', 'bot', texts, options);
-    this.validate();
-  }
+describe('DefaultView FR', () => {
+  test('should render a bot text message', () => {
+    const view = new DefaultView();
+    expect(view.render()).toEqual([new BotTextMessage("Je n'ai pas compris.")]);
+  });
 
-  /** @inheritDoc */
-  validate() {
-    super.validate();
-    this.validateArray(this.type, this.value);
-    for (const text of this.value) {
-      this.validateString(this.type, text);
-    }
-  }
-}
-
-module.exports = QuickrepliesMessage;
+  test('should render a text', () => {
+    const view = new DefaultView();
+    expect(view.getTexts()).toEqual(["Je n'ai pas compris."]);
+  });
+});

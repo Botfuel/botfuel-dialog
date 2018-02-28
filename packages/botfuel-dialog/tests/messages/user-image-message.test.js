@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 - present, Botfuel (https://www.botfuel.io).
+ * Copyright (c) 2017 - present, Userfuel (https://www.botfuel.io).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,26 @@
  * limitations under the License.
  */
 
-const ActionsMessage = require('../../src/messages/actions-message');
-const Link = require('../../src/messages/link');
+const UserImageMessage = require('../../src/messages/user-image-message');
 const MessageError = require('../../src/errors/message-error');
 
-describe('ActionsMessage', () => {
+describe('UserImageMessage', () => {
   test('should throw an exception when malformed', async () => {
-    expect(() => new ActionsMessage([{}])).toThrow(MessageError);
+    expect(() => new UserImageMessage(null)).toThrow(MessageError);
+  });
+
+  test('should throw an exception when parameter is not a URL', async () => {
+    expect(() => new UserImageMessage('hello')).toThrow(MessageError);
   });
 
   test('should generate the proper json', async () => {
-    const message = new ActionsMessage([new Link('Botfuel', 'https://www.botfuel.io/en')]);
+    const message = new UserImageMessage('https://botfuel.io/image.jpg');
     expect(message.toJson('USER')).toEqual({
-      type: 'actions',
-      sender: 'bot',
+      type: 'image',
+      sender: 'user',
       user: 'USER',
       payload: {
-        value: [
-          {
-            type: 'link',
-            text: 'Botfuel',
-            value: 'https://www.botfuel.io/en',
-          },
-        ],
+        value: 'https://botfuel.io/image.jpg',
       },
     });
   });

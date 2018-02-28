@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-/* eslint-disable quotes */
+/* eslint-disable quotes, no-underscore-dangle */
 
+const Bot = require('../../src/bot');
 const Adapter = require('../../src/adapters/adapter');
 const BotTextMessage = require('../../src/messages/bot-text-message');
+const UserTextMessage = require('../../src/messages/user-text-message');
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
+const userId = 'USER';
 describe('Adapter', () => {
   test('should add properties to the json message', async () => {
     const message = new BotTextMessage('message');
-    const extended = new Adapter({}).extendMessage(message.toJson('USER'));
+    const extended = new Adapter({}).extendMessage(message.toJson(userId));
     expect(Object.keys(extended)).toEqual(['id', 'timestamp', 'type', 'sender', 'user', 'payload']);
     expect(extended).toHaveProperty('user', 'USER');
     expect(extended).toHaveProperty('payload.value', 'message');
@@ -39,5 +41,50 @@ describe('Adapter', () => {
   test('should generate a timestamp', async () => {
     const timestamp = new Adapter({}).getMessageTimestamp();
     expect(typeof timestamp).toBe('number');
+  });
+
+  test('should add a user to the brain if not exists', async () => {
+    const bot = new Bot({});
+    await bot.adapter.initUserIfNecessary(userId);
+    const userExists = await bot.brain.hasUser(userId);
+    expect(userExists).toBe(true);
+  });
+
+  test('should handle a user message', async () => {
+    const bot = new Bot({});
+    await bot.init();
+    const message = new UserTextMessage('message').toJson(userId);
+    await bot.adapter.handleMessage(message);
+    const conversation = await bot.brain.getLastConversation(userId);
+    expect(conversation._dialogs.previous.length).toBe(1);
+  });
+
+  describe('Should throw missing implementation error for methods', () => {
+    test('sendMessage', async () => {
+      const adapter = new Adapter({});
+      try {
+        await adapter.sendMessage({});
+      } catch (e) {
+        expect(e.message).toEqual('Not implemented!');
+      }
+    });
+
+    test('run', async () => {
+      const adapter = new Adapter({});
+      try {
+        await adapter.run({});
+      } catch (e) {
+        expect(e.message).toEqual('Not implemented!');
+      }
+    });
+
+    test('play', async () => {
+      const adapter = new Adapter({});
+      try {
+        await adapter.play({});
+      } catch (e) {
+        expect(e.message).toEqual('Not implemented!');
+      }
+    });
   });
 });

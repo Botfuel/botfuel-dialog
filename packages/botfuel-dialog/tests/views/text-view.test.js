@@ -14,31 +14,16 @@
  * limitations under the License.
  */
 
-const Message = require('./message');
+const TextView = require('../../src/views/text-view');
 
-/**
- * A message containing quick replies.
- * @extends Message
- */
-class QuickrepliesMessage extends Message {
-  /**
-   * @constructor
-   * @param {String[]} texts - the array of texts
-   * @param {Object} [options] - the message options
-   */
-  constructor(texts, options) {
-    super('quickreplies', 'bot', texts, options);
-    this.validate();
-  }
+describe('TextView', () => {
+  test('should render an empty list (1)', () => {
+    const view = new TextView();
+    expect(view.render()).toEqual([]);
+  });
 
-  /** @inheritDoc */
-  validate() {
-    super.validate();
-    this.validateArray(this.type, this.value);
-    for (const text of this.value) {
-      this.validateString(this.type, text);
-    }
-  }
-}
-
-module.exports = QuickrepliesMessage;
+  test('should render an empty list (2)', () => {
+    const view = new TextView();
+    expect(view.getTexts()).toEqual([]);
+  });
+});

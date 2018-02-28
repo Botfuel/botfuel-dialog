@@ -53,7 +53,6 @@ const resolveConfigFile = (configFileName) => {
   } catch (error) {
     if (error.code === 'MODULE_NOT_FOUND') {
       logger.error(`Could not load config file ${configPath}`);
-      process.exit(1);
     }
 
     throw error;
