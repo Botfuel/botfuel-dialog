@@ -45,7 +45,7 @@ describe('Adapter', () => {
 
   test('should add a user to the brain if not exists', async () => {
     const bot = new Bot({});
-    await bot.adapter.initUserIfNecessary(userId);
+    await bot.adapter.addUserIfNecessary(userId);
     const userExists = await bot.brain.hasUser(userId);
     expect(userExists).toBe(true);
   });
