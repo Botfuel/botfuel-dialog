@@ -17,9 +17,9 @@
 
 const {
   Bot,
-  ActionsMessage,
+  // ActionsMessage,
   BotTextMessage,
-  Postback,
+  // Postback,
   UserTextMessage,
 } = require('botfuel-dialog');
 const config = require('../test-config');
@@ -89,6 +89,7 @@ describe('Qna', () => {
     expect(dialogs.stack[0].name).toBe('qnas');
     expect(dialogs.previous).toHaveLength(0);
   });
+   */
 
   test('should respond to hello', async () => {
     const bot = new Bot(config);
@@ -194,5 +195,4 @@ describe('Qna', () => {
     expect(dialogs.previous.length).toBe(1);
     expect(dialogs.previous[0].name).toBe('qnas');
   });
-   */
 });
