@@ -27,7 +27,6 @@ class MongoBrain extends Brain {
   constructor(config) {
     logger.debug('constructor');
     super(config);
-    this.users = null;
   }
 
   /** @inheritdoc */
@@ -35,7 +34,7 @@ class MongoBrain extends Brain {
     logger.debug('init');
     this.db = await MongoClient.connect(this.getMongoDbUri());
     this.users = this.db.collection('users');
-    this.bots = this.db.collection('bots');
+    this.bots = this.db.collection('bots'); // TODO: is this what we need?
   }
 
   /**
@@ -49,20 +48,19 @@ class MongoBrain extends Brain {
     if (process.env.MONGODB_URI) {
       return process.env.MONGODB_URI;
     }
-
     if (!process.env.BOTFUEL_APP_TOKEN) {
       throw new MissingCredentialsError(
         'Either MONGODB_URI or BOTFUEL_APP_TOKEN is required to use the Brain with mongodb.',
       );
     }
-
     return `mongodb://localhost/botfuel-bot-${process.env.BOTFUEL_APP_TOKEN}`;
   }
 
   /** @inheritdoc */
   async clean() {
     logger.debug('clean');
-    return this.users.deleteMany();
+    await this.bots.deleteMany();
+    await this.users.deleteMany();
   }
 
   /** @inheritdoc */
@@ -82,13 +80,10 @@ class MongoBrain extends Brain {
   /** @inheritdoc */
   async getUser(userId, ...params) {
     logger.debug('getUser', userId);
-
     const user = await this.users.findOne({ userId }, ...params);
-
     if (!user) {
       throw new Error('User does not exist');
     }
-
     return user;
   }
 
@@ -101,11 +96,9 @@ class MongoBrain extends Brain {
    */
   async findUserAndUpdate(...params) {
     const user = await this.users.findOneAndUpdate(...params);
-
     if (!user) {
       throw new Error('User does not exist');
     }
-
     return user;
   }
 
@@ -117,7 +110,6 @@ class MongoBrain extends Brain {
       { $set: { [key]: value } },
       { returnOriginal: false },
     );
-
     return result.value;
   }
 
@@ -125,7 +117,6 @@ class MongoBrain extends Brain {
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
     const user = await this.getUser(userId, { conversations: { $slice: 1 } });
-
     const conversation = user.conversations[0];
     return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
   }
@@ -138,7 +129,6 @@ class MongoBrain extends Brain {
       { $push: { conversations: { $each: [this.getConversationInitValue()], $position: 0 } } },
       { returnOriginal: false },
     );
-
     return result.value.conversations[0];
   }
 
@@ -151,7 +141,6 @@ class MongoBrain extends Brain {
       { $set: { [`conversations.0.${key}`]: value } },
       { returnOriginal: false, sort: { 'conversations.createdAt': -1 } },
     );
-
     return result.value.conversations[0];
   }
 
@@ -166,14 +155,13 @@ class MongoBrain extends Brain {
   }
 
   /** @inheritdoc */
-  async getValue(key) {
+  async botGet(key) {
     const bot = await this.bots.findOne({});
-
     return bot && bot[key];
   }
 
   /** @inheritdoc */
-  async setValue(key, value) {
+  async botSet(key, value) {
     const bot = await this.bots.findOneAndUpdate(
       {},
       {
@@ -183,7 +171,6 @@ class MongoBrain extends Brain {
         upsert: true,
       },
     );
-
     return bot[key];
   }
 }

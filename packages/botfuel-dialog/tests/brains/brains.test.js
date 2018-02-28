@@ -198,8 +198,8 @@ const brainTest = (brainLabel) => {
   });
 
   test('should set and get value', async () => {
-    await brain.setValue('test', 'hello');
-    const value = await brain.getValue('test');
+    await brain.botSet('test', 'hello');
+    const value = await brain.botGet('test');
     expect(value).toEqual('hello');
   });
 

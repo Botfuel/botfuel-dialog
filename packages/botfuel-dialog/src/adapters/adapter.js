@@ -91,7 +91,7 @@ class Adapter {
    */
   async handleMessage(userMessage) {
     logger.debug('handleMessage', userMessage);
-    await this.initUserIfNecessary(userMessage.user);
+    await this.addUserIfNecessary(userMessage.user);
     const context = {
       user: userMessage.user,
       brain: this.bot.brain,
@@ -104,16 +104,16 @@ class Adapter {
   }
 
   /**
-   * Inits the user if necessary.
+   * Adds the user if necessary.
    * Calls the corresponding method of the brain.
    * Adapters can add specific behaviour.
    * @async
    * @param {int} userId - the user id
    * @returns {Promise.<void>}
    */
-  async initUserIfNecessary(userId) {
-    logger.debug('initUserIfNecessary', userId);
-    await this.bot.brain.initUserIfNecessary(userId);
+  async addUserIfNecessary(userId) {
+    logger.debug('addUserIfNecessary', userId);
+    await this.bot.brain.addUserIfNecessary(userId);
   }
 
   /**
