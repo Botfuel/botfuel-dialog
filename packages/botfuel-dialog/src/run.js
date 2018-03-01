@@ -21,15 +21,24 @@ const logger = require('logtown')('Run');
 const Bot = require('./bot');
 const { resolveConfigFile } = require('./config');
 
+/**
+ * Logs an error
+ * @param {Error} error - the error
+ * @returns {null}
+ */
+function logError(error) {
+  logger.error(error.message, error.stack);
+}
+
 // log stack trace on unhandled promise rejection
-process.on('unhandledRejection', e => logger.error(e.message, e.stack));
+process.on('unhandledRejection', logError);
 
 (async () => {
   try {
     const config = resolveConfigFile(process.argv[2]);
     await new Bot(config).run();
   } catch (e) {
-    logger.error(e.message, e.stack);
+    logError(e);
     process.exit(0);
   }
 })();
