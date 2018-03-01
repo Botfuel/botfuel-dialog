@@ -1,9 +1,21 @@
 # Change Log
 
-All notable changes to this project will be documented in this file.
+      All notable changes to this project will be documented in this file.
+      See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+      <a name="3.0.1"></a>
+## [3.0.1](https://github.com/Botfuel/bot-sdk2/compare/v3.0.0...v3.0.1) (2018-03-01)
 
 
-<a name="3.0.0"></a>
+### Bug Fixes
+
+* Fix shell adapter broken by [#120](https://github.com/Botfuel/bot-sdk2/issues/120) ([f1b38b7](https://github.com/Botfuel/bot-sdk2/commit/f1b38b7))
+
+
+
+
+
+      <a name="3.0.0"></a>
 # [3.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v2.1.5...v3.0.0) (2018-03-01)
 
 ### Breaking changes
@@ -13,10 +25,10 @@ All notable changes to this project will be documented in this file.
 * Now the exported class `Nlu` is an abstract class that is subclassed by `BotfuelNlu`. ([821a863](https://github.com/Botfuel/botfuel-dialog/commit/821a863))
 
 * Some renamings ([#124](https://github.com/Botfuel/botfuel-dialog/pull/124)):
-  * `brain.getValue` -> `brain.botGet`
-  * `brain.setValue` -> `brain.botSet`
-  * `adapter.initUserIfNecessary` -> `adapter.addUserIfNecessary`
-  * `brain.initUserIfNecessary` -> `brain.addUserIfNecessary`
+* `brain.getValue` -> `brain.botGet`
+* `brain.setValue` -> `brain.botSet`
+* `adapter.initUserIfNecessary` -> `adapter.addUserIfNecessary`
+* `brain.initUserIfNecessary` -> `brain.addUserIfNecessary`
 
 ### Features
 

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/Botfuel/botfuel-dialog/compare/v3.0.0...v3.0.1) (2018-03-01)
+
+
+### Bug Fixes
+
+* Fix shell adapter broken by [#120](https://github.com/Botfuel/botfuel-dialog/issues/120) ([f1b38b7](https://github.com/Botfuel/botfuel-dialog/commit/f1b38b7))
+
+
+
+
+
 <a name="2.1.5"></a>
 ## [2.1.5](https://github.com/Botfuel/botfuel-dialog/compare/v2.1.4...v2.1.5) (2018-02-28)
 
