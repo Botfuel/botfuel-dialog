@@ -19,6 +19,8 @@ const { omitBy } = require('lodash');
 const logger = require('logtown')('Config');
 const LoggerManager = require('./logger-manager');
 
+const DEFAULT_CONVERSATION_DURATION = 86400000; // one day in ms
+
 const defaultConfig = {
   path: process.cwd(),
   locale: 'en',
@@ -77,7 +79,8 @@ const getConfiguration = (botConfig = {}) => {
     omitBy(botConfig, (val, key) => !whitelist.includes(key)),
   );
 
-  config.brain.conversationDuration = config.brain.conversationDuration || 86400000; // one day in ms
+  config.brain.conversationDuration =
+    config.brain.conversationDuration || DEFAULT_CONVERSATION_DURATION;
 
   // reconfigure the logger with the final config
   LoggerManager.configure(config);
