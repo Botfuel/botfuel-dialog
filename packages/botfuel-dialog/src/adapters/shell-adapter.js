@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-const uuidv4 = require('uuid/v4');
 const readline = require('readline');
 const chalk = require('chalk');
 const logger = require('logtown')('ShellAdapter');
+const uuidv4 = require('uuid/v4');
 const BotTextMessage = require('../messages/bot-text-message');
 const UserTextMessage = require('../messages/user-text-message');
 const Adapter = require('./adapter');

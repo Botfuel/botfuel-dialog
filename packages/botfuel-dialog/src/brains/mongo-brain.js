@@ -147,7 +147,6 @@ class MongoBrain extends Brain {
   /** @inheritdoc */
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
-    const lastConversation = await this.getLastConversation(userId);
     const result = await this.findUserAndUpdate(
       { _userId: userId },
       { $set: { [`_conversations.0.${key}`]: value } },

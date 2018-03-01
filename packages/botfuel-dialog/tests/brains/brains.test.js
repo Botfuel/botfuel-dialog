@@ -46,7 +46,6 @@ const brainTest = (brainLabel) => {
 
   beforeEach(async () => {
     USER_ID = uuidv4();
-    console.log('CURRENT USER ID', USER_ID);
     switch (brainLabel) {
       case MONGO_BRAIN_LABEL:
         brain = new MongoBrain(BRAIN_CONFIG);
@@ -128,7 +127,7 @@ const brainTest = (brainLabel) => {
   });
 
   test('set user last conversation key', async () => {
-    const user = await brain.addUser(USER_ID);
+    await brain.addUser(USER_ID);
     const conversation = await brain.conversationSet(USER_ID, 'city', 'Paris');
     expect(conversation).toHaveProperty('city');
   });
