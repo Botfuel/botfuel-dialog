@@ -250,7 +250,7 @@ describe('Brains', () => {
     describe('Should throw missing implementation error for methods', () => {
       test('botSet', async () => {
         try {
-          await new Brain().botSet();
+          await new Brain(BRAIN_CONFIG).botSet();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
@@ -258,7 +258,7 @@ describe('Brains', () => {
 
       test('botGet', async () => {
         try {
-          await new Brain().botGet();
+          await new Brain(BRAIN_CONFIG).botGet();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
@@ -266,7 +266,7 @@ describe('Brains', () => {
 
       test('conversationSet', async () => {
         try {
-          await new Brain().conversationSet();
+          await new Brain(BRAIN_CONFIG).conversationSet();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
@@ -274,7 +274,7 @@ describe('Brains', () => {
 
       test('userSet', async () => {
         try {
-          await new Brain().userSet();
+          await new Brain(BRAIN_CONFIG).userSet();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
@@ -282,7 +282,7 @@ describe('Brains', () => {
 
       test('getUser', async () => {
         try {
-          await new Brain().getUser();
+          await new Brain(BRAIN_CONFIG).getUser();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
@@ -290,7 +290,7 @@ describe('Brains', () => {
 
       test('addConversation', async () => {
         try {
-          await new Brain().addConversation();
+          await new Brain(BRAIN_CONFIG).addConversation();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
@@ -298,7 +298,7 @@ describe('Brains', () => {
 
       test('getLastConversation', async () => {
         try {
-          await new Brain().getLastConversation();
+          await new Brain(BRAIN_CONFIG).getLastConversation();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
@@ -306,7 +306,7 @@ describe('Brains', () => {
 
       test('addUser', async () => {
         try {
-          await new Brain().addUser();
+          await new Brain(BRAIN_CONFIG).addUser();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
@@ -314,7 +314,7 @@ describe('Brains', () => {
 
       test('hasUser', async () => {
         try {
-          await new Brain().hasUser();
+          await new Brain(BRAIN_CONFIG).hasUser();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
@@ -322,7 +322,7 @@ describe('Brains', () => {
 
       test('clean', async () => {
         try {
-          await new Brain().clean();
+          await new Brain(BRAIN_CONFIG).clean();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
@@ -331,7 +331,7 @@ describe('Brains', () => {
 
     describe('Should no throw error for methods', () => {
       test('init', async () => {
-        expect(async () => new Brain().init()).not.toThrow();
+        expect(async () => new Brain(BRAIN_CONFIG).init()).not.toThrow();
       });
     });
   });

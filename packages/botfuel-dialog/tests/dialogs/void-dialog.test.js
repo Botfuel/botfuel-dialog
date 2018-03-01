@@ -17,10 +17,14 @@
 const VoidDialog = require('../../src/dialogs/void-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 
-const TEST_BOT = process.env.BOTFUEL_APP_TOKEN;
+const BRAIN_CONFIG = {
+  brain: {
+    conversationDuration: 86400000, // one day in ms
+  },
+};
 
 describe('VoidDialog', () => {
-  const brain = new MemoryBrain(TEST_BOT);
+  const brain = new MemoryBrain(BRAIN_CONFIG);
   const dialog = new VoidDialog({ path: __dirname, locale: 'en' }, brain, {
     namespace: 'void-dialog',
   });

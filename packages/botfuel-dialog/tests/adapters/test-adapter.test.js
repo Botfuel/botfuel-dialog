@@ -34,7 +34,7 @@ describe('TestAdapter', () => {
 
   test('should play user messages', async () => {
     const messages = [new UserTextMessage('message1'), new UserTextMessage('message2')];
-    const bot = new Bot({ adapter: 'test' });
+    const bot = new Bot({ adapter: { name: 'test' } });
     await bot.init();
     await bot.adapter.play(messages);
     const conversation = await bot.brain.getLastConversation(bot.adapter.userId);
