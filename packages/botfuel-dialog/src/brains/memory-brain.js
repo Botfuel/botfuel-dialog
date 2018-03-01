@@ -85,7 +85,6 @@ class MemoryBrain extends Brain {
     logger.debug('addConversation', userId);
     const user = await this.getUser(userId);
     const conversation = this.getConversationInitValue();
-
     user.conversations.push(conversation);
     return conversation;
   }
@@ -94,7 +93,6 @@ class MemoryBrain extends Brain {
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
     const conversation = await this.getLastConversation(userId);
-    logger.debug('conversationSet', { conversation });
     conversation[key] = value;
     return conversation;
   }

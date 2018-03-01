@@ -114,7 +114,10 @@ class Brain {
    */
   getConversationInitValue() {
     return {
-      _dialogs: { stack: [], previous: [] },
+      _dialogs: {
+        stack: [],
+        previous: [],
+      },
       createdAt: Date.now(),
     };
   }
@@ -182,7 +185,7 @@ class Brain {
    * @async
    * @param {String} userId - user id
    * @param {String} key - last conversation key
-   * @returns {Promise}
+   * @returns {Promise.<*>} the value
    */
   async conversationGet(userId, key) {
     logger.debug('conversationGet', userId, key);
