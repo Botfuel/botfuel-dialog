@@ -21,6 +21,7 @@
     "no-param-reassign": "off",
     "no-plusplus": "off",
     "no-restricted-syntax": "off",
+    "no-underscore-dangle": "off",
     "strict": 0,
     "valid-jsdoc": [
       "error",
