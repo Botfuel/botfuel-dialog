@@ -57,9 +57,9 @@ class Brain {
    */
   getUserInitValue(userId) {
     return {
-      userId,
-      conversations: [this.getConversationInitValue()],
-      createdAt: Date.now(),
+      _userId: userId,
+      _conversations: [this.getConversationInitValue()],
+      _createdAt: Date.now(),
     };
   }
 
@@ -118,7 +118,7 @@ class Brain {
         stack: [],
         previous: [],
       },
-      createdAt: Date.now(),
+      _createdAt: Date.now(),
     };
   }
 
@@ -200,7 +200,7 @@ class Brain {
    */
   isConversationValid(conversation) {
     return (
-      conversation !== undefined && Date.now() - conversation.createdAt < this.conversationDuration
+      conversation !== undefined && Date.now() - conversation._createdAt < this.conversationDuration
     );
   }
 

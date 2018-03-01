@@ -80,9 +80,9 @@ const brainTest = (brainLabel) => {
   test('gets a user', async () => {
     await brain.addUser(USER_ID);
     const user = await brain.getUser(USER_ID);
-    expect(Object.keys(user)).toContain('userId', 'conversations', 'dialogs', 'createdAt');
-    expect(user.userId).toBe(USER_ID);
-    expect(user.conversations).toHaveLength(1);
+    expect(Object.keys(user)).toContain('_userId', '_conversations', '_createdAt');
+    expect(user._userId).toBe(USER_ID);
+    expect(user._conversations).toHaveLength(1);
   });
 
   test('sets user key', async () => {
@@ -103,7 +103,7 @@ const brainTest = (brainLabel) => {
     await brain.addUser(USER_ID);
     await brain.addConversation(USER_ID);
     const user = await brain.getUser(USER_ID);
-    expect(user.conversations).toHaveLength(2);
+    expect(user._conversations).toHaveLength(2);
   });
 
   test('get last user conversation', async () => {
@@ -116,7 +116,7 @@ const brainTest = (brainLabel) => {
 
   test('get last user conversation when no conversation', async () => {
     await brain.addUser(USER_ID);
-    await brain.userSet(USER_ID, 'conversations', []);
+    await brain.userSet(USER_ID, '_conversations', []);
     const conversation = await brain.getLastConversation(USER_ID);
     const { _dialogs } = conversation;
     expect(conversation).not.toBe(null);
@@ -124,7 +124,7 @@ const brainTest = (brainLabel) => {
   });
 
   test('set user last conversation key', async () => {
-    await brain.addUser(USER_ID);
+    const user = await brain.addUser(USER_ID);
     const conversation = await brain.conversationSet(USER_ID, 'city', 'Paris');
     expect(conversation).toHaveProperty('city');
   });
@@ -196,7 +196,7 @@ const brainTest = (brainLabel) => {
     await brain.addConversation(USER_ID);
     await brain.setDialogs(USER_ID, dialogsData);
     const dialogs = await brain.getDialogs(USER_ID);
-    const conversations = await brain.userGet(USER_ID, 'conversations');
+    const conversations = await brain.userGet(USER_ID, '_conversations');
     expect(conversations.length).toEqual(3);
     expect(dialogs.stack).toHaveLength(1);
     expect(dialogs.stack[0].name).toBe('greetings');
@@ -240,9 +240,9 @@ const brainTest = (brainLabel) => {
 };
 
 describe('Brains', () => {
-  describe('MongoBrain', () => {
-    brainTest(MONGO_BRAIN_LABEL);
-  });
+  // describe('MongoBrain', () => {
+  //   brainTest(MONGO_BRAIN_LABEL);
+  // });
   describe('MemoryBrain', () => {
     brainTest(MEMORY_BRAIN_LABEL);
   });

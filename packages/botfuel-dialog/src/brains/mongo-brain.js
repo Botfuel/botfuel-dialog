@@ -34,7 +34,7 @@ class MongoBrain extends Brain {
     logger.debug('init');
     this.db = await MongoClient.connect(this.getMongoDbUri());
     this.users = this.db.collection('users');
-    this.bots = this.db.collection('bots'); // TODO: is this what we need?
+    this.global = this.db.collection('global');
   }
 
   /**
@@ -59,28 +59,29 @@ class MongoBrain extends Brain {
   /** @inheritdoc */
   async clean() {
     logger.debug('clean');
-    await this.bots.deleteMany();
+    await this.global.deleteMany();
     await this.users.deleteMany();
   }
 
   /** @inheritdoc */
   async hasUser(userId) {
     logger.debug('hasUser', userId);
-    const user = await this.users.findOne({ userId });
+    const user = await this.users.findOne({ _userId: userId });
     return user !== null;
   }
 
   /** @inheritdoc */
   async addUser(userId) {
     logger.debug('addUser', userId);
-    const result = await this.users.insertOne(this.getUserInitValue(userId));
+    const newUser = this.getUserInitValue(userId);
+    const result = await this.users.insertOne(newUser);
     return result.ops[0];
   }
 
   /** @inheritdoc */
   async getUser(userId, ...params) {
     logger.debug('getUser', userId);
-    const user = await this.users.findOne({ userId }, ...params);
+    const user = await this.users.findOne({ _userId: userId }, ...params);
     if (!user) {
       throw new Error('User does not exist');
     }
@@ -106,7 +107,7 @@ class MongoBrain extends Brain {
   async userSet(userId, key, value) {
     logger.debug('userSet', userId, key, value);
     const result = await this.findUserAndUpdate(
-      { userId },
+      { _userId: userId },
       { $set: { [key]: value } },
       { returnOriginal: false },
     );
@@ -116,20 +117,21 @@ class MongoBrain extends Brain {
   /** @inheritdoc */
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
-    const user = await this.getUser(userId, { conversations: { $slice: 1 } });
-    const conversation = user.conversations[0];
+    const user = await this.getUser(userId, { _conversations: { $slice: 1 } });
+    const conversation = user._conversations[0];
     return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
   }
 
   /** @inheritdoc */
   async addConversation(userId) {
     logger.debug('addConversation', userId);
+    const conversation = this.getConversationInitValue();
     const result = await this.findUserAndUpdate(
-      { userId },
-      { $push: { conversations: { $each: [this.getConversationInitValue()], $position: 0 } } },
+      { _userId: userId },
+      { $push: { _conversations: { $each: [conversation], $position: 0 } } },
       { returnOriginal: false },
     );
-    return result.value.conversations[0];
+    return result.value._conversations[0];
   }
 
   /** @inheritdoc */
@@ -137,11 +139,11 @@ class MongoBrain extends Brain {
     logger.debug('conversationSet', userId, key, value);
     const lastConversation = await this.getLastConversation(userId);
     const result = await this.findUserAndUpdate(
-      { userId, 'conversations.createdAt': lastConversation.createdAt },
-      { $set: { [`conversations.0.${key}`]: value } },
-      { returnOriginal: false, sort: { 'conversations.createdAt': -1 } },
+      { _userId: userId, '_conversations.createdAt': lastConversation._createdAt },
+      { $set: { [`_conversations.0.${key}`]: value } },
+      { returnOriginal: false, sort: { '_conversations.createdAt': -1 } },
     );
-    return result.value.conversations[0];
+    return result.value._conversations[0];
   }
 
   /**
@@ -156,13 +158,13 @@ class MongoBrain extends Brain {
 
   /** @inheritdoc */
   async botGet(key) {
-    const bot = await this.bots.findOne({});
-    return bot && bot[key];
+    const global = await this.global.findOne({});
+    return global[key];
   }
 
   /** @inheritdoc */
   async botSet(key, value) {
-    const bot = await this.bots.findOneAndUpdate(
+    const global = await this.global.findOneAndUpdate(
       {},
       {
         $set: { [key]: value },
@@ -171,7 +173,7 @@ class MongoBrain extends Brain {
         upsert: true,
       },
     );
-    return bot[key];
+    return global[key];
   }
 }
 

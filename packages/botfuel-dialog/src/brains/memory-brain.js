@@ -27,15 +27,14 @@ class MemoryBrain extends Brain {
   constructor(config) {
     logger.debug('constructor');
     super(config);
-    this.users = {};
-    this.bot = {};
+    this.clean();
   }
 
   /** @inheritdoc */
   async clean() {
     logger.debug('clean');
     this.users = {};
-    this.bot = {};
+    this.global = {};
   }
 
   /** @inheritdoc */
@@ -47,9 +46,6 @@ class MemoryBrain extends Brain {
   /** @inheritdoc */
   async addUser(userId) {
     logger.debug('addUser', userId);
-    if (await this.hasUser(userId)) {
-      throw new Error('An user with this id for this bot already exists');
-    }
     const newUser = this.getUserInitValue(userId);
     this.users[userId] = newUser;
     return newUser;
@@ -76,7 +72,7 @@ class MemoryBrain extends Brain {
   async getLastConversation(userId) {
     logger.debug('getLastConversation', userId);
     const user = await this.getUser(userId);
-    const conversation = last(user.conversations);
+    const conversation = last(user._conversations);
     return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
   }
 
@@ -85,26 +81,26 @@ class MemoryBrain extends Brain {
     logger.debug('addConversation', userId);
     const user = await this.getUser(userId);
     const conversation = this.getConversationInitValue();
-    user.conversations.push(conversation);
+    user._conversations.push(conversation);
     return conversation;
   }
 
   /** @inheritdoc */
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
-    const conversation = await this.getLastConversation(userId);
-    conversation[key] = value;
-    return conversation;
+    const lastConversation = await this.getLastConversation(userId);
+    lastConversation[key] = value;
+    return lastConversation;
   }
 
   /** @inheritdoc */
   async botGet(key) {
-    return this.bot[key];
+    return this.global[key];
   }
 
   /** @inheritdoc */
   async botSet(key, value) {
-    this.bot[key] = value;
+    this.global[key] = value;
     return value;
   }
 }
