@@ -139,9 +139,9 @@ class MongoBrain extends Brain {
     logger.debug('conversationSet', userId, key, value);
     const lastConversation = await this.getLastConversation(userId);
     const result = await this.findUserAndUpdate(
-      { _userId: userId, '_conversations.createdAt': lastConversation._createdAt },
+      { _userId: userId, '_conversations._createdAt': lastConversation._createdAt },
       { $set: { [`_conversations.0.${key}`]: value } },
-      { returnOriginal: false, sort: { '_conversations.createdAt': -1 } },
+      { returnOriginal: false, sort: { '_conversations._createdAt': -1 } },
     );
     return result.value._conversations[0];
   }

@@ -240,9 +240,9 @@ const brainTest = (brainLabel) => {
 };
 
 describe('Brains', () => {
-  // describe('MongoBrain', () => {
-  //   brainTest(MONGO_BRAIN_LABEL);
-  // });
+  describe('MongoBrain', () => {
+    brainTest(MONGO_BRAIN_LABEL);
+  });
   describe('MemoryBrain', () => {
     brainTest(MEMORY_BRAIN_LABEL);
   });
