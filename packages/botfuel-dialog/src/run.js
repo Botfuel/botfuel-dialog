@@ -22,14 +22,14 @@ const Bot = require('./bot');
 const { resolveConfigFile } = require('./config');
 
 // log stack trace on unhandled promise rejection
-process.on('unhandledRejection', err => logger.error(err));
+process.on('unhandledRejection', e => logger.error(e.message, e.stack));
 
 (async () => {
   try {
     const config = resolveConfigFile(process.argv[2]);
     await new Bot(config).run();
   } catch (e) {
-    logger.error(e.message);
+    logger.error(e.message, e.stack);
     process.exit(0);
   }
 })();
