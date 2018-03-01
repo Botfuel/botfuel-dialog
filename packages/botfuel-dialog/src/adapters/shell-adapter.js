@@ -44,8 +44,6 @@ class ShellAdapter extends Adapter {
   // eslint-disable-next-line require-jsdoc
   async run() {
     logger.debug('run');
-    const botMessage = new BotTextMessage('onboarding');
-    await this.sendMessage(this.extendMessage(botMessage.toJson(this.userId)));
     this.rl.on('line', async (input) => {
       const userMessage = new UserTextMessage(input).toJson(this.userId);
       await this.handleMessage(userMessage);
