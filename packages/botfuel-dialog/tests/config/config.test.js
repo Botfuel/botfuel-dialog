@@ -26,14 +26,14 @@ describe('Config', () => {
   });
 
   test('should return a valid configuration when one provided', () => {
-    const config = getConfiguration({ adapter: 'botfuel', outOfScope: true });
-    expect(config.adapter).toEqual('botfuel');
+    const config = getConfiguration({ adapter: { name: 'botfuel' }, outOfScope: true });
+    expect(config.adapter.name).toEqual('botfuel');
     expect(config.outOfScope).toBe(undefined);
   });
 
   test('should return a valid configuration when qna provided', () => {
-    const config = getConfiguration({ qna: { when: 'before' } });
-    expect(config.qna.when).toEqual('before');
+    const config = getConfiguration({ nlu: { qna: { when: 'before' } } });
+    expect(config.nlu.qna.when).toEqual('before');
   });
 
   test('should return a valid configuration when spellchecking provided', () => {

@@ -18,10 +18,14 @@ const QnasDialog = require('../../src/dialogs/qnas-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const ShellAdapter = require('../../src/adapters/shell-adapter');
 
-const TEST_BOT = process.env.BOTFUEL_APP_TOKEN;
+const BRAIN_CONFIG = {
+  brain: {
+    conversationDuration: 86400000, // one day in ms
+  },
+};
 
 describe('QnasDialog', () => {
-  const brain = new MemoryBrain(TEST_BOT);
+  const brain = new MemoryBrain(BRAIN_CONFIG);
   const dialog = new QnasDialog({ path: __dirname, locale: 'en' }, brain);
   const adapter = new ShellAdapter({});
   const oneQna = [{ dim: 'qnas', value: [{ questions: ['question'], answer: 'answer' }] }];

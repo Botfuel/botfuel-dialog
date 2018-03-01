@@ -14,25 +14,12 @@
  * limitations under the License.
  */
 
-const VoidDialog = require('../../src/dialogs/void-dialog');
-const MemoryBrain = require('../../src/brains/memory-brain');
+const { TextView } = require('botfuel-dialog');
 
-const BRAIN_CONFIG = {
-  brain: {
-    conversationDuration: 86400000, // one day in ms
-  },
-};
+class SampleView extends TextView {
+  getTexts() {
+    return ['Hello human!'];
+  }
+}
 
-describe('VoidDialog', () => {
-  const brain = new MemoryBrain(BRAIN_CONFIG);
-  const dialog = new VoidDialog({ path: __dirname, locale: 'en' }, brain, {
-    namespace: 'void-dialog',
-  });
-
-  test('should return the complete action', async () => {
-    const action = await dialog.execute(null, {}, []);
-    expect(action).toEqual({
-      name: VoidDialog.ACTION_COMPLETE,
-    });
-  });
-});
+module.exports = SampleView;

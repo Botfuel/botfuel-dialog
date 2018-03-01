@@ -30,8 +30,8 @@ class Resolver {
   constructor(config, kind) {
     this.config = config;
     this.kind = kind;
-    this.path = `${config.path}/src/${kind}s`;
-    this.localPath = `${__dirname}/${kind}s`;
+    this.botPath = `${config.path}/src/${kind}s`;
+    this.sdkPath = `${__dirname}/${kind}s`;
   }
 
   /**

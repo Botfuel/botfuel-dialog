@@ -33,10 +33,10 @@ class ViewResolver extends Resolver {
   getPaths(name) {
     logger.debug('getPaths', name);
     return [
-      `${this.path}/${name}-${this.kind}.${this.config.locale}.js`,
-      `${this.path}/${name}-${this.kind}.js`,
-      `${this.localPath}/${name}-${this.kind}.${this.config.locale}.js`,
-      `${this.localPath}/${name}-${this.kind}.js`,
+      `${this.botPath}/${name}-${this.kind}.${this.config.locale}.js`,
+      `${this.botPath}/${name}-${this.kind}.js`,
+      `${this.sdkPath}/${name}-${this.kind}.${this.config.locale}.js`,
+      `${this.sdkPath}/${name}-${this.kind}.js`,
     ];
   }
 
