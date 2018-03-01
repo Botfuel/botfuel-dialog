@@ -46,6 +46,9 @@ class MemoryBrain extends Brain {
   /** @inheritdoc */
   async addUser(userId) {
     logger.debug('addUser', userId);
+    if (await this.hasUser(userId)) {
+      throw new Error('This user already exists');
+    }
     const newUser = this.getUserInitValue(userId);
     this.users[userId] = newUser;
     return newUser;

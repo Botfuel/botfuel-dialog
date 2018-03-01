@@ -18,6 +18,7 @@ const Extractor = require('../../src/extractors/extractor');
 
 describe('Extractor', () => {
   test('should throw an missing implementation error', async () => {
+    expect.assertions(1);
     try {
       await new Extractor({ locale: 'en' }).compute();
     } catch (e) {

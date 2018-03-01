@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const uuidv4 = require('uuid/v4');
 const readline = require('readline');
 const chalk = require('chalk');
 const logger = require('logtown')('ShellAdapter');
@@ -34,7 +35,7 @@ class ShellAdapter extends Adapter {
    */
   constructor(bot) {
     super(bot);
-    this.userId = 'USER_1';
+    this.userId = uuidv4();
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
