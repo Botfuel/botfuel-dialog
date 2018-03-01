@@ -18,10 +18,14 @@ const Dialog = require('../../src/dialogs/dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const DialogError = require('../../src/errors/dialog-error');
 
-const TEST_BOT = process.env.BOTFUEL_APP_TOKEN;
+const BRAIN_CONFIG = {
+  brain: {
+    conversationDuration: 86400000, // one day in ms
+  },
+};
 
 describe('Dialog', () => {
-  const brain = new MemoryBrain(TEST_BOT);
+  const brain = new MemoryBrain(BRAIN_CONFIG);
   const dialog = new Dialog({ path: __dirname, locale: 'en' }, brain, {
     namespace: 'testdialog',
     entities: {},

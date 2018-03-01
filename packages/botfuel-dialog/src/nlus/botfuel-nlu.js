@@ -18,28 +18,28 @@ const fs = require('fs');
 const fsExtra = require('fs-extra');
 const dir = require('node-dir');
 const Qna = require('botfuel-qna-sdk');
-const logger = require('logtown')('Nlu');
-const AuthenticationError = require('./errors/authentication-error');
-const Classifier = require('./classifier');
-const BooleanExtractor = require('./extractors/boolean-extractor');
-const CompositeExtractor = require('./extractors/composite-extractor');
+const logger = require('logtown')('BotfuelNlu');
+const AuthenticationError = require('../errors/authentication-error');
+const Classifier = require('../classifier');
+const BooleanExtractor = require('../extractors/boolean-extractor');
+const CompositeExtractor = require('../extractors/composite-extractor');
+const Nlu = require('./nlu');
 
 /**
- * A nlu module (could be replaced by an external one).
+ * Sample NLU module using NaturalJS.
  */
-class Nlu {
-  /**
-   * @constructor
-   * @param {Object} config - the bot config
-   */
+class BotfuelNlu extends Nlu {
+  /** @inheritdoc */
   constructor(config) {
     logger.debug('constructor', config);
-    this.config = config;
+    super(config);
     this.extractor = null;
     this.qna = null;
     this.classifier = null;
     this.intentFilter = async intents =>
-      intents.filter(intent => intent.value > config.intentThreshold).map(intent => intent.name);
+      intents
+        .filter(intent => intent.value > config.nlu.intentThreshold)
+        .map(intent => intent.name);
     const intentFilterPath = `${this.config.path}/src/intent-filter.js`;
     if (fsExtra.pathExistsSync(intentFilterPath)) {
       this.intentFilter = require(intentFilterPath);
@@ -75,12 +75,11 @@ class Nlu {
     return extractors;
   }
 
-  /**
-   * Initializes the Nlu module.
-   * @returns {Promise.<void>}
-   */
+  /** @inheritdoc */
   async init() {
     logger.debug('init');
+    super.init();
+
     // Extractors
     this.extractor = new CompositeExtractor({
       extractors: this.getExtractors(`${this.config.path}/src/extractors`),
@@ -89,7 +88,7 @@ class Nlu {
     this.classifier = new Classifier(this.config);
     await this.classifier.init();
     // QnA
-    if (this.config.qna) {
+    if (this.config.nlu.qna) {
       if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
         logger.error('BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the QnA service!');
       }
@@ -100,17 +99,12 @@ class Nlu {
     }
   }
 
-  /**
-   * Computes intents and entities.
-   * @param {String} sentence - the sentence
-   * @param {Object} [context] - an optional context (brain and userMessage)
-   * @returns {Promise} a promise with entities and intents
-   */
+  /** @inheritdoc */
   async compute(sentence, context) {
     logger.debug('compute', sentence);
-    if (this.config.qna) {
-      logger.debug('compute: qna', this.config.qna);
-      if (this.config.qna.when === 'before') {
+    if (this.config.nlu.qna) {
+      logger.debug('compute: qna', this.config.nlu.qna);
+      if (this.config.nlu.qna.when === 'before') {
         const qnaResult = await this.computeWithQna(sentence);
         if (qnaResult.intents.length > 0) {
           return qnaResult;
@@ -143,7 +137,7 @@ class Nlu {
     try {
       const qnas = await this.qna.getMatchingQnas({ sentence });
       logger.debug('computeWithQna: qnas', qnas);
-      const strict = this.config.qna.strict;
+      const strict = this.config.nlu.qna.strict;
       if ((strict && qnas.length === 1) || (!strict && qnas.length > 0)) {
         return {
           intents: ['qnas'],
@@ -189,4 +183,4 @@ class Nlu {
   }
 }
 
-module.exports = Nlu;
+module.exports = BotfuelNlu;

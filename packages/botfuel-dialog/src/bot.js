@@ -17,10 +17,9 @@
 const Logger = require('logtown');
 const Spellchecking = require('botfuel-nlp-sdk').Spellchecking;
 const AdapterResolver = require('./adapter-resolver');
+const BrainResolver = require('./brain-resolver');
+const NluResolver = require('./nlu-resolver');
 const DialogManager = require('./dialog-manager');
-const MemoryBrain = require('./brains/memory-brain');
-const MongoBrain = require('./brains/mongo-brain');
-const Nlu = require('./nlu');
 const { getConfiguration } = require('./config');
 const AuthenticationError = require('./errors/authentication-error');
 const DialogError = require('./errors/dialog-error');
@@ -47,11 +46,11 @@ class Bot {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
     checkCredentials(this.config);
-    this.brain = this.getBrain(this.config);
+    this.brain = new BrainResolver(this).resolve(this.config.brain.name);
     this.spellchecking = null;
-    this.nlu = new Nlu(this.config);
+    this.nlu = new NluResolver(this).resolve(this.config.nlu.name);
     this.dm = new DialogManager(this.brain, this.config);
-    this.adapter = new AdapterResolver(this).resolve(this.config.adapter);
+    this.adapter = new AdapterResolver(this).resolve(this.config.adapter.name);
   }
 
   /**
@@ -76,21 +75,6 @@ class Bot {
         appId: process.env.BOTFUEL_APP_ID,
         appKey: process.env.BOTFUEL_APP_KEY,
       });
-    }
-  }
-
-  /**
-   * Gets brain instance
-   * @param {Object} config - the config
-   * @returns {Brain}
-   */
-  getBrain(config) {
-    switch (config.brain) {
-      case 'mongo':
-        return new MongoBrain(config);
-      case 'memory':
-      default:
-        return new MemoryBrain(config);
     }
   }
 

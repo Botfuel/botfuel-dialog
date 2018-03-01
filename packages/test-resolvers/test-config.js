@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-const VoidDialog = require('../../src/dialogs/void-dialog');
-const MemoryBrain = require('../../src/brains/memory-brain');
-
-const BRAIN_CONFIG = {
-  brain: {
-    conversationDuration: 86400000, // one day in ms
+module.exports = {
+  adapter: {
+    name: 'test',
   },
+  brain: {
+    name: 'custom',
+    brainSecretSauce: 42,
+  },
+  logger: 'error',
+  nlu: {
+    name: 'custom',
+    intentThreshold: 0.75,
+    nluSecretSauce: 43,
+  },
+  path: __dirname,
 };
-
-describe('VoidDialog', () => {
-  const brain = new MemoryBrain(BRAIN_CONFIG);
-  const dialog = new VoidDialog({ path: __dirname, locale: 'en' }, brain, {
-    namespace: 'void-dialog',
-  });
-
-  test('should return the complete action', async () => {
-    const action = await dialog.execute(null, {}, []);
-    expect(action).toEqual({
-      name: VoidDialog.ACTION_COMPLETE,
-    });
-  });
-});

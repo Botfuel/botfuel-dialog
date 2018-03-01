@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-const logger = require('logtown')('AdapterResolver');
+const logger = require('logtown')('NluResolver');
 const Resolver = require('./resolver');
 
 /**
  * The adapter resolver resolves the adapter at startup.
  */
-class AdapterResolver extends Resolver {
+class NluResolver extends Resolver {
   /**
    * @constructor
    * @param {Object} bot - the bot
    */
   constructor(bot) {
-    super(bot.config, 'adapter');
+    super(bot.config, 'nlu');
     this.bot = bot;
   }
 
@@ -38,8 +38,8 @@ class AdapterResolver extends Resolver {
 
   /** @inheritdoc */
   resolutionSucceeded(Resolved) {
-    return new Resolved(this.bot);
+    return new Resolved(this.bot.config);
   }
 }
 
-module.exports = AdapterResolver;
+module.exports = NluResolver;

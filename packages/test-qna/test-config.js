@@ -15,9 +15,14 @@
  */
 
 module.exports = {
-  adapter: 'test',
-  conversationDuration: 86400000,
-  qna: {},
+  adapter: {
+    name: 'test',
+  },
+  nlu: {
+    name: 'botfuel',
+    intentThreshold: 0.75,
+    qna: {},
+  },
   logger: 'error',
   path: __dirname,
 };

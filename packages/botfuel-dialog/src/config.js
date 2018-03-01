@@ -19,18 +19,26 @@ const { omitBy } = require('lodash');
 const logger = require('logtown')('Config');
 const LoggerManager = require('./logger-manager');
 
+const DEFAULT_CONVERSATION_DURATION = 86400000; // one day in ms
+
 const defaultConfig = {
   path: process.cwd(),
   locale: 'en',
-  adapter: 'shell',
-  brain: 'memory',
-  intentThreshold: 0.8,
+  adapter: {
+    name: 'shell',
+  },
+  brain: {
+    name: 'memory',
+  },
   logger: 'info',
+  nlu: {
+    name: 'botfuel',
+    intentThreshold: 0.8,
+  },
   multiIntent: false,
-  conversationDuration: 86400000, // in ms
 };
 
-const whitelist = Object.keys(defaultConfig).concat(['qna', 'spellchecking']);
+const whitelist = Object.keys(defaultConfig).concat(['spellchecking']);
 
 /**
  * Returns the contents of the bot config file
@@ -70,6 +78,10 @@ const getConfiguration = (botConfig = {}) => {
     defaultConfig,
     omitBy(botConfig, (val, key) => !whitelist.includes(key)),
   );
+
+  config.brain.conversationDuration =
+    config.brain.conversationDuration || DEFAULT_CONVERSATION_DURATION;
+
   // reconfigure the logger with the final config
   LoggerManager.configure(config);
   // return default config extended by bot config
