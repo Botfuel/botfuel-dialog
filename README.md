@@ -83,6 +83,12 @@ This will make real API calls and create new fixtures.
 BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
 
+
+### Contribution guidelines
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+
 ## License
 
 See the [**License**](LICENSE.md) file.
