@@ -50,6 +50,7 @@ describe('WsExtractor', () => {
   });
 
   test('should throw an error when not valid credentials', async () => {
+    expect.assertions(1);
     sandbox.stub(process, 'env').value({ BOTFUEL_APP_ID: 'FakeId', BOTFUEL_APP_KEY: 'FakeKey' });
     try {
       await new WsExtractor({ locale: 'en' }).compute('I leave from London');

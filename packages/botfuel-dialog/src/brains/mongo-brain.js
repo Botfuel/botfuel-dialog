@@ -35,6 +35,8 @@ class MongoBrain extends Brain {
     this.db = await MongoClient.connect(this.getMongoDbUri());
     this.users = this.db.collection('users');
     this.global = this.db.collection('global');
+    // ensure userId uniqueness
+    this.users.ensureIndex({ _userId: 1 }, { unique: true });
   }
 
   /**
@@ -74,8 +76,16 @@ class MongoBrain extends Brain {
   async addUser(userId) {
     logger.debug('addUser', userId);
     const newUser = this.getUserInitValue(userId);
-    const result = await this.users.insertOne(newUser);
-    return result.ops[0];
+    try {
+      const result = await this.users.insertOne(newUser);
+      return result.ops[0];
+    } catch (e) {
+      if (e.code === 11000) {
+        // mongo unique index error code
+        throw new Error('This user already exists');
+      }
+      throw e;
+    }
   }
 
   /** @inheritdoc */
@@ -137,9 +147,8 @@ class MongoBrain extends Brain {
   /** @inheritdoc */
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
-    const lastConversation = await this.getLastConversation(userId);
     const result = await this.findUserAndUpdate(
-      { _userId: userId, '_conversations._createdAt': lastConversation._createdAt },
+      { _userId: userId },
       { $set: { [`_conversations.0.${key}`]: value } },
       { returnOriginal: false, sort: { '_conversations._createdAt': -1 } },
     );
