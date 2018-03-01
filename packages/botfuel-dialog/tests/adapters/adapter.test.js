@@ -61,6 +61,7 @@ describe('Adapter', () => {
 
   describe('Should throw missing implementation error for methods', () => {
     test('sendMessage', async () => {
+      expect.assertions(1);
       const adapter = new Adapter({});
       try {
         await adapter.sendMessage({});
@@ -70,6 +71,7 @@ describe('Adapter', () => {
     });
 
     test('run', async () => {
+      expect.assertions(1);
       const adapter = new Adapter({});
       try {
         await adapter.run({});
@@ -79,6 +81,7 @@ describe('Adapter', () => {
     });
 
     test('play', async () => {
+      expect.assertions(1);
       const adapter = new Adapter({});
       try {
         await adapter.play({});

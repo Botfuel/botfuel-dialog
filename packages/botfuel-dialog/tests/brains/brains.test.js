@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const uuidv4 = require('uuid/v4');
 const sinon = require('sinon');
 const Brain = require('../../src/brains/brain');
 const MemoryBrain = require('../../src/brains/memory-brain');
@@ -24,7 +25,7 @@ const MissingCredentialsError = require('../../src/errors/missing-credentials-er
 const MEMORY_BRAIN_LABEL = 'memory';
 const MONGO_BRAIN_LABEL = 'mongo';
 
-const USER_ID = 'USER_TEST';
+// const USER_ID = 'USER_TEST';
 
 const BRAIN_CONFIG = {
   brain: {
@@ -35,6 +36,7 @@ const BRAIN_CONFIG = {
 const brainTest = (brainLabel) => {
   let sandbox;
   let brain;
+  let USER_ID;
 
   beforeAll(() => {
     if (brainLabel === MONGO_BRAIN_LABEL) {
@@ -43,6 +45,7 @@ const brainTest = (brainLabel) => {
   });
 
   beforeEach(async () => {
+    USER_ID = uuidv4();
     switch (brainLabel) {
       case MONGO_BRAIN_LABEL:
         brain = new MongoBrain(BRAIN_CONFIG);
@@ -80,9 +83,9 @@ const brainTest = (brainLabel) => {
   test('gets a user', async () => {
     await brain.addUser(USER_ID);
     const user = await brain.getUser(USER_ID);
-    expect(Object.keys(user)).toContain('userId', 'conversations', 'dialogs', 'createdAt');
-    expect(user.userId).toBe(USER_ID);
-    expect(user.conversations).toHaveLength(1);
+    expect(Object.keys(user)).toContain('_userId', '_conversations', '_createdAt');
+    expect(user._userId).toBe(USER_ID);
+    expect(user._conversations).toHaveLength(1);
   });
 
   test('sets user key', async () => {
@@ -103,7 +106,7 @@ const brainTest = (brainLabel) => {
     await brain.addUser(USER_ID);
     await brain.addConversation(USER_ID);
     const user = await brain.getUser(USER_ID);
-    expect(user.conversations).toHaveLength(2);
+    expect(user._conversations).toHaveLength(2);
   });
 
   test('get last user conversation', async () => {
@@ -116,7 +119,7 @@ const brainTest = (brainLabel) => {
 
   test('get last user conversation when no conversation', async () => {
     await brain.addUser(USER_ID);
-    await brain.userSet(USER_ID, 'conversations', []);
+    await brain.userSet(USER_ID, '_conversations', []);
     const conversation = await brain.getLastConversation(USER_ID);
     const { _dialogs } = conversation;
     expect(conversation).not.toBe(null);
@@ -196,7 +199,7 @@ const brainTest = (brainLabel) => {
     await brain.addConversation(USER_ID);
     await brain.setDialogs(USER_ID, dialogsData);
     const dialogs = await brain.getDialogs(USER_ID);
-    const conversations = await brain.userGet(USER_ID, 'conversations');
+    const conversations = await brain.userGet(USER_ID, '_conversations');
     expect(conversations.length).toEqual(3);
     expect(dialogs.stack).toHaveLength(1);
     expect(dialogs.stack[0].name).toBe('greetings');
@@ -210,15 +213,18 @@ const brainTest = (brainLabel) => {
   });
 
   test('should throw an error when adding a user that already exists', async () => {
+    await brain.addUser(USER_ID);
+    expect.assertions(1);
     try {
       await brain.addUser(USER_ID);
       await brain.addUser(USER_ID);
     } catch (e) {
-      expect(e.message).toEqual('An user with this id for this bot already exists');
+      expect(e.message).toEqual('This user already exists');
     }
   });
 
   test('should throw an error when getting a non existing user', async () => {
+    expect.assertions(1);
     try {
       await brain.getUser(USER_ID);
     } catch (e) {
@@ -249,6 +255,7 @@ describe('Brains', () => {
   describe('Brain', () => {
     describe('Should throw missing implementation error for methods', () => {
       test('botSet', async () => {
+        expect.assertions(1);
         try {
           await new Brain(BRAIN_CONFIG).botSet();
         } catch (e) {
@@ -257,6 +264,7 @@ describe('Brains', () => {
       });
 
       test('botGet', async () => {
+        expect.assertions(1);
         try {
           await new Brain(BRAIN_CONFIG).botGet();
         } catch (e) {
@@ -265,6 +273,7 @@ describe('Brains', () => {
       });
 
       test('conversationSet', async () => {
+        expect.assertions(1);
         try {
           await new Brain(BRAIN_CONFIG).conversationSet();
         } catch (e) {
@@ -273,6 +282,7 @@ describe('Brains', () => {
       });
 
       test('userSet', async () => {
+        expect.assertions(1);
         try {
           await new Brain(BRAIN_CONFIG).userSet();
         } catch (e) {
@@ -281,6 +291,7 @@ describe('Brains', () => {
       });
 
       test('getUser', async () => {
+        expect.assertions(1);
         try {
           await new Brain(BRAIN_CONFIG).getUser();
         } catch (e) {
@@ -289,6 +300,7 @@ describe('Brains', () => {
       });
 
       test('addConversation', async () => {
+        expect.assertions(1);
         try {
           await new Brain(BRAIN_CONFIG).addConversation();
         } catch (e) {
@@ -297,6 +309,7 @@ describe('Brains', () => {
       });
 
       test('getLastConversation', async () => {
+        expect.assertions(1);
         try {
           await new Brain(BRAIN_CONFIG).getLastConversation();
         } catch (e) {
@@ -305,6 +318,7 @@ describe('Brains', () => {
       });
 
       test('addUser', async () => {
+        expect.assertions(1);
         try {
           await new Brain(BRAIN_CONFIG).addUser();
         } catch (e) {
@@ -313,6 +327,7 @@ describe('Brains', () => {
       });
 
       test('hasUser', async () => {
+        expect.assertions(1);
         try {
           await new Brain(BRAIN_CONFIG).hasUser();
         } catch (e) {
@@ -321,6 +336,7 @@ describe('Brains', () => {
       });
 
       test('clean', async () => {
+        expect.assertions(1);
         try {
           await new Brain(BRAIN_CONFIG).clean();
         } catch (e) {

@@ -31,7 +31,7 @@ describe('NameDialog', () => {
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     const lastConversation = await bot.brain.getLastConversation(userId);
-    expect(user.conversations.length).toBe(1);
+    expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('name');
     expect(lastConversation.name).toHaveProperty('name');
@@ -55,7 +55,7 @@ describe('NameDialog', () => {
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
     const lastConversation = await bot.brain.getLastConversation(userId);
-    expect(user.conversations.length).toBe(1);
+    expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('name');
     expect(lastConversation.name).toHaveProperty('name');

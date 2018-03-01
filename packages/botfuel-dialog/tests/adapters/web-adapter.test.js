@@ -20,6 +20,7 @@ const WebAdapter = require('../../src/adapters/web-adapter');
 
 describe('WebAdapter', () => {
   test('should throw a missing implementation error', async () => {
+    expect.assertions(1);
     try {
       await new WebAdapter({}).handleRequest();
     } catch (e) {

@@ -32,6 +32,7 @@ describe('Dialog', () => {
   });
 
   test('should throw a missing implementation error', async () => {
+    expect.assertions(1);
     try {
       await dialog.execute();
     } catch (e) {

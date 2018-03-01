@@ -17,6 +17,7 @@
 const readline = require('readline');
 const chalk = require('chalk');
 const logger = require('logtown')('ShellAdapter');
+const uuidv4 = require('uuid/v4');
 const BotTextMessage = require('../messages/bot-text-message');
 const UserTextMessage = require('../messages/user-text-message');
 const Adapter = require('./adapter');
@@ -34,7 +35,7 @@ class ShellAdapter extends Adapter {
    */
   constructor(bot) {
     super(bot);
-    this.userId = 'USER_1';
+    this.userId = uuidv4();
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,

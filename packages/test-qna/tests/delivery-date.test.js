@@ -39,8 +39,8 @@ describe('Delivery date', () => {
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.userId).toBe(userId);
-    expect(user.conversations.length).toBe(1);
+    expect(user._userId).toBe(userId);
+    expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(dialogs.previous.length).toBe(1);
     expect(dialogs.previous[0].name).toBe('delivery-date');

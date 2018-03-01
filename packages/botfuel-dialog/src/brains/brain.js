@@ -57,9 +57,9 @@ class Brain {
    */
   getUserInitValue(userId) {
     return {
-      userId,
-      conversations: [this.getConversationInitValue()],
-      createdAt: Date.now(),
+      _userId: userId,
+      _conversations: [this.getConversationInitValue()],
+      _createdAt: Date.now(),
     };
   }
 
@@ -114,8 +114,11 @@ class Brain {
    */
   getConversationInitValue() {
     return {
-      _dialogs: { stack: [], previous: [] },
-      createdAt: Date.now(),
+      _dialogs: {
+        stack: [],
+        previous: [],
+      },
+      _createdAt: Date.now(),
     };
   }
 
@@ -182,7 +185,7 @@ class Brain {
    * @async
    * @param {String} userId - user id
    * @param {String} key - last conversation key
-   * @returns {Promise}
+   * @returns {Promise.<*>} the value
    */
   async conversationGet(userId, key) {
     logger.debug('conversationGet', userId, key);
@@ -197,7 +200,7 @@ class Brain {
    */
   isConversationValid(conversation) {
     return (
-      conversation !== undefined && Date.now() - conversation.createdAt < this.conversationDuration
+      conversation !== undefined && Date.now() - conversation._createdAt < this.conversationDuration
     );
   }
 
