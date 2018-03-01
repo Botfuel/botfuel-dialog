@@ -1,7 +1,34 @@
 # Change Log
 
 All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v2.1.5...v3.0.0) (2018-03-01)
+
+### Breaking changes
+
+* Add members brain, nlu, adapters to the bot config ([7d3f080](https://github.com/Botfuel/botfuel-dialog/commit/7d3f080)). See [this sample config](https://github.com/Botfuel/botfuel-dialog/blob/master/packages/test-resolvers/test-config.js).
+
+* Now the exported class `Nlu` is an abstract class that is subclassed by `BotfuelNlu`. ([821a863](https://github.com/Botfuel/botfuel-dialog/commit/821a863))
+
+* Some renamings ([#124](https://github.com/Botfuel/botfuel-dialog/pull/124)):
+  * `brain.getValue` -> `brain.botGet`
+  * `brain.setValue` -> `brain.botSet`
+  * `adapter.initUserIfNecessary` -> `adapter.addUserIfNecessary`
+  * `brain.initUserIfNecessary` -> `brain.addUserIfNecessary`
+
+### Features
+
+The package [test-resolvers](https://github.com/Botfuel/botfuel-dialog/tree/master/packages/test-resolvers) provides samples for the following new features:
+
+* NLU modules can be resolved and loaded ([44fc9c2](https://github.com/Botfuel/botfuel-dialog/commit/44fc9c2)).
+
+* Brain modules can be resolved and loaded ([e81c4bb](https://github.com/Botfuel/botfuel-dialog/commit/e81c4bb)).
+
+* Export base brain class to allow suclassing ([7133ca8](https://github.com/Botfuel/botfuel-dialog/commit/7133ca8)).
+
+
 
 <a name="2.1.5"></a>
 ## [2.1.5](https://github.com/Botfuel/botfuel-dialog/compare/v2.1.4...v2.1.5) (2018-02-28)
