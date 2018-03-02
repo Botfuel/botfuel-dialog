@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v3.0.1...v4.0.0) (2018-03-02)
+
+
+### Bug Fixes
+
+* Fix greetings dialog ([de03b2e](https://github.com/Botfuel/botfuel-dialog/commit/de03b2e))
+
+
+
+
+
 <a name="2.1.1"></a>
 ## [2.1.1](https://github.com/Botfuel/botfuel-dialog/compare/v2.1.0...v2.1.1) (2018-02-15)
 
