@@ -39,10 +39,10 @@ describe('BotfuelAdapter', () => {
     expect(extended).toHaveProperty('adapter', 'botfuel');
   });
 
-  test('should return the correct uri', () => {
+  test('should return the correct url', () => {
     const botMessage = new BotTextMessage('message').toJson(userId);
-    const uri = new BotfuelAdapter({}).getUri(botMessage);
-    expect(uri).toEqual(
+    const url = new BotfuelAdapter({}).getUrl(botMessage);
+    expect(url).toEqual(
       `https://webchat.botfuel.io/bots/${
         process.env.BOTFUEL_APP_TOKEN
       }/users/USER/conversation/messages`,
@@ -56,7 +56,7 @@ describe('BotfuelAdapter', () => {
   });
 
   test('should return an empty object for the query string', () => {
-    const qs = new BotfuelAdapter({}).getQs();
+    const qs = new BotfuelAdapter({}).getQueryParameters();
     expect(qs).toEqual({});
   });
 });

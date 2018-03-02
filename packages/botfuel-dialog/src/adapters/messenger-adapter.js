@@ -103,12 +103,12 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /** @inheritDoc */
-  getUri() {
+  getUrl() {
     return `${FB_GRAPH_URL}/me/messages`;
   }
 
   /** @inheritDoc */
-  getQs() {
+  getQueryParameters() {
     return {
       access_token: process.env.FB_PAGE_ACCESS_TOKEN,
     };
