@@ -293,16 +293,6 @@ class MessengerAdapter extends WebAdapter {
       }
     }
   }
-
-  /** @inheritDoc */
-  extendMessage(message) {
-    return {
-      id: this.getMessageUUID(),
-      timestamp: this.getMessageTimestamp(),
-      adapter: 'messenger',
-      ...message,
-    };
-  }
 }
 
 module.exports = MessengerAdapter;

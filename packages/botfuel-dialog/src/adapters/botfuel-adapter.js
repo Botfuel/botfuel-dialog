@@ -47,16 +47,6 @@ class BotfuelAdapter extends WebAdapter {
   getBody(botMessage) {
     return botMessage;
   }
-
-  /** @inheritDoc */
-  extendMessage(message) {
-    return {
-      id: this.getMessageUUID(),
-      timestamp: this.getMessageTimestamp(),
-      adapter: 'botfuel',
-      ...message,
-    };
-  }
 }
 
 module.exports = BotfuelAdapter;
