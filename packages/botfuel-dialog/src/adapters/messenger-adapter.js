@@ -103,12 +103,12 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /** @inheritDoc */
-  getUri() {
+  getUrl() {
     return `${FB_GRAPH_URL}/me/messages`;
   }
 
   /** @inheritDoc */
-  getQs() {
+  getQueryParameters() {
     return {
       access_token: process.env.FB_PAGE_ACCESS_TOKEN,
     };
@@ -292,16 +292,6 @@ class MessengerAdapter extends WebAdapter {
         logger.error('updateUserProfile: error', error.message || error.error || error);
       }
     }
-  }
-
-  /** @inheritDoc */
-  extendMessage(message) {
-    return {
-      id: this.getMessageUUID(),
-      timestamp: this.getMessageTimestamp(),
-      adapter: 'messenger',
-      ...message,
-    };
   }
 }
 

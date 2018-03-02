@@ -89,8 +89,8 @@ class WebAdapter extends Adapter {
   /** @inheritDoc */
   async sendMessage(botMessage) {
     const requestOptions = {
-      uri: this.getUri(botMessage),
-      qs: this.getQs(),
+      uri: this.getUrl(botMessage),
+      qs: this.getQueryParameters(botMessage),
       body: this.getBody(botMessage),
     };
     const options = Object.assign({ method: 'POST', json: true }, requestOptions);
@@ -106,6 +106,36 @@ class WebAdapter extends Adapter {
       // TODO: is this what we want?
       logger.error('postResponse: catch KO', error.message || error.error || error);
     }
+  }
+
+  /**
+   * Get the URL of the API used to send a bot message.
+   * @async
+   * @param {Object} botMessage - the bot response
+   * @returns {null}
+   */
+  getUrl() {
+    throw new MissingImplementationError();
+  }
+
+  /**
+   * Get the query parameters to send along with a bot message.
+   * @async
+   * @param {Object} botMessage - the bot response
+   * @returns {null}
+   */
+  getQueryParameters() {
+    throw new MissingImplementationError();
+  }
+
+  /**
+   * Get the body of the request when sending a bot message.
+   * @async
+   * @param {Object} botMessage - the bot response
+   * @returns {null}
+   */
+  getBody() {
+    throw new MissingImplementationError();
   }
 }
 
