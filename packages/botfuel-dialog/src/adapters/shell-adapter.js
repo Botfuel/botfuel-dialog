@@ -18,6 +18,7 @@ const readline = require('readline');
 const chalk = require('chalk');
 const logger = require('logtown')('ShellAdapter');
 const uuidv4 = require('uuid/v4');
+const BotTextMessage = require('../messages/bot-text-message');
 const UserTextMessage = require('../messages/user-text-message');
 const Adapter = require('./adapter');
 
@@ -54,6 +55,16 @@ class ShellAdapter extends Adapter {
   async sendMessage(botMessage) {
     // eslint-disable-next-line no-console
     console.log(chalk.hex('#16a085')(`${DELIMITER}${botMessage.payload.value}`));
+  }
+
+  /** @inheritDoc */
+  extendMessage(message) {
+    return {
+      id: this.getMessageUUID(),
+      timestamp: this.getMessageTimestamp(),
+      adapter: 'shell',
+      ...message,
+    };
   }
 }
 

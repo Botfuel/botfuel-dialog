@@ -23,8 +23,17 @@ describe('ShellAdapter', () => {
   test('should add properties to the json message', async () => {
     const message = new BotTextMessage('message');
     const extended = new ShellAdapter({}).extendMessage(message.toJson('USER'));
-    expect(Object.keys(extended)).toEqual(['id', 'timestamp', 'type', 'sender', 'user', 'payload']);
+    expect(Object.keys(extended)).toEqual([
+      'id',
+      'timestamp',
+      'adapter',
+      'type',
+      'sender',
+      'user',
+      'payload',
+    ]);
     expect(extended).toHaveProperty('user', 'USER');
     expect(extended).toHaveProperty('payload.value', 'message');
+    expect(extended).toHaveProperty('adapter', 'shell');
   });
 });
