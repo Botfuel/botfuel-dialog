@@ -32,14 +32,14 @@ class BotfuelAdapter extends WebAdapter {
   }
 
   /** @inheritDoc */
-  getUri(botMessage) {
+  getUrl(botMessage) {
     return `${CHAT_SERVER_URL}/bots/${process.env.BOTFUEL_APP_TOKEN}/users/${
       botMessage.user
     }/conversation/messages`;
   }
 
   /** @inheritDoc */
-  getQs() {
+  getQueryParameters() {
     return {};
   }
 
