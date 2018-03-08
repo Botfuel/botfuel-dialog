@@ -40,9 +40,9 @@ class DialogManager extends Resolver {
   getPaths(name) {
     logger.debug('getPaths', name);
     return [
-      `${this.botPath}/${name}-${this.kind}.${this.config.adapter}.js`,
+      `${this.botPath}/${name}-${this.kind}.${this.config.adapter.name}.js`,
       `${this.botPath}/${name}-${this.kind}.js`,
-      `${this.sdkPath}/${name}-${this.kind}.${this.config.adapter}.js`,
+      `${this.sdkPath}/${name}-${this.kind}.${this.config.adapter.name}.js`,
       `${this.sdkPath}/${name}-${this.kind}.js`,
     ];
   }

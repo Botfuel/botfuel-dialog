@@ -16,6 +16,6 @@
 
 const { TextDialog } = require('botfuel-dialog');
 
-class SampleDialog extends TextDialog {}
+class HelloDialog extends TextDialog {}
 
-module.exports = SampleDialog;
+module.exports = HelloDialog;

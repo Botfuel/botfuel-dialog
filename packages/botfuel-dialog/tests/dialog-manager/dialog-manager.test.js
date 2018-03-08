@@ -37,7 +37,7 @@ const travelCancelDialog = { name: 'travel-cancel', entities: [] };
 
 describe('DialogManager', () => {
   const brain = new MemoryBrain(BRAIN_CONFIG);
-  const dm = new DialogManager(brain, { path: __dirname, locale: 'en' });
+  const dm = new DialogManager(brain, { path: __dirname, locale: 'en', adapter: { name: 'test' } });
 
   beforeEach(async () => {
     await brain.clean();

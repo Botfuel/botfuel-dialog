@@ -19,6 +19,7 @@ const MissingCredentialsError = require('../errors/missing-credentials-error');
 
 const BOTFUEL_ADAPTER = 'botfuel';
 const MONGO_BRAIN = 'mongo';
+const BOTFUEL_NLU = 'botfuel';
 
 /**
  * Logs informations/warnings about credentials environment variables.
@@ -30,10 +31,10 @@ const checkCredentials = (config) => {
   const { BOTFUEL_APP_TOKEN, BOTFUEL_APP_ID, BOTFUEL_APP_KEY } = process.env;
   // Botfuel app token
   if (!BOTFUEL_APP_TOKEN) {
-    if (config.adapter === BOTFUEL_ADAPTER) {
+    if (config.adapter.name === BOTFUEL_ADAPTER) {
       throw new MissingCredentialsError('BOTFUEL_APP_TOKEN is required to use the Webchat.');
     }
-    if (config.brain === MONGO_BRAIN) {
+    if (config.brain.name === MONGO_BRAIN) {
       throw new MissingCredentialsError(
         'BOTFUEL_APP_TOKEN is required to use the Brain with mongodb.',
       );
@@ -45,7 +46,7 @@ const checkCredentials = (config) => {
 
   // Botfuel app id/key
   if (!BOTFUEL_APP_ID || !BOTFUEL_APP_KEY) {
-    if (config.qna) {
+    if (config.nlu.name === BOTFUEL_NLU && config.nlu.qna) {
       throw new MissingCredentialsError(
         'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required to use Botfuel QnA.',
       );

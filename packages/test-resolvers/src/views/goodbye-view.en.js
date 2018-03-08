@@ -16,10 +16,10 @@
 
 const { TextView } = require('botfuel-dialog');
 
-class SampleView extends TextView {
+class GoodbyeView extends TextView {
   getTexts() {
-    return ['Hello human!'];
+    return ['Goodbye human!'];
   }
 }
 
-module.exports = SampleView;
+module.exports = GoodbyeView;
