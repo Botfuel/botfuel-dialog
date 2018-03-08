@@ -30,10 +30,10 @@ const checkCredentials = (config) => {
   const { BOTFUEL_APP_TOKEN, BOTFUEL_APP_ID, BOTFUEL_APP_KEY } = process.env;
   // Botfuel app token
   if (!BOTFUEL_APP_TOKEN) {
-    if (config.adapter === BOTFUEL_ADAPTER) {
+    if (config.adapter.name === BOTFUEL_ADAPTER) {
       throw new MissingCredentialsError('BOTFUEL_APP_TOKEN is required to use the Webchat.');
     }
-    if (config.brain === MONGO_BRAIN) {
+    if (config.brain.name === MONGO_BRAIN) {
       throw new MissingCredentialsError(
         'BOTFUEL_APP_TOKEN is required to use the Brain with mongodb.',
       );

@@ -47,6 +47,25 @@ describe('Resolutions', () => {
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(dialogs.previous.length).toBe(1);
-    expect(dialogs.previous[0].name).toBe('sample');
+    expect(dialogs.previous[0].name).toBe('hello');
+  });
+
+  test('should respond to dialog specific to the adapter and to view specific to language', async () => {
+    const bot = new Bot(config);
+    const userId = bot.adapter.userId;
+    await bot.play([new UserTextMessage('Goodbye')]);
+    expect(bot.adapter.log).toEqual(
+      [new UserTextMessage('Goodbye'), new BotTextMessage('Goodbye human!')].map(msg =>
+        msg.toJson(userId),
+      ),
+    );
+
+    const user = await bot.brain.getUser(userId);
+    const dialogs = await bot.brain.getDialogs(userId);
+    expect(user._userId).toBe(userId);
+    expect(user._conversations.length).toBe(1);
+    expect(dialogs.stack).toHaveLength(0);
+    expect(dialogs.previous.length).toBe(1);
+    expect(dialogs.previous[0].name).toBe('goodbye');
   });
 });

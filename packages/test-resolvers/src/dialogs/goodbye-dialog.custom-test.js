@@ -14,20 +14,8 @@
  * limitations under the License.
  */
 
-module.exports = {
-  adapter: {
-    name: 'custom-test',
-  },
-  brain: {
-    name: 'custom',
-    brainSecretSauce: 42,
-  },
-  locale: 'en',
-  logger: 'error',
-  nlu: {
-    name: 'custom',
-    intentThreshold: 0.75,
-    nluSecretSauce: 43,
-  },
-  path: __dirname,
-};
+const { TextDialog } = require('botfuel-dialog');
+
+class GoodbyeDialog extends TextDialog {}
+
+module.exports = GoodbyeDialog;
