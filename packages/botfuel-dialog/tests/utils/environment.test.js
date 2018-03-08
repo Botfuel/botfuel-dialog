@@ -30,7 +30,7 @@ describe('Environment utils', () => {
 
   describe('When BOTFUEL_APP_TOKEN, BOTFUEL_APP_KEY, BOTFUEL_APP_ID are defined', () => {
     test('should not throw an error when using spellchecking or qna', async () => {
-      const config = buildConfig({ qna: true, spellchecking: true });
+      const config = buildConfig({ nlu: { name: 'botfuel', qna: true }, spellchecking: true });
       expect(() => checkCredentials(config)).not.toThrowError(MissingCredentialsError);
     });
   });
@@ -41,13 +41,13 @@ describe('Environment utils', () => {
     });
 
     test('should throw an error when using botfuel adapter', async () => {
-      const config = buildConfig({ adapter: 'botfuel' });
+      const config = buildConfig({ adapter: { name: 'botfuel' } });
       const f = () => checkCredentials(config);
       expect(f).toThrowError(MissingCredentialsError);
     });
 
     test('should throw an error when using mongo brain', async () => {
-      const config = buildConfig({ brain: 'mongo' });
+      const config = buildConfig({ brain: { name: 'mongo' } });
       const f = () => checkCredentials(config);
       expect(f).toThrowError(MissingCredentialsError);
     });
@@ -59,7 +59,7 @@ describe('Environment utils', () => {
     });
 
     test('should throw an error when using botfuel QnA', async () => {
-      const config = buildConfig({ qna: true });
+      const config = buildConfig({ nlu: { name: 'botfuel', qna: true } });
       expect(() => checkCredentials(config)).toThrowError(MissingCredentialsError);
     });
 
@@ -80,7 +80,7 @@ describe('Environment utils', () => {
     });
 
     test('should throw an error when using botfuel QnA', async () => {
-      const config = buildConfig({ qna: true });
+      const config = buildConfig({ nlu: { name: 'botfuel', qna: true } });
       const f = () => checkCredentials(config);
       expect(f).toThrowError(MissingCredentialsError);
     });
