@@ -17,6 +17,7 @@
 module.exports = {
   adapter: {
     name: 'custom-test',
+    adapterSecretSauce: 41,
   },
   brain: {
     name: 'custom',

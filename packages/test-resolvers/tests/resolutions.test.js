@@ -19,6 +19,12 @@ const { Bot, BotTextMessage, UserTextMessage } = require('botfuel-dialog');
 const config = require('../test-config');
 
 describe('Resolutions', () => {
+  test('should resolve adapter', async () => {
+    const bot = new Bot(config);
+
+    expect(bot.adapter.secretSauce).toBe(41);
+  });
+
   test('should resolve brain', async () => {
     const bot = new Bot(config);
 
