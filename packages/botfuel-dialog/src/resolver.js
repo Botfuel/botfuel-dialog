@@ -15,8 +15,10 @@
  */
 
 const fs = require('fs');
+const path = require('path');
 const logger = require('logtown')('Resolver');
 const ResolutionError = require('./errors/resolution-error');
+const MissingImplementationError = require('./errors/missing-implementation-error');
 
 /**
  * The adapter resolver resolves the adapter at startup.
@@ -30,8 +32,19 @@ class Resolver {
   constructor(config, kind) {
     this.config = config;
     this.kind = kind;
-    this.botPath = `${config.path}/src/${kind}s`;
-    this.sdkPath = `${__dirname}/${kind}s`;
+    this.directories = config.componentRoots
+      .map(componentRoot => path.join(componentRoot, `${kind}s`))
+      .filter(fs.existsSync);
+  }
+
+  /**
+   * Gets the possible paths for a given name.
+   * @param {String} name - the adapter name
+   * @returns {[String]} the possible paths
+   */
+  getPaths(name) {
+    logger.debug('getPaths', name);
+    return this.directories.map(directory => path.join(directory, `${name}-${this.kind}.js`));
   }
 
   /**
@@ -41,11 +54,11 @@ class Resolver {
    */
   getPath(name) {
     logger.debug('getPath');
-    for (const path of this.getPaths(name)) {
-      logger.debug('getPath: test path', path);
-      if (fs.existsSync(path)) {
-        logger.debug('getPath: existing path', path);
-        return path;
+    for (const componentPath of this.getPaths(name)) {
+      logger.debug('getPath: test path', componentPath);
+      if (fs.existsSync(componentPath)) {
+        logger.debug('getPath: existing path', componentPath);
+        return componentPath;
       }
     }
     return null;
@@ -58,9 +71,9 @@ class Resolver {
    */
   resolve(name) {
     logger.debug('resolve', name);
-    const path = this.getPath(name);
-    if (path) {
-      const Resolved = require(path);
+    const componentPath = this.getPath(name);
+    if (componentPath) {
+      const Resolved = require(componentPath);
       return this.resolutionSucceeded(Resolved);
     }
     throw new ResolutionError({
@@ -68,6 +81,15 @@ class Resolver {
       name,
       paths: this.getPaths(name),
     });
+  }
+
+  /**
+   * Instantiate a component after a successful resolution
+   * @param {String} Resolved - the component class
+   * @returns {Adapter|null} the instance or null
+   */
+  resolutionSucceeded() {
+    throw new MissingImplementationError();
   }
 }
 

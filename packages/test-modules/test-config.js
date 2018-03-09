@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-const Resolver = require('./resolver');
-
-/**
- * The adapter resolver resolves the adapter at startup.
- */
-class AdapterResolver extends Resolver {
-  /**
-   * @constructor
-   * @param {Object} bot - the bot
-   */
-  constructor(bot) {
-    super(bot.config, 'adapter');
-    this.bot = bot;
-  }
-
-  /** @inheritdoc */
-  resolutionSucceeded(Resolved) {
-    return new Resolved(this.bot);
-  }
-}
-
-module.exports = AdapterResolver;
+module.exports = {
+  adapter: {
+    name: 'sample-module',
+    adapterSecretSauce: 41,
+  },
+  brain: {
+    name: 'sample-module',
+    brainSecretSauce: 42,
+  },
+  locale: 'en',
+  logger: 'error',
+  modules: ['sample-botfuel-module'],
+  nlu: {
+    name: 'sample-module',
+    intentThreshold: 0.75,
+    nluSecretSauce: 43,
+  },
+  path: __dirname,
+};

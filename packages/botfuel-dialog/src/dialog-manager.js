@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+const path = require('path');
+const flatMap = require('lodash/flatMap');
 const logger = require('logtown')('DialogManager');
 const Resolver = require('./resolver');
 const Dialog = require('./dialogs/dialog');
@@ -39,12 +41,15 @@ class DialogManager extends Resolver {
   /** @inheritdoc */
   getPaths(name) {
     logger.debug('getPaths', name);
-    return [
-      `${this.botPath}/${name}-${this.kind}.${this.config.adapter.name}.js`,
-      `${this.botPath}/${name}-${this.kind}.js`,
-      `${this.sdkPath}/${name}-${this.kind}.${this.config.adapter.name}.js`,
-      `${this.sdkPath}/${name}-${this.kind}.js`,
+
+    const possibleFilenames = [
+      `${name}-${this.kind}.${this.config.adapter.name}.js`,
+      `${name}-${this.kind}.js`,
     ];
+
+    return flatMap(this.directories, directory =>
+      possibleFilenames.map(filename => path.join(directory, filename)),
+    );
   }
 
   /** @inheritdoc */

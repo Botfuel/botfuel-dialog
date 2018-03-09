@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+const fs = require('fs');
 const path = require('path');
 const { omitBy } = require('lodash');
 const logger = require('logtown')('Config');
 const LoggerManager = require('./logger-manager');
+const ConfigurationError = require('./errors/configuration-error');
 
 const DEFAULT_CONVERSATION_DURATION = 86400000; // one day in ms
 
@@ -31,6 +33,7 @@ const defaultConfig = {
     name: 'memory',
   },
   logger: 'info',
+  modules: [],
   nlu: {
     name: 'botfuel',
     intentThreshold: 0.8,
@@ -67,6 +70,35 @@ const resolveConfigFile = (configFileName) => {
   }
 };
 
+const getComponentRoots = function (config) {
+  const botRoot = `${config.path}/src`;
+  const sdkRoot = __dirname;
+
+  const moduleRoots = config.modules.map((packageName) => {
+    if (typeof packageName !== 'string') {
+      throw new ConfigurationError(
+        'Parameter "modules" of configuration should be a list of package names.',
+      );
+    }
+    const moduleBasePath = path.dirname(require.resolve(packageName));
+    const { botfuelModuleRoot } = require(packageName);
+    if (typeof botfuelModuleRoot !== 'string') {
+      throw new ConfigurationError(
+        `Package ${packageName} should export "botfuelModuleRoot" with type string.`,
+      );
+    }
+    const absolutePath = path.join(moduleBasePath, botfuelModuleRoot);
+    if (!fs.existsSync(absolutePath)) {
+      throw new ConfigurationError(
+        `Package ${packageName} does not contain the directory "${absolutePath}".`,
+      );
+    }
+    return absolutePath;
+  });
+
+  return [botRoot, ...moduleRoots, sdkRoot];
+};
+
 /**
  * Returns the configuration
  * @param {Object} botConfig - the bot config
@@ -81,6 +113,8 @@ const getConfiguration = (botConfig = {}) => {
 
   config.brain.conversationDuration =
     config.brain.conversationDuration || DEFAULT_CONVERSATION_DURATION;
+
+  config.componentRoots = getComponentRoots(config);
 
   // reconfigure the logger with the final config
   LoggerManager.configure(config);

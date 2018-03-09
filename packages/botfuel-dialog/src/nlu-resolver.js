@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-const logger = require('logtown')('NluResolver');
 const Resolver = require('./resolver');
 
 /**
@@ -28,12 +27,6 @@ class NluResolver extends Resolver {
   constructor(bot) {
     super(bot.config, 'nlu');
     this.bot = bot;
-  }
-
-  /** @inheritdoc */
-  getPaths(name) {
-    logger.debug('getPaths', name);
-    return [`${this.botPath}/${name}-${this.kind}.js`, `${this.sdkPath}/${name}-${this.kind}.js`];
   }
 
   /** @inheritdoc */

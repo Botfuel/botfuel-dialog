@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+const path = require('path');
+const flatMap = require('lodash/flatMap');
 const logger = require('logtown')('ViewResolver');
 const Resolver = require('./resolver');
 
@@ -32,12 +34,15 @@ class ViewResolver extends Resolver {
   /** @inheritdoc */
   getPaths(name) {
     logger.debug('getPaths', name);
-    return [
-      `${this.botPath}/${name}-${this.kind}.${this.config.locale}.js`,
-      `${this.botPath}/${name}-${this.kind}.js`,
-      `${this.sdkPath}/${name}-${this.kind}.${this.config.locale}.js`,
-      `${this.sdkPath}/${name}-${this.kind}.js`,
+
+    const possibleFilenames = [
+      `${name}-${this.kind}.${this.config.locale}.js`,
+      `${name}-${this.kind}.js`,
     ];
+
+    return flatMap(this.directories, directory =>
+      possibleFilenames.map(filename => path.join(directory, filename)),
+    );
   }
 
   /** @inheritdoc */
