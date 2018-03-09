@@ -52,6 +52,7 @@ const QuickrepliesMessage = require('./messages/quickreplies-message');
 const UserImageMessage = require('./messages/user-image-message');
 const UserTextMessage = require('./messages/user-text-message');
 const QnasView = require('./views/qnas-view');
+const MissingImplementationError = require('./errors/missing-implementation-error');
 
 module.exports = {
   Logger: Logger.getLogger,
@@ -92,4 +93,5 @@ module.exports = {
   UserImageMessage,
   UserTextMessage,
   QnasView,
+  MissingImplementationError,
 };
