@@ -42,9 +42,23 @@ class Resolver {
    * @param {String} name - the adapter name
    * @returns {[String]} the possible paths
    */
+  getFilenames(name) {
+    return [`${name}-${this.kind}.js`];
+  }
+
+  /**
+   * Gets the possible paths for a given name.
+   * @param {String} name - the adapter name
+   * @returns {[String]} the possible paths
+   */
   getPaths(name) {
     logger.debug('getPaths', name);
-    return this.directories.map(directory => path.join(directory, `${name}-${this.kind}.js`));
+
+    const possibleFilenames = this.getFilenames(name);
+
+    return this.directories
+      .map(directory => possibleFilenames.map(filename => path.join(directory, filename)))
+      .reduce((a, b) => [...a, ...b]);
   }
 
   /**
