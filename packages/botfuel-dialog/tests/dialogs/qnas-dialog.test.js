@@ -17,16 +17,11 @@
 const QnasDialog = require('../../src/dialogs/qnas-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const ShellAdapter = require('../../src/adapters/shell-adapter');
-
-const BRAIN_CONFIG = {
-  brain: {
-    conversationDuration: 86400000, // one day in ms
-  },
-};
+const TEST_CONFIG = require('../../src/config').getConfiguration({});
 
 describe('QnasDialog', () => {
-  const brain = new MemoryBrain(BRAIN_CONFIG);
-  const dialog = new QnasDialog({ path: __dirname, locale: 'en' }, brain);
+  const brain = new MemoryBrain(TEST_CONFIG);
+  const dialog = new QnasDialog(TEST_CONFIG, brain);
   const adapter = new ShellAdapter({});
   const oneQna = [{ dim: 'qnas', value: [{ questions: ['question'], answer: 'answer' }] }];
   const manyQnas = [

@@ -17,16 +17,11 @@
 const Dialog = require('../../src/dialogs/dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const DialogError = require('../../src/errors/dialog-error');
-
-const BRAIN_CONFIG = {
-  brain: {
-    conversationDuration: 86400000, // one day in ms
-  },
-};
+const TEST_CONFIG = require('../../src/config').getConfiguration({});
 
 describe('Dialog', () => {
-  const brain = new MemoryBrain(BRAIN_CONFIG);
-  const dialog = new Dialog({ path: __dirname, locale: 'en' }, brain, {
+  const brain = new MemoryBrain(TEST_CONFIG);
+  const dialog = new Dialog(TEST_CONFIG, brain, {
     namespace: 'testdialog',
     entities: {},
   });

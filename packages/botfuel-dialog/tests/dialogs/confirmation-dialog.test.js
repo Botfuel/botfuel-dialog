@@ -17,16 +17,12 @@
 const ConfirmationDialog = require('../../src/dialogs/confirmation-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const UserTextMessage = require('../../src/messages/user-text-message');
+const TEST_CONFIG = require('../../src/config').getConfiguration({});
 
-const BRAIN_CONFIG = {
-  brain: {
-    conversationDuration: 86400000, // one day in ms
-  },
-};
 const USER_ID = 'USER';
 
 describe('ConfirmationDialog', () => {
-  const brain = new MemoryBrain(BRAIN_CONFIG);
+  const brain = new MemoryBrain(TEST_CONFIG);
 
   beforeEach(async () => {
     await brain.addUser(USER_ID);
@@ -37,7 +33,7 @@ describe('ConfirmationDialog', () => {
   });
 
   test('should return the complete action', async () => {
-    const dialog = new ConfirmationDialog({ path: __dirname, locale: 'en' }, brain, {
+    const dialog = new ConfirmationDialog(TEST_CONFIG, brain, {
       namespace: 'confirmation-dialog',
     });
     const action = await dialog.dialogWillComplete(new UserTextMessage('message').toJson(USER_ID), {
@@ -49,7 +45,7 @@ describe('ConfirmationDialog', () => {
   });
 
   test('should return the cancel action', async () => {
-    const dialog = new ConfirmationDialog({ path: __dirname, locale: 'en' }, brain, {
+    const dialog = new ConfirmationDialog(TEST_CONFIG, brain, {
       namespace: 'confirmation-dialog',
     });
     const action = await dialog.dialogWillComplete(new UserTextMessage('message').toJson(USER_ID), {

@@ -21,14 +21,12 @@ const Dialog = require('../../src/dialogs/dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const TestAdapter = require('../../src/adapters/test-adapter');
 const BotTextMessage = require('../../src/messages/bot-text-message');
+const TEST_CONFIG = require('../../src/config').getConfiguration({
+  path: __dirname,
+  adapter: { name: 'test' },
+});
 
 const TEST_USER = '1';
-
-const BRAIN_CONFIG = {
-  brain: {
-    conversationDuration: 86400000, // one day in ms
-  },
-};
 
 const greetingsDialog = { name: 'greetings', entities: [] };
 const thanksDialog = { name: 'thanks', entities: [] };
@@ -36,8 +34,8 @@ const travelDialog = { name: 'travel', entities: [] };
 const travelCancelDialog = { name: 'travel-cancel', entities: [] };
 
 describe('DialogManager', () => {
-  const brain = new MemoryBrain(BRAIN_CONFIG);
-  const dm = new DialogManager(brain, { path: __dirname, locale: 'en', adapter: { name: 'test' } });
+  const brain = new MemoryBrain(TEST_CONFIG);
+  const dm = new DialogManager(brain, TEST_CONFIG);
 
   beforeEach(async () => {
     await brain.clean();
