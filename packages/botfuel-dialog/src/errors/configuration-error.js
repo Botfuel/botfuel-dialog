@@ -14,25 +14,14 @@
  * limitations under the License.
  */
 
-const Resolver = require('./resolver');
+const SdkError = require('./sdk-error');
 
-/**
- * The adapter resolver resolves the adapter at startup.
- */
-class AdapterResolver extends Resolver {
+module.exports = class ConfigurationError extends SdkError {
   /**
    * @constructor
-   * @param {Object} bot - the bot
+   * @param {String} message - the error message
    */
-  constructor(bot) {
-    super(bot.config, 'adapter');
-    this.bot = bot;
+  constructor(message) {
+    super(message || 'Unknown configuration error');
   }
-
-  /** @inheritdoc */
-  resolutionSucceeded(Resolved) {
-    return new Resolved(this.bot);
-  }
-}
-
-module.exports = AdapterResolver;
+};

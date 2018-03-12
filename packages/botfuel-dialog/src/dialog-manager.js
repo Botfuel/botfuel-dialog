@@ -37,14 +37,8 @@ class DialogManager extends Resolver {
   }
 
   /** @inheritdoc */
-  getPaths(name) {
-    logger.debug('getPaths', name);
-    return [
-      `${this.botPath}/${name}-${this.kind}.${this.config.adapter.name}.js`,
-      `${this.botPath}/${name}-${this.kind}.js`,
-      `${this.sdkPath}/${name}-${this.kind}.${this.config.adapter.name}.js`,
-      `${this.sdkPath}/${name}-${this.kind}.js`,
-    ];
+  getFilenames(name) {
+    return [`${name}-${this.kind}.${this.config.adapter.name}.js`, `${name}-${this.kind}.js`];
   }
 
   /** @inheritdoc */

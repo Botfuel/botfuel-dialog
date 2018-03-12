@@ -5486,6 +5486,12 @@ safe-regex@^1.1.0:
   dependencies:
     ret "~0.1.10"
 
+sample-botfuel-module@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/sample-botfuel-module/-/sample-botfuel-module-1.1.0.tgz#b9afb1429325545df22d378332aa38e12880a964"
+  dependencies:
+    botfuel-dialog "^4.0.0"
+
 samsam@1.3.0, samsam@1.x:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/samsam/-/samsam-1.3.0.tgz#8d1d9350e25622da30de3e44ba692b5221ab7c50"

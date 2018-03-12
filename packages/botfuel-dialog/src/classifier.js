@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const Fs = require('fs');
+const fs = require('fs');
 const crypto = require('crypto');
 const fsExtra = require('fs-extra');
 const Natural = require('natural');
@@ -97,7 +97,7 @@ class Classifier {
    */
   async isModelUpToDate(modelFilePath, intentsDirPath) {
     logger.debug('isModelUpToDate');
-    const intentFiles = Fs.readdirSync(intentsDirPath, 'utf8');
+    const intentFiles = fs.readdirSync(intentsDirPath, 'utf8');
     const intentsMap = intentFiles
       .filter(file => file.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX)
       .map(fileName => ({
@@ -107,10 +107,9 @@ class Classifier {
       .reduce(
         (map, intent) =>
           Object.assign(map, {
-            [intent.intentName]: Fs.readFileSync(
-              `${intentsDirPath}/${intent.fileName}`,
-              'utf8',
-            ).toString(),
+            [intent.intentName]: fs
+              .readFileSync(`${intentsDirPath}/${intent.fileName}`, 'utf8')
+              .toString(),
           }),
         {},
       );
@@ -121,7 +120,7 @@ class Classifier {
       .digest('hex');
 
     try {
-      const storedHash = Fs.readFileSync(this.modelMetadataFilename, 'utf8').toString();
+      const storedHash = fs.readFileSync(this.modelMetadataFilename, 'utf8').toString();
 
       return hash === storedHash;
     } catch (err) {
@@ -187,14 +186,15 @@ class Classifier {
     const intentsMap = {};
 
     this.classifier = new Natural.LogisticRegressionClassifier(this.getStemmer());
-    Fs.readdirSync(this.intentDirname, 'utf8')
+    fs
+      .readdirSync(this.intentDirname, 'utf8')
       .filter(fileName => fileName.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX)
       .map((fileName) => {
         logger.debug('train: filename', fileName);
         const intent = fileName.substring(0, fileName.length - INTENT_SUFFIX.length);
         logger.debug('train: intent', intent);
 
-        const content = Fs.readFileSync(`${this.intentDirname}/${fileName}`, 'utf8').toString();
+        const content = fs.readFileSync(`${this.intentDirname}/${fileName}`, 'utf8').toString();
 
         return content.split('\n').map((line) => {
           logger.debug('train: line', line);

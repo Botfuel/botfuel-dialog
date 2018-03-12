@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-const logger = require('logtown')('ViewResolver');
 const Resolver = require('./resolver');
 
 /**
@@ -30,14 +29,8 @@ class ViewResolver extends Resolver {
   }
 
   /** @inheritdoc */
-  getPaths(name) {
-    logger.debug('getPaths', name);
-    return [
-      `${this.botPath}/${name}-${this.kind}.${this.config.locale}.js`,
-      `${this.botPath}/${name}-${this.kind}.js`,
-      `${this.sdkPath}/${name}-${this.kind}.${this.config.locale}.js`,
-      `${this.sdkPath}/${name}-${this.kind}.js`,
-    ];
+  getFilenames(name) {
+    return [`${name}-${this.kind}.${this.config.locale}.js`, `${name}-${this.kind}.js`];
   }
 
   /** @inheritdoc */

@@ -16,16 +16,11 @@
 
 const VoidDialog = require('../../src/dialogs/void-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
-
-const BRAIN_CONFIG = {
-  brain: {
-    conversationDuration: 86400000, // one day in ms
-  },
-};
+const TEST_CONFIG = require('../../src/config').getConfiguration({});
 
 describe('VoidDialog', () => {
-  const brain = new MemoryBrain(BRAIN_CONFIG);
-  const dialog = new VoidDialog({ path: __dirname, locale: 'en' }, brain, {
+  const brain = new MemoryBrain(TEST_CONFIG);
+  const dialog = new VoidDialog(TEST_CONFIG, brain, {
     namespace: 'void-dialog',
   });
 
