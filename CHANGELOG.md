@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+
+<a name="4.1.0"></a>
+## [4.1.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.0.0...v4.1.0) (2018-03-12)
+
+### New features
+
+* Assign uuid to conversations
+
+### Refactoring
+
+* Rename the methods used by the web adapter to build POST request
+  * `getUri` -> `getUrl`
+  * `getQs` -> `getQueryParameters`
+
+### Bug fixes
+
+* Fix dialog resolution for custom adapters
+
 <a name="4.0.0"></a>
 # [4.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v3.0.1...v4.0.0) (2018-03-02)
 
@@ -12,18 +30,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * Fix greetings dialog ([de03b2e](https://github.com/Botfuel/botfuel-dialog/commit/de03b2e))
 
 
-### Chores
-
-* Fake commit ([c63519f](https://github.com/Botfuel/botfuel-dialog/commit/c63519f))
-* Fake commit ([0bac1e5](https://github.com/Botfuel/botfuel-dialog/commit/0bac1e5))
-
-
 ### BREAKING CHANGES
 
 * Brain structure has changed
-* Brain structure has changed
-
-
 
 
 
