@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.2.0"></a>
+# [4.2.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.1.0...v4.2.0) (2018-03-12)
+
+
+### Features
+
+* expose MissingImplementationError ([5755bd5](https://github.com/Botfuel/botfuel-dialog/commit/5755bd5))
+* Support modules ([ecab4eb](https://github.com/Botfuel/botfuel-dialog/commit/ecab4eb))
+
+
+
+
+
 <a name="4.0.0"></a>
 # [4.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v3.0.1...v4.0.0) (2018-03-02)
 

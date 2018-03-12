@@ -1,10 +1,22 @@
 # Change Log
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+      All notable changes to this project will be documented in this file.
+      See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+      <a name="4.2.0"></a>
+# [4.2.0](https://github.com/Botfuel/bot-sdk2/compare/v4.1.0...v4.2.0) (2018-03-12)
 
 
-<a name="4.1.0"></a>
+### Features
+
+* expose MissingImplementationError ([5755bd5](https://github.com/Botfuel/bot-sdk2/commit/5755bd5))
+* Support modules ([ecab4eb](https://github.com/Botfuel/bot-sdk2/commit/ecab4eb))
+
+
+
+
+
+      <a name="4.1.0"></a>
 ## [4.1.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.0.0...v4.1.0) (2018-03-12)
 
 ### New features
@@ -14,8 +26,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Refactoring
 
 * Rename the methods used by the web adapter to build POST request
-  * `getUri` -> `getUrl`
-  * `getQs` -> `getQueryParameters`
+* `getUri` -> `getUrl`
+* `getQs` -> `getQueryParameters`
 
 ### Bug fixes
 
