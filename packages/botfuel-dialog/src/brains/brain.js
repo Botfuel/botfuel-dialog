@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+const uuidv4 = require('uuid/v4');
 const logger = require('logtown')('Brain');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 
@@ -119,6 +120,7 @@ class Brain {
         previous: [],
       },
       _createdAt: Date.now(),
+      uuid: uuidv4(),
     };
   }
 
