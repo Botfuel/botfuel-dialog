@@ -16,8 +16,8 @@
 
 /* eslint-disable quotes */
 
-const WebAdapter = require('../../src/adapters/web-adapter');
 const validUrl = require('valid-url');
+const WebAdapter = require('../../src/adapters/web-adapter');
 
 describe('WebAdapter', () => {
   test('should throw a missing implementation error', async () => {
