@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { Bot, BotImageMessage, UserTextMessage } = require('botfuel-dialog');
+const { Bot, BotImageMessage, UserTextMessage, WebAdapter } = require('botfuel-dialog');
 const PRODUCTS = require('../PRODUCTS.json');
 const config = require('../test-config');
 
@@ -26,9 +26,10 @@ describe('SingleProductDialog', () => {
     return test(`should show the ${key} image`, async () => {
       await bot.play([new UserTextMessage(`Show me the ${key}.`)]);
       expect(bot.adapter.log).toEqual(
-        [new UserTextMessage(`Show me the ${key}.`), new BotImageMessage(product.imageUrl)].map(
-          msg => msg.toJson(userId),
-        ),
+        [
+          new UserTextMessage(`Show me the ${key}.`),
+          new BotImageMessage(WebAdapter.getStaticUrl(product.imageUrl)),
+        ].map(msg => msg.toJson(userId)),
       );
     });
   });

@@ -1,17 +1,17 @@
 {
   "top hat": {
     "title": "Top hat",
-    "imageUrl": "https://images-na.ssl-images-amazon.com/images/I/51qyodDiK-L._SY355_.jpg",
+    "imageUrl": "images/tophat.jpg",
     "link": "https://www.amazon.com/Beistle-Satin-Sleek-Top-Hat/dp/B0051BH6IM"
   },
   "cowboy hat": {
     "title": "Cowboy hat",
-    "imageUrl": "https://images-na.ssl-images-amazon.com/images/I/71NAi8yEZRL._UX522_.jpg",
+    "imageUrl": "images/cowboyhat.jpg",
     "link": "https://www.amazon.co.uk/Leather-Australian-Cowboy-Aussie-brown/dp/B0094J2H0O"
   },
   "detective hat": {
     "title": "Detective hat",
-    "imageUrl": "https://images-na.ssl-images-amazon.com/images/I/71DyzluYzQL._UL1001_.jpg",
+    "imageUrl": "images/detectivehat.jpg",
     "link": "https://www.amazon.com/Unisex-Sherlock-Holmes-Detective-Deerstalker/dp/B016A3J3N0"
   }
 }
