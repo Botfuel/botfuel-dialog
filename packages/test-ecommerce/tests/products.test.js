@@ -68,7 +68,7 @@ describe('Products', () => {
     );
     expect(bot.adapter.log[4]).toEqual(
       new BotImageMessage(
-        WebAdapter.getTemplateImageUrl('product_order_confirm.handlebars', {
+        WebAdapter.getImageUrl('product_order_confirm.handlebars', {
           productName: 'Top hat',
           productImage: 'images/tophat.jpg',
         }),

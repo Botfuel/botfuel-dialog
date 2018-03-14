@@ -31,15 +31,17 @@ describe('WebAdapter', () => {
 
   test('should resolve static url to a correct uri', async () => {
     expect(validUrl.isWebUri(WebAdapter.getStaticUrl('./images/picture.png'))).toBeDefined();
-    expect(WebAdapter.getStaticUrl('./images/picture.png')).toContain('/static/images/picture.png');
+    expect(WebAdapter.getStaticUrl('./images/picture.png')).toEqual(
+      'http://localhost:5000/static/images/picture.png',
+    );
 
     expect(validUrl.isWebUri(WebAdapter.getStaticUrl('images/picture.png'))).toBeDefined();
-    expect(WebAdapter.getStaticUrl('images/picture.png')).toContain('/static/images/picture.png');
+    expect(WebAdapter.getStaticUrl('images/picture.png')).toEqual(
+      'http://localhost:5000/static/images/picture.png',
+    );
   });
 
   test('should resolve template image url to a correct uri', async () => {
-    expect(
-      validUrl.isWebUri(WebAdapter.getTemplateImageUrl('product.handlebars', {})),
-    ).toBeDefined();
+    expect(validUrl.isWebUri(WebAdapter.getImageUrl('product.handlebars', {}))).toBeDefined();
   });
 });

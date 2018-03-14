@@ -28,7 +28,7 @@ const Adapter = require('./adapter');
 const PORT = process.env.PORT || process.env.BOTFUEL_ADAPTER_PORT || 5000;
 const BOT_URL = process.env.BOT_URL || `http://localhost:${PORT}`;
 const STATIC_BASE_URL = url.resolve(BOT_URL, 'static/');
-const TEAMPLATE_BASE_URL = url.resolve(BOT_URL, 'templates/');
+const TEMPLATE_BASE_URL = url.resolve(BOT_URL, 'templates/');
 
 // screenshot service url
 const SCREENSHOT_SERVICE_URL = 'https://botfuel-screenshot-service.herokuapp.com/';
@@ -167,7 +167,7 @@ class WebAdapter extends Adapter {
    * @returns {null}
    */
   static getTemplateUrl(templateName, params) {
-    const templateRoot = url.resolve(TEAMPLATE_BASE_URL, templateName);
+    const templateRoot = url.resolve(TEMPLATE_BASE_URL, templateName);
     const templateUrl = `${templateRoot}?${querystring.stringify(params)}`;
     logger.debug('getTemplateUrl', templateUrl);
 
@@ -184,7 +184,7 @@ class WebAdapter extends Adapter {
    * @param {Number} quality - image quality
    * @returns {null}
    */
-  static getTemplateImageUrl(templateName, params, width = 800, height = 600, quality = 100) {
+  static getImageUrl(templateName, params, width = 800, height = 600, quality = 100) {
     const templateUrl = this.getTemplateUrl(templateName, params);
     const screenshotParams = {
       url: templateUrl,

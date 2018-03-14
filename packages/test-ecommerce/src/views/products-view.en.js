@@ -41,7 +41,7 @@ class ProductsView extends PromptView {
 
       messages.push(
         new BotImageMessage(
-          WebAdapter.getTemplateImageUrl('product_order_confirm.handlebars', {
+          WebAdapter.getImageUrl('product_order_confirm.handlebars', {
             productName: product.title,
             productImage: product.imageUrl,
           }),
