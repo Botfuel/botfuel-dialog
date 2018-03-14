@@ -183,7 +183,7 @@ class WebAdapter extends Adapter {
    * @returns {null}
    */
   static getTemplateImageUrl(templateName, params, width = 800, height = 600, quality = 100) {
-    const templateUrl = getTemplateUrl(templateName, params);
+    const templateUrl = this.getTemplateUrl(templateName, params);
     const screenshotParams = {
       url: templateUrl,
       quality,
