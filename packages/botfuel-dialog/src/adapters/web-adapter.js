@@ -167,9 +167,11 @@ class WebAdapter extends Adapter {
    * @returns {null}
    */
   static getTemplateUrl(templateName, params) {
-    logger.debug('getTemplateUrl', templateName, params);
-    const templateUrl = url.resolve(TEAMPLATE_BASE_URL, templateName);
-    return `${templateUrl}?${querystring.stringify(params)}`;
+    const templateRoot = url.resolve(TEAMPLATE_BASE_URL, templateName);
+    const templateUrl = `${templateRoot}?${querystring.stringify(params)}`;
+    logger.debug('getTemplateUrl', templateUrl);
+
+    return templateUrl;
   }
 
   /**

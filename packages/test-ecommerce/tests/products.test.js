@@ -18,6 +18,7 @@
 const {
   Bot,
   BotTextMessage,
+  BotImageMessage,
   UserTextMessage,
   CardsMessage,
   PostbackMessage,
@@ -66,6 +67,14 @@ describe('Products', () => {
       new PostbackMessage('products', [{ dim: 'product', values: ['top hat'] }]).toJson(userId),
     );
     expect(bot.adapter.log[4]).toEqual(
+      new BotImageMessage(
+        WebAdapter.getTemplateImageUrl('product_order_confirm.handlebars', {
+          productName: 'top hat',
+          productImage: 'images/tophat.jpg',
+        }),
+      ).toJson(userId),
+    );
+    expect(bot.adapter.log[5]).toEqual(
       new BotTextMessage('You just bought the top hat, good choice!').toJson(userId),
     );
     const user = await bot.brain.getUser(userId);

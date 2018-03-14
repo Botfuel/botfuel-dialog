@@ -17,6 +17,7 @@
 const {
   PromptView,
   BotTextMessage,
+  BotImageMessage,
   Card,
   Link,
   Postback,
@@ -36,9 +37,18 @@ class ProductsView extends PromptView {
     const messages = [];
 
     if (messageEntities.product) {
+      const productName = messageEntities.product.values[0];
+
       messages.push(
-        new BotTextMessage(`You just bought the ${messageEntities.product.values[0]}, good choice!`),
+        new BotImageMessage(
+          WebAdapter.getTemplateImageUrl('product_order_confirm.handlebars', {
+            productName,
+            productImage: PRODUCTS[productName].imageUrl,
+          }),
+        ),
       );
+
+      messages.push(new BotTextMessage(`You just bought the ${productName}, good choice!`));
     }
 
     if (missingEntities.product) {
