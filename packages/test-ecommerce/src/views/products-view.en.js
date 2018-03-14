@@ -37,18 +37,18 @@ class ProductsView extends PromptView {
     const messages = [];
 
     if (messageEntities.product) {
-      const productName = messageEntities.product.values[0];
+      const product = PRODUCTS[messageEntities.product.values[0]];
 
       messages.push(
         new BotImageMessage(
           WebAdapter.getTemplateImageUrl('product_order_confirm.handlebars', {
-            productName,
-            productImage: PRODUCTS[productName].imageUrl,
+            productName: product.title,
+            productImage: product.imageUrl,
           }),
         ),
       );
 
-      messages.push(new BotTextMessage(`You just bought the ${productName}, good choice!`));
+      messages.push(new BotTextMessage(`You just bought the ${product.title}, good choice!`));
     }
 
     if (missingEntities.product) {
