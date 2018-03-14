@@ -17,6 +17,7 @@
 /* eslint-disable quotes */
 
 const WebAdapter = require('../../src/adapters/web-adapter');
+const validUrl = require('valid-url');
 
 describe('WebAdapter', () => {
   test('should throw a missing implementation error', async () => {
@@ -26,5 +27,19 @@ describe('WebAdapter', () => {
     } catch (e) {
       expect(e.message).toEqual('Not implemented!');
     }
+  });
+
+  test('should resolve static url to a correct uri', async () => {
+    expect(validUrl.isWebUri(WebAdapter.getStaticUrl('./images/picture.png'))).toBeDefined();
+    expect(WebAdapter.getStaticUrl('./images/picture.png')).toContain('/static/images/picture.png');
+
+    expect(validUrl.isWebUri(WebAdapter.getStaticUrl('images/picture.png'))).toBeDefined();
+    expect(WebAdapter.getStaticUrl('images/picture.png')).toContain('/static/images/picture.png');
+  });
+
+  test('should resolve template image url to a correct uri', async () => {
+    expect(
+      validUrl.isWebUri(WebAdapter.getTemplateImageUrl('product.handlebars', {})),
+    ).toBeDefined();
   });
 });

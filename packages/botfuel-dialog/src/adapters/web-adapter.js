@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+const url = require('url');
+const querystring = require('querystring');
 const express = require('express');
 const exphbs = require('express-handlebars');
 const rp = require('request-promise-native');
 const bodyParser = require('body-parser');
-const url = require('url');
-const querystring = require('querystring');
 const logger = require('logtown')('WebAdapter');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 const Adapter = require('./adapter');
@@ -183,7 +183,7 @@ class WebAdapter extends Adapter {
    * @returns {null}
    */
   static getTemplateImageUrl(templateName, params, width = 800, height = 600, quality = 100) {
-    const templateUrl = getTemplateUrl(templateName, params);
+    const templateUrl = this.getTemplateUrl(templateName, params);
     const screenshotParams = {
       url: templateUrl,
       quality,

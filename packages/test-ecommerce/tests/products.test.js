@@ -24,6 +24,7 @@ const {
   Card,
   Link,
   Postback,
+  WebAdapter,
 } = require('botfuel-dialog');
 const config = require('../test-config');
 
@@ -41,36 +42,24 @@ describe('Products', () => {
     );
     expect(bot.adapter.log[2]).toEqual(
       new CardsMessage([
-        new Card(
-          'Top hat',
-          'https://images-na.ssl-images-amazon.com/images/I/51qyodDiK-L._SY355_.jpg',
-          [
-            new Link('Details', 'https://www.amazon.com/Beistle-Satin-Sleek-Top-Hat/dp/B0051BH6IM'),
-            new Postback('Buy', 'products', [{ dim: 'product', values: ['top hat'] }]),
-          ],
-        ),
-        new Card(
-          'Cowboy hat',
-          'https://images-na.ssl-images-amazon.com/images/I/71NAi8yEZRL._UX522_.jpg',
-          [
-            new Link(
-              'Details',
-              'https://www.amazon.co.uk/Leather-Australian-Cowboy-Aussie-brown/dp/B0094J2H0O',
-            ),
-            new Postback('Buy', 'products', [{ dim: 'product', values: ['cowboy hat'] }]),
-          ],
-        ),
-        new Card(
-          'Detective hat',
-          'https://images-na.ssl-images-amazon.com/images/I/71DyzluYzQL._UL1001_.jpg',
-          [
-            new Link(
-              'Details',
-              'https://www.amazon.com/Unisex-Sherlock-Holmes-Detective-Deerstalker/dp/B016A3J3N0',
-            ),
-            new Postback('Buy', 'products', [{ dim: 'product', values: ['detective hat'] }]),
-          ],
-        ),
+        new Card('Top hat', WebAdapter.getStaticUrl('images/tophat.jpg'), [
+          new Link('Details', 'https://www.amazon.com/Beistle-Satin-Sleek-Top-Hat/dp/B0051BH6IM'),
+          new Postback('Buy', 'products', [{ dim: 'product', values: ['top hat'] }]),
+        ]),
+        new Card('Cowboy hat', WebAdapter.getStaticUrl('images/cowboyhat.jpg'), [
+          new Link(
+            'Details',
+            'https://www.amazon.co.uk/Leather-Australian-Cowboy-Aussie-brown/dp/B0094J2H0O',
+          ),
+          new Postback('Buy', 'products', [{ dim: 'product', values: ['cowboy hat'] }]),
+        ]),
+        new Card('Detective hat', WebAdapter.getStaticUrl('images/detectivehat.jpg'), [
+          new Link(
+            'Details',
+            'https://www.amazon.com/Unisex-Sherlock-Holmes-Detective-Deerstalker/dp/B016A3J3N0',
+          ),
+          new Postback('Buy', 'products', [{ dim: 'product', values: ['detective hat'] }]),
+        ]),
       ]).toJson(userId),
     );
     expect(bot.adapter.log[3]).toEqual(

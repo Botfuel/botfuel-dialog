@@ -21,11 +21,12 @@ const {
   Link,
   Postback,
   CardsMessage,
+  WebAdapter,
 } = require('botfuel-dialog');
 const PRODUCTS = require('../../PRODUCTS.json');
 
 const productToCard = (key, product) =>
-  new Card(product.title, product.imageUrl, [
+  new Card(product.title, WebAdapter.getStaticUrl(product.imageUrl), [
     new Link('Details', product.link),
     new Postback('Buy', 'products', [{ dim: 'product', values: [key] }]),
   ]);
