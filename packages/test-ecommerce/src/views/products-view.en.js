@@ -17,15 +17,17 @@
 const {
   PromptView,
   BotTextMessage,
+  BotImageMessage,
   Card,
   Link,
   Postback,
   CardsMessage,
+  WebAdapter,
 } = require('botfuel-dialog');
 const PRODUCTS = require('../../PRODUCTS.json');
 
 const productToCard = (key, product) =>
-  new Card(product.title, product.imageUrl, [
+  new Card(product.title, WebAdapter.getStaticUrl(product.imageUrl), [
     new Link('Details', product.link),
     new Postback('Buy', 'products', [{ dim: 'product', values: [key] }]),
   ]);
@@ -35,9 +37,18 @@ class ProductsView extends PromptView {
     const messages = [];
 
     if (messageEntities.product) {
+      const product = PRODUCTS[messageEntities.product.values[0]];
+
       messages.push(
-        new BotTextMessage(`You just bought the ${messageEntities.product.values[0]}, good choice!`),
+        new BotImageMessage(
+          WebAdapter.getImageUrl('product_order_confirm.handlebars', {
+            productName: product.title,
+            productImage: product.imageUrl,
+          }),
+        ),
       );
+
+      messages.push(new BotTextMessage(`You just bought the ${product.title}, good choice!`));
     }
 
     if (missingEntities.product) {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { PromptView, BotImageMessage, BotTextMessage } = require('botfuel-dialog');
+const { PromptView, BotImageMessage, BotTextMessage, WebAdapter } = require('botfuel-dialog');
 
 class SingleProductView extends PromptView {
   renderEntities(matchedEntities, missingEntities, dialogData) {
@@ -22,7 +22,7 @@ class SingleProductView extends PromptView {
 
     return [
       product
-        ? new BotImageMessage(product.imageUrl)
+        ? new BotImageMessage(WebAdapter.getStaticUrl(product.imageUrl))
         : new BotTextMessage('Sorry, this product isn’t available.'),
     ];
   }
