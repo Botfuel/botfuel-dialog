@@ -184,7 +184,7 @@ class WebAdapter extends Adapter {
    * @param {Number} quality - image quality
    * @returns {null}
    */
-  static getImageUrl(templateName, params, width = 800, height = 600, quality = 100) {
+  static getImageUrl(templateName, params, width = 800, height = 600, quality = 80) {
     const templateUrl = this.getTemplateUrl(templateName, params);
     const screenshotParams = {
       url: templateUrl,
