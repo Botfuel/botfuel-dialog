@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.3.0"></a>
+# [4.3.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.2.0...v4.3.0) (2018-03-16)
+
+
+### Bug Fixes
+
+* Update test ecommerce to use local images and update unittests ([1f68fc7](https://github.com/Botfuel/botfuel-dialog/commit/1f68fc7))
+
+
+### Features
+
+* add example for using handlebars templates and image generation ([2c78d55](https://github.com/Botfuel/botfuel-dialog/commit/2c78d55))
+
+
+
+
+
 <a name="4.0.0"></a>
 # [4.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v3.0.1...v4.0.0) (2018-03-02)
 
