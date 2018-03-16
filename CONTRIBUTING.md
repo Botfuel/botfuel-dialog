@@ -82,7 +82,9 @@ We use [conventional commits](https://conventionalcommits.org/), with the [angul
 To publish:
 
 ```
-yarn publish
+yarn login
+
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn release
 ```
 
 To review the new version number before publishing:
