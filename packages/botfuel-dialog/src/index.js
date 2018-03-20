@@ -14,84 +14,86 @@
  * limitations under the License.
  */
 
-const Logger = require('logtown');
-const Bot = require('./bot');
-const Classifier = require('./classifier');
+const ActionsMessage = require('./messages/actions-message');
 const Adapter = require('./adapters/adapter');
+const Bot = require('./bot');
+const BotImageMessage = require('./messages/bot-image-message');
+const BotTextMessage = require('./messages/bot-text-message');
 const BotfuelAdapter = require('./adapters/botfuel-adapter');
-const MessengerAdapter = require('./adapters/messenger-adapter');
-const ShellAdapter = require('./adapters/shell-adapter');
-const TestAdapter = require('./adapters/test-adapter');
-const WebAdapter = require('./adapters/web-adapter');
+const BotfuelNlu = require('./nlus/botfuel-nlu');
+const Brain = require('./brains/brain');
+const Card = require('./messages/card');
+const CardsMessage = require('./messages/cards-message');
+const Classifier = require('./classifier');
 const ConfirmationDialog = require('./dialogs/confirmation-dialog');
 const ConfirmationView = require('./views/confirmation-view');
 const CorpusExtractor = require('./extractors/corpus-extractor');
 const Dialog = require('./dialogs/dialog');
 const DialogManager = require('./dialog-manager');
+const Extractor = require('./extractors/extractor');
 const FileCorpus = require('./corpora/file-corpus');
-const Brain = require('./brains/brain');
+const Link = require('./messages/link');
+const Logger = require('logtown');
 const MemoryBrain = require('./brains/memory-brain');
+const MessengerAdapter = require('./adapters/messenger-adapter');
+const MissingImplementationError = require('./errors/missing-implementation-error');
 const MongoBrain = require('./brains/mongo-brain');
 const Nlu = require('./nlus/nlu');
-const BotfuelNlu = require('./nlus/botfuel-nlu');
-const PromptDialog = require('./dialogs/prompt-dialog');
-const PromptView = require('./views/prompt-view');
-const TextDialog = require('./dialogs/text-dialog');
-const TextView = require('./views/text-view');
-const View = require('./views/view');
-const WsExtractor = require('./extractors/ws-extractor');
-const Link = require('./messages/link');
-const ActionsMessage = require('./messages/actions-message');
-const BotTextMessage = require('./messages/bot-text-message');
-const BotImageMessage = require('./messages/bot-image-message');
-const Card = require('./messages/card');
-const CardsMessage = require('./messages/cards-message');
 const Postback = require('./messages/postback');
 const PostbackMessage = require('./messages/postback-message');
+const PromptDialog = require('./dialogs/prompt-dialog');
+const PromptView = require('./views/prompt-view');
+const QnasView = require('./views/qnas-view');
 const QuickrepliesMessage = require('./messages/quickreplies-message');
+const ShellAdapter = require('./adapters/shell-adapter');
+const TestAdapter = require('./adapters/test-adapter');
+const TextDialog = require('./dialogs/text-dialog');
+const TextView = require('./views/text-view');
 const UserImageMessage = require('./messages/user-image-message');
 const UserTextMessage = require('./messages/user-text-message');
-const QnasView = require('./views/qnas-view');
-const MissingImplementationError = require('./errors/missing-implementation-error');
+const View = require('./views/view');
+const WebAdapter = require('./adapters/web-adapter');
+const WsExtractor = require('./extractors/ws-extractor');
 
 module.exports = {
-  Logger: Logger.getLogger,
+  ActionsMessage,
+  Adapter,
   Bot,
+  BotImageMessage,
+  BotTextMessage,
+  BotfuelAdapter,
   BotfuelNlu,
   Brain,
+  Card,
+  CardsMessage,
   Classifier,
-  Adapter,
-  BotfuelAdapter,
-  MessengerAdapter,
-  ShellAdapter,
-  TestAdapter,
-  WebAdapter,
   ConfirmationDialog,
   ConfirmationView,
   CorpusExtractor,
   Dialog,
   DialogManager,
+  Extractor,
   FileCorpus,
+  Link,
+  Logger: Logger.getLogger,
   MemoryBrain,
+  MessengerAdapter,
+  MissingImplementationError,
   MongoBrain,
   Nlu,
-  PromptDialog,
-  PromptView,
-  TextDialog,
-  TextView,
-  View,
-  WsExtractor,
-  Link,
-  ActionsMessage,
-  BotTextMessage,
-  BotImageMessage,
-  Card,
-  CardsMessage,
   Postback,
   PostbackMessage,
+  PromptDialog,
+  PromptView,
+  QnasView,
   QuickrepliesMessage,
+  ShellAdapter,
+  TestAdapter,
+  TextDialog,
+  TextView,
   UserImageMessage,
   UserTextMessage,
-  QnasView,
-  MissingImplementationError,
+  View,
+  WebAdapter,
+  WsExtractor,
 };
