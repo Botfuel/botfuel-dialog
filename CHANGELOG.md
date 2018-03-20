@@ -1,9 +1,21 @@
 # Change Log
 
-  All notable changes to this project will be documented in this file.
-  See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+      All notable changes to this project will be documented in this file.
+      See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-  <a name="4.3.0"></a>
+      <a name="4.3.1"></a>
+## [4.3.1](https://github.com/Botfuel/botfuel-dialog/compare/v4.3.0...v4.3.1) (2018-03-20)
+
+
+### Bug Fixes
+
+* update contributtion for publish ([044ff14](https://github.com/Botfuel/botfuel-dialog/commit/044ff14))
+
+
+
+
+
+      <a name="4.3.0"></a>
 # [4.3.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.2.0...v4.3.0) (2018-03-16)
 
 
@@ -23,7 +35,7 @@
 
 
 
-  <a name="4.2.0"></a>
+<a name="4.2.0"></a>
 # [4.2.0](https://github.com/Botfuel/bot-sdk2/compare/v4.1.0...v4.2.0) (2018-03-12)
 
 
