@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.3.0"></a>
+# [4.3.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.2.0...v4.3.0) (2018-03-16)
+
+
+### Bug Fixes
+
+* change import order ([aa02962](https://github.com/Botfuel/botfuel-dialog/commit/aa02962))
+* set quality of image screenshot default value to 80 ([535dfc0](https://github.com/Botfuel/botfuel-dialog/commit/535dfc0))
+* Update test ecommerce to use local images and update unittests ([1f68fc7](https://github.com/Botfuel/botfuel-dialog/commit/1f68fc7))
+
+
+### Features
+
+* add example for using handlebars templates and image generation ([2c78d55](https://github.com/Botfuel/botfuel-dialog/commit/2c78d55))
+* Implement methods to get static and template, tempate image ([bfa015f](https://github.com/Botfuel/botfuel-dialog/commit/bfa015f))
+
+
+
+
+
 <a name="4.2.0"></a>
 # [4.2.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.1.0...v4.2.0) (2018-03-12)
 
