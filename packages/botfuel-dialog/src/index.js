@@ -19,6 +19,7 @@ const Adapter = require('./adapters/adapter');
 const Bot = require('./bot');
 const BotImageMessage = require('./messages/bot-image-message');
 const BotTextMessage = require('./messages/bot-text-message');
+const BotTableMessage = require('./messages/bot-table-message');
 const BotfuelAdapter = require('./adapters/botfuel-adapter');
 const BotfuelNlu = require('./nlus/botfuel-nlu');
 const Brain = require('./brains/brain');
@@ -61,6 +62,7 @@ module.exports = {
   Bot,
   BotImageMessage,
   BotTextMessage,
+  BotTableMessage,
   BotfuelAdapter,
   BotfuelNlu,
   Brain,
