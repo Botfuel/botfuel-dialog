@@ -40,7 +40,6 @@ class RegexExtractor extends Extractor {
     const regex = RegexExtractor.ensureGlobalRegex(this.parameters.regex);
     const entities = [];
     let match;
-    console.log('regex', regex);
     while ((match = regex.exec(sentence))) {
       entities.push({
         dim: this.parameters.dimension,
