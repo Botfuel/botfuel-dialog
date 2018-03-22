@@ -58,11 +58,9 @@ class RegexExtractor extends Extractor {
     const regex = parts.length > 1 ? parts[1] : pattern;
     const flags = parts.length > 1 ? parts[2] : '';
     try {
-      console.log('ensureGlobalRegex', parts, regex, flags);
       return new RegExp(regex, flags.indexOf('g') === -1 ? `g${flags}` : flags);
     } catch (e) {
-      logger.error('Regex is not valid');
-      throw new Error(e);
+      throw new ExtractorError(e.message);
     }
   }
 
