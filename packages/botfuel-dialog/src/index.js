@@ -45,6 +45,7 @@ const PromptDialog = require('./dialogs/prompt-dialog');
 const PromptView = require('./views/prompt-view');
 const QnasView = require('./views/qnas-view');
 const QuickrepliesMessage = require('./messages/quickreplies-message');
+const RegexExtractor = require('./extractors/regex-extractor');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
 const TextDialog = require('./dialogs/text-dialog');
@@ -87,6 +88,7 @@ module.exports = {
   PromptView,
   QnasView,
   QuickrepliesMessage,
+  RegexExtractor,
   ShellAdapter,
   TestAdapter,
   TextDialog,
