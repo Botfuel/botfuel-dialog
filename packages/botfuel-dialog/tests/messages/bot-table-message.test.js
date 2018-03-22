@@ -26,5 +26,15 @@ describe('BotTableMessage', () => {
 
     // no schema
     expect(() => new BotTableMessage({ rows: [] })).toThrow(MessageError);
+
+    // rows and schema but they are not array
+    expect(() => new BotTableMessage({ rows: { key: 'name' }, schema: { key: 'label' } })).toThrow(
+      MessageError,
+    );
+
+    // good schema
+    expect(
+      () => new BotTableMessage({ rows: [{ key: 'name' }], schema: [{ key: 'label' }] }),
+    ).not.toThrow(MessageError);
   });
 });

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-const Message = require('./message');
 const MessageError = require('../errors/message-error');
+const Message = require('./message');
 
 /**
  * A table message sent by the bot to the user.
@@ -25,12 +25,12 @@ const MessageError = require('../errors/message-error');
 class BotTableMessage extends Message {
   /**
    * @constructor
-   * @param {Object} data - the table data. See explaination and example below.
+   * @param {Object} data - the table data. See explanation and example below.
    * @param {Object} [options] - the message options
    *
    * data = {schema: [], rows: []}
-   * schema: array of { key: label } with label is the displayed title for the corresponding key
-   * rows:	An array of objects with keys defined in schema
+   * schema: array of { key: label } where label is the displayed title for the corresponding key
+   * rows: array of objects with keys defined in schema
    * example:
    * data = {
    *    schema: [ {name: "Name"}, {city: "City"}],
@@ -48,15 +48,15 @@ class BotTableMessage extends Message {
   /** @inheritDoc */
   validate() {
     super.validate();
-    if (!(this.data && this.data.schema && this.data.rows)) {
+    if (!(this.value && this.value.schema && this.value.rows)) {
       throw new MessageError({
         name: 'data',
-        message: 'bad format for data',
+        message: 'A BotTableMessage data should have schema and rows properties.',
       });
     }
 
-    this.validateArray('data.schema', this.data.schema);
-    this.validateArray('data.rows', this.data.rows);
+    this.validateArray('data.schema', this.value.schema);
+    this.validateArray('data.rows', this.value.rows);
   }
 }
 
