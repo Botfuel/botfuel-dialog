@@ -36,6 +36,7 @@ const FileCorpus = require('./corpora/file-corpus');
 const Link = require('./messages/link');
 const Logger = require('logtown');
 const MemoryBrain = require('./brains/memory-brain');
+const Message = require('./messages/message');
 const MessengerAdapter = require('./adapters/messenger-adapter');
 const MissingImplementationError = require('./errors/missing-implementation-error');
 const MongoBrain = require('./brains/mongo-brain');
@@ -80,6 +81,7 @@ module.exports = {
   Link,
   Logger: Logger.getLogger,
   MemoryBrain,
+  Message,
   MessengerAdapter,
   MissingImplementationError,
   MongoBrain,
