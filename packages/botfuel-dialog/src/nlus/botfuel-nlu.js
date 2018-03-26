@@ -22,6 +22,7 @@ const logger = require('logtown')('BotfuelNlu');
 const AuthenticationError = require('../errors/authentication-error');
 const Classifier = require('../classifier');
 const BooleanExtractor = require('../extractors/boolean-extractor');
+const LocationExtractor = require('../extractors/location-extractor');
 const CompositeExtractor = require('../extractors/composite-extractor');
 const Nlu = require('./nlu');
 
@@ -72,6 +73,7 @@ class BotfuelNlu extends Nlu {
     });
     // system extractors
     extractors.push(new BooleanExtractor({ locale: this.config.locale }));
+    extractors.push(new LocationExtractor({}));
     return extractors;
   }
 
