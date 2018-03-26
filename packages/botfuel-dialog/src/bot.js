@@ -212,7 +212,7 @@ class Bot {
     logger.debug('respondWhenImage', userMessage);
     const dialog = {
       name: 'image',
-      entities: [{ url: userMessage.payload.value.url }],
+      entities: [{ url: userMessage.payload.value }],
     };
     await this.dm.executeDialogs(this.adapter, userMessage, [dialog]);
   }
