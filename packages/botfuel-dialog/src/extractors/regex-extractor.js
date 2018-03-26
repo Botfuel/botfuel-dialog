@@ -15,8 +15,8 @@
  */
 
 const logger = require('logtown')('RegexExtractor');
-const Extractor = require('./extractor');
 const ExtractorError = require('../errors/extractor-error');
+const Extractor = require('./extractor');
 
 /**
  * Entity extraction regex based extractor.
@@ -40,6 +40,7 @@ class RegexExtractor extends Extractor {
     const regex = RegexExtractor.ensureGlobalRegex(this.parameters.regex);
     const entities = [];
     let match;
+    /* eslint-disable no-cond-assign */
     while ((match = regex.exec(sentence))) {
       entities.push({
         dim: this.parameters.dimension,
@@ -49,6 +50,7 @@ class RegexExtractor extends Extractor {
         end: match.index + match[0].length,
       });
     }
+    /* eslint-enable no-cond-assign */
     return entities;
   }
 
@@ -61,6 +63,12 @@ class RegexExtractor extends Extractor {
     return { value: value[0] };
   }
 
+  /**
+   * Ensures the regex have the global flag
+   * @static
+   * @param {RegExp|*} pattern - the regexp pattern
+   * @returns {RegExp} the regexp with the global flag
+   */
   static ensureGlobalRegex(pattern) {
     const parts = pattern.toString().split('/');
     const regex = parts.length > 1 ? parts[1] : pattern;
@@ -72,9 +80,15 @@ class RegexExtractor extends Extractor {
     }
   }
 
-  static hasValidPattern(regex) {
+  /**
+   * Checks if the regexp has a valid pattern
+   * @static
+   * @param {RegExp|*} regexp - the regexp pattern
+   * @returns {boolean} true if pattern is valid
+   */
+  static hasValidPattern(regexp) {
     const exclusions = [undefined, null, ''];
-    return exclusions.indexOf(regex) === -1;
+    return exclusions.indexOf(regexp) === -1;
   }
 }
 

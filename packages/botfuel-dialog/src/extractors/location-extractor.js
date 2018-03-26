@@ -16,7 +16,6 @@
 
 const logger = require('logtown')('RegexExtractor');
 const RegexExtractor = require('./regex-extractor');
-const ExtractorError = require('../errors/extractor-error');
 
 /**
  * Extracts location entities.
@@ -35,6 +34,7 @@ class LocationExtractor extends RegexExtractor {
 
   /** @inheritDoc */
   buildValue(value) {
+    logger.debug('buildValue', value);
     const coordinates = value[0].split(',');
     return { value: { lat: coordinates[0], long: coordinates[1].trim() }, type: 'coordinates' };
   }
