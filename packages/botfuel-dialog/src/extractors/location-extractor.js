@@ -15,30 +15,28 @@
  */
 
 const logger = require('logtown')('RegexExtractor');
-const Extractor = require('./extractor');
+const RegexExtractor = require('./regex-extractor');
 const ExtractorError = require('../errors/extractor-error');
 
 /**
  * Extracts location entities.
  * @extends Extractor
  */
-class LocationExtractor extends Extractor {
+class LocationExtractor extends RegexExtractor {
   /**
    * @constructor
    * @param {Object} parameters - the extractor parameters
    */
   constructor(parameters) {
     parameters.dimension = 'system:location';
+    parameters.regex = /([-+]?)([\d]{1,2})((\.)(\d+)(,))(\s*)(([-+]?)([\d]{1,3})((\.)(\d+))?)/g;
     super(parameters);
   }
 
   /** @inheritDoc */
-  async compute(coordinates) {
-    logger.debug('compute', coordinates);
-    if (!!coordinates.lat || !!coordinates.long) {
-      throw new ExtractorError('Invalid coordinates received in a LocationExtractor');
-    }
-    return [{ value: coordinates, type: 'location' }];
+  buildValue(value) {
+    const coordinates = value.split(',');
+    return { value: { lat: coordinates[0], long: coordinates[1].trim() }, type: 'coordinates' };
   }
 }
 

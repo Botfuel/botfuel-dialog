@@ -44,12 +44,21 @@ class RegexExtractor extends Extractor {
       entities.push({
         dim: this.parameters.dimension,
         body: match[0],
-        values: [{ value: match[0] }],
+        values: [this.buildValue(match)],
         start: match.index,
         end: match.index + match[0].length,
       });
     }
     return entities;
+  }
+
+  /**
+   * Builds the object value from a match.
+   * @param {Object} value - the match
+   * @returns {Object} the object value
+   */
+  buildValue(value) {
+    return { value: value[0] };
   }
 
   static ensureGlobalRegex(pattern) {
