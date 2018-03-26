@@ -86,6 +86,9 @@ class MessengerAdapter extends WebAdapter {
       // user send attachments
       if (attachments && attachments[0].type === 'image') {
         userMessage = new UserImageMessage(attachments[0].payload);
+      } else if (attachments && attachments[0].type === 'location') {
+        const { lat, long } = attachments[0].payload.coordinates;
+        userMessage = new UserTextMessage(`${lat}, ${long}`);
       } else {
         userMessage = new UserTextMessage(text);
       }
