@@ -25,9 +25,9 @@ const ExtractorError = require('../errors/extractor-error');
 class LocationExtractor extends RegexExtractor {
   /**
    * @constructor
-   * @param {Object} parameters - the extractor parameters
+   * @param {Object} [parameters] - the extractor parameters
    */
-  constructor(parameters) {
+  constructor(parameters = {}) {
     parameters.dimension = 'system:location';
     parameters.regex = /([-+]?)([\d]{1,2})((\.)(\d+)(,))(\s*)(([-+]?)([\d]{1,3})((\.)(\d+))?)/g;
     super(parameters);
@@ -35,7 +35,7 @@ class LocationExtractor extends RegexExtractor {
 
   /** @inheritDoc */
   buildValue(value) {
-    const coordinates = value.split(',');
+    const coordinates = value[0].split(',');
     return { value: { lat: coordinates[0], long: coordinates[1].trim() }, type: 'coordinates' };
   }
 }
