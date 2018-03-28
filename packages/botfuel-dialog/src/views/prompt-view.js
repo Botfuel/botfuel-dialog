@@ -57,7 +57,10 @@ class PromptView extends View {
 
       // highest priority entity must be asked first
       const { entity } = _.maxBy(
-        Object.keys(missingEntities).map(entity => ({ entity, priority: missingEntities[entity].priority | 0 })),
+        Object.keys(missingEntities).map(key => ({
+          entity: key,
+          priority: missingEntities[key].priority || 0,
+        })),
         'priority',
       );
       messages.push(new BotTextMessage(`Which ${entity}?`));
