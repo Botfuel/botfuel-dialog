@@ -39,7 +39,7 @@ class WeightView extends PromptView {
     if (missingEntities.size === 0) {
       const totalWeight = Object.keys(matchedEntities).reduce(
         (total, key) => total + matchedEntities[key].values[0].value,
-        0
+        0,
       );
       let remark = 'Your family is pretty average.';
 
@@ -52,10 +52,7 @@ class WeightView extends PromptView {
       }
 
       messages.push(new BotTextMessage(remark));
-      if (
-        totalWeight > 240 &&
-        matchedEntities.motherWeight.values[0].value > 80
-      ) {
+      if (totalWeight > 240 && matchedEntities.motherWeight.values[0].value > 80) {
         messages.push(new BotTextMessage('Your female genitor especially!'));
       }
     }
