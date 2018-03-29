@@ -1,0 +1,122 @@
+[
+  {
+    "link": "",
+    "type": "Pull",
+    "brand": "Polo Raph Laurent",
+    "color": "White",
+    "size": "[S,M,L,XL,XXL]",
+    "price": 65,
+    "cut": "Slim",
+    "material": "",
+    "sleave": "Long",
+    "image": "https://static.galerieslafayette.com/media/489/48929177/G_48929177_85_ZP_1.jpg"
+  },
+  {
+    "link": "",
+    "type": "Pull",
+    "brand": "Lacoste",
+    "color": "Red",
+    "size": "[S,M,L,XL]",
+    "price": 95,
+    "cut": "Straight",
+    "material": "",
+    "sleave": "Short",
+    "image": "https://www.galerieslafayette.com/fstrz/r/s/static.galerieslafayette.com/media/807/80704372/G_80704372_401_ZP_1.jpg?frz-v=190"
+  },
+  {
+    "link": "",
+    "type": "Pull",
+    "brand": "Lacoste",
+    "color": "White",
+    "size": "[M,L,XL,XXL]",
+    "price": 100,
+    "cut": "Slim",
+    "material": "",
+    "sleave": "Short",
+    "image": "https://www.galerieslafayette.com/fstrz/r/s/static.galerieslafayette.com/media/497/49796223/G_49796223_85_ZP_1.jpg?frz-v=190"
+  },
+  {
+    "link": "",
+    "type": "Pull",
+    "brand": "Lacoste",
+    "color": "Red",
+    "size": "[S,M,L,XL,XXL]",
+    "price": 79,
+    "cut": "Straight",
+    "material": "",
+    "sleave": "Short",
+    "image": "https://www.galerieslafayette.com/fstrz/r/s/static.galerieslafayette.com/media/497/49796262/G_49796262_401_ZP_1.jpg?frz-v=190"
+  },
+  {
+    "link": "",
+    "type": "Pull",
+    "brand": "Polo Raph Laurent",
+    "color": "White",
+    "size": "[S,M,L,XL]",
+    "price": 115,
+    "cut": "Straight",
+    "material": "",
+    "sleave": "Short",
+    "image": "https://www.galerieslafayette.com/fstrz/r/s/static.galerieslafayette.com/media/498/49889613/G_49889613_85_ZP_1.jpg?frz-v=190"
+  },
+  {
+    "link": "",
+    "type": "Pull",
+    "brand": "Polo Raph Laurent",
+    "color": "Red",
+    "size": "[M,L,XL,XXL]",
+    "price": 115,
+    "cut": "Straight",
+    "material": "",
+    "sleave": "Short",
+    "image": "https://www.galerieslafayette.com/fstrz/r/s/static.galerieslafayette.com/media/498/49890829/G_49890829_401_ZP_1.jpg?frz-v=190"
+  },
+  {
+    "link": "https://www.galerieslafayette.com/p/jeans+calvin+klein+jeans+slim+fit-calvin+klein/46466745/230",
+    "type": "Jean",
+    "brand": "Calvin Klein",
+    "color": "Grey",
+    "size": "[S,M,L,XL]",
+    "price": 99,
+    "cut": "Slim",
+    "material": "Denim",
+    "sleave": "",
+    "image": "https://www.galerieslafayette.com/fstrz/r/s/static.galerieslafayette.com/media/464/46466745/G_46466745_230_ZP_2.jpg?frz-v=202"
+  },
+  {
+    "link": "https://www.galerieslafayette.com/p/jeans+calvin+klein+skinny+fit-calvin+klein/50068254/230",
+    "type": "Jean",
+    "brand": "Calvin Klein",
+    "color": "Grey",
+    "size": "[S,M,L]",
+    "price": 119,
+    "cut": "Skinny",
+    "material": "Cotton",
+    "sleave": "",
+    "image": "https://www.galerieslafayette.com/fstrz/r/s/static.galerieslafayette.com/media/500/50068254/G_50068254_230_ZP_1.jpg?frz-v=202"
+  },
+  {
+    "link": "https://www.galerieslafayette.com/p/jeans+levi+s+511+slim+fit-levi+s/40860881/244",
+    "type": "Jean",
+    "brand": "Levis",
+    "color": "Dark Grey",
+    "size": "[S,M,L,XL]",
+    "price": 109,
+    "cut": "Slim",
+    "material": "Cotton",
+    "sleave": "",
+    "image": "https://www.galerieslafayette.com/fstrz/r/s/static.galerieslafayette.com/media/408/40860881/G_40860881_244_ZP_1.jpg?frz-v=202"
+  },
+  {
+    "link": "https://www.galerieslafayette.com/p/jeans+levi+s+510+skinny+fit-levi+s/27486441/244",
+    "type": "Jean",
+    "brand": "Levis",
+    "color": "Dark Grey",
+    "size": "[S,M,L,XL]",
+    "price": 99,
+    "cut": "Skinny",
+    "material": "Cotton",
+    "sleave": "",
+    "image": "https://www.galerieslafayette.com/fstrz/r/s/static.galerieslafayette.com/media/274/27486441/G_27486441_244_ZP_1.jpg?frz-v=202"
+  }
+]
