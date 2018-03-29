@@ -719,6 +719,45 @@ describe('PromptDialog', () => {
         expect(Object.keys(missingEntities)).toHaveLength(0);
       });
     });
+
+    describe('previous question entity handleling', () => {
+      test('should match entity for previous question entity when no higher priority', () => {
+        const ageEntity = {
+          dim: 'number',
+          start: 0,
+          end: 2,
+          values: [{ value: 42, type: 'integer' }],
+          body: '42',
+        };
+
+        const messageEntities = [ageEntity];
+
+        const expectedEntities = {
+          maxAge: {
+            dim: 'number',
+          },
+          otherAge: {
+            dim: 'number',
+          },
+          minAge: {
+            dim: 'number',
+          },
+        };
+
+        const previousQuestionEntity = 'otherAge';
+
+        const { matchedEntities, missingEntities } = prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {},
+          previousQuestionEntity,
+        );
+
+        expect(matchedEntities).toHaveProperty('otherAge');
+        expect(matchedEntities.otherAge).toEqual(ageEntity);
+        expect(Object.keys(missingEntities)).toHaveLength(2);
+      });
+    });
   });
 
   describe('sort missing entities', () => {
