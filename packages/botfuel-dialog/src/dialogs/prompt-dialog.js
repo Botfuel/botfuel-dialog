@@ -144,9 +144,10 @@ class PromptDialog extends Dialog {
    *     reducer: Function(),
    *   }
    * }
+   * @param {String} previousQuestionEntity - previous question entity
    * @returns {String[]} array of entity names
    */
-  getSortedEntities(matchedEntities, expectedEntities) {
+  getSortedEntities(matchedEntities, expectedEntities, previousQuestionEntity) {
     return Object.keys(expectedEntities).sort((nameA, nameB) => {
       const entityA = expectedEntities[nameA];
       const entityB = expectedEntities[nameB];
@@ -165,6 +166,17 @@ class PromptDialog extends Dialog {
       if (isFulfilledB !== isFulfilledA) {
         return isFulfilledB - isFulfilledA;
       }
+
+      if (priorityA === priorityB && previousQuestionEntity) {
+        if (previousQuestionEntity === nameA) {
+          return 0;
+        }
+
+        if (previousQuestionEntity === nameB) {
+          return 1;
+        }
+      }
+
       return priorityB - priorityA;
     });
   }
@@ -186,19 +198,30 @@ class PromptDialog extends Dialog {
    * {
    *   <entityName>: <messageEntity>
    * }
+   * @param {String} previousQuestionEntity - previous question entity
    * @returns {Object} object containing missingEntities and matchedEntities
    */
-  computeEntities(candidates, entities, previouslyMatchedEntities = {}) {
+  computeEntities(
+    candidates,
+    entities,
+    previouslyMatchedEntities = {},
+    previousQuestionEntity = undefined,
+  ) {
     logger.debug('computeEntities', {
       candidates,
       entities,
       previouslyMatchedEntities,
+      previousQuestionEntity,
     });
 
     // Setup default values for entities
     entities = this.updateEntityWithDefaultValues(entities);
 
-    const result = this.getSortedEntities(previouslyMatchedEntities, entities).reduce(
+    const result = this.getSortedEntities(
+      previouslyMatchedEntities,
+      entities,
+      previousQuestionEntity,
+    ).reduce(
       ({ matchedEntities, remainingCandidates, missingEntities }, name) => {
         const entity = entities[name];
         const initialValue = previouslyMatchedEntities[name];
@@ -264,19 +287,32 @@ class PromptDialog extends Dialog {
   async execute(adapter, userMessage, messageEntities) {
     logger.debug('execute', userMessage, messageEntities);
     const userId = userMessage.user;
-    const previouslyMatchedEntities =
-      (await this.brain.conversationGet(userId, this.parameters.namespace)) || {};
+
+    const dialogCache = await this.brain.conversationGet(userId, this.parameters.namespace);
+    const previouslyMatchedEntities = (dialogCache && dialogCache.entities) || {};
+    const previousQuestionEntity = (dialogCache && dialogCache.question) || undefined;
     logger.debug('execute: previouslyMatchedEntities', previouslyMatchedEntities);
+
     // Get missing entities and matched entities
     const { missingEntities, matchedEntities } = this.computeEntities(
       messageEntities,
       this.parameters.entities,
       previouslyMatchedEntities,
+      previousQuestionEntity,
     );
     logger.debug('execute', { missingEntities, matchedEntities });
-    await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
+
     // create missing entity map sorted by order that should be asked
     const sortedMissingEntitiesMap = this.sortMissingEntities(missingEntities);
+
+    // save matched entities and next question in the brain
+    await this.brain.conversationSet(userId, this.parameters.namespace, {
+      entities: matchedEntities,
+      question:
+        sortedMissingEntitiesMap.size > 0
+          ? sortedMissingEntitiesMap.keys().next().value
+          : undefined,
+    });
 
     const extraData = await this.dialogWillDisplay(userMessage, {
       missingEntities: sortedMissingEntitiesMap,
@@ -285,6 +321,7 @@ class PromptDialog extends Dialog {
 
     const dialogData = { matchedEntities, missingEntities: sortedMissingEntitiesMap, extraData };
     await this.display(adapter, userMessage, dialogData);
+
     if (sortedMissingEntitiesMap.size === 0) {
       const action = await this.dialogWillComplete(userMessage, dialogData);
       return action || this.complete();
