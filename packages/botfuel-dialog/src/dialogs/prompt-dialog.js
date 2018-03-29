@@ -261,11 +261,15 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * Compute sorted missing entities as a Map
+   * Compute sorted question entities as a Map
+   * For PromptDialog this is the same as the missingEntities ordered by priority
+   * Override this function if you want to modify the entities to be asked next
+   * like in a Faceted Search for example
+   * @param {Object} matchedEntities - matched entities
    * @param {Object} missingEntities - missing entities
    * @returns {Object} map of missing entities with key sorted
    */
-  sortMissingEntities(missingEntities) {
+  async computeQuestionEntities(matchedEntities, missingEntities) {
     if (Object.keys(missingEntities).length === 0) {
       return new Map();
     }
@@ -302,27 +306,24 @@ class PromptDialog extends Dialog {
     );
     logger.debug('execute', { missingEntities, matchedEntities });
 
-    // create missing entity map sorted by order that should be asked
-    const sortedMissingEntitiesMap = this.sortMissingEntities(missingEntities);
+    // question entities (ordered) to be passed to the view
+    const questionEntities = await this.computeQuestionEntities(matchedEntities, missingEntities);
 
     // save matched entities and next question in the brain
     await this.brain.conversationSet(userId, this.parameters.namespace, {
       entities: matchedEntities,
-      question:
-        sortedMissingEntitiesMap.size > 0
-          ? sortedMissingEntitiesMap.keys().next().value
-          : undefined,
+      question: questionEntities.size > 0 ? questionEntities.keys().next().value : undefined,
     });
 
     const extraData = await this.dialogWillDisplay(userMessage, {
-      missingEntities: sortedMissingEntitiesMap,
+      missingEntities: questionEntities,
       matchedEntities,
     });
 
-    const dialogData = { matchedEntities, missingEntities: sortedMissingEntitiesMap, extraData };
+    const dialogData = { matchedEntities, missingEntities: questionEntities, extraData };
     await this.display(adapter, userMessage, dialogData);
 
-    if (sortedMissingEntitiesMap.size === 0) {
+    if (questionEntities.size === 0) {
       const action = await this.dialogWillComplete(userMessage, dialogData);
       return action || this.complete();
     }

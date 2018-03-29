@@ -728,7 +728,7 @@ describe('PromptDialog', () => {
       entities: {},
     });
 
-    test('should return unmatched entities', () => {
+    test('should return sorted missing entities', async () => {
       const missingEntities = {
         a: {
           dim: 'number',
@@ -744,7 +744,7 @@ describe('PromptDialog', () => {
         },
       };
 
-      const sortMissingEntities = prompt.sortMissingEntities(missingEntities);
+      const sortMissingEntities = await prompt.computeQuestionEntities([], missingEntities);
       expect(Array.from(sortMissingEntities.keys())).toEqual(['b', 'c', 'a']);
     });
   });
