@@ -44,14 +44,16 @@ class ProductsView extends PromptView {
           WebAdapter.getImageUrl('product_order_confirm.handlebars', {
             productName: product.title,
             productImage: product.imageUrl,
-          }),
-        ),
+          })
+        )
       );
 
-      messages.push(new BotTextMessage(`You just bought the ${product.title}, good choice!`));
+      messages.push(
+        new BotTextMessage(`You just bought the ${product.title}, good choice!`)
+      );
     }
 
-    if (missingEntities.product) {
+    if (missingEntities.has('product')) {
       messages.push(new BotTextMessage('Which product do you want to buy?'));
       messages.push(ProductsView.getCardsProducts());
     }
@@ -61,7 +63,9 @@ class ProductsView extends PromptView {
 
   static getCardsProducts() {
     return new CardsMessage(
-      ['top hat', 'cowboy hat', 'detective hat'].map(key => productToCard(key, PRODUCTS[key])),
+      ['top hat', 'cowboy hat', 'detective hat'].map(key =>
+        productToCard(key, PRODUCTS[key])
+      )
     );
   }
 }

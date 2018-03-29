@@ -238,6 +238,22 @@ class PromptDialog extends Dialog {
   }
 
   /**
+   * Compute sorted missing entities as a Map
+   * @param {Object} missingEntities - missing entities
+   * @returns {Object} map of missing entities with key sorted
+   */
+  sortMissingEntities(missingEntities) {
+    if (Object.keys(missingEntities).length === 0) {
+      return new Map();
+    }
+
+    const sortedNames = Object.keys(missingEntities).sort(
+      (a, b) => missingEntities[b].priority - missingEntities[a].priority,
+    );
+    return new Map(sortedNames.map(name => [name, missingEntities[name]]));
+  }
+
+  /**
    * Executes the dialog.
    * @async
    * @param {Adapter} adapter - the adapter
@@ -259,13 +275,17 @@ class PromptDialog extends Dialog {
     );
     logger.debug('execute', { missingEntities, matchedEntities });
     await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
+    // create missing entity map sorted by order that should be asked
+    const sortedMissingEntitiesMap = this.sortMissingEntities(missingEntities);
+
     const extraData = await this.dialogWillDisplay(userMessage, {
-      missingEntities,
+      missingEntities: sortedMissingEntitiesMap,
       matchedEntities,
     });
-    const dialogData = { matchedEntities, missingEntities, extraData };
+
+    const dialogData = { matchedEntities, missingEntities: sortedMissingEntitiesMap, extraData };
     await this.display(adapter, userMessage, dialogData);
-    if (Object.keys(missingEntities).length === 0) {
+    if (sortedMissingEntitiesMap.size === 0) {
       const action = await this.dialogWillComplete(userMessage, dialogData);
       return action || this.complete();
     }

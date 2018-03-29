@@ -32,7 +32,7 @@ describe('PromptView', () => {
             },
             {
               matchedEntities: { name1: {}, name2: {} },
-              missingEntities: {},
+              missingEntities: new Map(),
             },
           ),
         ).toEqual([new BotTextMessage('Entities defined: name1, name2')]);
@@ -48,7 +48,7 @@ describe('PromptView', () => {
             },
             {
               matchedEntities: {},
-              missingEntities: { name1: {}, name2: {} },
+              missingEntities: new Map([['name1', {}], ['name2', {}]]),
             },
           ),
         ).toEqual([
@@ -67,11 +67,11 @@ describe('PromptView', () => {
             },
             {
               matchedEntities: {},
-              missingEntities: { name1: { priority: 0 }, name2: { priority: 1 } },
+              missingEntities: new Map([['name2', { priority: 1 }], ['name1', { priority: 0 }]]),
             },
           ),
         ).toEqual([
-          new BotTextMessage('Entities needed: name1, name2'),
+          new BotTextMessage('Entities needed: name2, name1'),
           new BotTextMessage('Which name2?'),
         ]);
       });
