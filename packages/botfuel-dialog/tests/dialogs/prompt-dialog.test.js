@@ -720,4 +720,32 @@ describe('PromptDialog', () => {
       });
     });
   });
+
+  describe('sort missing entities', () => {
+    const brain = new MemoryBrain(TEST_CONFIG);
+    const prompt = new PromptDialog(TEST_CONFIG, brain, {
+      namespace: 'testdialog',
+      entities: {},
+    });
+
+    test('should return unmatched entities', () => {
+      const missingEntities = {
+        a: {
+          dim: 'number',
+          priority: 0,
+        },
+        b: {
+          dim: 'number',
+          priority: 10,
+        },
+        c: {
+          dim: 'number',
+          priority: 5,
+        },
+      };
+
+      const sortMissingEntities = prompt.sortMissingEntities(missingEntities);
+      expect(Array.from(sortMissingEntities.keys())).toEqual(['b', 'c', 'a']);
+    });
+  });
 });

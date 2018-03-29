@@ -18,7 +18,6 @@ const { PromptView, BotTextMessage } = require('botfuel-dialog');
 
 class GuessView extends PromptView {
   renderEntities(matchedEntities, missingEntities) {
-    console.log(missingEntities);
     if (missingEntities.has('favoriteColor')) {
       return [new BotTextMessage('Nope! Guess again.')];
     }
