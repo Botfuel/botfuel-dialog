@@ -68,7 +68,7 @@ class PromptDialog extends Dialog {
    * remainingCandidates (candidates minus candidates used) and
    * newValue (value we matched with the parameter)
    */
-  matchParameterWithCandidates(entity, candidates = [], initialValue) {
+  matchEntityWithCandidates(entity, candidates = [], initialValue) {
     const sameDimCandidates = candidates.filter(candidate => candidate.dim === entity.dim);
     // Check if the parameter is already fulfilled with its initial value
     // If so, we replace the fulfilled parameter’s entity
@@ -146,7 +146,7 @@ class PromptDialog extends Dialog {
    * }
    * @returns {String[]} array of entity names
    */
-  getSortedParameterNames(matchedEntities, expectedEntities) {
+  getSortedEntities(matchedEntities, expectedEntities) {
     return Object.keys(expectedEntities).sort((nameA, nameB) => {
       const entityA = expectedEntities[nameA];
       const entityB = expectedEntities[nameB];
@@ -198,14 +198,14 @@ class PromptDialog extends Dialog {
     // Setup default values for entities
     entities = this.updateEntityWithDefaultValues(entities);
 
-    const result = this.getSortedParameterNames(previouslyMatchedEntities, entities).reduce(
+    const result = this.getSortedEntities(previouslyMatchedEntities, entities).reduce(
       ({ matchedEntities, remainingCandidates, missingEntities }, name) => {
         const entity = entities[name];
         const initialValue = previouslyMatchedEntities[name];
         const {
           newValue,
           remainingCandidates: newRemainingCandidates,
-        } = this.matchParameterWithCandidates(entity, remainingCandidates, initialValue);
+        } = this.matchEntityWithCandidates(entity, remainingCandidates, initialValue);
         logger.debug('computeEntities: after matchParameterWithCandidates', {
           newValue,
           newRemainingCandidates,
