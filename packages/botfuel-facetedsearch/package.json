@@ -13,7 +13,7 @@
     "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest"
   },
   "dependencies": {
-    "botfuel-dialog": "^4.0.0",
+    "botfuel-dialog": "latest",
     "lodash": "^4.17.5"
   },
   "devDependencies": {
@@ -28,5 +28,8 @@
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jest": "^21.13.0",
     "jest": "^22.4.2"
+  },
+  "engines": {
+    "node": "8.x"
   }
 }

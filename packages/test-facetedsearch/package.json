@@ -10,7 +10,7 @@
     "train": "botfuel-train"
   },
   "dependencies": {
-    "botfuel-dialog": "^4.0.0",
+    "botfuel-dialog": "latest",
     "botfuel-facetedsearch": "file:../botfuel-facetedsearch",
     "lodash": "^4.17.5",
     "logtown-winston": "^1.0.0",
