@@ -16,7 +16,10 @@
 
 const PromptDialog = require('../../src/dialogs/prompt-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
-const TEST_CONFIG = require('../../src/config').getConfiguration({});
+const Bot = require('../../src/bot');
+const Config = require('../../src/config');
+
+const TEST_CONFIG = Config.getConfiguration({});
 
 describe('PromptDialog', () => {
   describe('computeEntities', () => {
@@ -785,6 +788,54 @@ describe('PromptDialog', () => {
 
       const sortMissingEntities = await prompt.computeQuestionEntities([], missingEntities);
       expect(Array.from(sortMissingEntities.keys())).toEqual(['b', 'c', 'a']);
+    });
+  });
+
+  describe('excecute', () => {
+    const config = Config.getConfiguration({
+      adapter: {
+        name: 'test',
+      },
+    });
+    const bot = new Bot(config);
+    const adapter = bot.adapter;
+    const userId = adapter.userId;
+
+    const prompt = new PromptDialog(TEST_CONFIG, bot.brain, {
+      namespace: 'testdialog',
+      entities: {
+        a: {
+          dim: 'number',
+          priority: 0,
+        },
+        b: {
+          dim: 'number',
+          priority: 10,
+        },
+        c: {
+          dim: 'number',
+          priority: 5,
+        },
+      },
+    });
+
+    test('should have correct dialog data structure in brain', async () => {
+      const messageEntities = [
+        {
+          dim: 'number',
+          start: 0,
+          end: 2,
+          values: [{ value: 42, type: 'integer' }],
+          body: '42',
+        },
+      ];
+
+      await prompt.brain.addUser(userId);
+      await prompt.execute(adapter, { user: userId }, messageEntities);
+      const conversation = await prompt.brain.getLastConversation(userId);
+      expect(conversation).toHaveProperty('testdialog');
+      expect(conversation.testdialog).toHaveProperty('entities');
+      expect(conversation.testdialog).toHaveProperty('question');
     });
   });
 });
