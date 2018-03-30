@@ -20,6 +20,15 @@
 ## [4.4.2](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.1...v4.4.2) (2018-03-26)
 
 
+### Features
+
+* add LocationExtractor and use it in Botfuel NLU
+* add 'system:entity' entity
+
+### Bug Fixes
+
+* pass url value instead of payload containing url in MessengerAdapter for UserImageMessage
+
 
 
 
@@ -29,10 +38,12 @@
 ## [4.4.1](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.0...v4.4.1) (2018-03-23)
 
 
+### Bug fixes
+
+* export Message class ([f69c162](https://github.com/Botfuel/botfuel-dialog/commit/f69c162))
 
 
 
-**Note:** Version bump only for package undefined
 
 <a name="4.4.0"></a>
 # [4.4.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.3.4...v4.4.0) (2018-03-22)
@@ -45,33 +56,16 @@
 
 
 
-
 <a name="4.3.4"></a>
 ## [4.3.4](https://github.com/Botfuel/botfuel-dialog/compare/v4.3.1...v4.3.4) (2018-03-22)
 
 
+### Features
+
+* add RegexExtractor ([59d0a60](https://github.com/Botfuel/botfuel-dialog/commit/59d0a60))
 
 
 
-**Note:** Version bump only for package undefined
-
-<a name="4.3.3"></a>
-## [4.3.3](https://github.com/Botfuel/botfuel-dialog/compare/v4.3.2...v4.3.3) (2018-03-22)
-
-
-
-
-
-**Note:** Version bump only for package undefined
-
-<a name="4.3.2"></a>
-## [4.3.2](https://github.com/Botfuel/botfuel-dialog/compare/v4.3.1...v4.3.2) (2018-03-22)
-
-
-
-
-
-**Note:** Version bump only for package undefined
 
 <a name="4.3.1"></a>
 ## [4.3.1](https://github.com/Botfuel/botfuel-dialog/compare/v4.3.0...v4.3.1) (2018-03-20)
@@ -80,8 +74,7 @@
 ### Bug Fixes
 
 * update contributtion for publish ([044ff14](https://github.com/Botfuel/botfuel-dialog/commit/044ff14))
-
-
+* exporting extractor ([32ff36db](https://github.com/Botfuel/botfuel-dialog/commit/32ff36db))
 
 
 
