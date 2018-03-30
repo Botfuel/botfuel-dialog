@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const omit = require('lodash/omit');
+const _ = require('lodash');
 const logger = require('logtown')('PromptDialog');
 const { filterIntersectingEntities } = require('../utils/entities');
 const Dialog = require('./dialog');
@@ -185,7 +185,7 @@ class PromptDialog extends Dialog {
    * Computes matched and missing entities.
    * @param {Array.<Object[]>} candidates - array of raw entities given by the extractor.
    * They are candidates for the entity parameters
-   * @param {Object} entities - map of entities expected by the dialog: {
+   * @param {Object} dialogEntities - map of entities expected by the dialog: {
    *   <entityName>: {
    *     dim: String,
    *     priority: Number,
@@ -201,79 +201,74 @@ class PromptDialog extends Dialog {
    * @param {String} previousQuestionEntity - previous question entity
    * @returns {Object} object containing missingEntities and matchedEntities
    */
-  computeEntities(
+  async computeEntities(
     candidates,
-    entities,
+    dialogEntities,
     previouslyMatchedEntities = {},
     previousQuestionEntity = undefined,
   ) {
     logger.debug('computeEntities', {
       candidates,
-      entities,
+      dialogEntities,
       previouslyMatchedEntities,
       previousQuestionEntity,
     });
 
     // Setup default values for entities
-    entities = this.updateEntityWithDefaultValues(entities);
+    dialogEntities = this.updateEntityWithDefaultValues(dialogEntities);
 
-    const result = this.getSortedEntities(
+    const sortedDialogEntityNames = this.getSortedEntities(
       previouslyMatchedEntities,
-      entities,
+      dialogEntities,
       previousQuestionEntity,
-    ).reduce(
-      ({ matchedEntities, remainingCandidates, missingEntities }, name) => {
-        const entity = entities[name];
-        const initialValue = previouslyMatchedEntities[name];
-        const {
-          newValue,
-          remainingCandidates: newRemainingCandidates,
-        } = this.matchEntityWithCandidates(entity, remainingCandidates, initialValue);
-        logger.debug('computeEntities: after matchParameterWithCandidates', {
-          newValue,
-          newRemainingCandidates,
-        });
-        const newMatchedEntities = { ...matchedEntities, [name]: newValue };
-        const isFulfilled = entity.isFulfilled(newValue, {
-          dialogEntities: newMatchedEntities,
-        });
-        // If an entity matching the one we are expecting was found,
-        // remove it from missing entities
-        // If it was not found, keep missing entities intact
-        const newMissingEntities = isFulfilled ? omit(missingEntities, [name]) : missingEntities;
-        return {
-          matchedEntities: newMatchedEntities,
-          remainingCandidates: newRemainingCandidates,
-          missingEntities: newMissingEntities,
-        };
-      },
-      // initial state
-      {
-        matchedEntities: previouslyMatchedEntities,
-        remainingCandidates: candidates,
-        missingEntities: entities,
-      },
     );
-    return {
-      matchedEntities: result.matchedEntities,
-      missingEntities: result.missingEntities,
-    };
+
+    let missingEntities = dialogEntities;
+    let matchedEntities = previouslyMatchedEntities;
+    let remainingCandidates = candidates;
+
+    _.forEach(sortedDialogEntityNames, (name) => {
+      const entity = dialogEntities[name];
+      const initialValue = previouslyMatchedEntities[name];
+      const {
+        newValue,
+        remainingCandidates: newRemainingCandidates,
+      } = this.matchEntityWithCandidates(entity, remainingCandidates, initialValue);
+      logger.debug('computeEntities: after matchParameterWithCandidates', {
+        name,
+        newValue,
+        newRemainingCandidates,
+      });
+
+      remainingCandidates = newRemainingCandidates;
+
+      matchedEntities = { ...matchedEntities, [name]: newValue };
+
+      const isFulfilled = entity.isFulfilled(newValue, {
+        dialogEntities: matchedEntities,
+      });
+
+      // If an entity matching the one we are expecting was found,
+      // remove it from missing entities
+      // If it was not found, keep missing entities intact
+      missingEntities = isFulfilled ? _.omit(missingEntities, [name]) : missingEntities;
+    });
+
+    // transform missingEntities to a Map, ordered by priority
+    missingEntities = this.sortMissingEntities(missingEntities);
+
+    return { matchedEntities, missingEntities };
   }
 
   /**
-   * Compute sorted question entities as a Map
-   * For PromptDialog this is the same as the missingEntities ordered by priority
-   * Override this function if you want to modify the entities to be asked next
-   * like in a Faceted Search for example
-   * @param {Object} matchedEntities - matched entities
+   * Compute sorted missing entities as a Map, ordered by priority
    * @param {Object} missingEntities - missing entities
    * @returns {Object} map of missing entities with key sorted
    */
-  async computeQuestionEntities(matchedEntities, missingEntities) {
+  sortMissingEntities(missingEntities) {
     if (Object.keys(missingEntities).length === 0) {
       return new Map();
     }
-
     const sortedNames = Object.keys(missingEntities).sort(
       (a, b) => missingEntities[b].priority - missingEntities[a].priority,
     );
@@ -298,7 +293,7 @@ class PromptDialog extends Dialog {
     logger.debug('execute: previouslyMatchedEntities', previouslyMatchedEntities);
 
     // Get missing entities and matched entities
-    const { missingEntities, matchedEntities } = this.computeEntities(
+    const { missingEntities, matchedEntities } = await this.computeEntities(
       messageEntities,
       this.parameters.entities,
       previouslyMatchedEntities,
@@ -306,24 +301,21 @@ class PromptDialog extends Dialog {
     );
     logger.debug('execute', { missingEntities, matchedEntities });
 
-    // question entities (ordered) to be passed to the view
-    const questionEntities = await this.computeQuestionEntities(matchedEntities, missingEntities);
-
     // save matched entities and next question in the brain
     await this.brain.conversationSet(userId, this.parameters.namespace, {
       _entities: matchedEntities,
-      _question: questionEntities.size > 0 ? questionEntities.keys().next().value : undefined,
+      _question: missingEntities.size > 0 ? missingEntities.keys().next().value : undefined,
     });
 
     const extraData = await this.dialogWillDisplay(userMessage, {
-      missingEntities: questionEntities,
+      missingEntities,
       matchedEntities,
     });
 
-    const dialogData = { matchedEntities, missingEntities: questionEntities, extraData };
+    const dialogData = { matchedEntities, missingEntities, extraData };
     await this.display(adapter, userMessage, dialogData);
 
-    if (questionEntities.size === 0) {
+    if (missingEntities.size === 0) {
       const action = await this.dialogWillComplete(userMessage, dialogData);
       return action || this.complete();
     }
