@@ -53,7 +53,7 @@ class PromptDialog extends Dialog {
    * Attempt to match an entity parameter with raw entities candidates extracted from a message.
    * We apply the reducer function to a raw entity candidate until we run out of candidates or
    * if the isFulfilled condition is met.
-   * @param {Object} parameter - entity parameter
+   * @param {Object} entity - entity parameter
    * we want to match with one or more raw entities
    * @param {Array<Object>} candidates - array of raw entities extracted
    * from a message: {
@@ -68,13 +68,13 @@ class PromptDialog extends Dialog {
    * remainingCandidates (candidates minus candidates used) and
    * newValue (value we matched with the parameter)
    */
-  matchParameterWithCandidates(parameter, candidates = [], initialValue) {
-    const sameDimCandidates = candidates.filter(candidate => candidate.dim === parameter.dim);
+  matchEntityWithCandidates(entity, candidates = [], initialValue) {
+    const sameDimCandidates = candidates.filter(candidate => candidate.dim === entity.dim);
     // Check if the parameter is already fulfilled with its initial value
     // If so, we replace the fulfilled parameter’s entity
     // with the first candidate of the same dimension
     const replace =
-      parameter.isFulfilled(initialValue, { dialogEntities: {} }) && sameDimCandidates.length >= 1;
+      entity.isFulfilled(initialValue, { dialogEntities: {} }) && sameDimCandidates.length >= 1;
     if (replace) {
       const chosenCandidate = sameDimCandidates[0];
       candidates = filterIntersectingEntities(candidates, chosenCandidate);
@@ -84,13 +84,13 @@ class PromptDialog extends Dialog {
         initialValue = chosenCandidate;
       }
     }
-    return candidates.filter(candidate => candidate.dim === parameter.dim).reduce(
+    return candidates.filter(candidate => candidate.dim === entity.dim).reduce(
       ({ newValue, remainingCandidates }, candidate) => {
-        if (parameter.isFulfilled(newValue, { dialogEntities: {} })) {
+        if (entity.isFulfilled(newValue, { dialogEntities: {} })) {
           return { newValue, remainingCandidates };
         }
         return {
-          newValue: parameter.reducer(newValue, candidate),
+          newValue: entity.reducer(newValue, candidate),
           remainingCandidates: filterIntersectingEntities(remainingCandidates, candidate),
         };
       },
@@ -99,8 +99,8 @@ class PromptDialog extends Dialog {
   }
 
   /**
-   * Updates parameters with default values.
-   * @param {Object} parameters - map of entities expected by the dialog: {
+   * Update entities with default values.
+   * @param {Object} entities - map of entities expected by the dialog: {
    *   <entityName>: {
    *     dim: String,
    *     priority: Number,
@@ -110,22 +110,22 @@ class PromptDialog extends Dialog {
    * }
    * @returns {Object} updated map of entities
    */
-  getParameters(parameters) {
-    return Object.keys(parameters).reduce((allParameters, name) => {
-      const parameter = parameters[name];
+  updateEntityWithDefaultValues(entities) {
+    return Object.keys(entities).reduce((allEntities, name) => {
+      const entity = entities[name];
       return {
-        ...allParameters,
+        ...allEntities,
         [name]: {
-          dim: parameter.dim,
+          dim: entity.dim,
           // If the reducer function is not defined,
           // we replace the old entities by the new ones
-          reducer: parameter.reducer || ((oldEntities, newEntities) => newEntities),
+          reducer: entity.reducer || ((oldEntities, newEntities) => newEntities),
           // If the isFulfilled function is not defined,
           // we check that the entity is not null and not undefined
-          isFulfilled: parameter.isFulfilled || (entity => entity != null),
+          isFulfilled: entity.isFulfilled || (e => e != null),
           // Because we need to to be able to override them but we want unfulfilled parameters
           // to have priority over them
-          priority: parameter.priority || 0,
+          priority: entity.priority || 0,
         },
       };
     }, {});
@@ -136,7 +136,7 @@ class PromptDialog extends Dialog {
    * - isFulfilled descending (unfulfilled first)
    * - then priority descending (highest priority first)
    * @param {Object} matchedEntities - map of matched entities
-   * @param {Object} parameters - map of entities expected by the dialog: {
+   * @param {Object} expectedEntities - map of entities expected by the dialog: {
    *   <entityName>: {
    *     dim: String,
    *     priority: Number,
@@ -144,20 +144,21 @@ class PromptDialog extends Dialog {
    *     reducer: Function(),
    *   }
    * }
+   * @param {String} previousQuestionEntity - previous question entity
    * @returns {String[]} array of entity names
    */
-  getSortedParameterNames(matchedEntities, parameters) {
-    return Object.keys(parameters).sort((nameA, nameB) => {
-      const parameterA = parameters[nameA];
-      const parameterB = parameters[nameB];
-      const priorityA = parameterA.priority;
-      const priorityB = parameterB.priority;
-      const isFulfilledA = parameterA.isFulfilled(matchedEntities[nameA], {
+  getSortedEntities(matchedEntities, expectedEntities, previousQuestionEntity) {
+    return Object.keys(expectedEntities).sort((nameA, nameB) => {
+      const entityA = expectedEntities[nameA];
+      const entityB = expectedEntities[nameB];
+      const priorityA = entityA.priority;
+      const priorityB = entityB.priority;
+      const isFulfilledA = entityA.isFulfilled(matchedEntities[nameA], {
         dialogEntities: matchedEntities,
       })
         ? 0
         : 1;
-      const isFulfilledB = parameterB.isFulfilled(matchedEntities[nameB], {
+      const isFulfilledB = entityB.isFulfilled(matchedEntities[nameB], {
         dialogEntities: matchedEntities,
       })
         ? 0
@@ -165,6 +166,17 @@ class PromptDialog extends Dialog {
       if (isFulfilledB !== isFulfilledA) {
         return isFulfilledB - isFulfilledA;
       }
+
+      if (priorityA === priorityB && previousQuestionEntity) {
+        if (previousQuestionEntity === nameA) {
+          return 0;
+        }
+
+        if (previousQuestionEntity === nameB) {
+          return 1;
+        }
+      }
+
       return priorityB - priorityA;
     });
   }
@@ -173,7 +185,7 @@ class PromptDialog extends Dialog {
    * Computes matched and missing entities.
    * @param {Array.<Object[]>} candidates - array of raw entities given by the extractor.
    * They are candidates for the entity parameters
-   * @param {Object} parameters - map of entities expected by the dialog: {
+   * @param {Object} entities - map of entities expected by the dialog: {
    *   <entityName>: {
    *     dim: String,
    *     priority: Number,
@@ -186,26 +198,45 @@ class PromptDialog extends Dialog {
    * {
    *   <entityName>: <messageEntity>
    * }
+   * @param {String} previousQuestionEntity - previous question entity
    * @returns {Object} object containing missingEntities and matchedEntities
    */
-  computeEntities(candidates, parameters, previouslyMatchedEntities = {}) {
-    logger.debug('computeEntities', { candidates, parameters, previouslyMatchedEntities });
+  computeEntities(
+    candidates,
+    entities,
+    previouslyMatchedEntities = {},
+    previousQuestionEntity = undefined,
+  ) {
+    logger.debug('computeEntities', {
+      candidates,
+      entities,
+      previouslyMatchedEntities,
+      previousQuestionEntity,
+    });
+
     // Setup default values for entities
-    parameters = this.getParameters(parameters);
-    const result = this.getSortedParameterNames(previouslyMatchedEntities, parameters).reduce(
+    entities = this.updateEntityWithDefaultValues(entities);
+
+    const result = this.getSortedEntities(
+      previouslyMatchedEntities,
+      entities,
+      previousQuestionEntity,
+    ).reduce(
       ({ matchedEntities, remainingCandidates, missingEntities }, name) => {
-        const parameter = parameters[name];
+        const entity = entities[name];
         const initialValue = previouslyMatchedEntities[name];
         const {
           newValue,
           remainingCandidates: newRemainingCandidates,
-        } = this.matchParameterWithCandidates(parameter, remainingCandidates, initialValue);
+        } = this.matchEntityWithCandidates(entity, remainingCandidates, initialValue);
         logger.debug('computeEntities: after matchParameterWithCandidates', {
           newValue,
           newRemainingCandidates,
         });
         const newMatchedEntities = { ...matchedEntities, [name]: newValue };
-        const isFulfilled = parameter.isFulfilled(newValue, { dialogEntities: newMatchedEntities });
+        const isFulfilled = entity.isFulfilled(newValue, {
+          dialogEntities: newMatchedEntities,
+        });
         // If an entity matching the one we are expecting was found,
         // remove it from missing entities
         // If it was not found, keep missing entities intact
@@ -216,13 +247,37 @@ class PromptDialog extends Dialog {
           missingEntities: newMissingEntities,
         };
       },
+      // initial state
       {
         matchedEntities: previouslyMatchedEntities,
         remainingCandidates: candidates,
-        missingEntities: parameters,
+        missingEntities: entities,
       },
     );
-    return { matchedEntities: result.matchedEntities, missingEntities: result.missingEntities };
+    return {
+      matchedEntities: result.matchedEntities,
+      missingEntities: result.missingEntities,
+    };
+  }
+
+  /**
+   * Compute sorted question entities as a Map
+   * For PromptDialog this is the same as the missingEntities ordered by priority
+   * Override this function if you want to modify the entities to be asked next
+   * like in a Faceted Search for example
+   * @param {Object} matchedEntities - matched entities
+   * @param {Object} missingEntities - missing entities
+   * @returns {Object} map of missing entities with key sorted
+   */
+  async computeQuestionEntities(matchedEntities, missingEntities) {
+    if (Object.keys(missingEntities).length === 0) {
+      return new Map();
+    }
+
+    const sortedNames = Object.keys(missingEntities).sort(
+      (a, b) => missingEntities[b].priority - missingEntities[a].priority,
+    );
+    return new Map(sortedNames.map(name => [name, missingEntities[name]]));
   }
 
   /**
@@ -236,24 +291,39 @@ class PromptDialog extends Dialog {
   async execute(adapter, userMessage, messageEntities) {
     logger.debug('execute', userMessage, messageEntities);
     const userId = userMessage.user;
-    const previouslyMatchedEntities =
-      (await this.brain.conversationGet(userId, this.parameters.namespace)) || {};
+
+    const dialogCache = await this.brain.conversationGet(userId, this.parameters.namespace);
+    const previouslyMatchedEntities = (dialogCache && dialogCache.entities) || {};
+    const previousQuestionEntity = (dialogCache && dialogCache.question) || undefined;
     logger.debug('execute: previouslyMatchedEntities', previouslyMatchedEntities);
+
     // Get missing entities and matched entities
     const { missingEntities, matchedEntities } = this.computeEntities(
       messageEntities,
       this.parameters.entities,
       previouslyMatchedEntities,
+      previousQuestionEntity,
     );
     logger.debug('execute', { missingEntities, matchedEntities });
-    await this.brain.conversationSet(userId, this.parameters.namespace, matchedEntities);
+
+    // question entities (ordered) to be passed to the view
+    const questionEntities = await this.computeQuestionEntities(matchedEntities, missingEntities);
+
+    // save matched entities and next question in the brain
+    await this.brain.conversationSet(userId, this.parameters.namespace, {
+      entities: matchedEntities,
+      question: questionEntities.size > 0 ? questionEntities.keys().next().value : undefined,
+    });
+
     const extraData = await this.dialogWillDisplay(userMessage, {
-      missingEntities,
+      missingEntities: questionEntities,
       matchedEntities,
     });
-    const dialogData = { matchedEntities, missingEntities, extraData };
+
+    const dialogData = { matchedEntities, missingEntities: questionEntities, extraData };
     await this.display(adapter, userMessage, dialogData);
-    if (Object.keys(missingEntities).length === 0) {
+
+    if (questionEntities.size === 0) {
       const action = await this.dialogWillComplete(userMessage, dialogData);
       return action || this.complete();
     }

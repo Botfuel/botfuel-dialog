@@ -25,7 +25,7 @@ class CitiesView extends PromptView {
       messages.push(new BotTextMessage(`Cool, so you like ${cityNames.join(', ')}`));
     }
 
-    if (missingEntities.favoriteCities) {
+    if (missingEntities.has('favoriteCities')) {
       const missingCount = 5 - matchedEntities.favoriteCities.length;
       messages.push(new BotTextMessage(`Can you give me ${missingCount} more cities you like?`));
     }

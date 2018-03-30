@@ -43,7 +43,7 @@ describe('GuessDialog', () => {
     expect(dialogs.stack).not.toHaveLength(0);
     const lastConversation = await bot.brain.getLastConversation(userId);
     expect(lastConversation).toHaveProperty('guess');
-    expect(lastConversation.guess).toHaveProperty('favoriteColor');
-    expect(lastConversation.guess.favoriteColor.values[0]).toHaveProperty('name');
+    expect(lastConversation.guess.entities).toHaveProperty('favoriteColor');
+    expect(lastConversation.guess.entities.favoriteColor.values[0]).toHaveProperty('name');
   });
 });

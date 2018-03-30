@@ -51,7 +51,7 @@ class ProductsView extends PromptView {
       messages.push(new BotTextMessage(`You just bought the ${product.title}, good choice!`));
     }
 
-    if (missingEntities.product) {
+    if (missingEntities.has('product')) {
       messages.push(new BotTextMessage('Which product do you want to buy?'));
       messages.push(ProductsView.getCardsProducts());
     }

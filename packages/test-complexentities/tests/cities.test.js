@@ -48,8 +48,8 @@ describe('CitiesDialog', () => {
     expect(dialogs.stack).toHaveLength(0);
     const lastConversation = await bot.brain.getLastConversation(userId);
     expect(lastConversation).toHaveProperty('cities');
-    expect(lastConversation.cities).toHaveProperty('favoriteCities');
-    expect(lastConversation.cities.favoriteCities).toHaveLength(5);
+    expect(lastConversation.cities.entities).toHaveProperty('favoriteCities');
+    expect(lastConversation.cities.entities.favoriteCities).toHaveLength(5);
   });
 
   test('should replace cities with a new list if it already has 5 cities', async () => {
@@ -86,7 +86,7 @@ describe('CitiesDialog', () => {
     expect(dialogs.stack).not.toHaveLength(0);
     const lastConversation = await bot.brain.getLastConversation(userId);
     expect(lastConversation).toHaveProperty('cities');
-    expect(lastConversation.cities).toHaveProperty('favoriteCities');
-    expect(lastConversation.cities.favoriteCities).toHaveLength(2);
+    expect(lastConversation.cities.entities).toHaveProperty('favoriteCities');
+    expect(lastConversation.cities.entities.favoriteCities).toHaveLength(2);
   });
 });

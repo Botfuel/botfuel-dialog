@@ -30,13 +30,13 @@ class WeightView extends PromptView {
       .filter(key => !!matchedEntities[key])
       .map(key => weightMessage(key, matchedEntities[key].values[0]));
 
-    if (missingEntities.fatherWeight) {
+    if (missingEntities.has('fatherWeight')) {
       messages.push(new BotTextMessage('What about your male genitor?'));
-    } else if (missingEntities.motherWeight) {
+    } else if (missingEntities.has('motherWeight')) {
       messages.push(new BotTextMessage('What about your female genitor?'));
     }
 
-    if (!Object.keys(missingEntities).length) {
+    if (missingEntities.size === 0) {
       const totalWeight = Object.keys(matchedEntities).reduce(
         (total, key) => total + matchedEntities[key].values[0].value,
         0,
