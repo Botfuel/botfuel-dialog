@@ -57,24 +57,5 @@ describe('PromptView', () => {
         ]);
       });
     });
-
-    describe('when missing entities have different priority', () => {
-      test('should ask highest priority entity first', () => {
-        expect(
-          view.render(
-            {
-              user: null,
-            },
-            {
-              matchedEntities: {},
-              missingEntities: new Map([['name2', { priority: 1 }], ['name1', { priority: 0 }]]),
-            },
-          ),
-        ).toEqual([
-          new BotTextMessage('Entities needed: name2, name1'),
-          new BotTextMessage('Which name2?'),
-        ]);
-      });
-    });
   });
 });
