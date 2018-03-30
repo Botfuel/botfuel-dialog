@@ -723,7 +723,7 @@ describe('PromptDialog', () => {
       });
     });
 
-    describe('previous question entity handleling', () => {
+    describe('previous question entity handling', () => {
       test('should match entity for previous question entity when no higher priority', () => {
         const ageEntity = {
           dim: 'number',
@@ -834,8 +834,8 @@ describe('PromptDialog', () => {
       await prompt.execute(adapter, { user: userId }, messageEntities);
       const conversation = await prompt.brain.getLastConversation(userId);
       expect(conversation).toHaveProperty('testdialog');
-      expect(conversation.testdialog).toHaveProperty('entities');
-      expect(conversation.testdialog).toHaveProperty('question');
+      expect(conversation.testdialog).toHaveProperty('_entities');
+      expect(conversation.testdialog).toHaveProperty('_question');
     });
   });
 });

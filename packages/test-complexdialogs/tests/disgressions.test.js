@@ -51,10 +51,10 @@ describe('Disgressions', () => {
         expect(user._conversations.length).toBe(1);
         expect(dialogs.stack).toHaveLength(0);
         expect(lastConversation).toHaveProperty('travel');
-        expect(lastConversation.travel.entities).toHaveProperty('city');
-        expect(lastConversation.travel.entities).toHaveProperty('time');
-        expect(lastConversation.travel.entities.city.body).toBe('Paris');
-        expect(lastConversation.travel.entities.time.body).toBe('tomorrow');
+        expect(lastConversation.travel._entities).toHaveProperty('city');
+        expect(lastConversation.travel._entities).toHaveProperty('time');
+        expect(lastConversation.travel._entities.city.body).toBe('Paris');
+        expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
       });
     },
     15000,
@@ -97,12 +97,12 @@ describe('Disgressions', () => {
         expect(user._conversations.length).toBe(1);
         expect(dialogs.stack).toHaveLength(0);
         expect(lastConversation).toHaveProperty('travel');
-        expect(lastConversation.travel.entities).toHaveProperty('city');
-        expect(lastConversation.travel.entities).toHaveProperty('time');
-        expect(lastConversation.travel.entities.city.body).toBe('Paris');
-        expect(lastConversation.travel.entities.time.body).toBe('tomorrow');
-        expect(lastConversation.name.entities).toHaveProperty('name');
-        expect(lastConversation.name.entities.name.body).toBe('John');
+        expect(lastConversation.travel._entities).toHaveProperty('city');
+        expect(lastConversation.travel._entities).toHaveProperty('time');
+        expect(lastConversation.travel._entities.city.body).toBe('Paris');
+        expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
+        expect(lastConversation.name._entities).toHaveProperty('name');
+        expect(lastConversation.name._entities.name.body).toBe('John');
       });
     },
     15000,

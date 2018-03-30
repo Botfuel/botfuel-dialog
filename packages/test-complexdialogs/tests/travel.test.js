@@ -38,8 +38,8 @@ describe('TravelDialog', () => {
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack.length).toBe(1);
     expect(lastConversation).toHaveProperty('travel');
-    expect(lastConversation.travel.entities).toHaveProperty('city');
-    expect(lastConversation.travel.entities.city.body).toBe('Paris');
+    expect(lastConversation.travel._entities).toHaveProperty('city');
+    expect(lastConversation.travel._entities.city.body).toBe('Paris');
   });
 
   test('should have the proper interaction when the user gives the destination then the date', async () => {
@@ -62,10 +62,10 @@ describe('TravelDialog', () => {
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('travel');
-    expect(lastConversation.travel.entities).toHaveProperty('city');
-    expect(lastConversation.travel.entities).toHaveProperty('time');
-    expect(lastConversation.travel.entities.city.body).toBe('Paris');
-    expect(lastConversation.travel.entities.time.body).toBe('tomorrow');
+    expect(lastConversation.travel._entities).toHaveProperty('city');
+    expect(lastConversation.travel._entities).toHaveProperty('time');
+    expect(lastConversation.travel._entities.city.body).toBe('Paris');
+    expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
   });
 
   test('should have the proper interaction when the user gives the destination twice', async () => {
@@ -96,10 +96,10 @@ describe('TravelDialog', () => {
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('travel');
-    expect(lastConversation.travel.entities).toHaveProperty('city');
-    expect(lastConversation.travel.entities).toHaveProperty('time');
-    expect(lastConversation.travel.entities.city.body).toBe('Berlin');
-    expect(lastConversation.travel.entities.time.body).toBe('tomorrow');
+    expect(lastConversation.travel._entities).toHaveProperty('city');
+    expect(lastConversation.travel._entities).toHaveProperty('time');
+    expect(lastConversation.travel._entities.city.body).toBe('Berlin');
+    expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
   });
 
   test('should have the proper interaction when the user gives the date twice', async () => {
@@ -128,9 +128,9 @@ describe('TravelDialog', () => {
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('travel');
-    expect(lastConversation.travel.entities).toHaveProperty('city');
-    expect(lastConversation.travel.entities).toHaveProperty('time');
-    expect(lastConversation.travel.entities.city.body).toBe('Paris');
-    expect(lastConversation.travel.entities.time.body).toBe('the day after tomorrow');
+    expect(lastConversation.travel._entities).toHaveProperty('city');
+    expect(lastConversation.travel._entities).toHaveProperty('time');
+    expect(lastConversation.travel._entities.city.body).toBe('Paris');
+    expect(lastConversation.travel._entities.time.body).toBe('the day after tomorrow');
   });
 });

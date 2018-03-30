@@ -293,8 +293,8 @@ class PromptDialog extends Dialog {
     const userId = userMessage.user;
 
     const dialogCache = await this.brain.conversationGet(userId, this.parameters.namespace);
-    const previouslyMatchedEntities = (dialogCache && dialogCache.entities) || {};
-    const previousQuestionEntity = (dialogCache && dialogCache.question) || undefined;
+    const previouslyMatchedEntities = (dialogCache && dialogCache._entities) || {};
+    const previousQuestionEntity = (dialogCache && dialogCache._question) || undefined;
     logger.debug('execute: previouslyMatchedEntities', previouslyMatchedEntities);
 
     // Get missing entities and matched entities
@@ -311,8 +311,8 @@ class PromptDialog extends Dialog {
 
     // save matched entities and next question in the brain
     await this.brain.conversationSet(userId, this.parameters.namespace, {
-      entities: matchedEntities,
-      question: questionEntities.size > 0 ? questionEntities.keys().next().value : undefined,
+      _entities: matchedEntities,
+      _question: questionEntities.size > 0 ? questionEntities.keys().next().value : undefined,
     });
 
     const extraData = await this.dialogWillDisplay(userMessage, {
