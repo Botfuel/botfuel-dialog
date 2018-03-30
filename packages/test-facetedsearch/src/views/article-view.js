@@ -1,10 +1,5 @@
 const _ = require('lodash');
-const {
-  BotTextMessage,
-  BotImageMessage,
-  Logger,
-  QuickrepliesMessage,
-} = require('botfuel-dialog');
+const { BotTextMessage, Logger, QuickrepliesMessage } = require('botfuel-dialog');
 const { SearchView } = require('botfuel-facetedsearch');
 
 const logger = Logger('ArticleView');
@@ -19,25 +14,20 @@ const questions = {
 };
 
 const getBotResponse = (facet, valueCounts) => {
-  var facetValues = [];
+  let facetValues = [];
   if (facet === 'size') {
     // size value is array
-    const array = valueCounts.map(o =>
-      o.value.substring(1, o.value.length - 1).split(',')
-    );
+    const array = valueCounts.map(o => o.value.substring(1, o.value.length - 1).split(','));
     facetValues = _.union(...array);
   } else {
     facetValues = valueCounts.map(o => o.value);
   }
 
-  return [
-    new BotTextMessage(questions[nextQuestionFacet]),
-    new QuickrepliesMessage(facetValues),
-  ];
+  return [new BotTextMessage(questions[facet]), new QuickrepliesMessage(facetValues)];
 };
 
-const articleHtml = data => {
-  var html = '<div>';
+const articleHtml = (data) => {
+  let html = '<div>';
   html += `<div><img src="${data.image}" style="max-width:100%"/></div>`;
   html += `<div><strong>${data.brand}</strong> <strong style="float:right">${
     data.price
@@ -54,7 +44,9 @@ const articleHtml = data => {
   return html;
 };
 
+/** @inheritdoc */
 class ArticleView extends SearchView {
+  /** @inheritdoc */
   renderEntities(matchedEntities, missingEntities, extraData) {
     logger.debug('renderEntities', {
       matchedEntities,
@@ -63,10 +55,7 @@ class ArticleView extends SearchView {
     });
 
     if (missingEntities.size !== 0) {
-      return getBotResponse(
-        missingEntities.values().next().value,
-        extraData.facetValueCounts
-      );
+      return getBotResponse(missingEntities.values().next().value, extraData.facetValueCounts);
     }
 
     const messages = [];
@@ -75,10 +64,10 @@ class ArticleView extends SearchView {
         new BotTextMessage(
           `Thank you. We have ${extraData.data.length} product${
             extraData.data.length > 1 ? 's' : ''
-          }:`
-        )
+          }:`,
+        ),
       );
-      _.forEach(extraData.data, data => {
+      _.forEach(extraData.data, (data) => {
         messages.push(new BotTextMessage(articleHtml(data)));
       });
     } else {
