@@ -1,9 +1,34 @@
 # Change Log
 
-  All notable changes to this project will be documented in this file.
-  See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+      All notable changes to this project will be documented in this file.
+      See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-  <a name="4.4.3"></a>
+      <a name="5.0.0"></a>
+# [5.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.3...v5.0.0) (2018-04-03)
+
+
+### Bug Fixes
+
+* correct style ([b04114b](https://github.com/Botfuel/botfuel-dialog/commit/b04114b))
+* fix style ([6671e78](https://github.com/Botfuel/botfuel-dialog/commit/6671e78))
+* fix style ([3108976](https://github.com/Botfuel/botfuel-dialog/commit/3108976))
+* remove undefined value in matchedEntities object ([8f9555d](https://github.com/Botfuel/botfuel-dialog/commit/8f9555d))
+
+
+### Code Refactoring
+
+* (breaking change) store prompt dialog in brain with new strucutre {entities: ..., question:...} ([599b8c8](https://github.com/Botfuel/botfuel-dialog/commit/599b8c8))
+
+
+### BREAKING CHANGES
+
+* this can cause conflict on running bot with MongoBrain
+
+
+
+
+
+      <a name="4.4.3"></a>
 ## [4.4.3](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.2...v4.4.3) (2018-03-29)
 
 
@@ -16,7 +41,7 @@
 
 
 
-  <a name="4.4.2"></a>
+<a name="4.4.2"></a>
 ## [4.4.2](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.1...v4.4.2) (2018-03-26)
 
 
