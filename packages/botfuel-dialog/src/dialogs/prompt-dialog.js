@@ -227,7 +227,7 @@ class PromptDialog extends Dialog {
     let matchedEntities = previouslyMatchedEntities;
     let remainingCandidates = candidates;
 
-    _.forEach(sortedDialogEntityNames, (name) => {
+    for (const name of sortedDialogEntityNames) {
       const entity = dialogEntities[name];
       const initialValue = previouslyMatchedEntities[name];
       const {
@@ -242,7 +242,9 @@ class PromptDialog extends Dialog {
 
       remainingCandidates = newRemainingCandidates;
 
-      matchedEntities = { ...matchedEntities, [name]: newValue };
+      if (newValue) {
+        matchedEntities = { ...matchedEntities, [name]: newValue };
+      }
 
       const isFulfilled = entity.isFulfilled(newValue, {
         dialogEntities: matchedEntities,
@@ -252,7 +254,7 @@ class PromptDialog extends Dialog {
       // remove it from missing entities
       // If it was not found, keep missing entities intact
       missingEntities = isFulfilled ? _.omit(missingEntities, [name]) : missingEntities;
-    });
+    }
 
     // transform missingEntities to a Map, ordered by priority
     missingEntities = this.sortMissingEntities(missingEntities);
