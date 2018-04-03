@@ -45,7 +45,6 @@ describe('NameDialog', () => {
     expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('Ask me my name'),
-        new BotTextMessage('Entities defined: '),
         new BotTextMessage('Entities needed: name'),
         new BotTextMessage('Which name?'),
         new UserTextMessage('My name is John'),

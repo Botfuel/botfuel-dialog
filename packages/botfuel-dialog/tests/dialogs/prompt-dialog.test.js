@@ -245,6 +245,87 @@ describe('PromptDialog', () => {
       });
     });
 
+    describe('matched entities', () => {
+      test('should return empty matchedEntities object when no message entities', async () => {
+        const messageEntities = [];
+
+        const expectedEntities = {
+          color: {
+            dim: 'color',
+          },
+          age: {
+            dim: 'number',
+          },
+        };
+
+        const { matchedEntities } = await prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {},
+        );
+
+        expect(matchedEntities).toEqual({});
+      });
+
+      test('should have keys for only matched entities', async () => {
+        const colorEntity = {
+          dim: 'color',
+          start: 10,
+          end: 14,
+          values: [{ value: 'blue', type: 'integer' }],
+          body: 'blue',
+        };
+
+        const messageEntities = [colorEntity];
+
+        const expectedEntities = {
+          color: {
+            dim: 'color',
+          },
+          age: {
+            dim: 'number',
+          },
+        };
+
+        const { matchedEntities } = await prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {},
+        );
+
+        expect(Object.keys(matchedEntities)).toEqual(['color']);
+      });
+
+      test('should have keys for matched entities even not fulfilled', async () => {
+        const ageEntity = {
+          dim: 'number',
+          values: [{ value: 10, type: 'integer' }],
+        };
+
+        const messageEntities = [ageEntity];
+
+        const expectedEntities = {
+          color: {
+            dim: 'color',
+          },
+          age: {
+            dim: 'number',
+            isFulfilled: entity =>
+              entity && entity.values && entity.values[0] && entity.values[0].value >= 20,
+          },
+        };
+
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {},
+        );
+
+        expect(Object.keys(matchedEntities)).toEqual(['age']);
+        expect(Array.from(missingEntities.keys())).toEqual(['color', 'age']);
+      });
+    });
+
     describe('handle multiple results for a single entity', () => {
       test('should remove candidate entities when an expected entity already matched with them', async () => {
         const weightEntity1 = {

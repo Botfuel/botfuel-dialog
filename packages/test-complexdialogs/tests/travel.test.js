@@ -53,7 +53,7 @@ describe('TravelDialog', () => {
         new BotTextMessage('Entities needed: time'),
         new BotTextMessage('Which time?'),
         new UserTextMessage('tomorrow'),
-        new BotTextMessage('Entities defined: time, city'),
+        new BotTextMessage('Entities defined: city, time'),
       ].map(msg => msg.toJson(userId)),
     );
     const user = await bot.brain.getUser(userId);
@@ -87,7 +87,7 @@ describe('TravelDialog', () => {
         new BotTextMessage('Entities needed: time'),
         new BotTextMessage('Which time?'),
         new UserTextMessage('tomorrow'),
-        new BotTextMessage('Entities defined: time, city'),
+        new BotTextMessage('Entities defined: city, time'),
       ].map(msg => msg.toJson(userId)),
     );
     const user = await bot.brain.getUser(userId);
@@ -117,9 +117,9 @@ describe('TravelDialog', () => {
         new BotTextMessage('Entities needed: time'),
         new BotTextMessage('Which time?'),
         new UserTextMessage('tomorrow'),
-        new BotTextMessage('Entities defined: time, city'),
+        new BotTextMessage('Entities defined: city, time'),
         new UserTextMessage('the day after tomorrow'),
-        new BotTextMessage('Entities defined: time, city'),
+        new BotTextMessage('Entities defined: city, time'),
       ].map(msg => msg.toJson(userId)),
     );
     const user = await bot.brain.getUser(userId);

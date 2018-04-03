@@ -42,7 +42,7 @@ describe('Disgressions', () => {
             new BotTextMessage('Entities needed: time'),
             new BotTextMessage('Which time?'),
             new UserTextMessage('tomorrow'),
-            new BotTextMessage('Entities defined: time, city'),
+            new BotTextMessage('Entities defined: city, time'),
           ].map(msg => msg.toJson(userId)),
         );
         const user = await bot.brain.getUser(userId);
@@ -79,7 +79,6 @@ describe('Disgressions', () => {
             new BotTextMessage('Entities needed: time'),
             new BotTextMessage('Which time?'),
             new UserTextMessage('Ask me my name'),
-            new BotTextMessage('Entities defined: '),
             new BotTextMessage('Entities needed: name'),
             new BotTextMessage('Which name?'),
             new UserTextMessage('John'),
@@ -88,7 +87,7 @@ describe('Disgressions', () => {
             new BotTextMessage('Entities needed: time'),
             new BotTextMessage('Which time?'),
             new UserTextMessage('tomorrow'),
-            new BotTextMessage('Entities defined: time, city'),
+            new BotTextMessage('Entities defined: city, time'),
           ].map(msg => msg.toJson(userId)),
         );
         const user = await bot.brain.getUser(bot.adapter.userId);
