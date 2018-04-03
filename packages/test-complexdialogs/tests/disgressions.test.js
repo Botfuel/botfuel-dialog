@@ -42,7 +42,7 @@ describe('Disgressions', () => {
             new BotTextMessage('Entities needed: time'),
             new BotTextMessage('Which time?'),
             new UserTextMessage('tomorrow'),
-            new BotTextMessage('Entities defined: time, city'),
+            new BotTextMessage('Entities defined: city, time'),
           ].map(msg => msg.toJson(userId)),
         );
         const user = await bot.brain.getUser(userId);
@@ -51,10 +51,10 @@ describe('Disgressions', () => {
         expect(user._conversations.length).toBe(1);
         expect(dialogs.stack).toHaveLength(0);
         expect(lastConversation).toHaveProperty('travel');
-        expect(lastConversation.travel).toHaveProperty('city');
-        expect(lastConversation.travel).toHaveProperty('time');
-        expect(lastConversation.travel.city.body).toBe('Paris');
-        expect(lastConversation.travel.time.body).toBe('tomorrow');
+        expect(lastConversation.travel._entities).toHaveProperty('city');
+        expect(lastConversation.travel._entities).toHaveProperty('time');
+        expect(lastConversation.travel._entities.city.body).toBe('Paris');
+        expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
       });
     },
     15000,
@@ -79,7 +79,6 @@ describe('Disgressions', () => {
             new BotTextMessage('Entities needed: time'),
             new BotTextMessage('Which time?'),
             new UserTextMessage('Ask me my name'),
-            new BotTextMessage('Entities defined: '),
             new BotTextMessage('Entities needed: name'),
             new BotTextMessage('Which name?'),
             new UserTextMessage('John'),
@@ -88,7 +87,7 @@ describe('Disgressions', () => {
             new BotTextMessage('Entities needed: time'),
             new BotTextMessage('Which time?'),
             new UserTextMessage('tomorrow'),
-            new BotTextMessage('Entities defined: time, city'),
+            new BotTextMessage('Entities defined: city, time'),
           ].map(msg => msg.toJson(userId)),
         );
         const user = await bot.brain.getUser(bot.adapter.userId);
@@ -97,12 +96,12 @@ describe('Disgressions', () => {
         expect(user._conversations.length).toBe(1);
         expect(dialogs.stack).toHaveLength(0);
         expect(lastConversation).toHaveProperty('travel');
-        expect(lastConversation.travel).toHaveProperty('city');
-        expect(lastConversation.travel).toHaveProperty('time');
-        expect(lastConversation.travel.city.body).toBe('Paris');
-        expect(lastConversation.travel.time.body).toBe('tomorrow');
-        expect(lastConversation.name).toHaveProperty('name');
-        expect(lastConversation.name.name.body).toBe('John');
+        expect(lastConversation.travel._entities).toHaveProperty('city');
+        expect(lastConversation.travel._entities).toHaveProperty('time');
+        expect(lastConversation.travel._entities.city.body).toBe('Paris');
+        expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
+        expect(lastConversation.name._entities).toHaveProperty('name');
+        expect(lastConversation.name._entities.name.body).toBe('John');
       });
     },
     15000,

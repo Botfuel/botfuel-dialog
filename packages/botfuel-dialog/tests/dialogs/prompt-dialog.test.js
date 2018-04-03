@@ -16,7 +16,10 @@
 
 const PromptDialog = require('../../src/dialogs/prompt-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
-const TEST_CONFIG = require('../../src/config').getConfiguration({});
+const Bot = require('../../src/bot');
+const Config = require('../../src/config');
+
+const TEST_CONFIG = Config.getConfiguration({});
 
 describe('PromptDialog', () => {
   describe('computeEntities', () => {
@@ -27,7 +30,7 @@ describe('PromptDialog', () => {
     });
 
     describe('simple matching', () => {
-      test('should message entities with expected entities in a simple case (one entity)', () => {
+      test('should message entities with expected entities in a simple case (one entity)', async () => {
         const cityEntity = {
           dim: 'city',
           start: 0,
@@ -47,7 +50,7 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {},
@@ -55,10 +58,10 @@ describe('PromptDialog', () => {
 
         expect(matchedEntities).toHaveProperty('city');
         expect(matchedEntities.city).toEqual(cityEntity);
-        expect(Object.keys(missingEntities)).toHaveLength(1);
+        expect(missingEntities.size).toEqual(1);
       });
 
-      test('should message entities with expected entities in a simple case (two entities)', () => {
+      test('should message entities with expected entities in a simple case (two entities)', async () => {
         const ageEntity = {
           dim: 'number',
           start: 0,
@@ -85,7 +88,7 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {},
@@ -95,12 +98,12 @@ describe('PromptDialog', () => {
         expect(matchedEntities.age).toEqual(ageEntity);
         expect(matchedEntities).toHaveProperty('weight');
         expect(matchedEntities.weight).toEqual(weightEntity);
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
     });
 
     describe('priority handling', () => {
-      test('should match entities with highest priority first', () => {
+      test('should match entities with highest priority first', async () => {
         const ageEntity1 = {
           dim: 'number',
           start: 0,
@@ -139,7 +142,7 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {},
@@ -151,10 +154,10 @@ describe('PromptDialog', () => {
         expect(matchedEntities.minAge).toEqual(ageEntity2);
         expect(matchedEntities).toHaveProperty('maxAge');
         expect(matchedEntities.maxAge).toEqual(ageEntity3);
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
 
-      test('should retain order of fulfilled entities', () => {
+      test('should retain order of fulfilled entities', async () => {
         const numberEntity1 = {
           dim: 'number',
           start: 0,
@@ -183,7 +186,7 @@ describe('PromptDialog', () => {
           body: '42',
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {
@@ -202,12 +205,12 @@ describe('PromptDialog', () => {
         expect(matchedEntities.minAge).toEqual(numberEntity1);
         expect(matchedEntities).toHaveProperty('maxAge');
         expect(matchedEntities.maxAge).toEqual(maxAgeEntity);
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
     });
 
     describe('missing entities', () => {
-      test('should return unmatched entities', () => {
+      test('should return unmatched entities', async () => {
         const colorEntity = {
           dim: 'color',
           start: 10,
@@ -227,7 +230,7 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {},
@@ -236,14 +239,95 @@ describe('PromptDialog', () => {
         expect(matchedEntities).toHaveProperty('color');
         expect(matchedEntities.color).toEqual(colorEntity);
         expect(matchedEntities).not.toHaveProperty('otherAge');
-        expect(Object.keys(missingEntities)).toHaveLength(1);
-        expect(missingEntities).toHaveProperty('age');
-        expect(missingEntities.age).toBeTruthy();
+        expect(missingEntities.size).toEqual(1);
+        expect(missingEntities.has('age')).toBe(true);
+        expect(missingEntities.get('age')).toBeTruthy();
+      });
+    });
+
+    describe('matched entities', () => {
+      test('should return empty matchedEntities object when no message entities', async () => {
+        const messageEntities = [];
+
+        const expectedEntities = {
+          color: {
+            dim: 'color',
+          },
+          age: {
+            dim: 'number',
+          },
+        };
+
+        const { matchedEntities } = await prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {},
+        );
+
+        expect(matchedEntities).toEqual({});
+      });
+
+      test('should have keys for only matched entities', async () => {
+        const colorEntity = {
+          dim: 'color',
+          start: 10,
+          end: 14,
+          values: [{ value: 'blue', type: 'integer' }],
+          body: 'blue',
+        };
+
+        const messageEntities = [colorEntity];
+
+        const expectedEntities = {
+          color: {
+            dim: 'color',
+          },
+          age: {
+            dim: 'number',
+          },
+        };
+
+        const { matchedEntities } = await prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {},
+        );
+
+        expect(Object.keys(matchedEntities)).toEqual(['color']);
+      });
+
+      test('should have keys for matched entities even not fulfilled', async () => {
+        const ageEntity = {
+          dim: 'number',
+          values: [{ value: 10, type: 'integer' }],
+        };
+
+        const messageEntities = [ageEntity];
+
+        const expectedEntities = {
+          color: {
+            dim: 'color',
+          },
+          age: {
+            dim: 'number',
+            isFulfilled: entity =>
+              entity && entity.values && entity.values[0] && entity.values[0].value >= 20,
+          },
+        };
+
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {},
+        );
+
+        expect(Object.keys(matchedEntities)).toEqual(['age']);
+        expect(Array.from(missingEntities.keys())).toEqual(['color', 'age']);
       });
     });
 
     describe('handle multiple results for a single entity', () => {
-      test('should remove candidate entities when an expected entity already matched with them', () => {
+      test('should remove candidate entities when an expected entity already matched with them', async () => {
         const weightEntity1 = {
           dim: 'weight',
           start: 0,
@@ -284,7 +368,7 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {},
@@ -296,10 +380,10 @@ describe('PromptDialog', () => {
         expect(matchedEntities).toHaveProperty('itemCount');
         expect(matchedEntities.itemCount).toEqual(itemCountEntity2);
 
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
 
-      test('should remove candidates that intersect with a matched candidate', () => {
+      test('should remove candidates that intersect with a matched candidate', async () => {
         const ageEntity = {
           dim: 'duration',
           start: 0,
@@ -335,7 +419,7 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {
@@ -349,12 +433,12 @@ describe('PromptDialog', () => {
         expect(matchedEntities).toHaveProperty('favoriteNumber');
         expect(matchedEntities.favoriteNumber).toEqual(numberEntity);
 
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
     });
 
     describe('isFulfilled condition', () => {
-      test('should set entity as missing if the isFulfilled condition is not met', () => {
+      test('should set entity as missing if the isFulfilled condition is not met', async () => {
         const numberEntity = {
           dim: 'number',
           start: 0,
@@ -373,13 +457,17 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { missingEntities } = prompt.computeEntities(messageEntities, expectedEntities, {});
+        const { missingEntities } = await prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {},
+        );
 
-        expect(Object.keys(missingEntities)).toHaveLength(1);
-        expect(missingEntities).toHaveProperty('myNumber');
+        expect(missingEntities.size).toEqual(1);
+        expect(missingEntities.has('myNumber')).toBe(true);
       });
 
-      test('should set entity as matched if the isFulfilled condition is met', () => {
+      test('should set entity as matched if the isFulfilled condition is met', async () => {
         const numberEntity = {
           dim: 'number',
           start: 0,
@@ -398,19 +486,19 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {},
         );
 
         expect(matchedEntities.myNumber).toEqual(numberEntity);
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
     });
 
     describe('reducer parameter', () => {
-      test('should use the reducer function', () => {
+      test('should use the reducer function', async () => {
         const numbers = [
           {
             dim: 'number',
@@ -460,7 +548,7 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {
@@ -474,12 +562,12 @@ describe('PromptDialog', () => {
           ...messageEntities.slice(0, 2),
         ]);
 
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
     });
 
     describe('replacing fulfilled entities', () => {
-      test('should replace a fulfilled entity if a new message is sent', () => {
+      test('should replace a fulfilled entity if a new message is sent', async () => {
         const numbers = [
           {
             dim: 'number',
@@ -529,7 +617,7 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {
@@ -540,10 +628,10 @@ describe('PromptDialog', () => {
         expect(matchedEntities).toHaveProperty('favoriteNumbers');
         expect(matchedEntities.favoriteNumbers).toEqual([...messageEntities.slice(0, 2)]);
 
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
 
-      test('should not replace a fulfilled entity if extracting from a new message', () => {
+      test('should not replace a fulfilled entity if extracting from a new message', async () => {
         const numbers = [
           {
             dim: 'number',
@@ -582,7 +670,7 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {
@@ -594,10 +682,10 @@ describe('PromptDialog', () => {
         expect(matchedEntities.favoriteNumbers).toEqual(numbers);
         expect(matchedEntities.age).toEqual(messageEntities[0]);
 
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
 
-      test('should not replace a fulfilled entity when there are several message entities', () => {
+      test('should not replace a fulfilled entity when there are several message entities', async () => {
         const age = {
           dim: 'number',
           values: [{ value: '28', type: 'integer' }],
@@ -633,7 +721,7 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           messageEntities,
           expectedEntities,
           {
@@ -645,10 +733,10 @@ describe('PromptDialog', () => {
         expect(matchedEntities.favoriteNumbers).toEqual(messageEntities);
         expect(matchedEntities.age).toEqual(age);
 
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
 
-      test('should replace fulfilled entities when the condition is always true', () => {
+      test('should replace fulfilled entities when the condition is always true', async () => {
         const age = {
           dim: 'number',
           values: [{ value: '28', type: 'integer' }],
@@ -671,7 +759,7 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { matchedEntities, missingEntities } = prompt.computeEntities(
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
           [newAge],
           expectedEntities,
           {
@@ -682,10 +770,10 @@ describe('PromptDialog', () => {
         expect(matchedEntities).toHaveProperty('age');
         expect(matchedEntities.age).toEqual(newAge);
 
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
 
-      test('should complete the dialog when the last entity is fulfilled subsequently', () => {
+      test('should complete the dialog when the last entity is fulfilled subsequently', async () => {
         const age = {
           dim: 'number',
           values: [{ value: 18, type: 'integer' }],
@@ -712,12 +800,127 @@ describe('PromptDialog', () => {
           },
         };
 
-        const { missingEntities } = prompt.computeEntities([age], expectedEntities, {
+        const { missingEntities } = await prompt.computeEntities([age], expectedEntities, {
           wantAlcohol,
         });
 
-        expect(Object.keys(missingEntities)).toHaveLength(0);
+        expect(missingEntities.size).toEqual(0);
       });
+    });
+
+    describe('previous question entity handling', () => {
+      test('should match entity for previous question entity when no higher priority', async () => {
+        const ageEntity = {
+          dim: 'number',
+          start: 0,
+          end: 2,
+          values: [{ value: 42, type: 'integer' }],
+          body: '42',
+        };
+
+        const messageEntities = [ageEntity];
+
+        const expectedEntities = {
+          maxAge: {
+            dim: 'number',
+          },
+          otherAge: {
+            dim: 'number',
+          },
+          minAge: {
+            dim: 'number',
+          },
+        };
+
+        const previousQuestionEntity = 'otherAge';
+
+        const { matchedEntities, missingEntities } = await prompt.computeEntities(
+          messageEntities,
+          expectedEntities,
+          {},
+          previousQuestionEntity,
+        );
+
+        expect(matchedEntities).toHaveProperty('otherAge');
+        expect(matchedEntities.otherAge).toEqual(ageEntity);
+        expect(missingEntities.size).toEqual(2);
+      });
+    });
+  });
+
+  describe('sort missing entities', () => {
+    const brain = new MemoryBrain(TEST_CONFIG);
+    const prompt = new PromptDialog(TEST_CONFIG, brain, {
+      namespace: 'testdialog',
+      entities: {},
+    });
+
+    test('should return sorted missing entities', () => {
+      const missingEntities = {
+        a: {
+          dim: 'number',
+          priority: 0,
+        },
+        b: {
+          dim: 'number',
+          priority: 10,
+        },
+        c: {
+          dim: 'number',
+          priority: 5,
+        },
+      };
+
+      const sortMissingEntities = prompt.sortMissingEntities(missingEntities);
+      expect(Array.from(sortMissingEntities.keys())).toEqual(['b', 'c', 'a']);
+    });
+  });
+
+  describe('excecute', () => {
+    const config = Config.getConfiguration({
+      adapter: {
+        name: 'test',
+      },
+    });
+    const bot = new Bot(config);
+    const adapter = bot.adapter;
+    const userId = adapter.userId;
+
+    const prompt = new PromptDialog(TEST_CONFIG, bot.brain, {
+      namespace: 'testdialog',
+      entities: {
+        a: {
+          dim: 'number',
+          priority: 0,
+        },
+        b: {
+          dim: 'number',
+          priority: 10,
+        },
+        c: {
+          dim: 'number',
+          priority: 5,
+        },
+      },
+    });
+
+    test('should have correct dialog data structure in brain', async () => {
+      const messageEntities = [
+        {
+          dim: 'number',
+          start: 0,
+          end: 2,
+          values: [{ value: 42, type: 'integer' }],
+          body: '42',
+        },
+      ];
+
+      await prompt.brain.addUser(userId);
+      await prompt.execute(adapter, { user: userId }, messageEntities);
+      const conversation = await prompt.brain.getLastConversation(userId);
+      expect(conversation).toHaveProperty('testdialog');
+      expect(conversation.testdialog).toHaveProperty('_entities');
+      expect(conversation.testdialog).toHaveProperty('_question');
     });
   });
 });

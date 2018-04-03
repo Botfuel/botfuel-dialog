@@ -38,8 +38,8 @@ describe('TravelDialog', () => {
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack.length).toBe(1);
     expect(lastConversation).toHaveProperty('travel');
-    expect(lastConversation.travel).toHaveProperty('city');
-    expect(lastConversation.travel.city.body).toBe('Paris');
+    expect(lastConversation.travel._entities).toHaveProperty('city');
+    expect(lastConversation.travel._entities.city.body).toBe('Paris');
   });
 
   test('should have the proper interaction when the user gives the destination then the date', async () => {
@@ -53,7 +53,7 @@ describe('TravelDialog', () => {
         new BotTextMessage('Entities needed: time'),
         new BotTextMessage('Which time?'),
         new UserTextMessage('tomorrow'),
-        new BotTextMessage('Entities defined: time, city'),
+        new BotTextMessage('Entities defined: city, time'),
       ].map(msg => msg.toJson(userId)),
     );
     const user = await bot.brain.getUser(userId);
@@ -62,10 +62,10 @@ describe('TravelDialog', () => {
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('travel');
-    expect(lastConversation.travel).toHaveProperty('city');
-    expect(lastConversation.travel).toHaveProperty('time');
-    expect(lastConversation.travel.city.body).toBe('Paris');
-    expect(lastConversation.travel.time.body).toBe('tomorrow');
+    expect(lastConversation.travel._entities).toHaveProperty('city');
+    expect(lastConversation.travel._entities).toHaveProperty('time');
+    expect(lastConversation.travel._entities.city.body).toBe('Paris');
+    expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
   });
 
   test('should have the proper interaction when the user gives the destination twice', async () => {
@@ -87,7 +87,7 @@ describe('TravelDialog', () => {
         new BotTextMessage('Entities needed: time'),
         new BotTextMessage('Which time?'),
         new UserTextMessage('tomorrow'),
-        new BotTextMessage('Entities defined: time, city'),
+        new BotTextMessage('Entities defined: city, time'),
       ].map(msg => msg.toJson(userId)),
     );
     const user = await bot.brain.getUser(userId);
@@ -96,10 +96,10 @@ describe('TravelDialog', () => {
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('travel');
-    expect(lastConversation.travel).toHaveProperty('city');
-    expect(lastConversation.travel).toHaveProperty('time');
-    expect(lastConversation.travel.city.body).toBe('Berlin');
-    expect(lastConversation.travel.time.body).toBe('tomorrow');
+    expect(lastConversation.travel._entities).toHaveProperty('city');
+    expect(lastConversation.travel._entities).toHaveProperty('time');
+    expect(lastConversation.travel._entities.city.body).toBe('Berlin');
+    expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
   });
 
   test('should have the proper interaction when the user gives the date twice', async () => {
@@ -117,9 +117,9 @@ describe('TravelDialog', () => {
         new BotTextMessage('Entities needed: time'),
         new BotTextMessage('Which time?'),
         new UserTextMessage('tomorrow'),
-        new BotTextMessage('Entities defined: time, city'),
+        new BotTextMessage('Entities defined: city, time'),
         new UserTextMessage('the day after tomorrow'),
-        new BotTextMessage('Entities defined: time, city'),
+        new BotTextMessage('Entities defined: city, time'),
       ].map(msg => msg.toJson(userId)),
     );
     const user = await bot.brain.getUser(userId);
@@ -128,9 +128,9 @@ describe('TravelDialog', () => {
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('travel');
-    expect(lastConversation.travel).toHaveProperty('city');
-    expect(lastConversation.travel).toHaveProperty('time');
-    expect(lastConversation.travel.city.body).toBe('Paris');
-    expect(lastConversation.travel.time.body).toBe('the day after tomorrow');
+    expect(lastConversation.travel._entities).toHaveProperty('city');
+    expect(lastConversation.travel._entities).toHaveProperty('time');
+    expect(lastConversation.travel._entities.city.body).toBe('Paris');
+    expect(lastConversation.travel._entities.time.body).toBe('the day after tomorrow');
   });
 });

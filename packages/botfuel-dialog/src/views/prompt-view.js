@@ -15,7 +15,6 @@
  */
 
 const logger = require('logtown')('PromptView');
-const _ = require('lodash');
 const BotTextMessage = require('../messages/bot-text-message');
 const View = require('./view');
 
@@ -34,7 +33,7 @@ class PromptView extends View {
    * Confirms the defined entities and asks for the needed ones.
    * @private
    * @param {Object[]} matchedEntities - the defined entities
-   * @param {String[]} missingEntities - the needed entities
+   * @param {Map} missingEntities - the missing entities map with keys ordered by priority
    * @param {Object} [extraData] - additional data from dialogWillDisplay hook
    * @returns {Object[]} the bot messages
    */
@@ -50,20 +49,13 @@ class PromptView extends View {
         ),
       );
     }
-    if (Object.keys(missingEntities).length !== 0) {
+
+    if (missingEntities.size > 0) {
       messages.push(
-        new BotTextMessage(`Entities needed: ${Object.keys(missingEntities).join(', ')}`),
+        new BotTextMessage(`Entities needed: ${Array.from(missingEntities.keys()).join(', ')}`),
       );
 
-      // highest priority entity must be asked first
-      const { entity } = _.maxBy(
-        Object.keys(missingEntities).map(key => ({
-          entity: key,
-          priority: missingEntities[key].priority || 0,
-        })),
-        'priority',
-      );
-      messages.push(new BotTextMessage(`Which ${entity}?`));
+      messages.push(new BotTextMessage(`Which ${missingEntities.keys().next().value}?`));
     }
     return messages;
   }

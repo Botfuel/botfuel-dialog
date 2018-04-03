@@ -34,8 +34,8 @@ describe('NameDialog', () => {
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('name');
-    expect(lastConversation.name).toHaveProperty('name');
-    expect(lastConversation.name.name.body).toBe('John');
+    expect(lastConversation.name._entities).toHaveProperty('name');
+    expect(lastConversation.name._entities.name.body).toBe('John');
   });
 
   test('should ask for the forename', async () => {
@@ -45,7 +45,6 @@ describe('NameDialog', () => {
     expect(bot.adapter.log).toEqual(
       [
         new UserTextMessage('Ask me my name'),
-        new BotTextMessage('Entities defined: '),
         new BotTextMessage('Entities needed: name'),
         new BotTextMessage('Which name?'),
         new UserTextMessage('My name is John'),
@@ -58,7 +57,7 @@ describe('NameDialog', () => {
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('name');
-    expect(lastConversation.name).toHaveProperty('name');
-    expect(lastConversation.name.name.body).toBe('John');
+    expect(lastConversation.name._entities).toHaveProperty('name');
+    expect(lastConversation.name._entities.name.body).toBe('John');
   });
 });
