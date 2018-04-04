@@ -1,9 +1,9 @@
 # Change Log
 
-      All notable changes to this project will be documented in this file.
-      See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-      <a name="5.0.0"></a>
+<a name="5.0.0"></a>
 # [5.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.3...v5.0.0) (2018-04-03)
 
 
@@ -28,7 +28,7 @@
 
 
 
-      <a name="4.4.3"></a>
+<a name="4.4.3"></a>
 ## [4.4.3](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.2...v4.4.3) (2018-03-29)
 
 
