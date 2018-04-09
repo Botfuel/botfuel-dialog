@@ -47,31 +47,14 @@ class DialogManager extends Resolver {
   }
 
   /**
-   * Sorts intents
-   * @param {Object[]} intents - the intent names
-   * @returns {Object[]} the sorted intents
-   */
-  sortIntents(intents) {
-    logger.debug('sortIntents', intents);
-    return intents.sort((intent1, intent2) => {
-      const reentrant1 = this.resolve(intent1).characteristics.reentrant;
-      const reentrant2 = this.resolve(intent2).characteristics.reentrant;
-      if (reentrant1 && !reentrant2) {
-        return 1;
-      }
-      if (!reentrant1 && reentrant2) {
-        return -1;
-      }
-      return 0;
-    });
-  }
-
-  /**
-   * Returns the last dialog to execute if no other dialog is found.
+   * Returns the last "reentrant" dialog to execute if no other dialog is found.
+   * When the sentence itself does not contain enough information for the DialogManager
+   * to compute a dialog, the DialogManager recalls the first reentrant dialog from the
+   * stack of previous dialogs
    * @param {Object[]} previousDialogs - the previous dialogs
    * @returns {String} a dialog name
    */
-  getLastDialog(previousDialogs) {
+  getLastReentrantDialog(previousDialogs) {
     for (let i = previousDialogs.length - 1; i >= 0; i--) {
       const dialog = previousDialogs[i];
       const dialogInstance = this.resolve(dialog.name);
@@ -113,26 +96,42 @@ class DialogManager extends Resolver {
    */
   updateWithIntents(userId, dialogs, intents, entities) {
     logger.debug('updateWithIntents', userId, dialogs, intents, entities);
-    intents = this.sortIntents(intents);
-    logger.debug('updateWithIntents: intents', intents);
-    let nb = 0;
-    const newDialogs = [];
-    for (let i = 0; i < intents.length; i++) {
-      const name = intents[i];
-      const characteristics = this.resolve(name).characteristics;
-      if (characteristics.reentrant) {
-        nb++;
+
+    let newDialog = null;
+    if (intents.length > 1) {
+      newDialog = {
+        name: 'intent-resolution',
+        entities: {
+          entities,
+          intents,
+        },
+      };
+    } else if (intents.length === 1) {
+      if (intents[0].isQnA()) {
+        newDialog = {
+          name: intents[0].name,
+          entities: intents[0].answers,
+        };
+      } else {
+        newDialog = {
+          name: intents[0].name,
+          entities,
+        };
       }
-      newDialogs.push({
-        name,
-        entities,
-        blocked: nb > 1,
-      });
     }
-    this.updateWithDialogs(dialogs, newDialogs);
+
+    if (newDialog) {
+      this.updateWithDialog(dialogs, newDialog);
+    } else {
+      const lastDialog = dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
+      if (lastDialog) {
+        lastDialog.entities = entities;
+      }
+    }
+
     if (dialogs.stack.length === 0) {
       // no intent detected
-      const lastDialog = this.getLastDialog(dialogs.previous) || {
+      const lastDialog = this.getLastReentrantDialog(dialogs.previous) || {
         name: 'default',
         characteristics: {
           reentrant: false,
@@ -143,28 +142,22 @@ class DialogManager extends Resolver {
         entities: entities || [],
       });
     }
-    if (entities) {
-      dialogs.stack[dialogs.stack.length - 1].entities = entities;
-    }
   }
 
   /**
    * Updates the dialogs.
    * @param {Object} dialogs - the dialogs data
-   * @param {Object[]} newDialogs - new dialogs to be added to the dialog stack
+   * @param {Object} newDialog - new dialog to be added to the dialog stack
    * @returns {void}
    */
-  updateWithDialogs(dialogs, newDialogs) {
-    for (let i = newDialogs.length - 1; i >= 0; i--) {
-      const newDialog = newDialogs[i];
-      const lastIndex = dialogs.stack.length - 1;
-      const lastDialog = lastIndex >= 0 ? dialogs.stack[lastIndex] : null;
-      if (lastDialog && lastDialog.name === newDialog.name) {
-        lastDialog.entities = newDialog.entities;
-      } else {
-        dialogs.stack.push(newDialog);
-      }
+  updateWithDialog(dialogs, newDialog) {
+    const lastDialog = dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
+    if (lastDialog && lastDialog.name === newDialog.name) {
+      lastDialog.entities = newDialog.entities;
+    } else {
+      dialogs.stack.push(newDialog);
     }
+    logger.debug('updateWithDialog: updated', dialogs);
   }
 
   /**
@@ -188,7 +181,7 @@ class DialogManager extends Resolver {
           previous: [...dialogs.previous, { ...currentDialog, date }],
         };
         if (newDialog) {
-          this.updateWithDialogs(dialogs, [newDialog]);
+          this.updateWithDialog(dialogs, newDialog);
         }
         return dialogs;
 
@@ -205,7 +198,7 @@ class DialogManager extends Resolver {
           stack: dialogs.stack.slice(0, -1),
           previous: [...dialogs.previous, { ...currentDialog, date }],
         };
-        this.updateWithDialogs(dialogs, [newDialog]);
+        this.updateWithDialog(dialogs, newDialog);
         return dialogs;
 
       case Dialog.ACTION_NEW_CONVERSATION:
@@ -275,7 +268,7 @@ class DialogManager extends Resolver {
    * @returns {void}
    */
   async executeIntents(adapter, userMessage, intents, entities) {
-    logger.debug('execute', userMessage, intents, entities);
+    logger.debug('executeIntents', userMessage, intents, entities);
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithIntents(userId, dialogs, intents, entities);
@@ -286,14 +279,14 @@ class DialogManager extends Resolver {
    * Populates and executes the stack.
    * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
-   * @param {Object[]} newDialogs - the new dialogs
+   * @param {Object[]} newDialog - the new dialogs
    * @returns {void}
    */
-  async executeDialogs(adapter, userMessage, newDialogs) {
-    logger.debug('executeWithDialogs', userMessage, newDialogs);
+  async executeDialog(adapter, userMessage, newDialog) {
+    logger.debug('executeDialog', userMessage, newDialog);
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
-    this.updateWithDialogs(dialogs, newDialogs);
+    this.updateWithDialog(dialogs, newDialog);
     await this.setDialogs(userId, await this.execute(adapter, userMessage, dialogs));
   }
 }

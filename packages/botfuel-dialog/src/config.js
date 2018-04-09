@@ -39,6 +39,7 @@ const defaultConfig = {
     intentThreshold: 0.8,
   },
   multiIntent: false,
+  trainerApiUri: 'https://trainer-api-staging.herokuapp.com/api/v0',
 };
 
 const whitelist = Object.keys(defaultConfig).concat(['spellchecking']);

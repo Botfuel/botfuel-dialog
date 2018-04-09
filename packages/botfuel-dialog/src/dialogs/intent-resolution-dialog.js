@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-const logger = require('logtown')('QnasDialog');
+const logger = require('logtown')('IntentResolutionDialog');
 const Dialog = require('./dialog');
 
 /**
- * The qnas dialog
- * either answers the user's question when there is a single answer
- * or displays several alternatives otherwise.
- * @extends Dialog
+ * The default resolution dialog when
+ * @extends IntentResolutionDialog
  */
-class QnasDialog extends Dialog {
+class IntentResolutionDialog extends Dialog {
   /**
    * @constructor
    * @param {Object} config - the bot config
@@ -36,14 +33,12 @@ class QnasDialog extends Dialog {
   /** @inheritDoc */
   async execute(adapter, userMessage, messageEntities) {
     logger.debug('execute', userMessage, messageEntities);
-    const extraData = await this.dialogWillDisplay(userMessage, messageEntities);
-    const answers = messageEntities;
-    const dialogData = { messageEntities, answers, extraData };
+    const { entities, intents } = messageEntities;
+    const dialogData = { entities, intents };
     await this.display(adapter, userMessage, dialogData);
 
-    const action = await this.dialogWillComplete(userMessage, dialogData);
-    return action || this.complete();
+    return this.complete();
   }
 }
 
-module.exports = QnasDialog;
+module.exports = IntentResolutionDialog;
