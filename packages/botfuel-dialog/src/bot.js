@@ -25,6 +25,7 @@ const AuthenticationError = require('./errors/authentication-error');
 const DialogError = require('./errors/dialog-error');
 const ResolutionError = require('./errors/resolution-error');
 const { checkCredentials } = require('./utils/environment');
+const MiddlewareManager = require('./middleware-manager');
 
 const logger = Logger.getLogger('Bot');
 
@@ -49,8 +50,9 @@ class Bot {
     this.brain = new BrainResolver(this).resolve(this.config.brain.name);
     this.spellchecking = null;
     this.nlu = new NluResolver(this).resolve(this.config.nlu.name);
-    this.dm = new DialogManager(this.brain, this.config);
+    this.dm = new DialogManager(this, this.brain, this.config);
     this.adapter = new AdapterResolver(this).resolve(this.config.adapter.name);
+    this.middlewareManager = new MiddlewareManager(this);
   }
 
   /**
@@ -144,6 +146,25 @@ class Bot {
   }
 
   /**
+   * Handles a user message.
+   * @async
+   * @param {Object} userMessage - the user extended message
+   * @returns {Promise.<void>}
+   */
+  async handleMessage(userMessage) {
+    logger.debug('handleMessage', userMessage);
+    const context = {
+      user: userMessage.user,
+      brain: this.brain,
+      userMessage,
+      config: this.config,
+    };
+    await this.middlewareManager.in(context, async () => {
+      await this.respond(userMessage);
+    });
+  }
+
+  /**
    * Responds to the user.
    * @async
    * @param {Object} userMessage - the user message
@@ -184,7 +205,6 @@ class Bot {
 
     logger.debug('respondWhenText: classificationResults', classificationResults, messageEntities);
     await this.dm.executeClassificationResults(
-      this.adapter,
       userMessage,
       classificationResults,
       messageEntities,
@@ -204,7 +224,7 @@ class Bot {
       name: userMessage.payload.value.dialog,
       data: { messageEntities: userMessage.payload.value.entities },
     };
-    await this.dm.executeDialog(this.adapter, userMessage, dialog);
+    await this.dm.executeDialog(userMessage, dialog);
   }
 
   /**
@@ -220,7 +240,34 @@ class Bot {
       name: 'image',
       data: { url: userMessage.payload.value },
     };
-    await this.dm.executeDialog(this.adapter, userMessage, dialog);
+    await this.dm.executeDialog(userMessage, dialog);
+  }
+
+  /**
+   * Iterates over the bot messages and send them to adapter.
+   * @async
+   * @param {Object[]} botMessages - the bot messages
+   * @param {Object} userMessage - the user message
+   * @returns {Promise.<void>}
+   */
+  async send(botMessages, userMessage) {
+    logger.debug('send', botMessages);
+    const context = {
+      user: userMessage.user,
+      brain: this.brain,
+      botMessages,
+      config: this.config,
+      userMessage,
+    };
+    await this.middlewareManager.out(context, async () => {
+      for (const botMessage of botMessages) {
+        // TODO: Remove this ugly line
+        const extendedBotMessage = this.adapter.extendMessage(botMessage);
+
+        // eslint-disable-next-line no-await-in-loop
+        await this.adapter.sendMessage(extendedBotMessage);
+      }
+    });
   }
 
   /**

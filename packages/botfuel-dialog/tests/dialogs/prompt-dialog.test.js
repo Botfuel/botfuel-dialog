@@ -21,10 +21,12 @@ const Config = require('../../src/config');
 
 const TEST_CONFIG = Config.getConfiguration({});
 
+const TEST_BOT = null;
+
 describe('PromptDialog', () => {
   describe('computeEntities', () => {
     const brain = new MemoryBrain(TEST_CONFIG);
-    const prompt = new PromptDialog(TEST_CONFIG, brain, {
+    const prompt = new PromptDialog(TEST_BOT, TEST_CONFIG, brain, {
       namespace: 'testdialog',
       entities: {},
     });
@@ -850,7 +852,7 @@ describe('PromptDialog', () => {
 
   describe('sort missing entities', () => {
     const brain = new MemoryBrain(TEST_CONFIG);
-    const prompt = new PromptDialog(TEST_CONFIG, brain, {
+    const prompt = new PromptDialog(TEST_BOT, TEST_CONFIG, brain, {
       namespace: 'testdialog',
       entities: {},
     });
@@ -886,7 +888,7 @@ describe('PromptDialog', () => {
     const { adapter } = bot;
     const { userId } = adapter;
 
-    const prompt = new PromptDialog(TEST_CONFIG, bot.brain, {
+    const prompt = new PromptDialog(bot, TEST_CONFIG, bot.brain, {
       namespace: 'testdialog',
       entities: {
         a: {
@@ -916,7 +918,7 @@ describe('PromptDialog', () => {
       ];
 
       await prompt.brain.addUser(userId);
-      await prompt.execute(adapter, { user: userId }, messageEntities);
+      await prompt.execute({ user: userId }, messageEntities);
       const conversation = await prompt.brain.getLastConversation(userId);
       expect(conversation).toHaveProperty('testdialog');
       expect(conversation.testdialog).toHaveProperty('_entities');

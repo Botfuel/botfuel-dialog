@@ -19,9 +19,11 @@ const MemoryBrain = require('../../src/brains/memory-brain');
 const DialogError = require('../../src/errors/dialog-error');
 const TEST_CONFIG = require('../../src/config').getConfiguration({});
 
+const TEST_BOT = null;
+
 describe('Dialog', () => {
   const brain = new MemoryBrain(TEST_CONFIG);
-  const dialog = new Dialog(TEST_CONFIG, brain, {
+  const dialog = new Dialog(TEST_BOT, TEST_CONFIG, brain, {
     namespace: 'testdialog',
     entities: {},
   });

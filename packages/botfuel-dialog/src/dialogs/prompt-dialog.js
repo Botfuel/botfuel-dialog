@@ -40,13 +40,14 @@ const Dialog = require('./dialog');
 class PromptDialog extends Dialog {
   /**
    * @constructor
+   * @param {class} bot - the bot
    * @param {Object} config - the bot config
    * @param {class} brain - the bot brain
    * @param {Object} parameters - the dialog parameters,
    * parameters.entities is a map mapping entities to optional parameters
    */
-  constructor(config, brain, parameters) {
-    super(config, brain, { reentrant: true }, parameters);
+  constructor(bot, config, brain, parameters) {
+    super(bot, config, brain, { reentrant: true }, parameters);
   }
 
   /**
@@ -280,12 +281,11 @@ class PromptDialog extends Dialog {
   /**
    * Executes the dialog.
    * @async
-   * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
    * @param {Object} data - the data
    * @returns {Promise.<Object>} an action
    */
-  async execute(adapter, userMessage, data) {
+  async execute(userMessage, data) {
     logger.debug('execute', userMessage, data);
 
     // get message entities extracted from the message
@@ -316,7 +316,7 @@ class PromptDialog extends Dialog {
     const extraData = await this.dialogWillDisplay(userMessage, data);
     data = this.mergeData(extraData, data);
 
-    await this.display(adapter, userMessage, data);
+    await this.display(userMessage, data);
 
     if (missingEntities.size === 0) {
       const action = await this.dialogWillComplete(userMessage, data);

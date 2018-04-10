@@ -28,11 +28,13 @@ const DialogError = require('./errors/dialog-error');
 class DialogManager extends Resolver {
   /**
    * @constructor
+   * @param {Object} bot - the bot
    * @param {Object} brain - the bot brain
    * @param {Object} config - the bot config
    */
-  constructor(brain, config) {
+  constructor(bot, brain, config) {
     super(config, 'dialog');
+    this.bot = bot;
     this.brain = brain;
   }
 
@@ -43,7 +45,7 @@ class DialogManager extends Resolver {
 
   /** @inheritdoc */
   resolutionSucceeded(Resolved) {
-    return new Resolved(this.config, this.brain, Resolved.params);
+    return new Resolved(this.bot, this.config, this.brain, Resolved.params);
   }
 
   /**
@@ -214,12 +216,11 @@ class DialogManager extends Resolver {
   /**
    * Executes the dialogs.
    * @async
-   * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
    * @param {Object[]} dialogs - the dialogs data
    * @returns {Promise.<Object[]>}
    */
-  async execute(adapter, userMessage, dialogs) {
+  async execute(userMessage, dialogs) {
     logger.debug('execute', userMessage, dialogs);
     if (dialogs.stack.length === 0) {
       return dialogs;
@@ -238,7 +239,7 @@ class DialogManager extends Resolver {
         data: {},
       });
     } else {
-      const action = await this.resolve(dialog.name).execute(adapter, userMessage, dialog.data);
+      const action = await this.resolve(dialog.name).execute(userMessage, dialog.data);
       logger.debug('execute: action', action);
       if (action.name !== Dialog.ACTION_WAIT) {
         dialogs = await this.applyAction(dialogs, action);
@@ -246,38 +247,36 @@ class DialogManager extends Resolver {
         return dialogs;
       }
     }
-    return this.execute(adapter, userMessage, dialogs);
+    return this.execute(userMessage, dialogs);
   }
 
   /**
    * Executes when receiving the classification results and message entities.
-   * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
    * @param {Object[]} classificationResults - the classification results from trainer
    * @param {Object[]} messageEntities - the message entities
    * @returns {void}
    */
-  async executeClassificationResults(adapter, userMessage, classificationResults, messageEntities) {
+  async executeClassificationResults(userMessage, classificationResults, messageEntities) {
     logger.debug('classificationResult', userMessage, classificationResults, messageEntities);
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithClassificationResults(userId, dialogs, classificationResults, messageEntities);
-    await this.setDialogs(userId, await this.execute(adapter, userMessage, dialogs));
+    await this.setDialogs(userId, await this.execute(userMessage, dialogs));
   }
 
   /**
    * Populates and executes the stack.
-   * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
    * @param {Object[]} newDialog - the new dialogs
    * @returns {void}
    */
-  async executeDialog(adapter, userMessage, newDialog) {
+  async executeDialog(userMessage, newDialog) {
     logger.debug('executeDialog', userMessage, newDialog);
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithDialog(dialogs, newDialog);
-    await this.setDialogs(userId, await this.execute(adapter, userMessage, dialogs));
+    await this.setDialogs(userId, await this.execute(userMessage, dialogs));
   }
 }
 

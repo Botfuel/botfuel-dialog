@@ -18,14 +18,16 @@ const VoidDialog = require('../../src/dialogs/void-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const TEST_CONFIG = require('../../src/config').getConfiguration({});
 
+const TEST_BOT = null;
+
 describe('VoidDialog', () => {
   const brain = new MemoryBrain(TEST_CONFIG);
-  const dialog = new VoidDialog(TEST_CONFIG, brain, {
+  const dialog = new VoidDialog(TEST_BOT, TEST_CONFIG, brain, {
     namespace: 'void-dialog',
   });
 
   test('should return the complete action', async () => {
-    const action = await dialog.execute(null, {}, []);
+    const action = await dialog.execute({}, []);
     expect(action).toEqual({
       name: VoidDialog.ACTION_COMPLETE,
     });

@@ -20,6 +20,7 @@ const UserTextMessage = require('../../src/messages/user-text-message');
 const TEST_CONFIG = require('../../src/config').getConfiguration({});
 
 const USER_ID = 'USER';
+const TEST_BOT = null;
 
 describe('ConfirmationDialog', () => {
   const brain = new MemoryBrain(TEST_CONFIG);
@@ -33,7 +34,7 @@ describe('ConfirmationDialog', () => {
   });
 
   test('should return the complete action', async () => {
-    const dialog = new ConfirmationDialog(TEST_CONFIG, brain, {
+    const dialog = new ConfirmationDialog(TEST_BOT, TEST_CONFIG, brain, {
       namespace: 'confirmation-dialog',
     });
     const action = await dialog.dialogWillComplete(new UserTextMessage('message').toJson(USER_ID), {
@@ -45,7 +46,7 @@ describe('ConfirmationDialog', () => {
   });
 
   test('should return the cancel action', async () => {
-    const dialog = new ConfirmationDialog(TEST_CONFIG, brain, {
+    const dialog = new ConfirmationDialog(TEST_BOT, TEST_CONFIG, brain, {
       namespace: 'confirmation-dialog',
     });
     const action = await dialog.dialogWillComplete(new UserTextMessage('message').toJson(USER_ID), {

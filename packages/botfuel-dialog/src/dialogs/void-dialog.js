@@ -25,7 +25,7 @@ const Dialog = require('./dialog');
  */
 class VoidDialog extends Dialog {
   /** @inheritDoc */
-  async execute(adapter, userMessage, data) {
+  async execute(userMessage, data) {
     logger.debug('execute', userMessage, data);
     const action = await this.dialogWillComplete(userMessage, data);
     return action || this.complete();

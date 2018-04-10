@@ -74,13 +74,15 @@ class Dialog {
 
   /**
    * @constructor
+   * @param {Bot} bot - the bot
    * @param {Object} config - the bot config
    * @param {class} brain - the bot brain
    * @param {Object} characteristics - the characteristics of the dialog
    * @param {Object} [parameters={}] - the optional dialog parameters
    */
-  constructor(config, brain, characteristics = { reentrant: false }, parameters = {}) {
+  constructor(bot, config, brain, characteristics = { reentrant: false }, parameters = {}) {
     logger.debug('constructor', parameters);
+    this.bot = bot;
     this.brain = brain;
     this.characteristics = characteristics;
     this.parameters = parameters;
@@ -99,22 +101,20 @@ class Dialog {
   /**
    * Displays messages by resolving the view associated to the dialog.
    * @async
-   * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
    * @param {Object} [data] - data used at display time
    * @returns {Promise.<void>}
    */
-  async display(adapter, userMessage, data) {
+  async display(userMessage, data) {
     logger.debug('display', userMessage, data);
     const botMessages = this.viewResolver.resolve(this.name).renderAsJson(userMessage, data);
-    return adapter.send(botMessages, userMessage);
+    return this.bot.send(botMessages, userMessage);
   }
 
   /**
    * Executes the dialog.
    * @abstract
    * @async
-   * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
    * @param {Object} data - the data
    * @returns {Promise.<Object>}

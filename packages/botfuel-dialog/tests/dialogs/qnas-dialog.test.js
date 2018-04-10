@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
+const Bot = require('../../src/bot');
 const QnasDialog = require('../../src/dialogs/qnas-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
-const ShellAdapter = require('../../src/adapters/shell-adapter');
-const TEST_CONFIG = require('../../src/config').getConfiguration({});
+const TEST_CONFIG = require('../../src/config').getConfiguration({
+  adapter: { name: 'shell' },
+});
+
+const TEST_BOT = new Bot(TEST_CONFIG);
 
 describe('QnasDialog', () => {
   const brain = new MemoryBrain(TEST_CONFIG);
-  const dialog = new QnasDialog(TEST_CONFIG, brain);
-  const adapter = new ShellAdapter({});
+  const dialog = new QnasDialog(TEST_BOT, TEST_CONFIG, brain);
   const answers = [[{ value: 'answer' }]];
 
   test('should return the complete action', async () => {
-    const action = await dialog.execute(adapter, {}, { answers });
+    const action = await dialog.execute({}, { answers });
     expect(action).toEqual({
       name: QnasDialog.ACTION_COMPLETE,
     });
