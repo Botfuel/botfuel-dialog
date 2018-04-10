@@ -55,14 +55,12 @@ class DialogManager extends Resolver {
    * @returns {String} a dialog name
    */
   getLastReentrantDialog(previousDialogs) {
-    for (let i = previousDialogs.length - 1; i >= 0; i--) {
-      const dialog = previousDialogs[i];
-      const dialogInstance = this.resolve(dialog.name);
-      if (dialogInstance.characteristics.reentrant) {
-        return dialog;
-      }
-    }
-    return null;
+    return (
+      previousDialogs
+        .slice(0)
+        .reverse()
+        .find(dialog => this.resolve(dialog.name).characteristics.reentrant) || null
+    );
   }
 
   /**
@@ -107,17 +105,10 @@ class DialogManager extends Resolver {
         },
       };
     } else if (intents.length === 1) {
-      if (intents[0].isQnA()) {
-        newDialog = {
-          name: intents[0].name,
-          entities: intents[0].answers,
-        };
-      } else {
-        newDialog = {
-          name: intents[0].name,
-          entities,
-        };
-      }
+      newDialog = {
+        name: intents[0].name,
+        entities: intents[0].isQnA() ? intents[0].answers : entities,
+      };
     }
 
     if (newDialog) {

@@ -17,7 +17,7 @@ const logger = require('logtown')('IntentResolutionDialog');
 const Dialog = require('./dialog');
 
 /**
- * The default resolution dialog when
+ * The default resolution dialog when multiple intities are detected from the trainer
  * @extends IntentResolutionDialog
  */
 class IntentResolutionDialog extends Dialog {

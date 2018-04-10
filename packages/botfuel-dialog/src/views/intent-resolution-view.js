@@ -21,7 +21,7 @@ const Postback = require('../messages/postback');
 const View = require('./view');
 
 /**
- * Qnas dialog's view.
+ * Intent Resolution Dialog's View.
  * @extends View
  */
 class IntentResolutionView extends View {

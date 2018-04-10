@@ -27,15 +27,11 @@ class Intent {
     logger.debug('constructor');
     const { name, type, label, resolvePrompt } = data;
 
-    if (!type) {
-      throw new SdkError('Intent constructor: data must contain type');
-    }
-
     if (!(name || label)) {
       throw new SdkError('Intent constructor: data must contain label or name');
     }
 
-    this.type = type;
+    this.type = this.getType(type);
     this.name = name;
     this.label = label;
     this.resolvePrompt = resolvePrompt;
@@ -49,12 +45,33 @@ class Intent {
     }
   }
 
+  static TYPE_QNA = 'QnA';
+  static TYPE_INTENT = 'Intent';
+
+  /**
+   * Parse type from data
+   * @param {String} type type
+   * @returns {String} static TYPE
+   */
+  getType(type) {
+    if (!type) {
+      throw new SdkError('Intent constructor: data must contain type');
+    }
+
+    if (type.toLowerCase() === 'intent') {
+      return Intent.TYPE_INTENT;
+    } else if (type.toLowerCase() === 'qna') {
+      return Intent.TYPE_QNA;
+    }
+    throw new SdkError(`Intent constructor: invalid intent type: ${type}`);
+  }
+
   /**
    * Returns true if intent is QnA
    * @returns {boolean}
    */
   isQnA() {
-    return this.type === 'QnA';
+    return this.type === Intent.TYPE_QNA;
   }
 }
 

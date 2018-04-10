@@ -33,6 +33,7 @@ const greetingsDialog = { name: 'greetings', entities: [] };
 const thanksDialog = { name: 'thanks', entities: [] };
 const travelDialog = { name: 'travel', entities: [] };
 const travelCancelDialog = { name: 'travel-cancel', entities: [] };
+const intentResolutionDialog = { name: 'intent-resolution', entities: [] };
 
 describe('DialogManager', () => {
   const brain = new MemoryBrain(TEST_CONFIG);
@@ -61,7 +62,7 @@ describe('DialogManager', () => {
     await dm.executeIntents(
       null,
       { user: TEST_USER },
-      [new Intent({ name: 'waiting', type: 'Intent' })],
+      [new Intent({ name: 'waiting', type: Intent.TYPE_INTENT })],
       [],
     );
     const dialogs = await dm.brain.getDialogs(TEST_USER);
@@ -72,13 +73,13 @@ describe('DialogManager', () => {
     await dm.executeIntents(
       null,
       { user: TEST_USER },
-      [new Intent({ name: 'waiting', type: 'Intent' })],
+      [new Intent({ name: 'waiting', type: Intent.TYPE_INTENT })],
       [],
     );
     await dm.executeIntents(
       null,
       { user: TEST_USER },
-      [new Intent({ name: 'waiting', type: 'Intent' })],
+      [new Intent({ name: 'waiting', type: Intent.TYPE_INTENT })],
       [],
     );
     const dialogs = await dm.brain.getDialogs(TEST_USER);
@@ -90,7 +91,7 @@ describe('DialogManager', () => {
     await dm.executeIntents(
       adapter,
       { user: TEST_USER },
-      [new Intent({ name: 'default', type: 'Intent' })],
+      [new Intent({ name: 'default', type: Intent.TYPE_INTENT })],
       [],
     );
     const dialogs = await dm.brain.getDialogs(TEST_USER);
@@ -102,6 +103,30 @@ describe('DialogManager', () => {
     await dm.executeDialog(adapter, { user: TEST_USER }, { name: 'default' });
     const dialogs = await dm.brain.getDialogs(TEST_USER);
     expect(dialogs.stack.length).toBe(0);
+  });
+
+  test('should call intent resolution dialog when multiple intents detected', async () => {
+    const adapter = new TestAdapter({});
+    await dm.executeIntents(
+      adapter,
+      { user: TEST_USER },
+      [
+        new Intent({
+          name: 'first-intent',
+          resolvePrompt: 'first-intent?',
+          type: Intent.TYPE_INTENT,
+        }),
+        new Intent({
+          name: 'second-intent',
+          resolvePrompt: 'second-intent?',
+          type: Intent.TYPE_INTENT,
+        }),
+      ],
+      [],
+    );
+    const dialogs = await dm.brain.getDialogs(TEST_USER);
+    expect(dialogs.stack.length).toBe(0);
+    expect(dialogs.previous[0].name).toEqual(intentResolutionDialog.name);
   });
 
   describe('DialogManager.applyAction', () => {

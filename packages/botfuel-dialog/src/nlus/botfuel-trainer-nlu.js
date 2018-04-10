@@ -22,11 +22,12 @@ const logger = require('logtown')('BotfuelTrainerNlu');
 const BooleanExtractor = require('../extractors/boolean-extractor');
 const LocationExtractor = require('../extractors/location-extractor');
 const CompositeExtractor = require('../extractors/composite-extractor');
+const SdkError = require('../errors/sdk-error');
 const Intent = require('./intent');
 const Nlu = require('./nlu');
 
 /**
- * Sample NLU module using NaturalJS.
+ * NLU using Botfuel Trainer API
  */
 class BotfuelTrainerNlu extends Nlu {
   /** @inheritdoc */
@@ -35,6 +36,14 @@ class BotfuelTrainerNlu extends Nlu {
     super(config);
     this.extractor = null;
     this.qna = null;
+
+    if (!process.env.BOTFUEL_APP_TOKEN) {
+      throw new SdkError('BOTFUEL_APP_TOKEN are required for using the nlu service');
+    }
+
+    if (!validUrl.isUri(config.trainerApiUri)) {
+      throw new SdkError('trainerApiUri in the configuration is not a valid URI');
+    }
   }
 
   /**
@@ -86,15 +95,7 @@ class BotfuelTrainerNlu extends Nlu {
     const entities = await this.computeEntities(sentence);
 
     // compute intents
-
-    if (!process.env.BOTFUEL_APP_TOKEN) {
-      logger.error('BOTFUEL_APP_TOKEN are required for using the nlu service');
-    }
-
     let trainerUri = this.config.trainerApiUri;
-    if (!validUrl.isUri(trainerUri)) {
-      logger.error('trainerApiUri in the configuration is not a valid URI');
-    }
 
     if (trainerUri.slice(-1) !== '/') {
       trainerUri += '/';

@@ -151,7 +151,7 @@ class BotfuelNlu extends Nlu {
         const intents = [
           new Intent({
             name: 'qnas',
-            type: 'QnA',
+            type: Intent.TYPE_QNA,
             answers: [[{ value: qnas[0].answer }]],
           }),
         ];
@@ -185,7 +185,7 @@ class BotfuelNlu extends Nlu {
     intents = intents.slice(0, this.config.multiIntent ? 2 : 1);
     logger.debug('computeWithClassifier: filtered intents', intents);
 
-    intents = intents.map(i => new Intent({ name: i, type: 'Intent' }));
+    intents = intents.map(i => new Intent({ name: i, type: Intent.TYPE_INTENT }));
     logger.debug('computeWithClassifier: final intents', { intents });
     return {
       intents,
