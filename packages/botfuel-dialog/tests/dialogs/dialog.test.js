@@ -43,7 +43,7 @@ describe('Dialog', () => {
     expect(dialog.triggerNext('greetings')).toEqual({
       newDialog: {
         name: 'greetings',
-        entities: [],
+        data: {},
       },
       name: Dialog.ACTION_NEXT,
     });
@@ -74,7 +74,7 @@ describe('Dialog', () => {
     expect(dialog.startNewConversation('greetings')).toEqual({
       newDialog: {
         name: 'greetings',
-        entities: [],
+        data: {},
       },
       name: Dialog.ACTION_NEW_CONVERSATION,
     });

@@ -115,7 +115,7 @@ class Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
-   * @param {String[]} messageEntities - the message entities
+   * @param {Object} data - the data
    * @returns {Promise.<Object>}
    */
   async execute() {
@@ -127,10 +127,10 @@ class Dialog {
    * indicating that the current dialog is completed and
    * providing the name of the next dialog to execute.
    * @param {String} dialogName - the name of the next dialog to execute
-   * @param {Object[]} dialogEntities - the entities for the next dialog
+   * @param {Object} data - the data for the next dialog
    * @returns {Object} the action object
    */
-  triggerNext(dialogName, dialogEntities = []) {
+  triggerNext(dialogName, data = {}) {
     if (!dialogName) {
       throw new DialogError({
         message: 'You must provide a dialogName as a parameter to the nextDialog method.',
@@ -139,7 +139,7 @@ class Dialog {
     return {
       newDialog: {
         name: dialogName,
-        entities: dialogEntities,
+        data,
       },
       name: this.ACTION_NEXT,
     };
@@ -168,16 +168,16 @@ class Dialog {
    * indicating that a new conversation should be started and
    * optionally providing the name of the next dialog.
    * @param {String} [dialogName] - the name of the next dialog (optional)
-   * @param {Object[]} [dialogEntities] - the entities for the next dialog
+   * @param {Object} [data] - the data for the next dialog
    * @returns {Object} the action object
    */
-  startNewConversation(dialogName, dialogEntities = []) {
+  startNewConversation(dialogName, data = {}) {
     return {
       name: this.ACTION_NEW_CONVERSATION,
       ...(dialogName && {
         newDialog: {
           name: dialogName,
-          entities: dialogEntities,
+          data,
         },
       }),
     };

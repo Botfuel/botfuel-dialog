@@ -282,11 +282,14 @@ class PromptDialog extends Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
-   * @param {Object[]} messageEntities - the message entities extracted from the message
+   * @param {Object} data - the data
    * @returns {Promise.<Object>} an action
    */
-  async execute(adapter, userMessage, messageEntities) {
-    logger.debug('execute', userMessage, messageEntities);
+  async execute(adapter, userMessage, data) {
+    logger.debug('execute', userMessage, data);
+
+    // get message entities extracted from the message
+    const messageEntities = data.entities;
     const userId = userMessage.user;
 
     const dialogCache = await this.brain.conversationGet(userId, this.parameters.namespace);

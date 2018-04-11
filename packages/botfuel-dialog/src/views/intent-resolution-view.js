@@ -26,9 +26,9 @@ const View = require('./view');
  */
 class IntentResolutionView extends View {
   /** @inheritDoc */
-  render(userMessage, { intents, entities }) {
-    logger.debug('render', userMessage, { intents, entities });
-
+  render(userMessage, { data, extraData }) {
+    logger.debug('render', userMessage, { data, extraData });
+    const { intents, entities } = data;
     const postbacks = intents.map((intent) => {
       if (intent.isQnA()) {
         return new Postback(intent.resolvePrompt, intent.name, intent.answers);
