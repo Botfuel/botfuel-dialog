@@ -23,28 +23,12 @@ describe('QnasDialog', () => {
   const brain = new MemoryBrain(TEST_CONFIG);
   const dialog = new QnasDialog(TEST_CONFIG, brain);
   const adapter = new ShellAdapter({});
-  const oneQna = [{ dim: 'qnas', value: [{ questions: ['question'], answer: 'answer' }] }];
-  const manyQnas = [
-    {
-      dim: 'qnas',
-      value: [
-        { questions: ['question'], answer: 'answer' },
-        { questions: ['question 2'], answer: 'answer 2' },
-      ],
-    },
-  ];
+  const qnaAnswers = [[{ value: 'answer' }]];
 
   test('should return the complete action', async () => {
-    const action = await dialog.execute(adapter, {}, oneQna);
+    const action = await dialog.execute(adapter, {}, qnaAnswers);
     expect(action).toEqual({
       name: QnasDialog.ACTION_COMPLETE,
-    });
-  });
-
-  test('should return the wait action', async () => {
-    const action = await dialog.execute(adapter, {}, manyQnas);
-    expect(action).toEqual({
-      name: QnasDialog.ACTION_WAIT,
     });
   });
 });

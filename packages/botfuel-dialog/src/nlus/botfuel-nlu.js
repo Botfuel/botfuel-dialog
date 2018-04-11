@@ -20,11 +20,13 @@ const dir = require('node-dir');
 const Qna = require('botfuel-qna-sdk');
 const logger = require('logtown')('BotfuelNlu');
 const AuthenticationError = require('../errors/authentication-error');
+const ConfigurationError = require('../errors/configuration-error');
 const Classifier = require('../classifier');
 const BooleanExtractor = require('../extractors/boolean-extractor');
 const LocationExtractor = require('../extractors/location-extractor');
 const CompositeExtractor = require('../extractors/composite-extractor');
 const Nlu = require('./nlu');
+const Intent = require('./intent');
 
 /**
  * Sample NLU module using NaturalJS.
@@ -37,6 +39,10 @@ class BotfuelNlu extends Nlu {
     this.extractor = null;
     this.qna = null;
     this.classifier = null;
+
+    if (config.nlu && config.nlu.intentThreshold === undefined) {
+      throw new ConfigurationError('Missing intentThreshold in nlu configuration');
+    }
     this.intentFilter = async intents =>
       intents
         .filter(intent => intent.value > config.nlu.intentThreshold)
@@ -107,9 +113,9 @@ class BotfuelNlu extends Nlu {
     if (this.config.nlu.qna) {
       logger.debug('compute: qna', this.config.nlu.qna);
       if (this.config.nlu.qna.when === 'before') {
-        const qnaResult = await this.computeWithQna(sentence);
-        if (qnaResult.intents.length > 0) {
-          return qnaResult;
+        const intents = await this.computeWithQna(sentence);
+        if (intents.length > 0) {
+          return { intents };
         }
         return this.computeWithClassifier(sentence, context);
       }
@@ -117,9 +123,9 @@ class BotfuelNlu extends Nlu {
       if (classifierResult.intents.length > 0) {
         return classifierResult;
       }
-      const qnaResult = await this.computeWithQna(sentence);
-      if (qnaResult.intents.length > 0) {
-        return qnaResult;
+      const intents = await this.computeWithQna(sentence);
+      if (intents.length > 0) {
+        return { intents };
       }
       return {
         intents: [],
@@ -139,21 +145,21 @@ class BotfuelNlu extends Nlu {
     try {
       const qnas = await this.qna.getMatchingQnas({ sentence });
       logger.debug('computeWithQna: qnas', qnas);
+
       const strict = this.config.nlu.qna.strict;
       if ((strict && qnas.length === 1) || (!strict && qnas.length > 0)) {
-        return {
-          intents: ['qnas'],
-          entities: [
-            {
-              dim: 'qnas',
-              value: qnas,
-            },
-          ],
-        };
+        const intents = [
+          new Intent({
+            name: 'qnas',
+            type: Intent.TYPE_QNA,
+            answers: [[{ value: qnas[0].answer }]],
+          }),
+        ];
+
+        return intents;
       }
-      return {
-        intents: [],
-      };
+
+      return [];
     } catch (error) {
       logger.error('Could not classify with QnA!');
       if (error.statusCode === 403) {
@@ -178,6 +184,9 @@ class BotfuelNlu extends Nlu {
     intents = await this.intentFilter(intents, context);
     intents = intents.slice(0, this.config.multiIntent ? 2 : 1);
     logger.debug('computeWithClassifier: filtered intents', intents);
+
+    intents = intents.map(i => new Intent({ name: i, type: Intent.TYPE_INTENT }));
+    logger.debug('computeWithClassifier: final intents', { intents });
     return {
       intents,
       entities,

@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-const logger = require('logtown')('QnasView');
-const BotTextMessage = require('../messages/bot-text-message');
-const View = require('./view');
+const Intent = require('../../src/nlus/intent');
+const SdkError = require('../../src/errors/sdk-error');
 
-/**
- * Qnas dialog's view.
- * @extends View
- */
-class QnasView extends View {
-  /** @inheritDoc */
-  render(userMessage, { answers }) {
-    logger.debug('render', userMessage, answers);
+describe('Intent', () => {
+  test('to throw error if type is missing', () => {
+    expect(() => new Intent({ name: 'test' })).toThrowError(SdkError);
+  });
 
-    return answers[0].map(message => new BotTextMessage(message.value));
-  }
-}
-
-module.exports = QnasView;
+  test('QnA intent have correct nama', () => {
+    const intent = new Intent({ label: 'Delivery', type: Intent.TYPE_QNA });
+    expect(intent.name).toEqual('qnas');
+  });
+});

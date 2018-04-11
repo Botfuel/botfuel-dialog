@@ -198,7 +198,7 @@ class Bot {
       name: userMessage.payload.value.dialog,
       entities: userMessage.payload.value.entities,
     };
-    await this.dm.executeDialogs(this.adapter, userMessage, [dialog]);
+    await this.dm.executeDialog(this.adapter, userMessage, dialog);
   }
 
   /**
@@ -214,7 +214,7 @@ class Bot {
       name: 'image',
       entities: [{ url: userMessage.payload.value }],
     };
-    await this.dm.executeDialogs(this.adapter, userMessage, [dialog]);
+    await this.dm.executeDialog(this.adapter, userMessage, dialog);
   }
 
   /**

@@ -18,6 +18,7 @@
 
 const DialogManager = require('../../src/dialog-manager');
 const Dialog = require('../../src/dialogs/dialog');
+const Intent = require('../../src/nlus/intent');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const TestAdapter = require('../../src/adapters/test-adapter');
 const BotTextMessage = require('../../src/messages/bot-text-message');
@@ -32,6 +33,7 @@ const greetingsDialog = { name: 'greetings', entities: [] };
 const thanksDialog = { name: 'thanks', entities: [] };
 const travelDialog = { name: 'travel', entities: [] };
 const travelCancelDialog = { name: 'travel-cancel', entities: [] };
+const intentResolutionDialog = { name: 'intent-resolution', entities: [] };
 
 describe('DialogManager', () => {
   const brain = new MemoryBrain(TEST_CONFIG);
@@ -57,30 +59,74 @@ describe('DialogManager', () => {
   });
 
   test('should keep on the stack a dialog which is waiting', async () => {
-    await dm.executeIntents(null, { user: TEST_USER }, ['waiting'], []);
+    await dm.executeIntents(
+      null,
+      { user: TEST_USER },
+      [new Intent({ name: 'waiting', type: Intent.TYPE_INTENT })],
+      [],
+    );
     const dialogs = await dm.brain.getDialogs(TEST_USER);
     expect(dialogs.stack.length).toBe(1);
   });
 
   test('should not stack the same dialog twice', async () => {
-    await dm.executeIntents(null, { user: TEST_USER }, ['waiting'], []);
-    await dm.executeIntents(null, { user: TEST_USER }, ['waiting'], []);
+    await dm.executeIntents(
+      null,
+      { user: TEST_USER },
+      [new Intent({ name: 'waiting', type: Intent.TYPE_INTENT })],
+      [],
+    );
+    await dm.executeIntents(
+      null,
+      { user: TEST_USER },
+      [new Intent({ name: 'waiting', type: Intent.TYPE_INTENT })],
+      [],
+    );
     const dialogs = await dm.brain.getDialogs(TEST_USER);
     expect(dialogs.stack.length).toBe(1);
   });
 
   test('should empty the stack (1)', async () => {
     const adapter = new TestAdapter({});
-    await dm.executeIntents(adapter, { user: TEST_USER }, ['default'], []);
+    await dm.executeIntents(
+      adapter,
+      { user: TEST_USER },
+      [new Intent({ name: 'default', type: Intent.TYPE_INTENT })],
+      [],
+    );
     const dialogs = await dm.brain.getDialogs(TEST_USER);
     expect(dialogs.stack.length).toBe(0);
   });
 
   test('should empty the stack (2)', async () => {
     const adapter = new TestAdapter({});
-    await dm.executeDialogs(adapter, { user: TEST_USER }, [{ name: 'default' }]);
+    await dm.executeDialog(adapter, { user: TEST_USER }, { name: 'default' });
     const dialogs = await dm.brain.getDialogs(TEST_USER);
     expect(dialogs.stack.length).toBe(0);
+  });
+
+  test('should call intent resolution dialog when multiple intents detected', async () => {
+    const adapter = new TestAdapter({});
+    await dm.executeIntents(
+      adapter,
+      { user: TEST_USER },
+      [
+        new Intent({
+          name: 'first-intent',
+          resolvePrompt: 'first-intent?',
+          type: Intent.TYPE_INTENT,
+        }),
+        new Intent({
+          name: 'second-intent',
+          resolvePrompt: 'second-intent?',
+          type: Intent.TYPE_INTENT,
+        }),
+      ],
+      [],
+    );
+    const dialogs = await dm.brain.getDialogs(TEST_USER);
+    expect(dialogs.stack.length).toBe(0);
+    expect(dialogs.previous[0].name).toEqual(intentResolutionDialog.name);
   });
 
   describe('DialogManager.applyAction', () => {

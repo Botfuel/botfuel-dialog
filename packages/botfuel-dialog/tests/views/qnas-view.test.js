@@ -16,75 +16,50 @@
 
 const QnasView = require('../../src/views/qnas-view');
 const BotTextMessage = require('../../src/messages/bot-text-message');
-const ActionsMessage = require('../../src/messages/actions-message');
-const Postback = require('../../src/messages/postback');
 
 describe('QnasView', () => {
   describe('renderEntities', () => {
     const view = new QnasView({});
 
-    describe('when no qnas', () => {
-      test('should display no postback', () => {
-        expect(
-          view.render(
-            {
-              user: null,
-            },
-            {
-              qnas: [],
-            },
-          ),
-        ).toEqual([new BotTextMessage('What do you mean?'), new ActionsMessage([])]);
-      });
-    });
-
-    describe('when 1 qna', () => {
-      test('should display answer', () => {
-        expect(
-          view.render(
-            {
-              user: null,
-            },
-            {
-              qnas: [
+    test('should display answer', () => {
+      expect(
+        view.render(
+          {
+            user: null,
+          },
+          {
+            answers: [
+              [
                 {
-                  answer: 'answer',
+                  value: 'answer',
                 },
               ],
-            },
-          ),
-        ).toEqual([new BotTextMessage('answer')]);
-      });
+            ],
+          },
+        ),
+      ).toEqual([new BotTextMessage('answer')]);
     });
 
-    describe('when 2 qnas', () => {
-      test('should display 2 postbacks', () => {
-        expect(
-          view.render(
-            {
-              user: null,
-            },
-            {
-              qnas: [
+    test('should display 2 messages in answer', () => {
+      expect(
+        view.render(
+          {
+            user: null,
+          },
+          {
+            answers: [
+              [
                 {
-                  answer: 'answer1',
-                  questions: ['question1a'],
+                  value: 'answer 1',
                 },
                 {
-                  answer: 'answer2',
-                  questions: ['question2a'],
+                  value: 'answer 2',
                 },
               ],
-            },
-          ),
-        ).toEqual([
-          new BotTextMessage('What do you mean?'),
-          new ActionsMessage([
-            new Postback('question1a', 'qnas', [{ dim: 'qnas', value: [{ answer: 'answer1' }] }]),
-            new Postback('question2a', 'qnas', [{ dim: 'qnas', value: [{ answer: 'answer2' }] }]),
-          ]),
-        ]);
-      });
+            ],
+          },
+        ),
+      ).toEqual([new BotTextMessage('answer 1'), new BotTextMessage('answer 2')]);
     });
   });
 });

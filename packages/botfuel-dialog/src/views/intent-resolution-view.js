@@ -14,21 +14,30 @@
  * limitations under the License.
  */
 
-const logger = require('logtown')('QnasView');
+const logger = require('logtown')('IntentResolutionView');
+const ActionsMessage = require('../messages/actions-message');
 const BotTextMessage = require('../messages/bot-text-message');
+const Postback = require('../messages/postback');
 const View = require('./view');
 
 /**
- * Qnas dialog's view.
+ * Intent Resolution Dialog's View.
  * @extends View
  */
-class QnasView extends View {
+class IntentResolutionView extends View {
   /** @inheritDoc */
-  render(userMessage, { answers }) {
-    logger.debug('render', userMessage, answers);
+  render(userMessage, { intents, entities }) {
+    logger.debug('render', userMessage, { intents, entities });
 
-    return answers[0].map(message => new BotTextMessage(message.value));
+    const postbacks = intents.map((intent) => {
+      if (intent.isQnA()) {
+        return new Postback(intent.resolvePrompt, intent.name, intent.answers);
+      }
+      return new Postback(intent.resolvePrompt, intent.name, entities);
+    });
+
+    return [new BotTextMessage('What do you mean?'), new ActionsMessage(postbacks)];
   }
 }
 
-module.exports = QnasView;
+module.exports = IntentResolutionView;
