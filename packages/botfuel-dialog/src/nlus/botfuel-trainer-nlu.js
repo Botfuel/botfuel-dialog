@@ -15,7 +15,6 @@
  */
 
 const fs = require('fs');
-const validUrl = require('valid-url');
 const rp = require('request-promise-native');
 const dir = require('node-dir');
 const logger = require('logtown')('BotfuelTrainerNlu');
@@ -23,7 +22,7 @@ const BooleanExtractor = require('../extractors/boolean-extractor');
 const LocationExtractor = require('../extractors/location-extractor');
 const CompositeExtractor = require('../extractors/composite-extractor');
 const SdkError = require('../errors/sdk-error');
-const Intent = require('./intent');
+const ClassificationResult = require('./classification-result');
 const Nlu = require('./nlu');
 
 /**
@@ -35,14 +34,9 @@ class BotfuelTrainerNlu extends Nlu {
     logger.debug('constructor', config);
     super(config);
     this.extractor = null;
-    this.qna = null;
 
     if (!process.env.BOTFUEL_APP_TOKEN) {
       throw new SdkError('BOTFUEL_APP_TOKEN are required for using the nlu service');
-    }
-
-    if (!validUrl.isUri(config.trainerApiUri)) {
-      throw new SdkError('trainerApiUri in the configuration is not a valid URI');
     }
   }
 
@@ -92,17 +86,18 @@ class BotfuelTrainerNlu extends Nlu {
     logger.debug('compute', sentence);
 
     // compute entities
-    const entities = await this.computeEntities(sentence);
+    const messageEntities = await this.computeEntities(sentence);
 
     // compute intents
-    let trainerUri = this.config.trainerApiUri;
+    let trainerUrl =
+      process.env.BOTFUEL_TRAINER_API_URL || 'https://trainer-api-staging.herokuapp.com/api/v0';
 
-    if (trainerUri.slice(-1) !== '/') {
-      trainerUri += '/';
+    if (trainerUrl.slice(-1) !== '/') {
+      trainerUrl += '/';
     }
 
     const options = {
-      uri: `${trainerUri}classify`,
+      uri: `${trainerUrl}classify`,
       qs: {
         sentence,
       },
@@ -114,13 +109,13 @@ class BotfuelTrainerNlu extends Nlu {
 
     const res = await rp(options);
 
-    const intents = res.map(data => new Intent(data));
+    const classificationResults = res.map(data => new ClassificationResult(data));
 
-    return { entities, intents };
+    return { messageEntities, classificationResults };
   }
 
   /**
-   * Computes intents and entities using the classifier.
+   * Computes entities using the classifier.
    * @param {String} sentence - the user sentence
    * @returns {Object} entities
    */

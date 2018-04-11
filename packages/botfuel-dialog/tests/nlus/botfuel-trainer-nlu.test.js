@@ -15,13 +15,9 @@
  */
 const sinon = require('sinon');
 const CompositeExtractor = require('../../src/extractors/composite-extractor');
-const Intent = require('../../src/nlus/intent');
+const ClassificationResult = require('../../src/nlus/classification-result');
 const BotfuelTrainerNlu = require('../../src/nlus/botfuel-trainer-nlu');
 const SdkError = require('../../src/errors/sdk-error');
-
-const CONFIG = {
-  trainerApiUri: 'https://trainer-api-staging.herokuapp.com/api/v0',
-};
 
 describe('Botfuel Trainer Nlu', () => {
   const sandbox = sinon.sandbox.create();
@@ -30,42 +26,38 @@ describe('Botfuel Trainer Nlu', () => {
     sandbox.restore();
   });
 
-  test('to throw error if invalid traineraApiUri in the config', () => {
-    expect(() => new BotfuelTrainerNlu({ trainerApiUri: '' })).toThrowError(SdkError);
-  });
-
   test('to throw error if missing BOTFUEL_APP_TOKEN', () => {
     sandbox.stub(process, 'env').value({ BOTFUEL_APP_TOKEN: undefined });
     expect(() => new BotfuelTrainerNlu()).toThrowError(SdkError);
   });
 
   describe('compute', () => {
-    test('to correctly detect intents', async () => {
+    test('to correctly detect intents ', async () => {
       // use app token = 1409617651128 to record trainer api response
       sandbox.stub(process, 'env').value({ BOTFUEL_APP_TOKEN: '1409617651128' });
-      const nlu = new BotfuelTrainerNlu(CONFIG);
+      const nlu = new BotfuelTrainerNlu();
       // fake extractor
       nlu.extractor = new CompositeExtractor({
         extractors: [],
       });
       const sentence = 'hello';
-      const { intents } = await nlu.compute(sentence);
-      expect(intents.length).toEqual(1);
-      expect(intents[0].type).toEqual(Intent.TYPE_INTENT);
+      const { classificationResults } = await nlu.compute(sentence);
+      expect(classificationResults.length).toEqual(1);
+      expect(classificationResults[0].type).toEqual(ClassificationResult.TYPE_INTENT);
     });
 
     test('to correctly detect qnas', async () => {
       // use app token = 1409617651128 to record trainer api response
       sandbox.stub(process, 'env').value({ BOTFUEL_APP_TOKEN: '1409617651128' });
-      const nlu = new BotfuelTrainerNlu(CONFIG);
+      const nlu = new BotfuelTrainerNlu();
       // fake extractor
       nlu.extractor = new CompositeExtractor({
         extractors: [],
       });
       const sentence = 'delivery';
-      const { intents } = await nlu.compute(sentence);
-      expect(intents.length).toEqual(1);
-      expect(intents[0].type).toEqual(Intent.TYPE_QNA);
+      const { classificationResults } = await nlu.compute(sentence);
+      expect(classificationResults.length).toEqual(1);
+      expect(classificationResults[0].type).toEqual(ClassificationResult.TYPE_QNA);
     });
   });
 });

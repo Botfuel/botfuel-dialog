@@ -17,8 +17,8 @@
 const logger = require('logtown')('Intent');
 const SdkError = require('../errors/sdk-error');
 
-/** Intent class */
-class Intent {
+/** ClassificationResult class */
+class ClassificationResult {
   /**
    * @constructor
    * @param {Object} data data receive from trainer api request
@@ -59,9 +59,9 @@ class Intent {
     }
 
     if (type.toLowerCase() === 'intent') {
-      return Intent.TYPE_INTENT;
+      return ClassificationResult.TYPE_INTENT;
     } else if (type.toLowerCase() === 'qna') {
-      return Intent.TYPE_QNA;
+      return ClassificationResult.TYPE_QNA;
     }
     throw new SdkError(`Intent constructor: invalid intent type: ${type}`);
   }
@@ -71,8 +71,8 @@ class Intent {
    * @returns {boolean}
    */
   isQnA() {
-    return this.type === Intent.TYPE_QNA;
+    return this.type === ClassificationResult.TYPE_QNA;
   }
 }
 
-module.exports = Intent;
+module.exports = ClassificationResult;

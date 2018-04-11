@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+const TextDialog = require('./text-dialog');
 
-const Intent = require('../../src/nlus/intent');
-const SdkError = require('../../src/errors/sdk-error');
+/**
+ * The disambiguation dialog when multiple classification results are returned from the trainer.
+ * @extends ClassificationDisambiguationDialog
+ */
+class ClassificationDisambiguationDialog extends TextDialog {}
 
-describe('Intent', () => {
-  test('to throw error if type is missing', () => {
-    expect(() => new Intent({ name: 'test' })).toThrowError(SdkError);
-  });
-
-  test('QnA intent have correct nama', () => {
-    const intent = new Intent({ label: 'Delivery', type: Intent.TYPE_QNA });
-    expect(intent.name).toEqual('qnas');
-  });
-});
+module.exports = ClassificationDisambiguationDialog;
