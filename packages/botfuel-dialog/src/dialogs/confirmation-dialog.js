@@ -26,9 +26,8 @@ const PromptDialog = require('./prompt-dialog');
  */
 class ConfirmationDialog extends PromptDialog {
   /** @inheritDoc */
-  async dialogWillComplete(userMessage, dialogData) {
-    logger.debug('dialogWillComplete', userMessage, dialogData);
-    const { matchedEntities } = dialogData;
+  async dialogWillComplete(userMessage, { matchedEntities }) {
+    logger.debug('dialogWillComplete', userMessage, { matchedEntities });
     // Clean entities for this dialog so it can be reused later
     await this.brain.conversationSet(userMessage.user, this.parameters.namespace, {});
     if (matchedEntities.answer.values[0].value) {

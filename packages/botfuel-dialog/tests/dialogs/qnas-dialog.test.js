@@ -23,10 +23,10 @@ describe('QnasDialog', () => {
   const brain = new MemoryBrain(TEST_CONFIG);
   const dialog = new QnasDialog(TEST_CONFIG, brain);
   const adapter = new ShellAdapter({});
-  const qnaAnswers = [[{ value: 'answer' }]];
+  const answers = [[{ value: 'answer' }]];
 
   test('should return the complete action', async () => {
-    const action = await dialog.execute(adapter, {}, qnaAnswers);
+    const action = await dialog.execute(adapter, {}, { answers });
     expect(action).toEqual({
       name: QnasDialog.ACTION_COMPLETE,
     });

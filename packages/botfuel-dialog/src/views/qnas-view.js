@@ -25,7 +25,7 @@ const View = require('./view');
 class QnasView extends View {
   /** @inheritDoc */
   render(userMessage, { answers }) {
-    logger.debug('render', userMessage, answers);
+    logger.debug('render', userMessage, { answers });
 
     return answers[0].map(message => new BotTextMessage(message.value));
   }

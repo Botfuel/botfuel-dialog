@@ -42,8 +42,8 @@ class ConfirmationView extends PromptView {
   }
 
   /** @inheritDoc */
-  renderEntities(matchedEntities, missingEntities) {
-    logger.debug('renderEntities', matchedEntities, missingEntities);
+  render(userMessage, { matchedEntities }) {
+    logger.debug('renderEntities', { matchedEntities });
     if (matchedEntities.answer) {
       if (matchedEntities.answer.values[0].value) {
         return [new BotTextMessage(this.dialogConfirmed)];

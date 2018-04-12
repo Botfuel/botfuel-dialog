@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+const _ = require('lodash');
 const logger = require('logtown')('Dialog');
 const kebabCase = require('lodash/kebabCase');
 const ViewResolver = require('../view-resolver');
 const MissingImplementationError = require('../errors/missing-implementation-error');
+const SdkError = require('../errors/sdk-error');
 const DialogError = require('../errors/dialog-error');
 
 /**
@@ -115,7 +116,7 @@ class Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
-   * @param {String[]} messageEntities - the message entities
+   * @param {Object} data - the data
    * @returns {Promise.<Object>}
    */
   async execute() {
@@ -126,20 +127,20 @@ class Dialog {
    * Builds an action
    * indicating that the current dialog is completed and
    * providing the name of the next dialog to execute.
-   * @param {String} dialogName - the name of the next dialog to execute
-   * @param {Object[]} dialogEntities - the entities for the next dialog
+   * @param {String} name - the name of the next dialog to execute
+   * @param {Object} data - the data for the next dialog
    * @returns {Object} the action object
    */
-  triggerNext(dialogName, dialogEntities = []) {
-    if (!dialogName) {
+  triggerNext(name, data = {}) {
+    if (!name) {
       throw new DialogError({
         message: 'You must provide a dialogName as a parameter to the nextDialog method.',
       });
     }
     return {
       newDialog: {
-        name: dialogName,
-        entities: dialogEntities,
+        name,
+        data,
       },
       name: this.ACTION_NEXT,
     };
@@ -149,15 +150,15 @@ class Dialog {
    * Builds an action
    * indicating that the previous dialog is canceled and
    * optionally providing the name of the next dialog.
-   * @param {String} [dialogName] - the name of the next dialog (optional)
+   * @param {String} [name] - the name of the next dialog (optional)
    * @returns {Object} the action object
    */
-  cancelPrevious(dialogName) {
+  cancelPrevious(name) {
     return {
       name: this.ACTION_CANCEL,
-      ...(dialogName && {
+      ...(name && {
         newDialog: {
-          name: dialogName,
+          name,
         },
       }),
     };
@@ -167,17 +168,17 @@ class Dialog {
    * Builds an action
    * indicating that a new conversation should be started and
    * optionally providing the name of the next dialog.
-   * @param {String} [dialogName] - the name of the next dialog (optional)
-   * @param {Object[]} [dialogEntities] - the entities for the next dialog
+   * @param {String} [name] - the name of the next dialog (optional)
+   * @param {Object} [data] - the data for the next dialog
    * @returns {Object} the action object
    */
-  startNewConversation(dialogName, dialogEntities = []) {
+  startNewConversation(name, data = {}) {
     return {
       name: this.ACTION_NEW_CONVERSATION,
-      ...(dialogName && {
+      ...(name && {
         newDialog: {
-          name: dialogName,
-          entities: dialogEntities,
+          name,
+          data,
         },
       }),
     };
@@ -210,12 +211,42 @@ class Dialog {
    * Returns null by default.
    * @async
    * @param {Object} [userMessage] - the user message
-   * @param {Object} [dialogData] - the dialog data
+   * @param {Object} [data] - the data
    * @returns {Promise.<*>} some data (will be passed to the display method with the extraData key)
    */
-  async dialogWillDisplay(userMessage, dialogData) {
-    logger.debug('dialogWillDisplay', userMessage, dialogData);
+  async dialogWillDisplay(userMessage, data) {
+    logger.debug('dialogWillDisplay', userMessage, data);
     return null;
+  }
+  /**
+   * Merge extraData to data if extraData is an object.
+   * If extraData is a value then extend data with key "extraData".
+   * @param {Object} [extraData] - the extra data
+   * @param {Object} [data] - the data
+   * @returns {Object} - the data with extraData combined
+   */
+  mergeData(extraData, data) {
+    // if extraData is null
+    if (!extraData) {
+      return data;
+    }
+
+    // if extraData is an object
+    if (typeof extraData === 'object' && !Array.isArray(extraData)) {
+      if (data) {
+        const commonKeys = _.intersection(Object.keys(data), Object.keys(extraData));
+        if (commonKeys.length > 0) {
+          throw new SdkError(
+            `Your extraData contains keys already defined in the dialog data: ${commonKeys}`,
+          );
+        }
+      }
+
+      return { ...data, ...extraData };
+    }
+
+    // if extraData is a value
+    return { ...data, extraData };
   }
 
   /**
@@ -223,11 +254,11 @@ class Dialog {
    * Does nothing by default.
    * @async
    * @param {Object} [userMessage] - the user message
-   * @param {Object} [dialogData] - the dialog data
+   * @param {Object} [data] - the dialog data
    * @returns {Promise.<*>}
    */
-  async dialogWillComplete(userMessage, dialogData) {
-    logger.debug('dialogWillComplete', userMessage, dialogData);
+  async dialogWillComplete(userMessage, data) {
+    logger.debug('dialogWillComplete', userMessage, data);
   }
 }
 

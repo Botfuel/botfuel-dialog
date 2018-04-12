@@ -40,10 +40,10 @@ describe('IntentResolutionDialog', () => {
       }),
     ];
 
-    expect(await dialog.execute(adapter, { user: 'TEST_USER' }, { intents, entities: [] })).toEqual(
-      {
-        name: IntentResolutionDialog.ACTION_COMPLETE,
-      },
-    );
+    expect(
+      await dialog.execute(adapter, { user: 'TEST_USER' }, { intents, messageEntities: [] }),
+    ).toEqual({
+      name: IntentResolutionDialog.ACTION_COMPLETE,
+    });
   });
 });

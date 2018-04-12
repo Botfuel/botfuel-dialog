@@ -282,11 +282,14 @@ class PromptDialog extends Dialog {
    * @async
    * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
-   * @param {Object[]} messageEntities - the message entities extracted from the message
+   * @param {Object} data - the data
    * @returns {Promise.<Object>} an action
    */
-  async execute(adapter, userMessage, messageEntities) {
-    logger.debug('execute', userMessage, messageEntities);
+  async execute(adapter, userMessage, data) {
+    logger.debug('execute', userMessage, data);
+
+    // get message entities extracted from the message
+    const { messageEntities } = data;
     const userId = userMessage.user;
 
     const dialogCache = await this.brain.conversationGet(userId, this.parameters.namespace);
@@ -309,16 +312,14 @@ class PromptDialog extends Dialog {
       _question: missingEntities.size > 0 ? missingEntities.keys().next().value : undefined,
     });
 
-    const extraData = await this.dialogWillDisplay(userMessage, {
-      missingEntities,
-      matchedEntities,
-    });
+    data = { ...data, missingEntities, matchedEntities };
+    const extraData = await this.dialogWillDisplay(userMessage, data);
+    data = this.mergeData(extraData, data);
 
-    const dialogData = { matchedEntities, missingEntities, extraData };
-    await this.display(adapter, userMessage, dialogData);
+    await this.display(adapter, userMessage, data);
 
     if (missingEntities.size === 0) {
-      const action = await this.dialogWillComplete(userMessage, dialogData);
+      const action = await this.dialogWillComplete(userMessage, data);
       return action || this.complete();
     }
     return this.wait();

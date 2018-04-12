@@ -25,7 +25,7 @@ const weightMessage = (key, entityValue) =>
   new BotTextMessage(`Cool, so ${members[key]} ${entityValue.value}`);
 
 class WeightView extends PromptView {
-  renderEntities(matchedEntities, missingEntities) {
+  render(userMessage, { matchedEntities, missingEntities }) {
     const messages = Object.keys(matchedEntities)
       .filter(key => !!matchedEntities[key])
       .map(key => weightMessage(key, matchedEntities[key].values[0]));

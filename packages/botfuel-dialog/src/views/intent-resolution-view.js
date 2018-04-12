@@ -26,14 +26,14 @@ const View = require('./view');
  */
 class IntentResolutionView extends View {
   /** @inheritDoc */
-  render(userMessage, { intents, entities }) {
-    logger.debug('render', userMessage, { intents, entities });
+  render(userMessage, { intents, messageEntities }) {
+    logger.debug('render', userMessage, { intents, messageEntities });
 
     const postbacks = intents.map((intent) => {
       if (intent.isQnA()) {
         return new Postback(intent.resolvePrompt, intent.name, intent.answers);
       }
-      return new Postback(intent.resolvePrompt, intent.name, entities);
+      return new Postback(intent.resolvePrompt, intent.name, messageEntities);
     });
 
     return [new BotTextMessage('What do you mean?'), new ActionsMessage(postbacks)];

@@ -95,19 +95,21 @@ class DialogManager extends Resolver {
   updateWithIntents(userId, dialogs, intents, entities) {
     logger.debug('updateWithIntents', userId, dialogs, intents, entities);
 
+    const messageEntities = entities;
+
     let newDialog = null;
     if (intents.length > 1) {
       newDialog = {
         name: 'intent-resolution',
-        entities: {
-          entities,
+        data: {
+          messageEntities,
           intents,
         },
       };
     } else if (intents.length === 1) {
       newDialog = {
         name: intents[0].name,
-        entities: intents[0].isQnA() ? intents[0].answers : entities,
+        data: intents[0].isQnA() ? { answers: intents[0].answers } : { messageEntities },
       };
     }
 
@@ -116,7 +118,7 @@ class DialogManager extends Resolver {
     } else {
       const lastDialog = dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
       if (lastDialog) {
-        lastDialog.entities = entities;
+        lastDialog.data.messageEntities = messageEntities;
       }
     }
 
@@ -130,7 +132,7 @@ class DialogManager extends Resolver {
       };
       dialogs.stack.push({
         ...lastDialog,
-        entities: entities || [],
+        data: { messageEntities } || {},
       });
     }
   }
@@ -144,7 +146,7 @@ class DialogManager extends Resolver {
   updateWithDialog(dialogs, newDialog) {
     const lastDialog = dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
     if (lastDialog && lastDialog.name === newDialog.name) {
-      lastDialog.entities = newDialog.entities;
+      lastDialog.data = newDialog.data;
     } else {
       dialogs.stack.push(newDialog);
     }
@@ -236,10 +238,10 @@ class DialogManager extends Resolver {
         characteristics: {
           reentrant: false,
         },
-        entities: [],
+        data: {},
       });
     } else {
-      const action = await this.resolve(dialog.name).execute(adapter, userMessage, dialog.entities);
+      const action = await this.resolve(dialog.name).execute(adapter, userMessage, dialog.data);
       logger.debug('execute: action', action);
       if (action.name !== Dialog.ACTION_WAIT) {
         dialogs = await this.applyAction(dialogs, action);

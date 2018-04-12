@@ -196,7 +196,7 @@ class Bot {
     logger.debug('respondWhenPostback', userMessage);
     const dialog = {
       name: userMessage.payload.value.dialog,
-      entities: userMessage.payload.value.entities,
+      data: { messageEntities: userMessage.payload.value.entities },
     };
     await this.dm.executeDialog(this.adapter, userMessage, dialog);
   }
@@ -212,7 +212,7 @@ class Bot {
     logger.debug('respondWhenImage', userMessage);
     const dialog = {
       name: 'image',
-      entities: [{ url: userMessage.payload.value }],
+      data: { url: userMessage.payload.value },
     };
     await this.dm.executeDialog(this.adapter, userMessage, dialog);
   }

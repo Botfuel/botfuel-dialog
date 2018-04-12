@@ -43,7 +43,7 @@ describe('Dialog', () => {
     expect(dialog.triggerNext('greetings')).toEqual({
       newDialog: {
         name: 'greetings',
-        entities: [],
+        data: {},
       },
       name: Dialog.ACTION_NEXT,
     });
@@ -74,7 +74,7 @@ describe('Dialog', () => {
     expect(dialog.startNewConversation('greetings')).toEqual({
       newDialog: {
         name: 'greetings',
-        entities: [],
+        data: {},
       },
       name: Dialog.ACTION_NEW_CONVERSATION,
     });
@@ -89,6 +89,29 @@ describe('Dialog', () => {
   test('should prepare wait dialog', () => {
     expect(dialog.wait()).toEqual({
       name: Dialog.ACTION_WAIT,
+    });
+  });
+
+  // test merge extraData to data
+  describe('merge extraData to data', () => {
+    test('handle edges cases (null) correctly', () => {
+      expect(dialog.mergeData(null, null)).toEqual(null);
+      expect(dialog.mergeData(null, {})).toEqual({});
+      expect(dialog.mergeData({}, null)).toEqual({});
+    });
+
+    test('when extraData is an object', () => {
+      expect(dialog.mergeData({ greeted: true }, {})).toEqual({ greeted: true });
+    });
+
+    test('throw error when extraData have keys in data', () => {
+      expect(() => dialog.mergeData({ greeted: true }, { greeted: false })).toThrowError();
+    });
+
+    test('when extraData is a value or array', () => {
+      expect(dialog.mergeData(42, {})).toEqual({ extraData: 42 });
+      expect(dialog.mergeData(undefined, {})).toEqual({ extraData: undefined });
+      expect(dialog.mergeData(['a', 'b'], {})).toEqual({ extraData: ['a', 'b'] });
     });
   });
 });
