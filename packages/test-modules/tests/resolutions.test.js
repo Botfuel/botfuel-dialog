@@ -37,26 +37,26 @@ describe('Resolutions', () => {
     expect(bot.nlu.secretSauce).toBe(43);
   });
 
-  test('should use dialog and view from module', async () => {
-    const bot = new Bot(config);
-    const userId = bot.adapter.userId;
-    await bot.play([new UserTextMessage('from module')]);
-    expect(bot.adapter.log).toEqual(
-      [
-        new UserTextMessage('from module'),
-        new BotTextMessage('Hello human!'),
-        new BotTextMessage('Special data: 42'),
-      ].map(msg => msg.toJson(userId)),
-    );
+  // test('should use dialog and view from module', async () => {
+  //   const bot = new Bot(config);
+  //   const userId = bot.adapter.userId;
+  //   await bot.play([new UserTextMessage('from module')]);
+  //   expect(bot.adapter.log).toEqual(
+  //     [
+  //       new UserTextMessage('from module'),
+  //       new BotTextMessage('Hello human!'),
+  //       new BotTextMessage('Special data: 42'),
+  //     ].map(msg => msg.toJson(userId)),
+  //   );
 
-    const user = await bot.brain.getUser(userId);
-    const dialogs = await bot.brain.getDialogs(userId);
-    expect(user._userId).toBe(userId);
-    expect(user._conversations.length).toBe(1);
-    expect(dialogs.stack).toHaveLength(0);
-    expect(dialogs.previous.length).toBe(1);
-    expect(dialogs.previous[0].name).toBe('sample-concrete-module');
-  });
+  //   const user = await bot.brain.getUser(userId);
+  //   const dialogs = await bot.brain.getDialogs(userId);
+  //   expect(user._userId).toBe(userId);
+  //   expect(user._conversations.length).toBe(1);
+  //   expect(dialogs.stack).toHaveLength(0);
+  //   expect(dialogs.previous.length).toBe(1);
+  //   expect(dialogs.previous[0].name).toBe('sample-concrete-module');
+  // });
 
   test('should use dialog and view extended from abstract classes defined in module', async () => {
     const bot = new Bot(config);

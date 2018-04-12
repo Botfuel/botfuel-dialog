@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-const logger = require('logtown')('QnasDialog');
-const Dialog = require('./dialog');
+const TextDialog = require('./text-dialog');
 
 /**
  * The qnas dialog
@@ -23,27 +22,6 @@ const Dialog = require('./dialog');
  * or displays several alternatives otherwise.
  * @extends Dialog
  */
-class QnasDialog extends Dialog {
-  /**
-   * @constructor
-   * @param {Object} config - the bot config
-   * @param {class} brain - the bot brain
-   */
-  constructor(config, brain) {
-    super(config, brain, { reentrant: false });
-  }
-
-  /** @inheritDoc */
-  async execute(adapter, userMessage, data) {
-    logger.debug('execute', userMessage, data);
-    const { answers } = data;
-    const extraData = await this.dialogWillDisplay(userMessage, { answers });
-    const dialogData = { answers, extraData };
-    await this.display(adapter, userMessage, dialogData);
-
-    const action = await this.dialogWillComplete(userMessage, dialogData);
-    return action || this.complete();
-  }
-}
+class QnasDialog extends TextDialog {}
 
 module.exports = QnasDialog;

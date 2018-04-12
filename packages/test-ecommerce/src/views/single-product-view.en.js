@@ -17,9 +17,7 @@
 const { PromptView, BotImageMessage, BotTextMessage, WebAdapter } = require('botfuel-dialog');
 
 class SingleProductView extends PromptView {
-  renderEntities(matchedEntities, missingEntities, dialogData) {
-    const { product } = dialogData;
-
+  render(userMessage, { product }) {
     return [
       product
         ? new BotImageMessage(WebAdapter.getStaticUrl(product.imageUrl))

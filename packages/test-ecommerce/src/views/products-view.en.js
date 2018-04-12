@@ -33,11 +33,11 @@ const productToCard = (key, product) =>
   ]);
 
 class ProductsView extends PromptView {
-  renderEntities(messageEntities, missingEntities) {
+  render(userMessage, { matchedEntities, missingEntities }) {
     const messages = [];
 
-    if (messageEntities.product) {
-      const product = PRODUCTS[messageEntities.product.values[0]];
+    if (matchedEntities.product) {
+      const product = PRODUCTS[matchedEntities.product.values[0]];
 
       messages.push(
         new BotImageMessage(

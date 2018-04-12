@@ -26,9 +26,9 @@ class TextDialog extends Dialog {
   async execute(adapter, userMessage, data) {
     logger.debug('execute', userMessage, data);
     const extraData = await this.dialogWillDisplay(userMessage, data);
-    const dialogData = { data, extraData };
-    await this.display(adapter, userMessage, dialogData);
-    const action = await this.dialogWillComplete(userMessage, dialogData);
+    data = this.mergeData(extraData, data);
+    await this.display(adapter, userMessage, data);
+    const action = await this.dialogWillComplete(userMessage, data);
     return action || this.complete();
   }
 }

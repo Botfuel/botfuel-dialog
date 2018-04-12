@@ -18,7 +18,7 @@
 const { PromptView, BotTextMessage } = require('botfuel-dialog');
 
 class QuestionView extends PromptView {
-  renderEntities(matchedEntities, missingEntities) {
+  render(userMessage, { matchedEntities, missingEntities }) {
     const hasFirstAnswer = !!matchedEntities.firstAnswer && !missingEntities.firstAnswer;
     const isFirstAnswerPositive = hasFirstAnswer && matchedEntities.firstAnswer.values[0].value;
     const hasSecondAnswer = !!matchedEntities.secondAnswer && !missingEntities.secondAnswer;

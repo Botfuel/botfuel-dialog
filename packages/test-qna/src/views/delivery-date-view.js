@@ -17,8 +17,8 @@
 const { TextView, BotTextMessage } = require('botfuel-dialog');
 
 class DeliveryDateView extends TextView {
-  render(userMessage, { extraData }) {
-    const dateStr = extraData.date.toISOString().split('T')[0];
+  render(userMessage, { date }) {
+    const dateStr = date.toISOString().split('T')[0];
     const response = new BotTextMessage(
       `If you purchase today before 10pm, you purchase will be delivered by ${dateStr}.`,
     );

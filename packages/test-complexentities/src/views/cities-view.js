@@ -17,7 +17,7 @@
 const { PromptView, BotTextMessage } = require('botfuel-dialog');
 
 class CitiesView extends PromptView {
-  renderEntities(matchedEntities, missingEntities) {
+  render(userMessage, { matchedEntities, missingEntities }) {
     const messages = [];
 
     if (matchedEntities.favoriteCities && matchedEntities.favoriteCities.length) {

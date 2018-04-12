@@ -95,19 +95,21 @@ class DialogManager extends Resolver {
   updateWithIntents(userId, dialogs, intents, entities) {
     logger.debug('updateWithIntents', userId, dialogs, intents, entities);
 
+    const messageEntities = entities;
+
     let newDialog = null;
     if (intents.length > 1) {
       newDialog = {
         name: 'intent-resolution',
         data: {
-          entities,
+          messageEntities,
           intents,
         },
       };
     } else if (intents.length === 1) {
       newDialog = {
         name: intents[0].name,
-        data: intents[0].isQnA() ? { answers: intents[0].answers } : { entities },
+        data: intents[0].isQnA() ? { answers: intents[0].answers } : { messageEntities },
       };
     }
 
@@ -116,7 +118,7 @@ class DialogManager extends Resolver {
     } else {
       const lastDialog = dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
       if (lastDialog) {
-        lastDialog.data.entities = entities;
+        lastDialog.data.messageEntities = messageEntities;
       }
     }
 
@@ -130,7 +132,7 @@ class DialogManager extends Resolver {
       };
       dialogs.stack.push({
         ...lastDialog,
-        data: { entities } || {},
+        data: { messageEntities } || {},
       });
     }
   }

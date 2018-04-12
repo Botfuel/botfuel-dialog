@@ -18,28 +18,28 @@ const ConfirmationView = require('../../src/views/confirmation-view');
 const BotTextMessage = require('../../src/messages/bot-text-message');
 
 describe('ConfirmationView', () => {
-  describe('renderEntities', () => {
+  describe('render', () => {
     const view = new ConfirmationView({});
 
     describe('when no answer', () => {
       test('should ask the question again', () => {
-        expect(view.renderEntities({}, {})).toEqual([new BotTextMessage(view.dialogQuestion)]);
+        expect(view.render({}, { matchedEntities: {} })).toEqual([
+          new BotTextMessage(view.dialogQuestion),
+        ]);
       });
     });
 
     describe('when confirmed', () => {
       test('should confirm', () => {
-        expect(view.renderEntities({ answer: { values: [{ value: true }] } }, {})).toEqual([
-          new BotTextMessage(view.dialogConfirmed),
-        ]);
+        const data = { matchedEntities: { answer: { values: [{ value: true }] } } };
+        expect(view.render({}, data)).toEqual([new BotTextMessage(view.dialogConfirmed)]);
       });
     });
 
     describe('when discarded', () => {
       test('should discard', () => {
-        expect(view.renderEntities({ answer: { values: [{ value: false }] } }, {})).toEqual([
-          new BotTextMessage(view.dialogDiscarded),
-        ]);
+        const data = { matchedEntities: { answer: { values: [{ value: false }] } } };
+        expect(view.render({}, data)).toEqual([new BotTextMessage(view.dialogDiscarded)]);
       });
     });
   });

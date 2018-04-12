@@ -38,7 +38,7 @@ describe('IntentResolutionView', () => {
     const view = new IntentResolutionView();
 
     test('should return correct choices for both intents and qnas', () => {
-      expect(view.render({ user: 'TEST_USER' }, { data: { intents, entities: [] } })).toEqual([
+      expect(view.render({ user: 'TEST_USER' }, { intents, messageEntities: [] })).toEqual([
         new BotTextMessage('What do you mean?'),
         new ActionsMessage([
           new Postback('You want trip information?', 'trip', []),

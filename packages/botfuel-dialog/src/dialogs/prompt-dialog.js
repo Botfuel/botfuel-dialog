@@ -289,7 +289,7 @@ class PromptDialog extends Dialog {
     logger.debug('execute', userMessage, data);
 
     // get message entities extracted from the message
-    const messageEntities = data.entities;
+    const { messageEntities } = data;
     const userId = userMessage.user;
 
     const dialogCache = await this.brain.conversationGet(userId, this.parameters.namespace);
@@ -312,16 +312,14 @@ class PromptDialog extends Dialog {
       _question: missingEntities.size > 0 ? missingEntities.keys().next().value : undefined,
     });
 
-    const extraData = await this.dialogWillDisplay(userMessage, {
-      missingEntities,
-      matchedEntities,
-    });
+    data = { ...data, missingEntities, matchedEntities };
+    const extraData = await this.dialogWillDisplay(userMessage, data);
+    data = this.mergeData(extraData, data);
 
-    const dialogData = { matchedEntities, missingEntities, extraData };
-    await this.display(adapter, userMessage, dialogData);
+    await this.display(adapter, userMessage, data);
 
     if (missingEntities.size === 0) {
-      const action = await this.dialogWillComplete(userMessage, dialogData);
+      const action = await this.dialogWillComplete(userMessage, data);
       return action || this.complete();
     }
     return this.wait();
