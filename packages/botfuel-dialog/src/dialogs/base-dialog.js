@@ -18,7 +18,7 @@ const logger = require('logtown')('BaseDialog');
 const Dialog = require('./dialog');
 
 /**
- * The base dialog is a general-purpose dialog used to display basic messages .
+ * The base dialog is a general-purpose dialog used to display basic messages.
  * @extends Dialog
  */
 class BaseDialog extends Dialog {

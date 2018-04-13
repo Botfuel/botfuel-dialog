@@ -23,9 +23,9 @@ const View = require('./view');
  */
 class DefaultView extends View {
   /** @inheritDoc */
-  getTexts(userMessage, data) {
+  render(userMessage, data) {
     logger.debug('getTexts', userMessage, data);
-    return ["Je n'ai pas compris."];
+   return [new BotTextMessage("Je n'ai pas compris.")];
   }
 }
 

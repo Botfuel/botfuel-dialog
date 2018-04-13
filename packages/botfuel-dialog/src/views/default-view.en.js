@@ -25,7 +25,7 @@ class DefaultView extends View {
   /** @inheritDoc */
   getTexts(userMessage, data) {
     logger.debug('getTexts', userMessage, data);
-    return ['Not understood.'];
+     return [new BotTextMessage("Not understood")];
   }
 }
 
