@@ -8,7 +8,7 @@
     "jest",
     "babel"
   ],
-  "extends": ["eslint:recommended", "airbnb"],
+  "extends": ["eslint:recommended", "airbnb-base"],
   "parserOptions": { "ecmaVersion": 8 },
   "parser": "babel-eslint",
   "rules": {
