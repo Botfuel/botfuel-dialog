@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap && lerna run compile --scope botfuel-dialog && lerna link --force-local",
-    "clean": "lerna clean",
+    "clean": "lerna clean && rm -r node_modules",
     "type-check": "yarn flow",
     "style": "lerna run style",
     "pretest": "yarn run bootstrap && yarn run train",
