@@ -50,7 +50,7 @@ class DialogManager extends Resolver {
    * Returns the last "reentrant" dialog to execute if no other dialog is found.
    * When the sentence itself does not contain enough information for the DialogManager
    * to compute a dialog, the DialogManager recalls the first reentrant dialog from the
-   * stack of previous dialogs
+   * stack of previous dialogs.
    * @param {Object[]} previousDialogs - the previous dialogs
    * @returns {String} a dialog name
    */
@@ -88,28 +88,25 @@ class DialogManager extends Resolver {
    * Updates the dialogs.
    * @param {String} userId - the user id
    * @param {Object} dialogs - the dialogs data
-   * @param {Object[]} intents - the intents
-   * @param {Object[]} entities - the entities
+   * @param {Object[]} classificationResults - the classification results
+   * @param {Object[]} messageEntities - the message entities
    * @returns {void}
    */
-  updateWithIntents(userId, dialogs, intents, entities) {
-    logger.debug('updateWithIntents', userId, dialogs, intents, entities);
-
-    const messageEntities = entities;
+  updateWithClassificationResults(userId, dialogs, classificationResults, messageEntities) {
+    logger.debug('updateWithClassificationResults', userId, dialogs, classificationResults);
 
     let newDialog = null;
-    if (intents.length > 1) {
+    if (classificationResults.length > 1) {
       newDialog = {
-        name: 'intent-resolution',
-        data: {
-          messageEntities,
-          intents,
-        },
+        name: 'classification-disambiguation',
+        data: { classificationResults, messageEntities },
       };
-    } else if (intents.length === 1) {
+    } else if (classificationResults.length === 1) {
       newDialog = {
-        name: intents[0].name,
-        data: intents[0].isQnA() ? { answers: intents[0].answers } : { messageEntities },
+        name: classificationResults[0].name,
+        data: classificationResults[0].isQnA()
+          ? { answers: classificationResults[0].answers }
+          : { messageEntities },
       };
     }
 
@@ -253,18 +250,18 @@ class DialogManager extends Resolver {
   }
 
   /**
-   * Populates and executes the stack.
+   * Executes when receiving the classification results and message entities.
    * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
-   * @param {String[]} intents - the intents
-   * @param {Object[]} entities - the transient entities
+   * @param {Object[]} classificationResults - the classification results from trainer
+   * @param {Object[]} messageEntities - the message entities
    * @returns {void}
    */
-  async executeIntents(adapter, userMessage, intents, entities) {
-    logger.debug('executeIntents', userMessage, intents, entities);
+  async executeClassificationResults(adapter, userMessage, classificationResults, messageEntities) {
+    logger.debug('classificationResult', userMessage, classificationResults, messageEntities);
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
-    this.updateWithIntents(userId, dialogs, intents, entities);
+    this.updateWithClassificationResults(userId, dialogs, classificationResults, messageEntities);
     await this.setDialogs(userId, await this.execute(adapter, userMessage, dialogs));
   }
 

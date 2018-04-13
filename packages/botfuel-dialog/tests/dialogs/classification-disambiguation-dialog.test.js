@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-const Intent = require('../../src/nlus/intent');
-const IntentResolutionDialog = require('../../src/dialogs/intent-resolution-dialog');
+const ClassificationResult = require('../../src/nlus/classification-result');
+const ClassificationDisambiguationDialog = require('../../src/dialogs/classification-disambiguation-dialog');
 const MemoryBrain = require('../../src/brains/memory-brain');
 const TestAdapter = require('../../src/adapters/test-adapter');
 const TEST_CONFIG = require('../../src/config').getConfiguration({});
 
-describe('IntentResolutionDialog', () => {
+describe('ClassificationDisambiguationDialog', () => {
   const brain = new MemoryBrain(TEST_CONFIG);
 
   test('should complete', async () => {
-    const dialog = new IntentResolutionDialog(TEST_CONFIG, brain);
+    const dialog = new ClassificationDisambiguationDialog(TEST_CONFIG, brain);
     const adapter = new TestAdapter({});
-    const intents = [
-      new Intent({
-        type: Intent.TYPE_INTENT,
+    const classificationResults = [
+      new ClassificationResult({
+        type: ClassificationResult.TYPE_INTENT,
         name: 'trip',
         resolvePrompt: 'You want trip information?',
       }),
-      new Intent({
-        type: Intent.TYPE_QNA,
+      new ClassificationResult({
+        type: ClassificationResult.TYPE_QNA,
         name: 'qnas',
         resolvePrompt: 'You want delivery information?',
         answers: [[{ value: 'Here is your delivery information' }]],
@@ -41,9 +41,13 @@ describe('IntentResolutionDialog', () => {
     ];
 
     expect(
-      await dialog.execute(adapter, { user: 'TEST_USER' }, { intents, messageEntities: [] }),
+      await dialog.execute(
+        adapter,
+        { user: 'TEST_USER' },
+        { classificationResults, messageEntities: [] },
+      ),
     ).toEqual({
-      name: IntentResolutionDialog.ACTION_COMPLETE,
+      name: ClassificationDisambiguationDialog.ACTION_COMPLETE,
     });
   });
 });

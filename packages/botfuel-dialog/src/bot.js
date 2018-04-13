@@ -177,12 +177,18 @@ class Bot {
     if (this.config.spellchecking) {
       sentence = (await this.spellcheck(sentence, this.config.spellchecking)).correctSentence;
     }
-    const { intents, entities } = await this.nlu.compute(sentence, {
+    const { classificationResults, messageEntities } = await this.nlu.compute(sentence, {
       brain: this.brain,
       userMessage,
     });
-    logger.debug('respondWhenText: intents, entities', intents, entities);
-    await this.dm.executeIntents(this.adapter, userMessage, intents, entities);
+
+    logger.debug('respondWhenText: classificationResults', classificationResults, messageEntities);
+    await this.dm.executeClassificationResults(
+      this.adapter,
+      userMessage,
+      classificationResults,
+      messageEntities,
+    );
   }
 
   /**

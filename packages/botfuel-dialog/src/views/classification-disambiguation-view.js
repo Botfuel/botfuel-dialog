@@ -24,20 +24,20 @@ const View = require('./view');
  * Intent Resolution Dialog's View.
  * @extends View
  */
-class IntentResolutionView extends View {
+class ClassificationDisambiguationView extends View {
   /** @inheritDoc */
-  render(userMessage, { intents, messageEntities }) {
-    logger.debug('render', userMessage, { intents, messageEntities });
+  render(userMessage, { classificationResults, messageEntities }) {
+    logger.debug('render', userMessage, { classificationResults, messageEntities });
 
-    const postbacks = intents.map((intent) => {
-      if (intent.isQnA()) {
-        return new Postback(intent.resolvePrompt, intent.name, intent.answers);
+    const postbacks = classificationResults.map((cr) => {
+      if (cr.isQnA()) {
+        return new Postback(cr.resolvePrompt, cr.name, cr.answers);
       }
-      return new Postback(intent.resolvePrompt, intent.name, messageEntities);
+      return new Postback(cr.resolvePrompt, cr.name, messageEntities);
     });
 
     return [new BotTextMessage('What do you mean?'), new ActionsMessage(postbacks)];
   }
 }
 
-module.exports = IntentResolutionView;
+module.exports = ClassificationDisambiguationView;
