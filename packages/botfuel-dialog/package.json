@@ -20,7 +20,7 @@
   "scripts": {
     "compile": "rm -rf build; ../../node_modules/.bin/babel src --out-dir build; cp -r src/corpora/*.txt build/corpora/",
     "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest",
-    "style": "eslint src; eslint tests",
+    "style": "eslint src && eslint tests",
     "docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose",
     "precommit": "lint-staged"
   },

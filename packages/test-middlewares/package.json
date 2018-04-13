@@ -10,7 +10,7 @@
     "train": "botfuel-train",
     "clean": "botfuel-clean",
     "test": "jest",
-    "style": "eslint src; eslint tests"
+    "style": "eslint src && eslint tests"
   },
   "dependencies": {
     "botfuel-dialog": "latest"
