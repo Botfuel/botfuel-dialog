@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-const TextDialog = require('./text-dialog');
+const BaseDialog = require('./base-dialog');
 
 /**
  * The default dialog is used when the bot does not understand the user intent.
- * @extends TextDialog
+ * @extends BaseDialog
  */
-class DefaultDialog extends TextDialog {}
+class DefaultDialog extends BaseDialog {}
 
 module.exports = DefaultDialog;

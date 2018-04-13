@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const TextDialog = require('./text-dialog');
+const BaseDialog = require('./base-dialog');
 
 /**
  * The default resolution dialog when multiple intities are detected from the trainer
- * @extends IntentResolutionDialog
+ * @extends BaseDialog
  */
-class IntentResolutionDialog extends TextDialog {}
+class IntentResolutionDialog extends BaseDialog {}
 
 module.exports = IntentResolutionDialog;

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-const { TextDialog } = require('botfuel-dialog');
+const { BaseDialog } = require('botfuel-dialog');
 
-class ResetDialog extends TextDialog {
+class ResetDialog extends BaseDialog {
   async dialogWillComplete() {
     return this.startNewConversation('greetings');
   }

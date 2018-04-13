@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-const { TextDialog } = require('botfuel-dialog');
+const { BaseDialog } = require('botfuel-dialog');
 
-class Mute extends TextDialog {
+class Mute extends BaseDialog {
   dialogWillComplete(userMessage) {
     this.brain.userSet(userMessage.user, '_isMuted', true);
   }

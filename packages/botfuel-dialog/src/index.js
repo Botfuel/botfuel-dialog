@@ -16,6 +16,7 @@
 
 const ActionsMessage = require('./messages/actions-message');
 const Adapter = require('./adapters/adapter');
+const BaseDialog = require('./dialogs/base-dialog');
 const Bot = require('./bot');
 const BotImageMessage = require('./messages/bot-image-message');
 const BotTextMessage = require('./messages/bot-text-message');
@@ -51,8 +52,6 @@ const QuickrepliesMessage = require('./messages/quickreplies-message');
 const RegexExtractor = require('./extractors/regex-extractor');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
-const TextDialog = require('./dialogs/text-dialog');
-const TextView = require('./views/text-view');
 const UserImageMessage = require('./messages/user-image-message');
 const UserTextMessage = require('./messages/user-text-message');
 const View = require('./views/view');
@@ -62,6 +61,7 @@ const WsExtractor = require('./extractors/ws-extractor');
 module.exports = {
   ActionsMessage,
   Adapter,
+  BaseDialog,
   Bot,
   BotImageMessage,
   BotTableMessage,
@@ -97,8 +97,6 @@ module.exports = {
   RegexExtractor,
   ShellAdapter,
   TestAdapter,
-  TextDialog,
-  TextView,
   UserImageMessage,
   UserTextMessage,
   View,

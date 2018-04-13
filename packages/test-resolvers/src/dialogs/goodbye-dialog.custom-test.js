@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-const { TextDialog } = require('botfuel-dialog');
+const { BaseDialog } = require('botfuel-dialog');
 
-class GoodbyeDialog extends TextDialog {}
+class GoodbyeDialog extends BaseDialog {}
 
 module.exports = GoodbyeDialog;
