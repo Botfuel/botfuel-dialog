@@ -211,8 +211,8 @@ class Dialog {
    * Returns null by default.
    * @async
    * @param {Object} [userMessage] - the user message
-   * @param {Object} [data] - the data
-   * @returns {Promise.<*>} some data (will be passed to the display method with the extraData key)
+   * @param {Object} data - the data
+   * @returns {Promise.<*>} - the extra data which will be added to the data passed to the view
    */
   async dialogWillDisplay(userMessage, data) {
     logger.debug('dialogWillDisplay', userMessage, data);
@@ -221,8 +221,8 @@ class Dialog {
   /**
    * Merge extraData to data if extraData is an object.
    * If extraData is a value then extend data with key "extraData".
-   * @param {Object} [extraData] - the extra data
-   * @param {Object} [data] - the data
+   * @param {Object} extraData - the extra data
+   * @param {Object} data - the data
    * @returns {Object} - the data with extraData combined
    */
   mergeData(extraData, data) {
@@ -254,7 +254,7 @@ class Dialog {
    * Does nothing by default.
    * @async
    * @param {Object} [userMessage] - the user message
-   * @param {Object} [data] - the dialog data
+   * @param {Object} data - the data passed to the view
    * @returns {Promise.<*>}
    */
   async dialogWillComplete(userMessage, data) {
