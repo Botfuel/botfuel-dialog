@@ -1,6 +1,6 @@
 {
   "name": "botfuel-dialog",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel Dialog",
@@ -19,8 +19,8 @@
   },
   "scripts": {
     "compile": "rm -rf build; ../../node_modules/.bin/babel src --out-dir build; cp -r src/corpora/*.txt build/corpora/",
-    "test": "yarn run compile && BOTFUEL_APP_TOKEN=TEST_BOT jest",
-    "style": "eslint src; eslint tests",
+    "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest",
+    "style": "eslint src && eslint tests",
     "docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose",
     "precommit": "lint-staged"
   },

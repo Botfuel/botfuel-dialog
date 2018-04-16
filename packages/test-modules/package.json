@@ -1,6 +1,6 @@
 {
   "name": "test-modules",
-  "version": "4.2.0",
+  "version": "5.1.0",
   "private": true,
   "author": "sysadmin@botfuel.io",
   "description": "Provide minimal examples for botfuel modules",
@@ -10,11 +10,11 @@
     "train": "botfuel-train",
     "clean": "botfuel-clean",
     "test": "jest",
-    "style": "eslint src; eslint tests"
+    "style": "eslint src && eslint tests"
   },
   "dependencies": {
     "botfuel-dialog": "latest",
-    "sample-botfuel-module": "^1.1.2"
+    "botfuel-module-sample": "^1.1.3"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

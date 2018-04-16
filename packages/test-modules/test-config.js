@@ -25,7 +25,7 @@ module.exports = {
   },
   locale: 'en',
   logger: 'error',
-  modules: ['sample-botfuel-module'],
+  modules: ['botfuel-module-sample'],
   nlu: {
     name: 'sample-module',
     intentThreshold: 0.75,

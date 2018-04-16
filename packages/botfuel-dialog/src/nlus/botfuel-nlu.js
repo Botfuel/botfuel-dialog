@@ -26,7 +26,7 @@ const BooleanExtractor = require('../extractors/boolean-extractor');
 const LocationExtractor = require('../extractors/location-extractor');
 const CompositeExtractor = require('../extractors/composite-extractor');
 const Nlu = require('./nlu');
-const Intent = require('./intent');
+const ClassificationResult = require('./classification-result');
 
 /**
  * Sample NLU module using NaturalJS.
@@ -110,33 +110,39 @@ class BotfuelNlu extends Nlu {
   /** @inheritdoc */
   async compute(sentence, context) {
     logger.debug('compute', sentence);
+
     if (this.config.nlu.qna) {
       logger.debug('compute: qna', this.config.nlu.qna);
+
       if (this.config.nlu.qna.when === 'before') {
-        const intents = await this.computeWithQna(sentence);
-        if (intents.length > 0) {
-          return { intents };
+        const qnaResults = await this.computeWithQna(sentence);
+        if (qnaResults.length > 0) {
+          return { classificationResults: qnaResults };
         }
         return this.computeWithClassifier(sentence, context);
       }
-      const classifierResult = await this.computeWithClassifier(sentence, context);
-      if (classifierResult.intents.length > 0) {
-        return classifierResult;
+
+      // qna is after
+      const { classificationResults, messageEntities } = await this.computeWithClassifier(
+        sentence,
+        context,
+      );
+
+      if (classificationResults.length > 0) {
+        return { classificationResults, messageEntities };
       }
-      const intents = await this.computeWithQna(sentence);
-      if (intents.length > 0) {
-        return { intents };
+
+      const qnaResults = await this.computeWithQna(sentence);
+      if (qnaResults.length > 0) {
+        return { classificationResults: qnaResults };
       }
-      return {
-        intents: [],
-        entities: classifierResult.entities,
-      };
     }
+
     return this.computeWithClassifier(sentence, context);
   }
 
   /**
-   * Computes intents and entities using QnA.
+   * Computes QnA.
    * @param {String} sentence - the user sentence
    * @returns {Promise.<Object>}
    */
@@ -148,15 +154,15 @@ class BotfuelNlu extends Nlu {
 
       const strict = this.config.nlu.qna.strict;
       if ((strict && qnas.length === 1) || (!strict && qnas.length > 0)) {
-        const intents = [
-          new Intent({
+        const qnaResults = [
+          new ClassificationResult({
             name: 'qnas',
-            type: Intent.TYPE_QNA,
+            type: ClassificationResult.TYPE_QNA,
             answers: [[{ value: qnas[0].answer }]],
           }),
         ];
 
-        return intents;
+        return qnaResults;
       }
 
       return [];
@@ -185,11 +191,13 @@ class BotfuelNlu extends Nlu {
     intents = intents.slice(0, this.config.multiIntent ? 2 : 1);
     logger.debug('computeWithClassifier: filtered intents', intents);
 
-    intents = intents.map(i => new Intent({ name: i, type: Intent.TYPE_INTENT }));
-    logger.debug('computeWithClassifier: final intents', { intents });
+    const classificationResults = intents.map(
+      i => new ClassificationResult({ name: i, type: ClassificationResult.TYPE_INTENT }),
+    );
+    logger.debug('computeWithClassifier: final classficationResults', { classificationResults });
     return {
-      intents,
-      entities,
+      classificationResults: classificationResults || [],
+      messageEntities: entities,
     };
   }
 }

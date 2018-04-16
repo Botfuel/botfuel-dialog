@@ -13,12 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const BaseDialog = require('./base-dialog');
 
-/**
- * The default resolution dialog when multiple intities are detected from the trainer
- * @extends BaseDialog
- */
-class IntentResolutionDialog extends BaseDialog {}
+const ClassificationResult = require('../../src/nlus/classification-result');
+const SdkError = require('../../src/errors/sdk-error');
 
-module.exports = IntentResolutionDialog;
+describe('Intent', () => {
+  test('to throw error if type is missing', () => {
+    expect(() => new ClassificationResult({ name: 'test' })).toThrowError(SdkError);
+  });
+
+  test('QnA intent have correct nama', () => {
+    const intent = new ClassificationResult({
+      label: 'Delivery',
+      type: ClassificationResult.TYPE_QNA,
+    });
+    expect(intent.name).toEqual('qnas');
+  });
+});

@@ -19,11 +19,11 @@ const { BaseDialog } = require('botfuel-dialog');
 class GreetingsDialog extends BaseDialog {
   async dialogWillDisplay(userMessage) {
     const userId = userMessage.user;
-    const greetings = (await this.brain.userGet(userId, 'greetings')) || { greeted: false };
-    if (!greetings.greeted) {
+    const { greeted } = (await this.brain.userGet(userId, 'greetings')) || { greeted: false };
+    if (!greeted) {
       await this.brain.userSet(userId, 'greetings', { greeted: true });
     }
-    return greetings;
+    return { greeted };
   }
 }
 

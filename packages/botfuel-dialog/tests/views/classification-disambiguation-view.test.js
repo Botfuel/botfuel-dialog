@@ -14,31 +14,33 @@
  * limitations under the License.
  */
 
-const IntentResolutionView = require('../../src/views/intent-resolution-view');
+const ClassificationDisambiguationView = require('../../src/views/classification-disambiguation-view');
 const ActionsMessage = require('../../src/messages/actions-message');
 const BotTextMessage = require('../../src/messages/bot-text-message');
 const Postback = require('../../src/messages/postback');
-const Intent = require('../../src/nlus/intent');
+const ClassificationResult = require('../../src/nlus/classification-result');
 
-describe('IntentResolutionView', () => {
+describe('ClassificationDisambiguationView', () => {
   describe('render', () => {
-    const intents = [
-      new Intent({
-        type: Intent.TYPE_INTENT,
+    const classificationResults = [
+      new ClassificationResult({
+        type: ClassificationResult.TYPE_INTENT,
         name: 'trip',
         resolvePrompt: 'You want trip information?',
       }),
-      new Intent({
-        type: Intent.TYPE_QNA,
+      new ClassificationResult({
+        type: ClassificationResult.TYPE_QNA,
         name: 'qnas',
         resolvePrompt: 'You want delivery information?',
         answers: [[{ value: 'Here is your delivery information' }]],
       }),
     ];
-    const view = new IntentResolutionView();
+    const view = new ClassificationDisambiguationView();
 
     test('should return correct choices for both intents and qnas', () => {
-      expect(view.render({ user: 'TEST_USER' }, { intents, messageEntities: [] })).toEqual([
+      expect(
+        view.render({ user: 'TEST_USER' }, { classificationResults, messageEntities: [] }),
+      ).toEqual([
         new BotTextMessage('What do you mean?'),
         new ActionsMessage([
           new Postback('You want trip information?', 'trip', []),
