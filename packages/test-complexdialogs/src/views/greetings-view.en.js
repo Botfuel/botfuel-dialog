@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-const { View } = require('botfuel-dialog');
+const { BotTextMessage, View } = require('botfuel-dialog');
 
 class GreetingsView extends View {
-	render(userMessage, { greeted }) {
-		if (greeted) {
-		 	return [new BotTextMessage('Hello again human!')];
-    	}	
-   		 return [new BotTextMessage('Hello human!')];
-	}
-
+  render(userMessage, { greeted }) {
+    if (greeted) {
+      return [new BotTextMessage('Hello again human!')];
+    }
+    return [new BotTextMessage('Hello human!')];
+  }
 }
 
 module.exports = GreetingsView;

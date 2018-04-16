@@ -22,9 +22,4 @@ describe('DefaultView EN', () => {
     const view = new DefaultView();
     expect(view.render()).toEqual([new BotTextMessage('Not understood.')]);
   });
-
-  test('should render a text', () => {
-    const view = new DefaultView();
-    expect(view.getTexts()).toEqual(['Not understood.']);
-  });
 });

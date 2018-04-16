@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { View } = require('botfuel-dialog');
+const { View, BotTextMessage } = require('botfuel-dialog');
 
 class ThanksView extends View {
   render() {

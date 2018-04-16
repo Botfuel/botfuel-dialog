@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-const { View } = require('botfuel-dialog');
+const { View, BotTextMessage } = require('botfuel-dialog');
 
 class ResetView extends View {
   render() {
-  	return [new BotTextMessage('A new conversation has started!')];
+    return [new BotTextMessage('A new conversation has started!')];
   }
 }
 

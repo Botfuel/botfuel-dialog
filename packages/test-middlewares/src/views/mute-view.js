@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-const { View } = require('botfuel-dialog');
+const { View, BotTextMessage } = require('botfuel-dialog');
 
 class MuteView extends View {
   render() {
-  	return [new BotTextMessage('Muted!')];
+    return [new BotTextMessage('Muted!')];
   }
 }
 

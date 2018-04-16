@@ -15,6 +15,7 @@
  */
 
 const logger = require('logtown')('DefaultView.fr');
+const BotTextMessage = require('../messages/bot-text-message');
 const View = require('./view');
 
 /**
@@ -25,7 +26,7 @@ class DefaultView extends View {
   /** @inheritDoc */
   render(userMessage, data) {
     logger.debug('getTexts', userMessage, data);
-   return [new BotTextMessage("Je n'ai pas compris.")];
+    return [new BotTextMessage("Je n'ai pas compris.")];
   }
 }
 
