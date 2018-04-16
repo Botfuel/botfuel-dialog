@@ -1,4 +1,4 @@
-const { SampleAbstractModuleDialog } = require('sample-botfuel-module');
+const { SampleAbstractModuleDialog } = require('botfuel-module-sample');
 
 class ConcreteDialog extends SampleAbstractModuleDialog {
   async dialogWillDisplay() {

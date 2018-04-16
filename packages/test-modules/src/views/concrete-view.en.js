@@ -1,4 +1,4 @@
-const { SampleAbstractModuleView } = require('sample-botfuel-module');
+const { SampleAbstractModuleView } = require('botfuel-module-sample');
 
 class ConcreteView extends SampleAbstractModuleView {
   getTextsConcrete() {
