@@ -19,6 +19,7 @@ const chalk = require('chalk');
 const logger = require('logtown')('ShellAdapter');
 const uuidv4 = require('uuid/v4');
 const UserTextMessage = require('../messages/user-text-message');
+const PostbackMessage = require('../messages/postback-message');
 const Adapter = require('./adapter');
 
 const DELIMITER = `${chalk.bold('> ')}`;
@@ -35,6 +36,7 @@ class ShellAdapter extends Adapter {
   constructor(bot) {
     super(bot);
     this.userId = uuidv4();
+    this.botTextColor = '#16a085';
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
@@ -50,10 +52,47 @@ class ShellAdapter extends Adapter {
     });
   }
 
+  /* eslint-disable no-console */
   /** @inheritDoc */
   async sendMessage(botMessage) {
-    // eslint-disable-next-line no-console
-    console.log(chalk.hex('#16a085')(`${DELIMITER}${botMessage.payload.value}`));
+    if (botMessage.type === 'actions') {
+      await this.sendActionsMessage(botMessage);
+    } else {
+      console.log(chalk.hex(this.botTextColor)(`${DELIMITER}${botMessage.payload.value}`));
+    }
+  }
+
+  /**
+   * Send actions message
+   * @param {Object} actionsMessage actionMessage
+   * @returns {Promise.<void>}
+   */
+  async sendActionsMessage(actionsMessage) {
+    const actions = actionsMessage.payload.value;
+    let str = 'Please select:\n';
+    actions.forEach((action, index) => {
+      str += `${index + 1}: (${action.type}) ${action.text}\n`;
+    });
+
+    this.rl.question(chalk.hex(this.botTextColor)(str), async (answer) => {
+      const id = parseInt(answer, 10);
+      if (id >= 1 && id <= actions.length) {
+        const selected = actions[id - 1];
+        // postback
+        if (selected.type === 'postback') {
+          const userMessage = new PostbackMessage(
+            selected.value.dialog,
+            selected.value.entities,
+          ).toJson(this.userId);
+          await this.handleMessage(userMessage);
+          // link
+        } else if (selected.type === 'link') {
+          console.log(chalk.hex(this.botTextColor)(`open link: ${selected.value}`));
+        }
+      } else {
+        console.log(chalk.red('Invalid choice!'));
+      }
+    });
   }
 }
 
