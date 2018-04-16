@@ -1,6 +1,6 @@
 {
   "name": "test-qna",
-  "version": "4.0.0",
+  "version": "5.1.0",
   "private": true,
   "author": "sysadmin@botfuel.io",
   "description": "Bot testing botfuel-dialog and qna",
