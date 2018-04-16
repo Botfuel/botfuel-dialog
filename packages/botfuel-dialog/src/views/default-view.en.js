@@ -15,17 +15,18 @@
  */
 
 const logger = require('logtown')('DefaultView.en');
-const TextView = require('./text-view');
+const BotTextMessage = require('../messages/bot-text-message');
+const View = require('./view');
 
 /**
- * Default text view for english.
- * @extends TextView
+ * Default view for english.
+ * @extends View
  */
-class DefaultView extends TextView {
+class DefaultView extends View {
   /** @inheritDoc */
-  getTexts(userMessage, data) {
-    logger.debug('getTexts', userMessage, data);
-    return ['Not understood.'];
+  render(userMessage, data) {
+    logger.debug('render', userMessage, data);
+    return [new BotTextMessage('Not understood.')];
   }
 }
 

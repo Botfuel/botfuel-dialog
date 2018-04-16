@@ -80,7 +80,9 @@ const getComponentRoots = function (config) {
         'Parameter "modules" of configuration should be a list of package names.',
       );
     }
+
     const moduleBasePath = path.dirname(require.resolve(packageName));
+
     const { botfuelModuleRoot } = require(packageName);
     if (typeof botfuelModuleRoot !== 'string') {
       throw new ConfigurationError(

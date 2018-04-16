@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-const TextDialog = require('./text-dialog');
+const BaseDialog = require('./base-dialog');
 
 /**
  * The qnas dialog
  * either answers the user's question when there is a single answer
  * or displays several alternatives otherwise.
- * @extends Dialog
+ * @extends BaseDialog
  */
-class QnasDialog extends TextDialog {}
+class QnasDialog extends BaseDialog {}
 
 module.exports = QnasDialog;

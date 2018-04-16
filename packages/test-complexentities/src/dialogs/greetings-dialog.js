@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-const { TextDialog } = require('botfuel-dialog');
+const { BaseDialog } = require('botfuel-dialog');
 
-class GreetingsDialog extends TextDialog {
+class GreetingsDialog extends BaseDialog {
   async dialogWillDisplay(userMessage) {
     const userId = userMessage.user;
     const { greeted } = (await this.brain.userGet(userId, 'greetings')) || { greeted: false };

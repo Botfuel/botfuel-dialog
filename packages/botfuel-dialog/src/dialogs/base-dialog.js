@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-const logger = require('logtown')('TextDialog');
+const logger = require('logtown')('BaseDialog');
 const Dialog = require('./dialog');
 
 /**
- * The text dialog is used to display text messages.
+ * The base dialog is a general-purpose dialog used to display basic messages.
  * @extends Dialog
  */
-class TextDialog extends Dialog {
+class BaseDialog extends Dialog {
   /** @inheritDoc */
   async execute(adapter, userMessage, data) {
     logger.debug('execute', userMessage, data);
@@ -33,4 +33,4 @@ class TextDialog extends Dialog {
   }
 }
 
-module.exports = TextDialog;
+module.exports = BaseDialog;

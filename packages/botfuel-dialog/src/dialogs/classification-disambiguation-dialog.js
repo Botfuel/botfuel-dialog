@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const TextDialog = require('./text-dialog');
+const BaseDialog = require('./base-dialog');
 
 /**
  * The disambiguation dialog when multiple classification results are returned from the trainer.
  * @extends ClassificationDisambiguationDialog
  */
-class ClassificationDisambiguationDialog extends TextDialog {}
+class ClassificationDisambiguationDialog extends BaseDialog {}
 
 module.exports = ClassificationDisambiguationDialog;

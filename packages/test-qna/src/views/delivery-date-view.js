@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-const { TextView, BotTextMessage } = require('botfuel-dialog');
+const { View, BotTextMessage } = require('botfuel-dialog');
 
-class DeliveryDateView extends TextView {
+class DeliveryDateView extends View {
   render(userMessage, { date }) {
     const dateStr = date.toISOString().split('T')[0];
     const response = new BotTextMessage(

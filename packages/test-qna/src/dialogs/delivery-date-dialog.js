@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-const { TextDialog } = require('botfuel-dialog');
+const { BaseDialog } = require('botfuel-dialog');
 
-class DeliveryDateDialog extends TextDialog {
+class DeliveryDateDialog extends BaseDialog {
   async dialogWillDisplay() {
     const date = new Date();
     date.setDate(date.getDate() + 5);
