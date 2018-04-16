@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="5.1.7"></a>
+## [5.1.7](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.6...v5.1.7) (2018-04-16)
+
+**Note:** Version bump only for package botfuel-dialog
+
+
+
+
+
 <a name="5.1.6"></a>
 ## [5.1.6](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.5...v5.1.6) (2018-04-16)
 
