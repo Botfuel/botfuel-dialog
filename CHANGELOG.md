@@ -3,71 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-<a name="5.1.7"></a>
-## [5.1.7](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.6...v5.1.7) (2018-04-16)
 
-**Note:** Version bump only for package botfuel-dialog
-
+<a name="6.0.0"></a>
+# [6.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.0...v6.0.0) (2018-04-17)
 
 
+### BREAKING CHANGE
 
+* Changed TextDialog to BaseDialog, and removed TextView. Now, if you would like to use a TextDialog, you use a BaseDialog instead, and if you would like to use a TextView, you use a general View instead (and you must implement render yourself. ([94a4763](https://github.com/Botfuel/botfuel-dialog/commit/94a4763))
 
-<a name="5.1.6"></a>
-## [5.1.6](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.5...v5.1.6) (2018-04-16)
-
-**Note:** Version bump only for package botfuel-dialog
-
-
-
-
-
-<a name="5.1.5"></a>
-## [5.1.5](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.4...v5.1.5) (2018-04-16)
-
-**Note:** Version bump only for package botfuel-dialog
-
-
-
-
-
-<a name="5.1.4"></a>
-## [5.1.4](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.3...v5.1.4) (2018-04-16)
-
-**Note:** Version bump only for package botfuel-dialog
-
-
-
-
-
-<a name="5.1.3"></a>
-## [5.1.3](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.2...v5.1.3) (2018-04-16)
-
-**Note:** Version bump only for package botfuel-dialog
-
-
-
-
-
-<a name="5.1.2"></a>
-## [5.1.2](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.1...v5.1.2) (2018-04-16)
-
-**Note:** Version bump only for package botfuel-dialog
-
-
-
-
-
-<a name="5.1.1"></a>
-## [5.1.1](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.0...v5.1.1) (2018-04-16)
-
-
-### Bug Fixes
-
-* bug in default view ([2bc3ca1](https://github.com/Botfuel/botfuel-dialog/commit/2bc3ca1))
-* render instead of getTexts ([5db077b](https://github.com/Botfuel/botfuel-dialog/commit/5db077b))
-
-
-
+* Change data structure in dialog: the data in dialog.execute function will contains all the necessary entities (like messageEntities, missingEntities, matchedEntities...) and possibly other keys from extraData ([4640b46](https://github.com/Botfuel/botfuel-dialog/commit/4640b46))
 
 
 <a name="5.1.0"></a>
@@ -85,9 +30,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * botfuel nlu use trainer api ([083f578](https://github.com/Botfuel/botfuel-dialog/commit/083f578))
 
 
-
-
-
 <a name="5.0.0"></a>
 # [5.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.3...v5.0.0) (2018-04-03)
 
@@ -100,17 +42,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * remove undefined value in matchedEntities object ([8f9555d](https://github.com/Botfuel/botfuel-dialog/commit/8f9555d))
 
 
-### Code Refactoring
-
-* (breaking change) store prompt dialog in brain with new strucutre {entities: ..., question:...} ([599b8c8](https://github.com/Botfuel/botfuel-dialog/commit/599b8c8))
-
-
 ### BREAKING CHANGES
 
-* this can cause conflict on running bot with MongoBrain
-
-
-
+* Store prompt dialog in brain with new strucutre {entities: ..., question:...}, this can cause conflict on running bot with MongoBrain ([599b8c8](https://github.com/Botfuel/botfuel-dialog/commit/599b8c8))
 
 
 <a name="4.4.3"></a>
@@ -121,8 +55,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 * fix style ([4f91f3e](https://github.com/Botfuel/botfuel-dialog/commit/4f91f3e))
 * send question for entity with highest priority first in prompt-view ([7a4a99e](https://github.com/Botfuel/botfuel-dialog/commit/7a4a99e))
-
-
 
 
 
