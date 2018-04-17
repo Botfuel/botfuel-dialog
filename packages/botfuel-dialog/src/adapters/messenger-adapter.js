@@ -220,7 +220,7 @@ class MessengerAdapter extends WebAdapter {
    */
   adapt(botMessage) {
     logger.debug('adapt', botMessage);
-    const payload = botMessage.payload;
+    const { payload } = botMessage;
     switch (botMessage.type) {
       case 'text':
         return this.adaptText(payload);

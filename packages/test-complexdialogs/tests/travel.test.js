@@ -22,7 +22,8 @@ const config = require('../test-config');
 describe('TravelDialog', () => {
   test('should have the proper interaction when the user gives the destination', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('I leave from Paris')]);
     expect(bot.adapter.log).toEqual(
       [
@@ -44,7 +45,8 @@ describe('TravelDialog', () => {
 
   test('should have the proper interaction when the user gives the destination then the date', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('I leave from Paris'), new UserTextMessage('tomorrow')]);
     expect(bot.adapter.log).toEqual(
       [
@@ -70,7 +72,8 @@ describe('TravelDialog', () => {
 
   test('should have the proper interaction when the user gives the destination twice', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([
       new UserTextMessage('I leave from Paris'),
       new UserTextMessage('Actually, I leave from Berlin'),
@@ -104,7 +107,8 @@ describe('TravelDialog', () => {
 
   test('should have the proper interaction when the user gives the date twice', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([
       new UserTextMessage('I leave from Paris'),
       new UserTextMessage('tomorrow'),

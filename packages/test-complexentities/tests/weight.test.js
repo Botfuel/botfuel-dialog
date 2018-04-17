@@ -20,7 +20,8 @@ const config = require('../test-config');
 describe('WeightDialog', () => {
   test('should replace the highest priority entity when all are fulfilled', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([
       new UserTextMessage('I weigh 77kg'),
       new UserTextMessage('88kg'),

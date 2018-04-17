@@ -40,8 +40,7 @@ class CorpusExtractor extends Extractor {
             values: [this.buildValue(row[0])],
             start: index.start,
             end: index.end,
-          }),
-        );
+          }));
       }
     }
     return entities;

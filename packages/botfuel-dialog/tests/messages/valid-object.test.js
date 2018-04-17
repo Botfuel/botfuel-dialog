@@ -48,8 +48,7 @@ describe('ValidObject', () => {
 
     test('Url is valid', () => {
       expect(() =>
-        new ValidObject().validateUrl('link', 'https://www.botfuel.io/en'),
-      ).not.toThrow();
+        new ValidObject().validateUrl('link', 'https://www.botfuel.io/en')).not.toThrow();
     });
   });
 });

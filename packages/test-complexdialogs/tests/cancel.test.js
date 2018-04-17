@@ -23,7 +23,8 @@ describe('Canceling', () => {
     'should cancel the previous dialog',
     async () => {
       const bot = new Bot(config);
-      const userId = bot.adapter.userId;
+      const { adapter } = bot;
+      const { userId } = adapter;
       await bot.play([
         new UserTextMessage('I want to buy a blue car.'),
         new UserTextMessage('I want to cancel.'),
@@ -58,7 +59,8 @@ describe('Canceling', () => {
     'should not cancel the previous dialog if user says no',
     async () => {
       const bot = new Bot(config);
-      const userId = bot.adapter.userId;
+      const { adapter } = bot;
+      const { userId } = adapter;
       await bot.play([
         new UserTextMessage('I want to buy a blue car.'),
         new UserTextMessage('I want to cancel.'),
@@ -94,7 +96,8 @@ describe('Canceling', () => {
     'should reset memory of the cancel dialog if user already canceled once',
     async () => {
       const bot = new Bot(config);
-      const userId = bot.adapter.userId;
+      const { adapter } = bot;
+      const { userId } = adapter;
       await bot.play([
         new UserTextMessage('I want to buy a blue car.'),
         new UserTextMessage('I want to cancel.'),

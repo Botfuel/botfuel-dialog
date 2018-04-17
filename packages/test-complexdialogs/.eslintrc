@@ -1,6 +1,5 @@
 {
   "extends": ["../../.eslintrc"],
   "rules": {
-    "require-jsdoc": "off"
   }
 }

@@ -21,7 +21,8 @@ const config = require('../test-config');
 describe('NameDialog', () => {
   test('should have the proper interaction when the user gives its name', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('My name is John')]);
     expect(bot.adapter.log).toEqual(
       [new UserTextMessage('My name is John'), new BotTextMessage('Entities defined: name')].map(
@@ -40,7 +41,8 @@ describe('NameDialog', () => {
 
   test('should ask for the forename', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Ask me my name'), new UserTextMessage('My name is John')]);
     expect(bot.adapter.log).toEqual(
       [

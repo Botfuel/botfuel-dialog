@@ -21,7 +21,8 @@ const config = require('../test-config');
 describe('SingleProductDialog', () => {
   Object.keys(PRODUCTS).map((key) => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     const product = PRODUCTS[key];
     return test(`should show the ${key} image`, async () => {
       await bot.play([new UserTextMessage(`Show me the ${key}.`)]);

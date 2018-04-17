@@ -20,7 +20,8 @@ const config = require('../test-config');
 describe('GuessDialog', () => {
   test('should keep prompting until it has the right answer', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([
       new UserTextMessage('Your favorite color is blue'),
       new UserTextMessage('Your favorite color is red'),

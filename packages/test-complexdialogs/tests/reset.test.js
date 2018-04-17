@@ -21,7 +21,8 @@ const config = require('../test-config');
 describe('ResetDialog', () => {
   test('should have the proper interaction when the user reset to greetings dialog', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('My name is John'), new UserTextMessage('reset')]);
     expect(bot.adapter.log).toEqual(
       [

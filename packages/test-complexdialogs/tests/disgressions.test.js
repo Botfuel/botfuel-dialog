@@ -24,7 +24,8 @@ describe('Disgressions', () => {
     () => {
       test('should handle digressions', async () => {
         const bot = new Bot(config);
-        const userId = bot.adapter.userId;
+        const { adapter } = bot;
+        const { userId } = adapter;
         await bot.play([
           new UserTextMessage('I am leaving from Paris'),
           new UserTextMessage('Hello'),
@@ -65,7 +66,8 @@ describe('Disgressions', () => {
     () => {
       test('should handle two turn digressions', async () => {
         const bot = new Bot(config);
-        const userId = bot.adapter.userId;
+        const { adapter } = bot;
+        const { userId } = adapter;
         await bot.play([
           new UserTextMessage('I leave from Paris'),
           new UserTextMessage('Ask me my name'),
