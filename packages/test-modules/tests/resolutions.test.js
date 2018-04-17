@@ -61,7 +61,8 @@ describe('Resolutions', () => {
 
   test('should use dialog and view extended from abstract classes defined in module', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('from bot')]);
     expect(bot.adapter.log).toEqual(
       [
