@@ -13,15 +13,21 @@ git clone git@github.com:Botfuel/botfuel-dialog.git
 
 ```shell
 yarn install
+yarn bootstrap
 ```
 
 ### Issue with node-gyp and Python v3.x
 
-Install [Python v2.7](https://www.python.org/downloads/release/python-2714/).
+Make sure that yarn uses python2.7.
+
+First, make sure that you have python2.7 installed. If not, install [Python v2.7](https://www.python.org/downloads/release/python-2714/).
+
+If python2.7 is not the default python version, you can use a virtualenv (`pew`) or:
 
 ```shell
-yarn config set python /path/to/python2.7 -g
+yarn config set python /path/to/your/python2.7 -g
 yarn install
+yarn bootstrap
 ```
 
 

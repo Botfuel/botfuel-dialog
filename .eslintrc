@@ -14,40 +14,16 @@
   "rules": {
     "class-methods-use-this": "off",
     "func-names": "off",
+    "function-paren-newline": ["error", "consistent"],
     "global-require": "off",
     "import/no-dynamic-require": "off",
     "import/order": ["error"],
     "jsx-a11y/href-no-hash": "off",
+    "object-curly-newline": ["error", { "consistent": true }],
     "no-param-reassign": "off",
     "no-plusplus": "off",
     "no-restricted-syntax": "off",
     "no-underscore-dangle": "off",
-    "strict": 0,
-    "valid-jsdoc": [
-      "error",
-      {
-        "requireReturn": true,
-        "requireReturnType": true,
-        "requireParamDescription": true,
-        "requireReturnDescription": false,
-        "prefer": {
-          "arg": "param",
-          "argument": "param",
-          "class": "constructor",
-          "return": "returns",
-          "virtual": "abstract"
-        }
-      }
-    ],
-    "require-jsdoc": [
-      "error",
-      {
-        "require": {
-          "FunctionDeclaration": true,
-          "MethodDefinition": true,
-          "ClassDeclaration": true
-        }
-      }
-    ]
+    "strict": 0
   }
 }
