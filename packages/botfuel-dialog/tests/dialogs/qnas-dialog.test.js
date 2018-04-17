@@ -16,16 +16,15 @@
 
 const Bot = require('../../src/bot');
 const QnasDialog = require('../../src/dialogs/qnas-dialog');
-const MemoryBrain = require('../../src/brains/memory-brain');
 const TEST_CONFIG = require('../../src/config').getConfiguration({
-  adapter: { name: 'shell' },
+  adapter: {
+    name: 'shell',
+  },
 });
 
-const TEST_BOT = new Bot(TEST_CONFIG);
-
 describe('QnasDialog', () => {
-  const brain = new MemoryBrain(TEST_CONFIG);
-  const dialog = new QnasDialog(TEST_BOT, TEST_CONFIG, brain);
+  const bot = new Bot(TEST_CONFIG);
+  const dialog = new QnasDialog(bot);
   const answers = [[{ value: 'answer' }]];
 
   test('should return the complete action', async () => {

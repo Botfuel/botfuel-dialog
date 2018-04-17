@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
+const Bot = require('../../src/bot');
 const ConfirmationDialog = require('../../src/dialogs/confirmation-dialog');
-const MemoryBrain = require('../../src/brains/memory-brain');
 const UserTextMessage = require('../../src/messages/user-text-message');
-const TEST_CONFIG = require('../../src/config').getConfiguration({});
+const TEST_CONFIG = require('../../src/config').getConfiguration({
+  brain: {
+    name: 'memory',
+  },
+});
 
 const USER_ID = 'USER';
-const TEST_BOT = null;
 
 describe('ConfirmationDialog', () => {
-  const brain = new MemoryBrain(TEST_CONFIG);
+  const bot = new Bot(TEST_CONFIG);
+  const { brain } = bot;
 
   beforeEach(async () => {
     await brain.addUser(USER_ID);
@@ -34,7 +38,7 @@ describe('ConfirmationDialog', () => {
   });
 
   test('should return the complete action', async () => {
-    const dialog = new ConfirmationDialog(TEST_BOT, TEST_CONFIG, brain, {
+    const dialog = new ConfirmationDialog(bot, {
       namespace: 'confirmation-dialog',
     });
     const action = await dialog.dialogWillComplete(new UserTextMessage('message').toJson(USER_ID), {
@@ -46,7 +50,7 @@ describe('ConfirmationDialog', () => {
   });
 
   test('should return the cancel action', async () => {
-    const dialog = new ConfirmationDialog(TEST_BOT, TEST_CONFIG, brain, {
+    const dialog = new ConfirmationDialog(bot, {
       namespace: 'confirmation-dialog',
     });
     const action = await dialog.dialogWillComplete(new UserTextMessage('message').toJson(USER_ID), {

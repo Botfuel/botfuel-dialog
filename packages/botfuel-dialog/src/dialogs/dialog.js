@@ -80,8 +80,9 @@ class Dialog {
    * @param {Object} characteristics - the characteristics of the dialog
    * @param {Object} [parameters={}] - the optional dialog parameters
    */
-  constructor(bot, config, brain, characteristics = { reentrant: false }, parameters = {}) {
+  constructor(bot, characteristics = { reentrant: false }, parameters = {}) {
     logger.debug('constructor', parameters);
+    const { config, brain } = bot;
     this.bot = bot;
     this.brain = brain;
     this.characteristics = characteristics;

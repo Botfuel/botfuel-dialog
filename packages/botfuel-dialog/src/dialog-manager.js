@@ -45,7 +45,7 @@ class DialogManager extends Resolver {
 
   /** @inheritdoc */
   resolutionSucceeded(Resolved) {
-    return new Resolved(this.bot, this.config, this.brain, Resolved.params);
+    return new Resolved(this.bot, Resolved.params);
   }
 
   /**

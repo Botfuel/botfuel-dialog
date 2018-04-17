@@ -46,8 +46,8 @@ class PromptDialog extends Dialog {
    * @param {Object} parameters - the dialog parameters,
    * parameters.entities is a map mapping entities to optional parameters
    */
-  constructor(bot, config, brain, parameters) {
-    super(bot, config, brain, { reentrant: true }, parameters);
+  constructor(bot, parameters) {
+    super(bot, { reentrant: true }, parameters);
   }
 
   /**

@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
+const Bot = require('../../src/bot');
 const VoidDialog = require('../../src/dialogs/void-dialog');
-const MemoryBrain = require('../../src/brains/memory-brain');
-const TEST_CONFIG = require('../../src/config').getConfiguration({});
-
-const TEST_BOT = null;
+const TEST_CONFIG = require('../../src/config').getConfiguration({
+  brain: {
+    name: 'memory',
+  },
+});
 
 describe('VoidDialog', () => {
-  const brain = new MemoryBrain(TEST_CONFIG);
-  const dialog = new VoidDialog(TEST_BOT, TEST_CONFIG, brain, {
+  const bot = new Bot(TEST_CONFIG);
+  const dialog = new VoidDialog(bot, {
     namespace: 'void-dialog',
   });
 

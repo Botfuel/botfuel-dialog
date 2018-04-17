@@ -28,10 +28,9 @@ const TEST_CONFIG = require('../../src/config').getConfiguration({
 
 describe('ClassificationDisambiguationDialog', () => {
   const bot = new Bot(TEST_CONFIG);
-  const { brain } = bot;
 
   test('should complete', async () => {
-    const dialog = new ClassificationDisambiguationDialog(bot, TEST_CONFIG, brain);
+    const dialog = new ClassificationDisambiguationDialog(bot);
     const classificationResults = [
       new ClassificationResult({
         type: ClassificationResult.TYPE_INTENT,
