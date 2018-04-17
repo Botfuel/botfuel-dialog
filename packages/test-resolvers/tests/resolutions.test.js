@@ -39,12 +39,12 @@ describe('Resolutions', () => {
 
   test('should respond to simple dialog with custom brain and nlu', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Hello')]);
     expect(bot.adapter.log).toEqual(
       [new UserTextMessage('Hello'), new BotTextMessage('Hello human!')].map(msg =>
-        msg.toJson(userId),
-      ),
+        msg.toJson(userId)),
     );
 
     const user = await bot.brain.getUser(userId);
@@ -58,12 +58,12 @@ describe('Resolutions', () => {
 
   test('should respond to dialog specific to the adapter and to view specific to language', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Goodbye')]);
     expect(bot.adapter.log).toEqual(
       [new UserTextMessage('Goodbye'), new BotTextMessage('Goodbye human!')].map(msg =>
-        msg.toJson(userId),
-      ),
+        msg.toJson(userId)),
     );
 
     const user = await bot.brain.getUser(userId);

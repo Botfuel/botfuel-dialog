@@ -21,7 +21,8 @@ const config = require('../test-config');
 describe('Question', () => {
   test('should complete dialog if the first answer is no', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
 
     await bot.play([new UserTextMessage('Ask me a question.'), new UserTextMessage('No.')]);
 
@@ -47,7 +48,8 @@ describe('Question', () => {
 
   test('should ask the second question if the first answer is yes', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
 
     await bot.play([
       new UserTextMessage('Ask me a question.'),

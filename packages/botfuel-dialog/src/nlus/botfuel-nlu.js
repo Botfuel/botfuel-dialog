@@ -152,7 +152,9 @@ class BotfuelNlu extends Nlu {
       const qnas = await this.qna.getMatchingQnas({ sentence });
       logger.debug('computeWithQna: qnas', qnas);
 
-      const strict = this.config.nlu.qna.strict;
+      const { nlu } = this.config;
+      const { qna } = nlu;
+      const { strict } = qna;
       if ((strict && qnas.length === 1) || (!strict && qnas.length > 0)) {
         const qnaResults = [
           new ClassificationResult({

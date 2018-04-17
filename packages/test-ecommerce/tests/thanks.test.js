@@ -21,12 +21,12 @@ const config = require('../test-config');
 describe('ThanksDialog', () => {
   test('should understand when the user mispells', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Thenks')]);
     expect(bot.adapter.log).toEqual(
       [new UserTextMessage('Thenks'), new BotTextMessage("You're welcome!")].map(msg =>
-        msg.toJson(userId),
-      ),
+        msg.toJson(userId)),
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);

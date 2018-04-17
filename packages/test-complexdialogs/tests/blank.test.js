@@ -21,12 +21,12 @@ const config = require('../test-config');
 describe('Blank', () => {
   test('should handle blank input when no previous dialog', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('')]);
     expect(bot.adapter.log).toEqual(
       [new UserTextMessage(''), new BotTextMessage('Not understood.')].map(msg =>
-        msg.toJson(userId),
-      ),
+        msg.toJson(userId)),
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
@@ -39,7 +39,8 @@ describe('Blank', () => {
 
   test('should handle blank input when previous dialog is not understood', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage(''), new UserTextMessage('')]);
     expect(bot.adapter.log).toEqual(
       [

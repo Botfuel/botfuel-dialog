@@ -21,12 +21,12 @@ const config = require('../test-config');
 describe('Greetings', () => {
   test('should respond to Hello', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Hello')]);
     expect(bot.adapter.log).toEqual(
       [new UserTextMessage('Hello'), new BotTextMessage('Hello human!')].map(msg =>
-        msg.toJson(userId),
-      ),
+        msg.toJson(userId)),
     );
 
     const user = await bot.brain.getUser(userId);

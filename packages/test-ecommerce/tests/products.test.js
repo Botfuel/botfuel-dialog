@@ -32,7 +32,8 @@ const config = require('../test-config');
 describe('Products', () => {
   test('should understand the click on the buy button', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([
       new UserTextMessage('Show me the products.'),
       new PostbackMessage('products', [{ dim: 'product', values: ['top hat'] }]),

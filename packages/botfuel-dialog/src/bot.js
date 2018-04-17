@@ -15,7 +15,7 @@
  */
 
 const Logger = require('logtown');
-const Spellchecking = require('botfuel-nlp-sdk').Spellchecking;
+const { Spellchecking } = require('botfuel-nlp-sdk');
 const AdapterResolver = require('./adapter-resolver');
 const BrainResolver = require('./brain-resolver');
 const NluResolver = require('./nlu-resolver');

@@ -21,7 +21,8 @@ const config = require('../test-config');
 describe('GreetingsDialog', () => {
   test('should have the proper interaction when the bot not understand', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([
       new UserTextMessage('Hello bot!'),
       new UserTextMessage("What's the weather today ?"),
@@ -45,7 +46,8 @@ describe('GreetingsDialog', () => {
 
   test('should say something different when greeting for the second time', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Hello bot!'), new UserTextMessage('Hello bot!')]);
     expect(bot.adapter.log).toEqual(
       [

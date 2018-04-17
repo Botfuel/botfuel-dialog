@@ -21,7 +21,8 @@ const config = require('../test-config');
 describe('Out ', () => {
   test('should set brain isOutMiddlewareWorking to true', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Hello')]);
     expect(await bot.brain.userGet(userId, 'isOutMiddlewareWorking')).toBe(true);
   });

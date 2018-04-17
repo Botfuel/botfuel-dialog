@@ -21,7 +21,8 @@ const config = require('../test-config');
 describe('Mute', () => {
   test('should mute the bot', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Mute'), new UserTextMessage("What's up")]);
     expect(bot.adapter.log).toEqual(
       [

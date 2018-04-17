@@ -21,7 +21,8 @@ const config = require('../test-config');
 describe('Alcohol', () => {
   test('should complete dialog', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
 
     await bot.play([
       new UserTextMessage('I want to drink alcohol.'),

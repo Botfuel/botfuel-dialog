@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const MongoClient = require('mongodb').MongoClient;
+const { MongoClient } = require('mongodb');
 const logger = require('logtown')('MongoBrain');
 const MissingCredentialsError = require('../errors/missing-credentials-error');
 const Brain = require('./brain');

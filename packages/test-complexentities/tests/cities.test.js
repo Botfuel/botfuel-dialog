@@ -20,7 +20,8 @@ const config = require('../test-config');
 describe('CitiesDialog', () => {
   test('should keep prompting until it has all 5 cities', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([
       new UserTextMessage('My favorite cities are Paris and Marseille'),
       new UserTextMessage('Toulouse'),
@@ -54,7 +55,8 @@ describe('CitiesDialog', () => {
 
   test('should replace cities with a new list if it already has 5 cities', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([
       new UserTextMessage('My favorite cities are Paris and Marseille'),
       new UserTextMessage('Toulouse'),

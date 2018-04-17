@@ -21,7 +21,8 @@ const config = require('../test-config');
 describe('Chaining', () => {
   test('should call a second dialog', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('I want to buy a blue automatic car.')]);
     expect(bot.adapter.log).toEqual(
       [

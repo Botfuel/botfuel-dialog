@@ -883,8 +883,8 @@ describe('PromptDialog', () => {
       },
     });
     const bot = new Bot(config);
-    const adapter = bot.adapter;
-    const userId = adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
 
     const prompt = new PromptDialog(TEST_CONFIG, bot.brain, {
       namespace: 'testdialog',

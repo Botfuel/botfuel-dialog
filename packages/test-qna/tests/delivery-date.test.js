@@ -25,7 +25,8 @@ describe('Delivery date', () => {
   test('should give expected delivery date', async () => {
     const clock = sinon.useFakeTimers(REFERENCE_INSTANT);
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
 
     await bot.play([new UserTextMessage('What is the expected delivery date?')]);
 

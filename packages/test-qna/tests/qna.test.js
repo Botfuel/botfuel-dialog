@@ -27,7 +27,8 @@ const config = require('../test-config');
 describe('Qna', () => {
   test('should respond when not understood', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Where is bryan ?')]);
     expect(bot.adapter.log).toEqual(
       [
@@ -95,7 +96,8 @@ describe('Qna', () => {
 
   test('should respond to hello', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Hello')]);
     expect(bot.adapter.log).toEqual(
       [
@@ -116,7 +118,8 @@ describe('Qna', () => {
 
   test('should respond to invoice question', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Could you send me an invoice please?')]);
     expect(bot.adapter.log).toEqual(
       [
@@ -137,7 +140,8 @@ describe('Qna', () => {
 
   test('should respond to assistance need', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('A have a problem on the website.')]);
     expect(bot.adapter.log).toEqual(
       [
@@ -158,7 +162,8 @@ describe('Qna', () => {
 
   test('should respond question about payment options', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Can I pay in bitcoins?')]);
     expect(bot.adapter.log).toEqual(
       [
@@ -179,7 +184,8 @@ describe('Qna', () => {
 
   test('should respond to question about shipping policy', async () => {
     const bot = new Bot(config);
-    const userId = bot.adapter.userId;
+    const { adapter } = bot;
+    const { userId } = adapter;
     await bot.play([new UserTextMessage('Do you ship to France?')]);
     expect(bot.adapter.log).toEqual(
       [
