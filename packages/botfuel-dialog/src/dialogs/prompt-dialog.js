@@ -41,8 +41,6 @@ class PromptDialog extends Dialog {
   /**
    * @constructor
    * @param {class} bot - the bot
-   * @param {Object} config - the bot config
-   * @param {class} brain - the bot brain
    * @param {Object} parameters - the dialog parameters,
    * parameters.entities is a map mapping entities to optional parameters
    */

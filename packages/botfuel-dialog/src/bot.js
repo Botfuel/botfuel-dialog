@@ -183,26 +183,20 @@ class Bot {
    * Responds to the user.
    * @async
    * @param {Object} userMessage - the user message
-   * @returns {Promise.<void>}
+   * @returns {Promise.<Object[]>}
    */
   async respond(userMessage) {
-    let botMessages;
-
     logger.debug('respond', userMessage);
 
     switch (userMessage.type) {
       case 'postback':
-        botMessages = await this.respondWhenPostback(userMessage);
-        break;
+        return this.respondWhenPostback(userMessage);
       case 'image':
-        botMessages = await this.respondWhenImage(userMessage);
-        break;
+        return this.respondWhenImage(userMessage);
       case 'text':
       default:
-        botMessages = await this.respondWhenText(userMessage);
+        return this.respondWhenText(userMessage);
     }
-
-    return botMessages;
   }
 
   /**

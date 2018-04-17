@@ -29,8 +29,6 @@ class DialogManager extends Resolver {
   /**
    * @constructor
    * @param {Object} bot - the bot
-   * @param {Object} brain - the bot brain
-   * @param {Object} config - the bot config
    */
   constructor(bot) {
     const { brain, config } = bot;
@@ -221,18 +219,21 @@ class DialogManager extends Resolver {
    * @async
    * @param {Object} userMessage - the user message
    * @param {Object[]} dialogs - the dialogs data
+   * @param {Object[]} botMessagesAccumulator - the bot messages from previous dialogs
    * @returns {Promise.<Object[]>}
    */
-  async execute(userMessage, dialogs, previousBotMessages) {
-    let botMessages = previousBotMessages;
+  async execute(userMessage, dialogs, botMessagesAccumulator = []) {
+    logger.debug('execute', userMessage, dialogs, botMessagesAccumulator);
 
-    logger.debug('execute', userMessage, dialogs);
+    let botMessages = botMessagesAccumulator;
+
     if (dialogs.stack.length === 0) {
       return {
         dialogs,
         botMessages,
       };
     }
+
     const dialog = dialogs.stack[dialogs.stack.length - 1];
     if (dialog.blocked) {
       dialog.blocked = false;
@@ -247,21 +248,21 @@ class DialogManager extends Resolver {
         data: {},
       });
     } else {
-      const { action, botMessages: newBotMessages } = await this.resolve(dialog.name).execute(
+      const dialogInstance = this.resolve(dialog.name);
+      const { action, botMessages: newBotMessages } = await dialogInstance.execute(
         userMessage,
         dialog.data,
       );
       botMessages = botMessages.concat(newBotMessages);
 
       logger.debug('execute: action', action);
-      if (action.name !== Dialog.ACTION_WAIT) {
-        dialogs = await this.applyAction(dialogs, action);
-      } else {
+      if (action.name === Dialog.ACTION_WAIT) {
         return {
           dialogs,
           botMessages,
         };
       }
+      dialogs = await this.applyAction(dialogs, action);
     }
     return this.execute(userMessage, dialogs, botMessages);
   }
@@ -271,14 +272,14 @@ class DialogManager extends Resolver {
    * @param {Object} userMessage - the user message
    * @param {Object[]} classificationResults - the classification results from trainer
    * @param {Object[]} messageEntities - the message entities
-   * @returns {void}
+   * @returns {Promise.<Object[]>}
    */
   async executeClassificationResults(userMessage, classificationResults, messageEntities) {
     logger.debug('classificationResult', userMessage, classificationResults, messageEntities);
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithClassificationResults(userId, dialogs, classificationResults, messageEntities);
-    const { dialogs: newDialogs, botMessages } = await this.execute(userMessage, dialogs, []);
+    const { dialogs: newDialogs, botMessages } = await this.execute(userMessage, dialogs);
     await this.setDialogs(userId, newDialogs);
     return botMessages;
   }
@@ -287,14 +288,14 @@ class DialogManager extends Resolver {
    * Populates and executes the stack.
    * @param {Object} userMessage - the user message
    * @param {Object[]} newDialog - the new dialogs
-   * @returns {void}
+   * @returns {Promise.<Object[]>}
    */
   async executeDialog(userMessage, newDialog) {
     logger.debug('executeDialog', userMessage, newDialog);
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithDialog(dialogs, newDialog);
-    const { dialogs: newDialogs, botMessages } = await this.execute(userMessage, dialogs, []);
+    const { dialogs: newDialogs, botMessages } = await this.execute(userMessage, dialogs);
     await this.setDialogs(userId, newDialogs);
     return botMessages;
   }
