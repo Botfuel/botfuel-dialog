@@ -27,9 +27,10 @@ describe('VoidDialog', () => {
   });
 
   test('should return the complete action', async () => {
-    const action = await dialog.execute({}, []);
+    const { action, botMessages } = await dialog.execute({}, []);
     expect(action).toEqual({
       name: VoidDialog.ACTION_COMPLETE,
     });
+    expect(botMessages).toEqual([]);
   });
 });

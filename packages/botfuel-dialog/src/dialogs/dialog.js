@@ -108,7 +108,7 @@ class Dialog {
   async display(userMessage, data) {
     logger.debug('display', userMessage, data);
     const botMessages = this.viewResolver.resolve(this.name).renderAsJson(userMessage, data);
-    return this.bot.send(botMessages, userMessage);
+    return botMessages;
   }
 
   /**

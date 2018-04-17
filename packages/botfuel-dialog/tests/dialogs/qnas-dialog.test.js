@@ -29,7 +29,7 @@ describe('QnasDialog', () => {
   const answers = [[{ value: 'answer' }]];
 
   test('should return the complete action', async () => {
-    const action = await dialog.execute({}, { answers });
+    const { action } = await dialog.execute({}, { answers });
     expect(action).toEqual({
       name: QnasDialog.ACTION_COMPLETE,
     });

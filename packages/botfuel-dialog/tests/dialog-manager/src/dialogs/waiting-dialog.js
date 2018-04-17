@@ -25,7 +25,10 @@ class Waiting extends Dialog {
    * @returns {string}
    */
   async execute() {
-    return this.wait();
+    return {
+      action: this.wait(),
+      botMessages: [],
+    };
   }
 }
 

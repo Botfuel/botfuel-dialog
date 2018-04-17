@@ -316,13 +316,19 @@ class PromptDialog extends Dialog {
     const extraData = await this.dialogWillDisplay(userMessage, data);
     data = this.mergeData(extraData, data);
 
-    await this.display(userMessage, data);
+    const botMessages = await this.display(userMessage, data);
 
     if (missingEntities.size === 0) {
-      const action = await this.dialogWillComplete(userMessage, data);
-      return action || this.complete();
+      const action = (await this.dialogWillComplete(userMessage, data)) || this.complete();
+      return {
+        action,
+        botMessages,
+      };
     }
-    return this.wait();
+    return {
+      action: this.wait(),
+      botMessages,
+    };
   }
 }
 
