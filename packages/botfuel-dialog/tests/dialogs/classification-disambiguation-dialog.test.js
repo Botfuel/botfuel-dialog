@@ -46,9 +46,11 @@ describe('ClassificationDisambiguationDialog', () => {
       }),
     ];
 
-    expect(
-      await dialog.execute({ user: 'TEST_USER' }, { classificationResults, messageEntities: [] }),
-    ).toEqual({
+    const { action } = await dialog.execute(
+      { user: 'TEST_USER' },
+      { classificationResults, messageEntities: [] },
+    );
+    expect(action).toEqual({
       name: ClassificationDisambiguationDialog.ACTION_COMPLETE,
     });
   });

@@ -152,16 +152,31 @@ class Bot {
    * @returns {Promise.<void>}
    */
   async handleMessage(userMessage) {
+    let botMessages = [];
+
     logger.debug('handleMessage', userMessage);
-    const context = {
+
+    const contextIn = {
       user: userMessage.user,
       brain: this.brain,
       userMessage,
       config: this.config,
     };
-    await this.middlewareManager.in(context, async () => {
-      await this.respond(userMessage);
+
+    await this.middlewareManager.in(contextIn, async () => {
+      botMessages = await this.respond(userMessage);
     });
+
+    const contextOut = {
+      user: userMessage.user,
+      brain: this.brain,
+      botMessages,
+      config: this.config,
+      userMessage,
+    };
+    await this.middlewareManager.out(contextOut, async () => {});
+
+    return botMessages;
   }
 
   /**
@@ -171,18 +186,23 @@ class Bot {
    * @returns {Promise.<void>}
    */
   async respond(userMessage) {
+    let botMessages;
+
     logger.debug('respond', userMessage);
+
     switch (userMessage.type) {
       case 'postback':
-        await this.respondWhenPostback(userMessage);
+        botMessages = await this.respondWhenPostback(userMessage);
         break;
       case 'image':
-        await this.respondWhenImage(userMessage);
+        botMessages = await this.respondWhenImage(userMessage);
         break;
       case 'text':
       default:
-        await this.respondWhenText(userMessage);
+        botMessages = await this.respondWhenText(userMessage);
     }
+
+    return botMessages;
   }
 
   /**
@@ -204,11 +224,12 @@ class Bot {
     });
 
     logger.debug('respondWhenText: classificationResults', classificationResults, messageEntities);
-    await this.dm.executeClassificationResults(
+    const botMessages = await this.dm.executeClassificationResults(
       userMessage,
       classificationResults,
       messageEntities,
     );
+    return botMessages;
   }
 
   /**
@@ -224,7 +245,8 @@ class Bot {
       name: userMessage.payload.value.dialog,
       data: { messageEntities: userMessage.payload.value.entities },
     };
-    await this.dm.executeDialog(userMessage, dialog);
+    const botMessages = await this.dm.executeDialog(userMessage, dialog);
+    return botMessages;
   }
 
   /**
@@ -240,34 +262,8 @@ class Bot {
       name: 'image',
       data: { url: userMessage.payload.value },
     };
-    await this.dm.executeDialog(userMessage, dialog);
-  }
-
-  /**
-   * Iterates over the bot messages and send them to adapter.
-   * @async
-   * @param {Object[]} botMessages - the bot messages
-   * @param {Object} userMessage - the user message
-   * @returns {Promise.<void>}
-   */
-  async send(botMessages, userMessage) {
-    logger.debug('send', botMessages);
-    const context = {
-      user: userMessage.user,
-      brain: this.brain,
-      botMessages,
-      config: this.config,
-      userMessage,
-    };
-    await this.middlewareManager.out(context, async () => {
-      for (const botMessage of botMessages) {
-        // TODO: Remove this ugly line
-        const extendedBotMessage = this.adapter.extendMessage(botMessage);
-
-        // eslint-disable-next-line no-await-in-loop
-        await this.adapter.sendMessage(extendedBotMessage);
-      }
-    });
+    const botMessages = await this.dm.executeDialog(userMessage, dialog);
+    return botMessages;
   }
 
   /**

@@ -220,10 +220,15 @@ class DialogManager extends Resolver {
    * @param {Object[]} dialogs - the dialogs data
    * @returns {Promise.<Object[]>}
    */
-  async execute(userMessage, dialogs) {
+  async execute(userMessage, dialogs, previousBotMessages) {
+    let botMessages = previousBotMessages;
+
     logger.debug('execute', userMessage, dialogs);
     if (dialogs.stack.length === 0) {
-      return dialogs;
+      return {
+        dialogs,
+        botMessages,
+      };
     }
     const dialog = dialogs.stack[dialogs.stack.length - 1];
     if (dialog.blocked) {
@@ -239,15 +244,23 @@ class DialogManager extends Resolver {
         data: {},
       });
     } else {
-      const action = await this.resolve(dialog.name).execute(userMessage, dialog.data);
+      const { action, botMessages: newBotMessages } = await this.resolve(dialog.name).execute(
+        userMessage,
+        dialog.data,
+      );
+      botMessages = botMessages.concat(newBotMessages);
+
       logger.debug('execute: action', action);
       if (action.name !== Dialog.ACTION_WAIT) {
         dialogs = await this.applyAction(dialogs, action);
       } else {
-        return dialogs;
+        return {
+          dialogs,
+          botMessages,
+        };
       }
     }
-    return this.execute(userMessage, dialogs);
+    return this.execute(userMessage, dialogs, botMessages);
   }
 
   /**
@@ -262,7 +275,9 @@ class DialogManager extends Resolver {
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithClassificationResults(userId, dialogs, classificationResults, messageEntities);
-    await this.setDialogs(userId, await this.execute(userMessage, dialogs));
+    const { dialogs: newDialogs, botMessages } = await this.execute(userMessage, dialogs, []);
+    await this.setDialogs(userId, newDialogs);
+    return botMessages;
   }
 
   /**
@@ -276,7 +291,9 @@ class DialogManager extends Resolver {
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithDialog(dialogs, newDialog);
-    await this.setDialogs(userId, await this.execute(userMessage, dialogs));
+    const { dialogs: newDialogs, botMessages } = await this.execute(userMessage, dialogs, []);
+    await this.setDialogs(userId, newDialogs);
+    return botMessages;
   }
 }
 

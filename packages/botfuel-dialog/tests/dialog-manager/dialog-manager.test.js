@@ -36,7 +36,7 @@ const classificationDisambiguationDialog = { name: 'classification-disambiguatio
 
 describe('DialogManager', () => {
   const bot = new Bot(TEST_CONFIG);
-  const { brain, dm, adapter } = bot;
+  const { brain, dm } = bot;
 
   beforeEach(async () => {
     await brain.clean();
@@ -52,8 +52,8 @@ describe('DialogManager', () => {
   });
 
   test('should not crash when no intent', async () => {
-    await dm.executeClassificationResults({ user: TEST_USER }, [], []);
-    expect(adapter.log).toEqual([new BotTextMessage('Not understood.').toJson(TEST_USER)]);
+    const botMessages = await dm.executeClassificationResults({ user: TEST_USER }, [], []);
+    expect(botMessages).toEqual([new BotTextMessage('Not understood.').toJson(TEST_USER)]);
   });
 
   test('should keep on the stack a dialog which is waiting', async () => {

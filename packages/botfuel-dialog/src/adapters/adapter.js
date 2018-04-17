@@ -66,7 +66,15 @@ class Adapter {
   async handleMessage(userMessage) {
     logger.debug('handleMessage', userMessage);
     await this.addUserIfNecessary(userMessage.user);
-    return this.bot.handleMessage(this.extendMessage(userMessage));
+    const botMessages = await this.bot.handleMessage(this.extendMessage(userMessage));
+
+    for (const botMessage of botMessages) {
+      // TODO: Remove this ugly line
+      const extendedBotMessage = this.extendMessage(botMessage);
+
+      // eslint-disable-next-line no-await-in-loop
+      await this.sendMessage(extendedBotMessage);
+    }
   }
 
   /**
