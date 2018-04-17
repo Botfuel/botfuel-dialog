@@ -32,8 +32,11 @@ class DialogManager extends Resolver {
    * @param {Object} brain - the bot brain
    * @param {Object} config - the bot config
    */
-  constructor(bot, brain, config) {
+  constructor(bot) {
+    const { brain, config } = bot;
+
     super(config, 'dialog');
+
     this.bot = bot;
     this.brain = brain;
   }

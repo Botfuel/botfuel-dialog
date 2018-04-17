@@ -50,7 +50,7 @@ class Bot {
     this.brain = new BrainResolver(this).resolve(this.config.brain.name);
     this.spellchecking = null;
     this.nlu = new NluResolver(this).resolve(this.config.nlu.name);
-    this.dm = new DialogManager(this, this.brain, this.config);
+    this.dm = new DialogManager(this);
     this.adapter = new AdapterResolver(this).resolve(this.config.adapter.name);
     this.middlewareManager = new MiddlewareManager(this);
   }
