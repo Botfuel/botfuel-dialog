@@ -16,7 +16,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { omitBy } = require('lodash');
+const _ = require('lodash');
 const logger = require('logtown')('Config');
 const LoggerManager = require('./logger-manager');
 const ConfigurationError = require('./errors/configuration-error');
@@ -108,10 +108,12 @@ const getComponentRoots = function (config) {
  */
 const getConfiguration = (botConfig = {}) => {
   // get the config by extending defaultConfig with botConfig
-  const config = Object.assign(
+  const config = _.merge(
     defaultConfig,
-    omitBy(botConfig, (val, key) => !whitelist.includes(key)),
+    _.omitBy(botConfig, (val, key) => !whitelist.includes(key)),
   );
+
+  Object.assign(defaultConfig);
 
   config.brain.conversationDuration =
     config.brain.conversationDuration || DEFAULT_CONVERSATION_DURATION;
