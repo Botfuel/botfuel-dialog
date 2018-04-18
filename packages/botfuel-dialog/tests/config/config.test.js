@@ -49,4 +49,10 @@ describe('Config', () => {
   test('should throw an error when file not exists', () => {
     expect(() => resolveConfigFile('invalid')).toThrow();
   });
+
+  test('should merge correctly config', () => {
+    const config = getConfiguration({ nlu: { name: 'custom' } });
+    expect(config.adapter.name).toEqual('botfuel');
+    expect(config.nlu.intentThreshold).toBeDefined();
+  });
 });
