@@ -27,7 +27,6 @@ module.exports = {
   logger: 'error',
   nlu: {
     name: 'custom',
-    intentThreshold: 0.75,
     nluSecretSauce: 43,
   },
   path: __dirname,

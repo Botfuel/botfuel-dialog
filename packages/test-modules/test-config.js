@@ -28,7 +28,6 @@ module.exports = {
   modules: ['botfuel-module-sample'],
   nlu: {
     name: 'sample-module',
-    intentThreshold: 0.75,
     nluSecretSauce: 43,
   },
   path: __dirname,
