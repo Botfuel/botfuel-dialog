@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="7.0.0"></a>
+# [7.0.0](https://github.com/Botfuel/bot-sdk2/compare/v5.1.7...v7.0.0) (2018-04-18)
+
+
+### Bug Fixes
+
+* adapter style fix ([79b79b1](https://github.com/Botfuel/bot-sdk2/commit/79b79b1))
+* added resolutions test back, all tests pass! ([eb89d9f](https://github.com/Botfuel/bot-sdk2/commit/eb89d9f))
+* fix merge config to default config ([6d9943c](https://github.com/Botfuel/bot-sdk2/commit/6d9943c))
+* Update predefined dialogs ([988e025](https://github.com/Botfuel/bot-sdk2/commit/988e025))
+
+
+### Code Refactoring
+
+* Do not call adapters in dialogs ([656d884](https://github.com/Botfuel/bot-sdk2/commit/656d884))
+* Do not pass brain and config to Dialog constructor ([b2eec6f](https://github.com/Botfuel/bot-sdk2/commit/b2eec6f))
+* Pass bot messages by return value ([2501685](https://github.com/Botfuel/bot-sdk2/commit/2501685))
+
+
+### BREAKING CHANGES
+
+* Do not pass brain and config to Dialog
+constructor because the bot is already passed.
+* * Dialog.execute() returns an object with keys action and
+botMessage().
+* * Add new parameters Bot of Dialog constructor
+* Remove 1st paramters Adapter of methods
+Dialog.execute(), Dialog.display()
+
+
+
+
 
 <a name="6.0.0"></a>
 # [6.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.0...v6.0.0) (2018-04-17)
