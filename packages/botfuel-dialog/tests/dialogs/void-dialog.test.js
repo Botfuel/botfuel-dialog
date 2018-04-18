@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
+const Bot = require('../../src/bot');
 const VoidDialog = require('../../src/dialogs/void-dialog');
-const MemoryBrain = require('../../src/brains/memory-brain');
-const TEST_CONFIG = require('../../src/config').getConfiguration({});
+const TEST_CONFIG = require('../../src/config').getConfiguration({
+  brain: {
+    name: 'memory',
+  },
+});
 
 describe('VoidDialog', () => {
-  const brain = new MemoryBrain(TEST_CONFIG);
-  const dialog = new VoidDialog(TEST_CONFIG, brain, {
+  const bot = new Bot(TEST_CONFIG);
+  const dialog = new VoidDialog(bot, {
     namespace: 'void-dialog',
   });
 
   test('should return the complete action', async () => {
-    const action = await dialog.execute(null, {}, []);
+    const { action, botMessages } = await dialog.execute({}, []);
     expect(action).toEqual({
       name: VoidDialog.ACTION_COMPLETE,
     });
+    expect(botMessages).toEqual([]);
   });
 });

@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-const PromptDialog = require('../../src/dialogs/prompt-dialog');
-const MemoryBrain = require('../../src/brains/memory-brain');
 const Bot = require('../../src/bot');
+const PromptDialog = require('../../src/dialogs/prompt-dialog');
 const Config = require('../../src/config');
 
-const TEST_CONFIG = Config.getConfiguration({});
+const TEST_CONFIG = Config.getConfiguration({
+  adapter: {
+    name: 'test',
+  },
+  brain: {
+    name: 'memory',
+  },
+});
+
+const bot = new Bot(TEST_CONFIG);
 
 describe('PromptDialog', () => {
   describe('computeEntities', () => {
-    const brain = new MemoryBrain(TEST_CONFIG);
-    const prompt = new PromptDialog(TEST_CONFIG, brain, {
+    const prompt = new PromptDialog(bot, {
       namespace: 'testdialog',
       entities: {},
     });
@@ -849,8 +856,7 @@ describe('PromptDialog', () => {
   });
 
   describe('sort missing entities', () => {
-    const brain = new MemoryBrain(TEST_CONFIG);
-    const prompt = new PromptDialog(TEST_CONFIG, brain, {
+    const prompt = new PromptDialog(bot, {
       namespace: 'testdialog',
       entities: {},
     });
@@ -877,16 +883,10 @@ describe('PromptDialog', () => {
   });
 
   describe('excecute', () => {
-    const config = Config.getConfiguration({
-      adapter: {
-        name: 'test',
-      },
-    });
-    const bot = new Bot(config);
     const { adapter } = bot;
     const { userId } = adapter;
 
-    const prompt = new PromptDialog(TEST_CONFIG, bot.brain, {
+    const prompt = new PromptDialog(bot, {
       namespace: 'testdialog',
       entities: {
         a: {
@@ -916,7 +916,7 @@ describe('PromptDialog', () => {
       ];
 
       await prompt.brain.addUser(userId);
-      await prompt.execute(adapter, { user: userId }, messageEntities);
+      await prompt.execute({ user: userId }, messageEntities);
       const conversation = await prompt.brain.getLastConversation(userId);
       expect(conversation).toHaveProperty('testdialog');
       expect(conversation.testdialog).toHaveProperty('_entities');

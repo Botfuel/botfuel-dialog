@@ -17,7 +17,6 @@
 const uuidv4 = require('uuid/v4');
 const logger = require('logtown')('Adapter');
 const MissingImplementationError = require('../errors/missing-implementation-error');
-const MiddlewareManager = require('../middleware-manager');
 
 /**
  * An adapter adapts the messages to the messaging platform.
@@ -30,7 +29,6 @@ class Adapter {
   constructor(bot) {
     logger.debug('constructor');
     this.bot = bot;
-    this.middlewareManager = new MiddlewareManager(bot);
   }
 
   /**
@@ -60,30 +58,6 @@ class Adapter {
   }
 
   /**
-   * Iterates over the bot messages and send them to the messaging platform.
-   * @async
-   * @param {Object[]} botMessages - the bot messages
-   * @param {Object} userMessage - the user message
-   * @returns {Promise.<void>}
-   */
-  async send(botMessages, userMessage) {
-    logger.debug('send', botMessages);
-    const context = {
-      user: userMessage.user,
-      brain: this.bot.brain,
-      botMessages,
-      config: this.bot.config,
-      userMessage,
-    };
-    await this.middlewareManager.out(context, async () => {
-      for (const botMessage of botMessages) {
-        // eslint-disable-next-line no-await-in-loop
-        await this.sendMessage(this.extendMessage(botMessage));
-      }
-    });
-  }
-
-  /**
    * Handles a user message.
    * @async
    * @param {Object} userMessage - the user message
@@ -92,15 +66,15 @@ class Adapter {
   async handleMessage(userMessage) {
     logger.debug('handleMessage', userMessage);
     await this.addUserIfNecessary(userMessage.user);
-    const context = {
-      user: userMessage.user,
-      brain: this.bot.brain,
-      userMessage,
-      config: this.bot.config,
-    };
-    await this.middlewareManager.in(context, async () => {
-      await this.bot.respond(this.extendMessage(userMessage));
-    });
+    const botMessages = await this.bot.handleMessage(this.extendMessage(userMessage));
+
+    for (const botMessage of botMessages) {
+      // TODO: Remove this ugly line
+      const extendedBotMessage = this.extendMessage(botMessage);
+
+      // eslint-disable-next-line no-await-in-loop
+      await this.sendMessage(extendedBotMessage);
+    }
   }
 
   /**

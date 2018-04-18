@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
+const Bot = require('../../src/bot');
 const ClassificationResult = require('../../src/nlus/classification-result');
 const ClassificationDisambiguationDialog = require('../../src/dialogs/classification-disambiguation-dialog');
-const MemoryBrain = require('../../src/brains/memory-brain');
-const TestAdapter = require('../../src/adapters/test-adapter');
-const TEST_CONFIG = require('../../src/config').getConfiguration({});
+const TEST_CONFIG = require('../../src/config').getConfiguration({
+  adapter: {
+    name: 'test',
+  },
+  brain: {
+    name: 'memory',
+  },
+});
 
 describe('ClassificationDisambiguationDialog', () => {
-  const brain = new MemoryBrain(TEST_CONFIG);
+  const bot = new Bot(TEST_CONFIG);
 
   test('should complete', async () => {
-    const dialog = new ClassificationDisambiguationDialog(TEST_CONFIG, brain);
-    const adapter = new TestAdapter({});
+    const dialog = new ClassificationDisambiguationDialog(bot);
     const classificationResults = [
       new ClassificationResult({
         type: ClassificationResult.TYPE_INTENT,
@@ -40,13 +45,11 @@ describe('ClassificationDisambiguationDialog', () => {
       }),
     ];
 
-    expect(
-      await dialog.execute(
-        adapter,
-        { user: 'TEST_USER' },
-        { classificationResults, messageEntities: [] },
-      ),
-    ).toEqual({
+    const { action } = await dialog.execute(
+      { user: 'TEST_USER' },
+      { classificationResults, messageEntities: [] },
+    );
+    expect(action).toEqual({
       name: ClassificationDisambiguationDialog.ACTION_COMPLETE,
     });
   });

@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
+const Bot = require('../../src/bot');
 const Dialog = require('../../src/dialogs/dialog');
-const MemoryBrain = require('../../src/brains/memory-brain');
 const DialogError = require('../../src/errors/dialog-error');
-const TEST_CONFIG = require('../../src/config').getConfiguration({});
+const TEST_CONFIG = require('../../src/config').getConfiguration({
+  brain: {
+    name: 'memory',
+  },
+});
 
 describe('Dialog', () => {
-  const brain = new MemoryBrain(TEST_CONFIG);
-  const dialog = new Dialog(TEST_CONFIG, brain, {
+  const bot = new Bot(TEST_CONFIG);
+  const dialog = new Dialog(bot, {
     namespace: 'testdialog',
     entities: {},
   });

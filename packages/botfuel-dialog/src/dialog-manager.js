@@ -28,11 +28,14 @@ const DialogError = require('./errors/dialog-error');
 class DialogManager extends Resolver {
   /**
    * @constructor
-   * @param {Object} brain - the bot brain
-   * @param {Object} config - the bot config
+   * @param {Object} bot - the bot
    */
-  constructor(brain, config) {
+  constructor(bot) {
+    const { brain, config } = bot;
+
     super(config, 'dialog');
+
+    this.bot = bot;
     this.brain = brain;
   }
 
@@ -43,7 +46,7 @@ class DialogManager extends Resolver {
 
   /** @inheritdoc */
   resolutionSucceeded(Resolved) {
-    return new Resolved(this.config, this.brain, Resolved.params);
+    return new Resolved(this.bot, Resolved.params);
   }
 
   /**
@@ -214,16 +217,23 @@ class DialogManager extends Resolver {
   /**
    * Executes the dialogs.
    * @async
-   * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
    * @param {Object[]} dialogs - the dialogs data
+   * @param {Object[]} botMessagesAccumulator - the bot messages from previous dialogs
    * @returns {Promise.<Object[]>}
    */
-  async execute(adapter, userMessage, dialogs) {
-    logger.debug('execute', userMessage, dialogs);
+  async execute(userMessage, dialogs, botMessagesAccumulator = []) {
+    logger.debug('execute', userMessage, dialogs, botMessagesAccumulator);
+
+    let botMessages = botMessagesAccumulator;
+
     if (dialogs.stack.length === 0) {
-      return dialogs;
+      return {
+        dialogs,
+        botMessages,
+      };
     }
+
     const dialog = dialogs.stack[dialogs.stack.length - 1];
     if (dialog.blocked) {
       dialog.blocked = false;
@@ -238,46 +248,56 @@ class DialogManager extends Resolver {
         data: {},
       });
     } else {
-      const action = await this.resolve(dialog.name).execute(adapter, userMessage, dialog.data);
+      const dialogInstance = this.resolve(dialog.name);
+      const { action, botMessages: newBotMessages } = await dialogInstance.execute(
+        userMessage,
+        dialog.data,
+      );
+      botMessages = botMessages.concat(newBotMessages);
+
       logger.debug('execute: action', action);
-      if (action.name !== Dialog.ACTION_WAIT) {
-        dialogs = await this.applyAction(dialogs, action);
-      } else {
-        return dialogs;
+      if (action.name === Dialog.ACTION_WAIT) {
+        return {
+          dialogs,
+          botMessages,
+        };
       }
+      dialogs = await this.applyAction(dialogs, action);
     }
-    return this.execute(adapter, userMessage, dialogs);
+    return this.execute(userMessage, dialogs, botMessages);
   }
 
   /**
    * Executes when receiving the classification results and message entities.
-   * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
    * @param {Object[]} classificationResults - the classification results from trainer
    * @param {Object[]} messageEntities - the message entities
-   * @returns {void}
+   * @returns {Promise.<Object[]>}
    */
-  async executeClassificationResults(adapter, userMessage, classificationResults, messageEntities) {
+  async executeClassificationResults(userMessage, classificationResults, messageEntities) {
     logger.debug('classificationResult', userMessage, classificationResults, messageEntities);
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithClassificationResults(userId, dialogs, classificationResults, messageEntities);
-    await this.setDialogs(userId, await this.execute(adapter, userMessage, dialogs));
+    const { dialogs: newDialogs, botMessages } = await this.execute(userMessage, dialogs);
+    await this.setDialogs(userId, newDialogs);
+    return botMessages;
   }
 
   /**
    * Populates and executes the stack.
-   * @param {Adapter} adapter - the adapter
    * @param {Object} userMessage - the user message
    * @param {Object[]} newDialog - the new dialogs
-   * @returns {void}
+   * @returns {Promise.<Object[]>}
    */
-  async executeDialog(adapter, userMessage, newDialog) {
+  async executeDialog(userMessage, newDialog) {
     logger.debug('executeDialog', userMessage, newDialog);
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithDialog(dialogs, newDialog);
-    await this.setDialogs(userId, await this.execute(adapter, userMessage, dialogs));
+    const { dialogs: newDialogs, botMessages } = await this.execute(userMessage, dialogs);
+    await this.setDialogs(userId, newDialogs);
+    return botMessages;
   }
 }
 

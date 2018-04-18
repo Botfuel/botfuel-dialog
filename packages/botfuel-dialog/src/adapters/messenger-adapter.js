@@ -63,9 +63,7 @@ class MessengerAdapter extends WebAdapter {
     const { object, entry } = req.body;
     if (object === 'page') {
       entry.forEach((entryItem) => {
-        entryItem.messaging.forEach(async (event) => {
-          await this.processEvent(event);
-        });
+        entryItem.messaging.forEach(this.processEvent);
       });
       res.sendStatus(200);
     }

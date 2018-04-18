@@ -16,15 +16,14 @@
 
 // require('../../src/logger-manager').configure({ logger: 'botfuel'});
 
-const DialogManager = require('../../src/dialog-manager');
+const Bot = require('../../src/bot');
 const Dialog = require('../../src/dialogs/dialog');
 const ClassificationResult = require('../../src/nlus/classification-result');
-const MemoryBrain = require('../../src/brains/memory-brain');
-const TestAdapter = require('../../src/adapters/test-adapter');
 const BotTextMessage = require('../../src/messages/bot-text-message');
 const TEST_CONFIG = require('../../src/config').getConfiguration({
   path: __dirname,
   adapter: { name: 'test' },
+  brain: { name: 'memory' },
 });
 
 const TEST_USER = '1';
@@ -36,8 +35,8 @@ const travelCancelDialog = { name: 'travel-cancel', entities: [] };
 const classificationDisambiguationDialog = { name: 'classification-disambiguation', entities: [] };
 
 describe('DialogManager', () => {
-  const brain = new MemoryBrain(TEST_CONFIG);
-  const dm = new DialogManager(brain, TEST_CONFIG);
+  const bot = new Bot(TEST_CONFIG);
+  const { brain, dm } = bot;
 
   beforeEach(async () => {
     await brain.clean();
@@ -53,14 +52,12 @@ describe('DialogManager', () => {
   });
 
   test('should not crash when no intent', async () => {
-    const adapter = new TestAdapter({});
-    await dm.executeClassificationResults(adapter, { user: TEST_USER }, [], []);
-    expect(adapter.log).toEqual([new BotTextMessage('Not understood.').toJson(TEST_USER)]);
+    const botMessages = await dm.executeClassificationResults({ user: TEST_USER }, [], []);
+    expect(botMessages).toEqual([new BotTextMessage('Not understood.').toJson(TEST_USER)]);
   });
 
   test('should keep on the stack a dialog which is waiting', async () => {
     await dm.executeClassificationResults(
-      null,
       { user: TEST_USER },
       [new ClassificationResult({ name: 'waiting', type: ClassificationResult.TYPE_INTENT })],
       [],
@@ -71,13 +68,11 @@ describe('DialogManager', () => {
 
   test('should not stack the same dialog twice', async () => {
     await dm.executeClassificationResults(
-      null,
       { user: TEST_USER },
       [new ClassificationResult({ name: 'waiting', type: ClassificationResult.TYPE_INTENT })],
       [],
     );
     await dm.executeClassificationResults(
-      null,
       { user: TEST_USER },
       [new ClassificationResult({ name: 'waiting', type: ClassificationResult.TYPE_INTENT })],
       [],
@@ -87,9 +82,7 @@ describe('DialogManager', () => {
   });
 
   test('should empty the stack (1)', async () => {
-    const adapter = new TestAdapter({});
     await dm.executeClassificationResults(
-      adapter,
       { user: TEST_USER },
       [new ClassificationResult({ name: 'default', type: ClassificationResult.TYPE_INTENT })],
       [],
@@ -99,16 +92,13 @@ describe('DialogManager', () => {
   });
 
   test('should empty the stack (2)', async () => {
-    const adapter = new TestAdapter({});
-    await dm.executeDialog(adapter, { user: TEST_USER }, { name: 'default' });
+    await dm.executeDialog({ user: TEST_USER }, { name: 'default' });
     const dialogs = await dm.brain.getDialogs(TEST_USER);
     expect(dialogs.stack.length).toBe(0);
   });
 
   test('should call classification disambiguation dialog when multiple classification results detected', async () => {
-    const adapter = new TestAdapter({});
     await dm.executeClassificationResults(
-      adapter,
       { user: TEST_USER },
       [
         new ClassificationResult({

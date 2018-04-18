@@ -25,6 +25,7 @@ const AuthenticationError = require('./errors/authentication-error');
 const DialogError = require('./errors/dialog-error');
 const ResolutionError = require('./errors/resolution-error');
 const { checkCredentials } = require('./utils/environment');
+const MiddlewareManager = require('./middleware-manager');
 
 const logger = Logger.getLogger('Bot');
 
@@ -49,8 +50,9 @@ class Bot {
     this.brain = new BrainResolver(this).resolve(this.config.brain.name);
     this.spellchecking = null;
     this.nlu = new NluResolver(this).resolve(this.config.nlu.name);
-    this.dm = new DialogManager(this.brain, this.config);
+    this.dm = new DialogManager(this);
     this.adapter = new AdapterResolver(this).resolve(this.config.adapter.name);
+    this.middlewareManager = new MiddlewareManager(this);
   }
 
   /**
@@ -144,23 +146,56 @@ class Bot {
   }
 
   /**
+   * Handles a user message.
+   * @async
+   * @param {Object} userMessage - the user extended message
+   * @returns {Promise.<void>}
+   */
+  async handleMessage(userMessage) {
+    let botMessages = [];
+
+    logger.debug('handleMessage', userMessage);
+
+    const contextIn = {
+      user: userMessage.user,
+      brain: this.brain,
+      userMessage,
+      config: this.config,
+    };
+
+    await this.middlewareManager.in(contextIn, async () => {
+      botMessages = await this.respond(userMessage);
+    });
+
+    const contextOut = {
+      user: userMessage.user,
+      brain: this.brain,
+      botMessages,
+      config: this.config,
+      userMessage,
+    };
+    await this.middlewareManager.out(contextOut, async () => {});
+
+    return botMessages;
+  }
+
+  /**
    * Responds to the user.
    * @async
    * @param {Object} userMessage - the user message
-   * @returns {Promise.<void>}
+   * @returns {Promise.<Object[]>}
    */
   async respond(userMessage) {
     logger.debug('respond', userMessage);
+
     switch (userMessage.type) {
       case 'postback':
-        await this.respondWhenPostback(userMessage);
-        break;
+        return this.respondWhenPostback(userMessage);
       case 'image':
-        await this.respondWhenImage(userMessage);
-        break;
+        return this.respondWhenImage(userMessage);
       case 'text':
       default:
-        await this.respondWhenText(userMessage);
+        return this.respondWhenText(userMessage);
     }
   }
 
@@ -183,12 +218,12 @@ class Bot {
     });
 
     logger.debug('respondWhenText: classificationResults', classificationResults, messageEntities);
-    await this.dm.executeClassificationResults(
-      this.adapter,
+    const botMessages = await this.dm.executeClassificationResults(
       userMessage,
       classificationResults,
       messageEntities,
     );
+    return botMessages;
   }
 
   /**
@@ -204,7 +239,8 @@ class Bot {
       name: userMessage.payload.value.dialog,
       data: { messageEntities: userMessage.payload.value.entities },
     };
-    await this.dm.executeDialog(this.adapter, userMessage, dialog);
+    const botMessages = await this.dm.executeDialog(userMessage, dialog);
+    return botMessages;
   }
 
   /**
@@ -220,7 +256,8 @@ class Bot {
       name: 'image',
       data: { url: userMessage.payload.value },
     };
-    await this.dm.executeDialog(this.adapter, userMessage, dialog);
+    const botMessages = await this.dm.executeDialog(userMessage, dialog);
+    return botMessages;
   }
 
   /**

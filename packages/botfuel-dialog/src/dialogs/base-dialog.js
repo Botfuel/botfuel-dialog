@@ -23,13 +23,16 @@ const Dialog = require('./dialog');
  */
 class BaseDialog extends Dialog {
   /** @inheritDoc */
-  async execute(adapter, userMessage, data) {
+  async execute(userMessage, data) {
     logger.debug('execute', userMessage, data);
     const extraData = await this.dialogWillDisplay(userMessage, data);
     data = this.mergeData(extraData, data);
-    await this.display(adapter, userMessage, data);
-    const action = await this.dialogWillComplete(userMessage, data);
-    return action || this.complete();
+    const botMessages = await this.display(userMessage, data);
+    const action = (await this.dialogWillComplete(userMessage, data)) || this.complete();
+    return {
+      action,
+      botMessages,
+    };
   }
 }
 
