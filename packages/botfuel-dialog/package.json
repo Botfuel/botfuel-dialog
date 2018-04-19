@@ -9,26 +9,23 @@
     "url": "https://github.com/Botfuel/botfuel-dialog"
   },
   "license": "Apache-2.0",
-  "files": [
-    "build"
-  ],
+  "files": ["build"],
   "bin": {
     "botfuel-run": "./build/run.js",
     "botfuel-train": "./build/train.js",
     "botfuel-clean": "./build/clean.js"
   },
   "scripts": {
-    "compile": "rm -rf build; ../../node_modules/.bin/babel src --out-dir build; cp -r src/corpora/*.txt build/corpora/",
+    "prebuild": "node ./scripts/prebuild.js ",
+    "build": "babel src --out-dir build",
+    "postbuild": "node ./scripts/postbuild.js",
     "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest",
     "style": "eslint src && eslint tests",
     "docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose",
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier-eslint --write \"{src,tests}/**/*.js\"",
-      "git add"
-    ]
+    "*.js": ["prettier-eslint --write \"{src,tests}/**/*.js\"", "git add"]
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
@@ -59,6 +56,7 @@
     "prettier": "^1.9.2",
     "prettier-eslint": "^8.3.1",
     "prettier-eslint-cli": "^4.6.1",
+    "shelljs": "^0.8.1",
     "sinon": "^4.1.5"
   },
   "engines": {
