@@ -31,6 +31,20 @@ yarn bootstrap
 ```
 
 
+## Workflow
+
+We use the [GitHub workflow](https://guides.github.com/introduction/flow/).
+
+The author of a Pull Request is free to choose the validation criteria that best suits the situation:
+* *trivial PR*: there is no reasonable chance any member of the team will suggest modifications, and the PR bears no knowledge that should be shared to the other team members. For example, fixing a broken link. The PR can be merged without approval.
+* *simple PR*: the PR contains one small atomic non-breaking change. The PR is required to receive one formal approval from a team member.
+* *complex PR*: the PR contains a breaking change or affects several parts. Theses PR should be avoided when possible. The PR is required to receive two formal approvals from team members. All the team members should be notified of the changes.
+
+When a breaking change is merged to master, then sample bots and documentation should be updated as soon as possible (these updates are implicitely part of the Definition of Done of the task).
+
+After merging a change to master, a new version should be published, except of no code is involved.
+
+
 ## Run the tests
 
 Botfuel Dialog comes with unit and integration tests.
@@ -80,16 +94,14 @@ BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 
 ## Changelog
 
-We use [conventional commits](https://conventionalcommits.org/), with the [angular conventions]( https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular). More details [here](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#-commit-message-guidelines).
+We use [conventional commits](https://conventionalcommits.org/), with the [angular conventions](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular). More details [here](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#-commit-message-guidelines).
 
 
 ## Publishing
 
-To publish:
+See our internal documentation to configure login with yarn.
 
 ```
-yarn login
-
 BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn release
 ```
 
@@ -99,6 +111,7 @@ lerna publish --skip-git --skip-npm --conventional-commits --changelog-preset=an
 ```
 
 If the new version number is incorrect (for example, a breaking change tag was added by mistake), it is possible to manually set it:
+* Remove the git tag that was potentially created during the failed attempt to publish
 * Add a new section in the changelog
 * Update the version number in `packages/botfuel-dialog/package.json`
 * Test and compile as `yarn publish` would do
