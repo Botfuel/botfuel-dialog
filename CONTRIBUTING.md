@@ -36,13 +36,13 @@ yarn bootstrap
 We use the [GitHub workflow](https://guides.github.com/introduction/flow/).
 
 The author of a Pull Request is free to choose the validation criteria that best suits the situation:
-* *trivial PR*: there is no reasonable chance any member of the team will suggest modifications, and the PR bears no knowledge that should be shared to the other team members. For example, fixing a broken link. The PR can be merged without approval.
-* *simple PR*: the PR contains one small atomic non-breaking change. The PR is required to receive one formal approval from a team member.
-* *complex PR*: the PR contains a breaking change or affects several parts. Theses PR should be avoided when possible. The PR is required to receive two formal approvals from team members. All the team members should be notified of the changes.
+* *trivial PR*: there is no reasonable chance any member of the team will suggest modifications, and the PR contains no information that is worth sharing with the other team members. For example, fixing a broken link. The PR can be merged without approval.
+* *simple PR*: the PR contains one small non-breaking change which affects only one part of repository. The PR is required to receive one formal approval from a team member.
+* *complex PR*: the PR contains a breaking change or affects several parts. These PR should be avoided when possible. The PR is required to receive formal approval from at least two team members. All the team members should be notified of the changes.
 
 When a breaking change is merged to master, then sample bots and documentation should be updated as soon as possible (these updates are implicitely part of the Definition of Done of the task).
 
-After merging a change to master, a new version should be published, except of no code is involved.
+After merging a change to master, a new version should be published, except if no code is involved.
 
 
 ## Run the tests
