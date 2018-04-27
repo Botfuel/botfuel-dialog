@@ -1,7 +1,6 @@
 // @flow
 
-import type ClassificationResult from './nlus/classification-result';
-
+import type ClassificationResult, { QnaAnswers } from './nlus/classification-result';
 
 /*
   Data used in the dialogs
@@ -12,7 +11,7 @@ export type MessageEntities = {};
 export type DialogDataData = {
   classificationResults?: ClassificationResult[],
   messageEntities?: MessageEntities,
-  answers?: {},
+  answers?: QnaAnswers,
   url?: string,
 };
 
@@ -91,9 +90,3 @@ export type TextMessage = {
 };
 
 export type UserMessage = PostbackMessage | ImageMessage | TextMessage;
-
-
-export type BotMessage = {
-  id?: string,
-  timestamp?: number,
-};

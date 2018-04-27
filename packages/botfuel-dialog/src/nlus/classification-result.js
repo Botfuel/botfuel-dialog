@@ -14,46 +14,65 @@
  * limitations under the License.
  */
 
+// @flow
+
+export type ClassificationType = 'QnA' | 'Intent';
+
+export type QnaAnswers = {
+  value: string,
+}[][];
+
+export type ClassificationData = {
+  name?: string,
+  label?: string;
+  type: string,
+  answers?: QnaAnswers,
+  resolvePrompt?: string,
+};
+
+
 const logger = require('logtown')('Intent');
 const SdkError = require('../errors/sdk-error');
 
 /** ClassificationResult class */
 class ClassificationResult {
-  /**
-   * @constructor
-   * @param {Object} data data receive from trainer api request
-   */
-  constructor(data) {
-    logger.debug('constructor');
-    const { name, type, label, resolvePrompt } = data;
-
-    if (!(name || label)) {
-      throw new SdkError('Intent constructor: data must contain label or name');
-    }
-
-    this.type = this.getType(type);
-    this.name = name;
-    this.label = label;
-    this.resolvePrompt = resolvePrompt;
-
-    if (!this.name) {
-      this.name = this.isQnA() ? 'qnas' : this.label;
-    }
-
-    if (this.isQnA()) {
-      this.answers = data.answers;
-    }
-  }
+  type: ClassificationType;
+  name: string;
+  label: ?string;
+  resolvePrompt: ?string;
+  answers: ?QnaAnswers;
 
   static TYPE_QNA = 'QnA';
   static TYPE_INTENT = 'Intent';
 
   /**
-   * Parse type from data
-   * @param {String} type type
-   * @returns {String} static TYPE
+   * @constructor
+   * @param data data receive from trainer api request
    */
-  getType(type) {
+  constructor(data: ClassificationData) {
+    logger.debug('constructor');
+
+    this.type = this.getType(data.type);
+    this.label = data.label;
+    this.resolvePrompt = data.resolvePrompt;
+
+    const name = data.name || (this.isQnA() ? 'qnas' : data.label);
+    if (!name) {
+      throw new SdkError('Intent constructor: data must contain label or name');
+    }
+    this.name = name;
+
+    if (this.isQnA()) {
+      this.answers = (data.answers: any);
+    }
+  }
+
+  /**
+   * Parse type from data
+   * @param type - type
+   * @returns static TYPE
+   */
+  getType(type: string): ClassificationType {
     if (!type) {
       throw new SdkError('Intent constructor: data must contain type');
     }
@@ -67,10 +86,9 @@ class ClassificationResult {
   }
 
   /**
-   * Returns true if intent is QnA
-   * @returns {boolean}
+   * Return true if intent is QnA
    */
-  isQnA() {
+  isQnA(): boolean {
     return this.type === ClassificationResult.TYPE_QNA;
   }
 }

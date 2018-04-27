@@ -17,8 +17,10 @@
 // @flow
 
 import type { Config } from '../config';
-import type { UserMessage } from '../types';
+import type { UserMessage, MessageEntities } from '../types';
 import type Brain from '../brains/brain';
+import type ClassificationResult from '../nlus/classification-result';
+
 
 export type ComputeContext = {
   brain: Brain,
@@ -26,11 +28,8 @@ export type ComputeContext = {
 };
 
 export type ComputeOutput = {
-  intents: string[],
-  entities: {
-    dim: string,
-    value: {},
-  }[],
+  classificationResults: ClassificationResult[],
+  messageEntities: MessageEntities,
 };
 
 const logger = require('logtown')('Nlu');

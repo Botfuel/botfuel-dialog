@@ -19,7 +19,8 @@
 import type Bot from './bot';
 import type { Config } from './config';
 import type Brain from './brains/brain';
-import type { UserMessage, BotMessage } from './types';
+import type { UserMessage } from './types';
+import type { BotMessageJson } from './messages/message';
 
 const fs = require('fs-extra');
 const logger = require('logtown')('MiddlewareManager');
@@ -35,7 +36,7 @@ export type InMiddlewareContext = {|
 export type OutMiddlewareContext = {|
   user: string,
   brain: Brain,
-  botMessages: BotMessage[],
+  botMessages: BotMessageJson[],
   config: Config,
   userMessage: UserMessage,
 |};

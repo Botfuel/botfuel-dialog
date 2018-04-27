@@ -20,9 +20,9 @@ import type { Config, RawConfig } from './config';
 import type {
   UserMessage,
   PostbackMessage, ImageMessage, TextMessage,
-  BotMessage,
   DialogData,
 } from './types';
+import type { BotMessageJson } from './messages/message';
 import type Adapter from './adapters/adapter';
 import type Brain from './brains/brain';
 import type Nlu from './nlus/nlu';
@@ -157,8 +157,8 @@ class Bot {
   /**
    * Handle a user message.
    */
-  async handleMessage(userMessage: UserMessage): Promise<BotMessage[]> {
-    let botMessages: BotMessage[] = [];
+  async handleMessage(userMessage: UserMessage): Promise<BotMessageJson[]> {
+    let botMessages: BotMessageJson[] = [];
 
     logger.debug('handleMessage', userMessage);
 
@@ -188,7 +188,7 @@ class Bot {
   /**
    * Respond to the user.
    */
-  async respond(userMessage: UserMessage): Promise<BotMessage[]> {
+  async respond(userMessage: UserMessage): Promise<BotMessageJson[]> {
     logger.debug('respond', userMessage);
 
     // TODO Replace Conditional with Polymorphism (Fowler)
@@ -207,15 +207,18 @@ class Bot {
    * Compute the responses for a user message of type text.
    * @private
    */
-  async respondWhenText(userMessage: TextMessage): Promise<BotMessage[]> {
+  async respondWhenText(userMessage: TextMessage): Promise<BotMessageJson[]> {
     logger.debug('respondWhenText', userMessage);
     let sentence = userMessage.payload.value;
     sentence = await this.spellcheck(sentence);
 
-    const { classificationResults, messageEntities } = await this.nlu.compute(sentence, {
-      brain: this.brain,
-      userMessage,
-    });
+    const { classificationResults, messageEntities } = await this.nlu.compute(
+      sentence,
+      {
+        brain: this.brain,
+        userMessage,
+      },
+    );
 
     logger.debug('respondWhenText: classificationResults', classificationResults, messageEntities);
     const botMessages = await this.dm.executeClassificationResults(
@@ -230,7 +233,7 @@ class Bot {
    * Compute the responses for a user message of type postback.
    * @private
    */
-  async respondWhenPostback(userMessage: PostbackMessage): Promise<BotMessage[]> {
+  async respondWhenPostback(userMessage: PostbackMessage): Promise<BotMessageJson[]> {
     logger.debug('respondWhenPostback', userMessage);
     const dialog = {
       name: userMessage.payload.value.dialog,
@@ -246,7 +249,7 @@ class Bot {
    * Compute the responses for a user message of type image.
    * @private
    */
-  async respondWhenImage(userMessage: ImageMessage): Promise<BotMessage[]> {
+  async respondWhenImage(userMessage: ImageMessage): Promise<BotMessageJson[]> {
     logger.debug('respondWhenImage', userMessage);
     const dialog: DialogData = {
       name: 'image',

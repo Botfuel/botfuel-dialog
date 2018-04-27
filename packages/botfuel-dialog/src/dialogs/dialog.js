@@ -20,12 +20,12 @@ import type Bot from '../bot';
 import type Brain from '../brains/brain';
 import type {
   UserMessage,
-  BotMessage,
   DialogDataData,
   DialogData,
   DialogWillDisplayData,
   DialogWillCompleteData,
 } from '../types';
+import type { BotMessageJson } from '../messages/message';
 
 const _ = require('lodash');
 const logger = require('logtown')('Dialog');
@@ -37,8 +37,6 @@ const DialogError = require('../errors/dialog-error');
 
 
 // TODO: Remove duplication of magic codes
-export type ActionName = 'cancel' | 'complete' | 'wait' | 'next' | 'new_conversation';
-
 export type ActionCancel = {
   name: 'cancel',
   newDialog?: DialogData,
@@ -77,7 +75,7 @@ export type DisplayData = {};
 
 export type ExecuteResult = {
   action: Action,
-  botMessages: BotMessage[],
+  botMessages: BotMessageJson[],
 };
 
 /**
@@ -133,7 +131,7 @@ class Dialog {
    * @param {Object} [data] - data used at display time
    * @returns {Promise.<void>}
    */
-  async display(userMessage: UserMessage, data: DisplayData): Promise<BotMessage[]> {
+  async display(userMessage: UserMessage, data: DisplayData): Promise<BotMessageJson[]> {
     logger.debug('display', userMessage, data);
     const botMessages = this.viewResolver.resolve(this.name).renderAsJson(userMessage, data);
     return botMessages;

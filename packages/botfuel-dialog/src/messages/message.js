@@ -14,20 +14,39 @@
  * limitations under the License.
  */
 
+// @flow
+
+export type BotMessageJson = {
+  type: string,
+  sender: string,
+  user: string,
+  payload: {
+    value: {},
+    options?: {},
+  },
+  id?: string,
+  timestamp?: number,
+};
+
 const ValidObject = require('./valid-object');
 
 /**
  * An abstract message.
  */
 class Message extends ValidObject {
+  type: string;
+  sender: string;
+  value: {};
+  options: ?{};
+
   /**
    * @constructor
-   * @param {String} type - the message type
-   * @param {String} sender - the message sender, the bot or the user
-   * @param {*} value - the message value
-   * @param {Object} [options] - the message options
+   * @param type - the message type
+   * @param sender - the message sender, the bot or the user
+   * @param value - the message value
+   * @param options - the message options
    */
-  constructor(type, sender, value, options) {
+  constructor(type: string, sender: string, value: {}, options?: {}) {
     super();
     this.type = type;
     this.sender = sender;
@@ -36,31 +55,35 @@ class Message extends ValidObject {
   }
 
   /**
-   * Converts a message to json and adds to it the bot and user ids.
-   * @param {String} userId - the user id
-   * @returns {Object} the json message
+   * Convert a message to json and adds to it the bot and user ids.
+   * @param userId - the user id
+   * @returns the json message
    */
-  toJson(userId) {
-    return {
+  toJson(userId: string): BotMessageJson {
+    const jsonOutput: BotMessageJson = {
       type: this.type,
       sender: this.sender,
       user: userId,
       payload: {
         value: this.valueAsJson(),
-        ...(!!this.options && { options: this.options }),
       },
     };
+
+    if (this.options) {
+      jsonOutput.payload.options = this.options;
+    }
+
+    return jsonOutput;
   }
 
   /**
    * Returns the value as json
-   * @returns {*} the json value
+   * @returns the json value
    */
-  valueAsJson() {
+  valueAsJson(): {} {
     return this.value;
   }
 
-  /** @inheritDoc */
   validate() {
     this.validateString(this.type, this.type);
     this.validateString(this.type, this.sender);
@@ -68,3 +91,5 @@ class Message extends ValidObject {
 }
 
 module.exports = Message;
+
+export type BotMessageObject = Message;

@@ -16,7 +16,8 @@
 
 // @flow
 
-import type { UserMessage, BotMessage } from '../types';
+import type { UserMessage } from '../types';
+import type { BotMessageJson } from '../messages/message';
 import type Bot from '../bot';
 
 const uuidv4 = require('uuid/v4');
@@ -86,7 +87,7 @@ class Adapter {
    * Sends a single bot message to the messaging platform.
    * @abstract
    */
-  async sendMessage(botMessage: BotMessage): Promise<void> {
+  async sendMessage(botMessage: BotMessageJson): Promise<void> {
     logger.debug('sendMessage', botMessage);
     throw new MissingImplementationError();
   }
@@ -96,15 +97,13 @@ class Adapter {
    * @param {Object} message - bot or user message
    * @returns {Object} the message extended with properties
    */
-  extendMessage<T: UserMessage | BotMessage>(message: T): T {
+  extendMessage<T: UserMessage | BotMessageJson>(message: T): T {
     logger.debug('extendMessage', message);
-    return {
-      id: this.getMessageUUID(),
-      timestamp: this.getMessageTimestamp(),
-      ...message,
-    };
-  }
 
+    message.id = this.getMessageUUID();
+    message.timestamp = this.getMessageTimestamp();
+    return message;
+  }
   /**
    * Generates an uuid
    */

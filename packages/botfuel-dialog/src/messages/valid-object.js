@@ -18,25 +18,25 @@ const validUrl = require('valid-url');
 const MessageError = require('../errors/message-error');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 
+// @flow
+
 /**
  * An object that can be validated.
  */
 class ValidObject {
   /**
-   * Validates the object.
-   * @returns {void}
+   * Validate the object.
    */
-  validate() {
+  validate(): void {
     throw new MissingImplementationError();
   }
 
   /**
-   * Validates that a value is a string.
-   * @param {String} name - the type of the object being validated
-   * @param {*} value - the value being validated
-   * @returns {void}
+   * Validate that a value is a string.
+   * @param name - the type of the object being validated
+   * @param value - the value being validated
    */
-  validateString(name, value) {
+  validateString(name: string, value: any): void {
     if (!(typeof value === 'string')) {
       throw new MessageError({
         name,
@@ -46,12 +46,11 @@ class ValidObject {
   }
 
   /**
-   * Validates that a value is a url.
-   * @param {String} name - the type of the object being validated
-   * @param {*} value - the value being validated
-   * @returns {void}
+   * Validate that a value is a url.
+   * @param name - the type of the object being validated
+   * @param value - the value being validated
    */
-  validateUrl(name, value) {
+  validateUrl(name: string, value: any): void {
     if (!validUrl.isUri(value)) {
       throw new MessageError({
         name,
@@ -61,12 +60,11 @@ class ValidObject {
   }
 
   /**
-   * Validates that a value is an array
-   * @param {String} name - the type of the object being validated
-   * @param {*} value - the value being validated
-   * @returns {void}
+   * Validate that a value is an array
+   * @param name - the type of the object being validated
+   * @param value - the value being validated
    */
-  validateArray(name, value) {
+  validateArray(name: string, value: any): void {
     if (!Array.isArray(value)) {
       throw new MessageError({
         name,

@@ -14,27 +14,32 @@
  * limitations under the License.
  */
 
+// @flow
+
+import type { Config } from './config';
+import type View from './views/view';
+
 const Resolver = require('./resolver');
 
 /**
  * The view resolver resolves the view for a given dialog.
  */
-class ViewResolver extends Resolver {
+class ViewResolver extends Resolver<View> {
+  config: Config;
+
   /**
    * @constructor
-   * @param {Object} config - the bot config
+   * @param config - the bot config
    */
-  constructor(config) {
+  constructor(config: Config) {
     super(config, 'view');
   }
 
-  /** @inheritdoc */
-  getFilenames(name) {
+  getFilenames(name: string): string[] {
     return [`${name}-${this.kind}.${this.config.locale}.js`, `${name}-${this.kind}.js`];
   }
 
-  /** @inheritdoc */
-  resolutionSucceeded(Resolved) {
+  resolutionSucceeded(Resolved: Class<View>): View {
     return new Resolved();
   }
 }

@@ -17,7 +17,8 @@
 // @flow
 
 import type { Config } from './config';
-import type { UserMessage, BotMessage, DialogData, DialogsData, MessageEntities } from './types';
+import type { UserMessage, DialogData, DialogsData, MessageEntities } from './types';
+import type { BotMessageJson } from './messages/message';
 import type Bot from './bot';
 import type Brain from './brains/brain';
 import type ClassificationResult from './nlus/classification-result';
@@ -30,7 +31,7 @@ const DialogError = require('./errors/dialog-error');
 
 export type DialogManagerExecuteOutput = {|
   dialogs: DialogsData,
-  botMessages: BotMessage[],
+  botMessages: BotMessageJson[],
 |};
 
 /**
@@ -111,7 +112,7 @@ class DialogManager extends Resolver<Dialog> {
       newDialog = {
         name: classificationResults[0].name,
         data: classificationResults[0].isQnA()
-          ? { answers: classificationResults[0].answers }
+          ? { answers: (classificationResults[0].answers: any) } // TODO refactor (law of Demeter)
           : { messageEntities },
       };
     }
@@ -226,7 +227,7 @@ class DialogManager extends Resolver<Dialog> {
   async execute(
     userMessage: UserMessage,
     dialogs: DialogsData,
-    botMessagesAccumulator: BotMessage[] = [],
+    botMessagesAccumulator: BotMessageJson[] = [],
   ): Promise<DialogManagerExecuteOutput> {
     logger.debug('execute', userMessage, dialogs, botMessagesAccumulator);
 
@@ -283,7 +284,7 @@ class DialogManager extends Resolver<Dialog> {
     userMessage: UserMessage,
     classificationResults: ClassificationResult[],
     messageEntities: MessageEntities,
-  ): Promise<BotMessage[]> {
+  ): Promise<BotMessageJson[]> {
     logger.debug('classificationResult', userMessage, classificationResults, messageEntities);
 
     const userId = userMessage.user;
@@ -300,7 +301,7 @@ class DialogManager extends Resolver<Dialog> {
   async executeDialog(
     userMessage: UserMessage,
     newDialog: DialogData,
-  ): Promise<BotMessage[]> {
+  ): Promise<BotMessageJson[]> {
     logger.debug('executeDialog', userMessage, newDialog);
 
     const userId = userMessage.user;
