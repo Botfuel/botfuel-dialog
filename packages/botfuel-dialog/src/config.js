@@ -28,6 +28,7 @@ export type Config = {|
     name: string,
     conversationDuration: number,
   },
+  componentRoots: string[],
   locale: string,
   logger: string,
   modules: string[],
@@ -95,7 +96,7 @@ const resolveConfigFile = (configFileName: string): RawConfig => {
   }
 };
 
-const getComponentRoots = function (config) {
+const getComponentRoots = function (config): string[] {
   const botRoot = `${config.path}/src`;
   const sdkRoot = __dirname;
 

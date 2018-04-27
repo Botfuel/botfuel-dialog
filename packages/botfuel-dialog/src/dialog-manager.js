@@ -19,6 +19,7 @@
 import type { Config } from './config';
 import type { UserMessage, BotMessage, DialogData, DialogsData, MessageEntities } from './types';
 import type Bot from './bot';
+import type Brain from './brains/brain';
 import type ClassificationResult from './nlus/classification-result';
 import type { Action, ExecuteResult } from './dialogs/dialog';
 
@@ -36,8 +37,9 @@ export type DialogManagerExecuteOutput = {|
  * The dialog manager turns NLU output into a dialog stack. It executes the stack and returns the
  * bot messages
  */
-class DialogManager extends Resolver {
+class DialogManager extends Resolver<Dialog> {
   bot: Bot;
+  brain: Brain;
   config: Config;
 
   constructor(bot: Bot) {
@@ -53,7 +55,7 @@ class DialogManager extends Resolver {
     return [`${name}-${this.kind}.${this.config.adapter.name}.js`, `${name}-${this.kind}.js`];
   }
 
-  resolutionSucceeded(Resolved: typeof Dialog): Dialog {
+  resolutionSucceeded(Resolved: Class<Dialog>): Dialog {
     return new Resolved(this.bot, (Resolved: any).params);
   }
 
