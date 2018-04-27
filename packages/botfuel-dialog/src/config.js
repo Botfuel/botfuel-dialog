@@ -14,6 +14,31 @@
  * limitations under the License.
  */
 
+// @flow
+
+export type RawConfig = {
+  [string]: {},
+};
+
+export type Config = {|
+  adapter: {
+    name: string,
+  },
+  brain: {
+    name: string,
+    conversationDuration: number,
+  },
+  locale: string,
+  logger: string,
+  modules: string[],
+  multiintent: boolean,
+  nlu: {
+    name: string,
+  },
+  path: string,
+  spellchecking: boolean,
+|};
+
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
@@ -44,11 +69,11 @@ const defaultConfig = {
 const whitelist = Object.keys(defaultConfig).concat(['spellchecking']);
 
 /**
- * Returns the contents of the bot config file
- * @param {String} configFileName - the bot config file name/path
- * @returns {Object} the contents of the bot config file
+ * Return the contents of the bot config file
+ * @param configFileName - the bot config file name/path
+ * @returns the contents of the bot config file
  */
-const resolveConfigFile = (configFileName) => {
+const resolveConfigFile = (configFileName: string): RawConfig => {
   // configure the logger with default configuration first the be able to log errors
   LoggerManager.configure(defaultConfig);
 
@@ -102,15 +127,15 @@ const getComponentRoots = function (config) {
 };
 
 /**
- * Returns the configuration
- * @param {Object} botConfig - the bot config
- * @returns {Object} the configuration
+ * Merge the given configuration with the default configuration.
+ * @param botConfig - the bot config
+ * @returns the configuration
  */
-const getConfiguration = (botConfig = {}) => {
+const getConfiguration = (botConfig: RawConfig = {}): Config => {
   // get the config by extending defaultConfig with botConfig
   const config = _.merge(
     defaultConfig,
-    _.omitBy(botConfig, (val, key) => !whitelist.includes(key)),
+    _.omitBy(botConfig, (val, key: string): boolean => !whitelist.includes(key)),
   );
 
   Object.assign(defaultConfig);

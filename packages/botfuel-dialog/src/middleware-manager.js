@@ -14,27 +14,76 @@
  * limitations under the License.
  */
 
+// @flow
+
+import type Bot from './bot';
+import type { Config } from './config';
+import type Brain from './brains/brain';
+import type { UserMessage, BotMessage } from './types';
+
 const fs = require('fs-extra');
 const logger = require('logtown')('MiddlewareManager');
 
+
+export type InMiddlewareContext = {|
+  user: string,
+  brain: Brain,
+  userMessage: UserMessage,
+  config: Config,
+|};
+
+export type OutMiddlewareContext = {|
+  user: string,
+  brain: Brain,
+  botMessages: BotMessage[],
+  config: Config,
+  userMessage: UserMessage,
+|};
+
+
+export type DoneFunction = () => Promise<void>;
+export type NextFunction = (done?: DoneFunction) => Promise<void>;
+export type CallbackFunction = () => Promise<void>;
+
+export type InMiddleware = (
+  context: InMiddlewareContext,
+  next: NextFunction,
+  done: DoneFunction,
+) => Promise<void>;
+
+export type OutMiddleware = (
+  context: OutMiddlewareContext,
+  next: NextFunction,
+  done: DoneFunction,
+) => Promise<void>;
+
+
+export type MiddlewareDefinitions = {|
+  in: InMiddleware[],
+  out: OutMiddleware[],
+|}
+
+
 /**
- * Manages the middlewares.
+ * Manage the middlewares.
  */
 class MiddlewareManager {
-  /**
-   * @constructor
-   * @param {Object} bot - the bot
-   * @param {Function[]} [inMiddlewares] - an optional array of middlewares
-   * @param {Function[]} [outMiddlewares] - an optional array of middlewares
-   */
-  constructor(bot, inMiddlewares, outMiddlewares) {
+  inMiddlewares: InMiddleware[];
+  outMiddlewares: OutMiddleware[];
+
+  constructor(
+    bot: Bot,
+    inMiddlewares: InMiddleware[] = [],
+    outMiddlewares: OutMiddleware[] = [],
+  ) {
     logger.debug('constructor', inMiddlewares, outMiddlewares);
-    this.inMiddlewares = inMiddlewares || [];
-    this.outMiddlewares = outMiddlewares || [];
+    this.inMiddlewares = inMiddlewares;
+    this.outMiddlewares = outMiddlewares;
+
     if (bot.config) {
       const middlewarePath = `${bot.config.path}/src/middlewares.js`;
       if (fs.pathExistsSync(middlewarePath)) {
-        const middleware = require(middlewarePath);
+        const middleware: MiddlewareDefinitions = require(middlewarePath);
         this.inMiddlewares = middleware.in || this.inMiddlewares;
         this.outMiddlewares = middleware.out || this.outMiddlewares;
       }
@@ -43,28 +92,26 @@ class MiddlewareManager {
   }
 
   /**
-   * Executes the in middlewares.
-   * @async
-   * @param {Object} context - the context
+   * Execute the in middlewares.
    * @param {Object} callback - this function is executed when middlewares complete
-   * @returns {Promise.<void>}
    */
-  async in(context, callback) {
+  async in(context: InMiddlewareContext, callback: CallbackFunction): Promise<void> {
     await this.inRun(context, callback, 0, async () => {});
   }
 
   /**
-   * Executes the in middlewares starting from a given index.
-   * @async
+   * Execute the in middlewares starting from a given index.
    * @private
-   * @param {Object} context - the context
-   * @param {Object} callback - this function is executed only when middlewares complete
-   * @param {int} index - the index
-   * @param {Object} done - this function is executed at the end,
+   * @param callback - this function is executed only when middlewares complete
+   * @param done - this function is executed at the end,
    * independently of the completion of the middlewares
-   * @returns {Promise.<void>}
    */
-  async inRun(context, callback, index, done) {
+  async inRun(
+    context: InMiddlewareContext,
+    callback: CallbackFunction,
+    index: number,
+    done: DoneFunction,
+  ): Promise<void> {
     if (this.inMiddlewares.length === index) {
       logger.debug('inRun: calling callback');
       await callback();
@@ -72,35 +119,34 @@ class MiddlewareManager {
       await done();
     } else {
       const middleware = this.inMiddlewares[index];
-      const next = async d => this.inRun(context, callback, index + 1, d || done);
+      const next: NextFunction = async d => this.inRun(context, callback, index + 1, d || done);
       logger.debug('inRun: calling middleware');
       await middleware(context, next, done);
     }
   }
 
   /**
-   * Executes the out middlewares.
-   * @async
-   * @param {Object} context - the context
-   * @param {Object} callback - this function is executed when middlewares complete
-   * @returns {Promise.<void>}
+   * Execute the out middlewares.
+   * @param callback - this function is executed when middlewares complete
    */
-  async out(context, callback) {
-    await this.outRun(context, callback, 0, async () => {});
+  async out(context: OutMiddlewareContext, callback: CallbackFunction): Promise<void> {
+    const done: DoneFunction = async () => {};
+    await this.outRun(context, callback, 0, done);
   }
 
   /**
-   * Executes the out middlewares starting from a given index.
-   * @async
+   * Execute the out middlewares starting from a given index.
    * @private
-   * @param {Object} context - the context
-   * @param {Object} callback - this function is executed only when middlewares complete
-   * @param {int} index - the index
-   * @param {Object} done - this function is executed at the end,
+   * @param callback - this function is executed only when middlewares complete
+   * @param done - this function is executed at the end,
    * independently of the completion of the middlewares
-   * @returns {Promise.<void>}
    */
-  async outRun(context, callback, index, done) {
+  async outRun(
+    context: OutMiddlewareContext,
+    callback: CallbackFunction,
+    index: number,
+    done: DoneFunction,
+  ): Promise<void> {
     if (this.outMiddlewares.length === index) {
       logger.debug('outRun: calling callback');
       await callback();

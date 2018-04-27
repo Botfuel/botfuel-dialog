@@ -14,6 +14,19 @@
  * limitations under the License.
  */
 
+// @flow
+
+import type { Config, RawConfig } from './config';
+import type {
+  UserMessage,
+  PostbackMessage, ImageMessage, TextMessage,
+  BotMessage,
+  DialogData,
+} from './types';
+import type Adapter from './adapters/adapter';
+import type Brain from './brains/brain';
+import type Nlu from './nlus/nlu';
+
 const Logger = require('logtown');
 const { Spellchecking } = require('botfuel-nlp-sdk');
 const AdapterResolver = require('./adapter-resolver');
@@ -30,20 +43,27 @@ const MiddlewareManager = require('./middleware-manager');
 const logger = Logger.getLogger('Bot');
 
 /**
- * This is the bot main class.
+ * This is the bot main class that ties all the components together.
  *
  * A bot has :
  * - an {@link Adapter},
  * - a {@link Brain},
+ * - a configuration,
+ * - a {@link DialogManager},
+ * - a {@link MiddlewareManager},
  * - a {@link Nlu} (Natural Language Understanding) module,
- * - a {@link DialogManager}.
+ * - an optional {@link Spellchecking} module.
  */
 class Bot {
-  /**
-   * @constructor
-   * @param {object} config - the bot configuration
-   */
-  constructor(config) {
+  adapter: Adapter;
+  brain: Brain;
+  config: Config;
+  dm: DialogManager;
+  middlewareManager: MiddlewareManager;
+  nlu: Nlu;
+  spellchecking: ?Spellchecking;
+
+  constructor(config: RawConfig) {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
     checkCredentials(this.config);
@@ -56,12 +76,10 @@ class Bot {
   }
 
   /**
-   * Initializes the bot.
-   * @async
+   * Initialize the bot.
    * @private
-   * @returns {Promise.<void>}
    */
-  async init() {
+  async init(): Promise<void> {
     // Brain
     await this.brain.init();
     // NLU
@@ -81,11 +99,9 @@ class Bot {
   }
 
   /**
-   * Handles errors.
-   * @param {Object} error - the error
-   * @returns {void}
+   * Handle errors. Adds a user friendly message to common errors.
    */
-  handleError(error) {
+  handleError(error: Error): void {
     if (error instanceof AuthenticationError) {
       logger.error('Botfuel API authentication failed!');
       logger.error(
@@ -100,11 +116,9 @@ class Bot {
   }
 
   /**
-   * Runs the bot.
-   * @async
-   * @returns {Promise.<void>}
+   * Run the bot.
    */
-  async run() {
+  async run(): Promise<void> {
     logger.debug('run');
     try {
       await this.init();
@@ -115,12 +129,9 @@ class Bot {
   }
 
   /**
-   * Plays user messages (only available with the {@link TestAdapter}).
-   * @async
-   * @param {string[]} userMessages - the user messages
-   * @returns {Promise.<void>}
+   * Plays user messages (only available with the TestAdapter).
    */
-  async play(userMessages) {
+  async play(userMessages: UserMessage[]): Promise<void> {
     logger.debug('play', userMessages);
     try {
       await this.init();
@@ -132,10 +143,8 @@ class Bot {
 
   /**
    * Clean the bot brain.
-   * @async
-   * @returns {Promise.<void>}
    */
-  async clean() {
+  async clean(): Promise<void> {
     logger.debug('clean');
     try {
       await this.brain.init();
@@ -146,13 +155,10 @@ class Bot {
   }
 
   /**
-   * Handles a user message.
-   * @async
-   * @param {Object} userMessage - the user extended message
-   * @returns {Promise.<void>}
+   * Handle a user message.
    */
-  async handleMessage(userMessage) {
-    let botMessages = [];
+  async handleMessage(userMessage: UserMessage): Promise<BotMessage[]> {
+    let botMessages: BotMessage[] = [];
 
     logger.debug('handleMessage', userMessage);
 
@@ -180,14 +186,12 @@ class Bot {
   }
 
   /**
-   * Responds to the user.
-   * @async
-   * @param {Object} userMessage - the user message
-   * @returns {Promise.<Object[]>}
+   * Respond to the user.
    */
-  async respond(userMessage) {
+  async respond(userMessage: UserMessage): Promise<BotMessage[]> {
     logger.debug('respond', userMessage);
 
+    // TODO Replace Conditional with Polymorphism (Fowler)
     switch (userMessage.type) {
       case 'postback':
         return this.respondWhenPostback(userMessage);
@@ -200,18 +204,14 @@ class Bot {
   }
 
   /**
-   * Computes the responses for a user message of type text.
-   * @async
+   * Compute the responses for a user message of type text.
    * @private
-   * @param {Object} userMessage - the user text message
-   * @returns {Promise.<void>}
    */
-  async respondWhenText(userMessage) {
+  async respondWhenText(userMessage: TextMessage): Promise<BotMessage[]> {
     logger.debug('respondWhenText', userMessage);
     let sentence = userMessage.payload.value;
-    if (this.config.spellchecking) {
-      sentence = (await this.spellcheck(sentence, this.config.spellchecking)).correctSentence;
-    }
+    sentence = await this.spellcheck(sentence);
+
     const { classificationResults, messageEntities } = await this.nlu.compute(sentence, {
       brain: this.brain,
       userMessage,
@@ -227,51 +227,55 @@ class Bot {
   }
 
   /**
-   * Computes the responses for a user message of type postback.
-   * @async
+   * Compute the responses for a user message of type postback.
    * @private
-   * @param {Object} userMessage - the user postback message
-   * @returns {void}
    */
-  async respondWhenPostback(userMessage) {
+  async respondWhenPostback(userMessage: PostbackMessage): Promise<BotMessage[]> {
     logger.debug('respondWhenPostback', userMessage);
     const dialog = {
       name: userMessage.payload.value.dialog,
-      data: { messageEntities: userMessage.payload.value.entities },
+      data: {
+        messageEntities: userMessage.payload.value.entities,
+      },
     };
     const botMessages = await this.dm.executeDialog(userMessage, dialog);
     return botMessages;
   }
 
   /**
-   * Computes the responses for a user message of type image.
-   * @async
+   * Compute the responses for a user message of type image.
    * @private
-   * @param {object} userMessage - the user image message
-   * @returns {void}
    */
-  async respondWhenImage(userMessage) {
+  async respondWhenImage(userMessage: ImageMessage): Promise<BotMessage[]> {
     logger.debug('respondWhenImage', userMessage);
-    const dialog = {
+    const dialog: DialogData = {
       name: 'image',
-      data: { url: userMessage.payload.value },
+      data: {
+        url: userMessage.payload.value,
+      },
     };
     const botMessages = await this.dm.executeDialog(userMessage, dialog);
     return botMessages;
   }
 
   /**
-   * Spellchecks a sentence.
-   * @param {String} sentence - a sentence
-   * @param {String} key - a dictionary key
-   * @returns {Object} the spellchecking result
+   * Spellcheck a sentence.
+   * @param sentence - a sentence
+   * @returns the spellchecked sentence
    */
-  async spellcheck(sentence, key) {
+  async spellcheck(sentence: string): Promise<string> {
+    const key = this.config.spellchecking;
+
     logger.debug('spellcheck', sentence, key);
+
+    if (!key || !this.spellchecking) {
+      return sentence;
+    }
+
     try {
       const result = await this.spellchecking.compute({ sentence, key });
       logger.debug('spellcheck: result', result);
-      return result;
+      return result.correctSentence;
     } catch (error) {
       logger.error('spellcheck: error');
       if (error.statusCode === 403) {
