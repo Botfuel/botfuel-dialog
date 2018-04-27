@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "botfuel-dialog": "latest",
-    "botfuel-module-sample": "^6.0.0"
+    "botfuel-module-sample": "latest"
   },
   "engines": {
     "node": "8.x"

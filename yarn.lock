@@ -1613,7 +1613,7 @@ botfuel-dialog@latest:
     valid-url "^1.0.9"
     winston "^2.4.0"
 
-botfuel-module-sample@^6.0.0:
+botfuel-module-sample@latest:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/botfuel-module-sample/-/botfuel-module-sample-6.0.0.tgz#9468a343d25ebbbae6e73de358e06479b750bdb9"
 
