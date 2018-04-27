@@ -16,6 +16,7 @@
 
 // require('../../src/logger-manager').configure({ logger: 'botfuel'});
 
+const path = require('path');
 const Bot = require('../../src/bot');
 const Dialog = require('../../src/dialogs/dialog');
 const ClassificationResult = require('../../src/nlus/classification-result');
@@ -44,7 +45,7 @@ describe('DialogManager', () => {
   });
 
   test('when given a name, it should return the correct path', () => {
-    expect(dm.getPath('test')).toEqual(`${__dirname}/src/dialogs/test-dialog.js`);
+    expect(dm.getPath('test')).toEqual(path.resolve(__dirname, './src/dialogs/test-dialog.js'));
   });
 
   test('when given an unknown name, it should return null', () => {
