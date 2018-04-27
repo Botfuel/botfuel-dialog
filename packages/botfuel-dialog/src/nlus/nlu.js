@@ -14,6 +14,25 @@
  * limitations under the License.
  */
 
+// @flow
+
+import type { Config } from '../config';
+import type { UserMessage } from '../types';
+import type Brain from '../brains/brain';
+
+export type ComputeContext = {
+  brain: Brain,
+  userMessage: UserMessage,
+};
+
+export type ComputeOutput = {
+  intents: string[],
+  entities: {
+    dim: string,
+    value: {},
+  }[],
+};
+
 const logger = require('logtown')('Nlu');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 
@@ -21,31 +40,33 @@ const MissingImplementationError = require('../errors/missing-implementation-err
  * Abstract class for a Natural Language Understanding (NLU) module.
  */
 class Nlu {
+  config: Config;
+
   /**
    * @constructor
-   * @param {Object} config - the configuration
+   * @param config - the bot configuration
    */
-  constructor(config) {
+  constructor(config: Config) {
     logger.debug('constructor', config);
     this.config = config;
   }
 
   /**
-   * Initializes the Nlu module.
-   * @returns {Promise.<void>}
+   * Initialize the Nlu module.
    */
-  async init() {
+  async init(): Promise<void> {
     logger.debug('init');
   }
 
   /**
-   * Computes intents and entities.
-   * @param {String} sentence - the sentence
-   * @param {Object} context - { brain, userMessage }
-   * @returns {Promise} a promise of { intents, entities } where intents is
-   *  of the form [ 'intent-name' ] and entities is of the form [ { dim, value } ]
+   * Compute intents and entities.
+   * @param sentence - the sentence
+   * @param context - { brain, userMessage }
    */
-  async compute() {
+  async compute(
+    sentence: string,
+    context: ComputeContext, // eslint-disable-line no-unused-vars
+  ): Promise<ComputeOutput> {
     throw new MissingImplementationError();
   }
 }
