@@ -88,6 +88,15 @@ const brainTest = (brainLabel) => {
     expect(user._conversations).toHaveLength(1);
   });
 
+  test('get all users', async () => {
+    await brain.addUser('d8372804-2716-47aa-81bf-dd0908f9f9f7');
+    await brain.addUser('8042b7e4-445f-4fa8-891a-d734595ac706');
+    await brain.addUser('e93428x4-2236-12da-c9jf-le983nxnl2k3');
+
+    const users = await brain.getAllUsers();
+    expect(Object.keys(users)).toHaveLength(3);
+  });
+
   test('sets user key', async () => {
     await brain.addUser(USER_ID);
     const user = await brain.userSet(USER_ID, 'name', 'test');

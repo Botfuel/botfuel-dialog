@@ -98,6 +98,12 @@ class MongoBrain extends Brain {
     return user;
   }
 
+  /** @inheritdoc */
+  async getAllUsers() {
+    logger.debug('getAllUsers');
+    return this.users.find().toArray();
+  }
+
   /**
    * Wraps mongodb findOneAndUpdate and throws if user does not exist
    * @async

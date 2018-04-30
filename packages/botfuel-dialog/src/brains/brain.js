@@ -110,6 +110,15 @@ class Brain {
   }
 
   /**
+   * Gets all users.
+   * @async
+   * @returns {Promise.<Object>} the users
+   */
+  async getAllUsers() {
+    throw new MissingImplementationError();
+  }
+
+  /**
    * Gets the init value for creating a new conversation.
    * @returns {Object}
    */
