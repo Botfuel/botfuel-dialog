@@ -94,7 +94,7 @@ const brainTest = (brainLabel) => {
     await brain.addUser('e93428x4-2236-12da-c9jf-le983nxnl2k3');
 
     const users = await brain.getAllUsers();
-    expect(Object.keys(users)).toHaveLength(3);
+    expect(users).toHaveLength(3);
   });
 
   test('sets user key', async () => {

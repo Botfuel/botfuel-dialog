@@ -66,7 +66,7 @@ class MemoryBrain extends Brain {
   /** @inheritdoc */
   async getAllUsers() {
     logger.debug('getAllUsers');
-    return this.users;
+    return Object.values(this.users);
   }
 
   /** @inheritdoc */
