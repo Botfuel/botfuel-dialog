@@ -57,10 +57,16 @@ class MemoryBrain extends Brain {
   /** @inheritdoc */
   async getUser(userId) {
     logger.debug('getUser', userId);
-    if (!await this.hasUser(userId)) {
+    if (!(await this.hasUser(userId))) {
       throw new Error('User does not exist');
     }
     return this.users[userId];
+  }
+
+  /** @inheritdoc */
+  async getAllUsers() {
+    logger.debug('getAllUsers');
+    return Object.values(this.users);
   }
 
   /** @inheritdoc */
