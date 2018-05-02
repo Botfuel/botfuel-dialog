@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="7.1.1"></a>
+## [7.1.1](https://github.com/Botfuel/bot-sdk2/compare/v7.1.0...v7.1.1) (2018-05-02)
+
+**Note:** Version bump only for package bot-sdk2
+
+
+
+
+
 <a name="7.1.0"></a>
 # [7.1.0](https://github.com/Botfuel/botfuel-dialog/compare/v7.0.1...v7.1.0) (2018-04-30)
 

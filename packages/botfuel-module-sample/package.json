@@ -1,6 +1,6 @@
 {
   "name": "botfuel-module-sample",
-  "version": "6.0.0",
+  "version": "7.1.1",
   "private": true,
   "author": "sysadmin@botfuel.io",
   "description": "Sample botfuel module to extend Botfuel Dialog",
@@ -12,7 +12,6 @@
   "peerDependencies": {
     "botfuel-dialog": "latest"
   },
-  "dependencies": {},
   "devDependencies": {
     "botfuel-dialog": "latest"
   },
