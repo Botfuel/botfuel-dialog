@@ -119,6 +119,7 @@ constructor because the bot is already passed.
 ### BREAKING CHANGES
 
 * Store prompt dialog in brain with new strucutre {entities: ..., question:...}, this can cause conflict on running bot with MongoBrain ([599b8c8](https://github.com/Botfuel/botfuel-dialog/commit/599b8c8))
+* `missingEntities` is now a Map instead of a plain Object
 
 
 <a name="4.4.3"></a>
