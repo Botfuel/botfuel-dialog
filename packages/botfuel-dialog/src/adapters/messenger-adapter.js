@@ -121,6 +121,7 @@ class MessengerAdapter extends WebAdapter {
   getBody(botMessage) {
     const message = this.adapt(botMessage);
     return {
+      messaging_type: 'RESPONSE',
       recipient: {
         id: botMessage.user,
       },
