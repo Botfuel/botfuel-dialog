@@ -63,7 +63,7 @@ class ClassificationResult {
     this.name = name;
 
     if (this.isQnA()) {
-      this.answers = (data.answers: any);
+      this.answers = data.answers;
     }
   }
 
