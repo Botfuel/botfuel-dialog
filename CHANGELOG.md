@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="6.0.1"></a>
+## [6.0.1](https://github.com/Botfuel/bot-sdk2/compare/v5.1.7...v6.0.1) (2018-05-03)
+
+
+### Bug Fixes
+
+* adapter style fix ([79b79b1](https://github.com/Botfuel/bot-sdk2/commit/79b79b1))
+* Add messaging_type in FB responses ([be4107c](https://github.com/Botfuel/bot-sdk2/commit/be4107c))
+* added resolutions test back, all tests pass! ([eb89d9f](https://github.com/Botfuel/bot-sdk2/commit/eb89d9f))
+
+
+
+
 
 <a name="6.0.0"></a>
 # [6.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.0...v6.0.0) (2018-04-17)
