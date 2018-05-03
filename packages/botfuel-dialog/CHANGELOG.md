@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.4.4"></a>
+## [4.4.4](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.3...v4.4.4) (2018-05-03)
+
+
+### Bug Fixes
+
+* Add messaging_type in FB responses ([11e2187](https://github.com/Botfuel/botfuel-dialog/commit/11e2187))
+
+
+
+
+
 <a name="4.4.3"></a>
 ## [4.4.3](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.2...v4.4.3) (2018-03-29)
 
