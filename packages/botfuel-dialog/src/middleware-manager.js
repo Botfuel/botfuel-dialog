@@ -66,7 +66,7 @@ export type MiddlewareDefinitions = {|
 
 
 /**
- * Manage the middlewares.
+ * Manages the middlewares.
  */
 class MiddlewareManager {
   inMiddlewares: InMiddleware[];
@@ -93,7 +93,7 @@ class MiddlewareManager {
   }
 
   /**
-   * Execute the in middlewares.
+   * Executes the in middlewares.
    * @param {Object} callback - this function is executed when middlewares complete
    */
   async in(context: InMiddlewareContext, callback: CallbackFunction): Promise<void> {
@@ -101,7 +101,7 @@ class MiddlewareManager {
   }
 
   /**
-   * Execute the in middlewares starting from a given index.
+   * Executes the in middlewares starting from a given index.
    * @private
    * @param callback - this function is executed only when middlewares complete
    * @param done - this function is executed at the end,
@@ -127,7 +127,7 @@ class MiddlewareManager {
   }
 
   /**
-   * Execute the out middlewares.
+   * Executes the out middlewares.
    * @param callback - this function is executed when middlewares complete
    */
   async out(context: OutMiddlewareContext, callback: CallbackFunction): Promise<void> {
@@ -136,7 +136,7 @@ class MiddlewareManager {
   }
 
   /**
-   * Execute the out middlewares starting from a given index.
+   * Executes the out middlewares starting from a given index.
    * @private
    * @param callback - this function is executed only when middlewares complete
    * @param done - this function is executed at the end,

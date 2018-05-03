@@ -57,7 +57,7 @@ class Adapter {
   }
 
   /**
-   * Handle a user message.
+   * Handles a user message.
    */
   async handleMessage(userMessage: UserMessage): Promise<void> {
     logger.debug('handleMessage', userMessage);
@@ -113,7 +113,7 @@ class Adapter {
   }
 
   /**
-   * Generate a timestamp
+   * Generates a timestamp.
    */
   getMessageTimestamp(): number {
     logger.debug('getMessageTimestamp');

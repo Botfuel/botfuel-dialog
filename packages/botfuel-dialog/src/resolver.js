@@ -46,7 +46,7 @@ class Resolver<Component> {
   }
 
   /**
-   * Get the possible filenames for a given name.
+   * Gets the possible filenames for a given name.
    * @param name - the component name
    * @returns the possible paths
    */
@@ -55,7 +55,7 @@ class Resolver<Component> {
   }
 
   /**
-   * Get the possible paths for a given name.
+   * Gets the possible paths for a given name.
    * @param name - the component name
    * @returns the possible paths
    */
@@ -70,7 +70,7 @@ class Resolver<Component> {
   }
 
   /**
-   * Get the path for a given name.
+   * Gets the path for a given name.
    * @param name - the component name
    * @returns the path if exists or null
    */
@@ -87,7 +87,7 @@ class Resolver<Component> {
   }
 
   /**
-   * Resolve the component for a given name.
+   * Resolves the component for a given name.
    * @param name - the component name
    * @returns the component instance or null
    */
@@ -106,7 +106,7 @@ class Resolver<Component> {
   }
 
   /**
-   * Instantiate a component after a successful resolution
+   * Instantiates a component after a successful resolution
    * @param Resolved - the component class
    * @returns the instance
    */

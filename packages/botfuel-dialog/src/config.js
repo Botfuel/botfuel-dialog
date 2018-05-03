@@ -70,7 +70,7 @@ const defaultConfig = {
 const whitelist = Object.keys(defaultConfig).concat(['spellchecking']);
 
 /**
- * Return the contents of the bot config file
+ * Returns the contents of the bot config file.
  * @param configFileName - the bot config file name/path
  * @returns the contents of the bot config file
  */
@@ -128,7 +128,7 @@ const getComponentRoots = function (config): string[] {
 };
 
 /**
- * Merge the given configuration with the default configuration.
+ * Merges the given configuration with the default configuration.
  * @param botConfig - the bot config
  * @returns the configuration
  */

@@ -29,7 +29,7 @@ const MissingImplementationError = require('../errors/missing-implementation-err
  */
 class View {
   /**
-   * Render a view as an array of json objects.
+   * Renders a view as an array of json objects.
    * @param userMessage - the user message
    * @param data - data used at display time
    * @returns the messages as an array json objects
@@ -41,7 +41,7 @@ class View {
   }
 
   /**
-   * Render a view as an array of bot messages.
+   * Renders a view as an array of bot messages.
    * @param userMessage - the user message
    * @param data - data used at display time
    * @returns an array of bot messages

@@ -68,7 +68,7 @@ class ClassificationResult {
   }
 
   /**
-   * Parse type from data
+   * Parses type from data.
    * @param type - type
    * @returns static TYPE
    */
@@ -86,7 +86,7 @@ class ClassificationResult {
   }
 
   /**
-   * Return true if intent is QnA
+   * Returns true if intent is QnA.
    */
   isQnA(): boolean {
     return this.type === ClassificationResult.TYPE_QNA;

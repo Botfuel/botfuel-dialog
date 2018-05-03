@@ -61,7 +61,7 @@ class DialogManager extends Resolver<Dialog> {
   }
 
   /**
-   * Return the last "reentrant" dialog to execute if no other dialog is found.
+   * Returns the last "reentrant" dialog to execute if no other dialog is found.
    * When the sentence itself does not contain enough information for the DialogManager
    * to compute a dialog, the DialogManager recalls the first reentrant dialog from the
    * stack of previous dialogs.
@@ -76,7 +76,7 @@ class DialogManager extends Resolver<Dialog> {
   }
 
   /**
-   * Return the dialogs data (stack and previous dialogs).
+   * Returns the dialogs data (stack and previous dialogs).
    */
   async getDialogs(userId: string): Promise<DialogsData> {
     logger.debug('getDialogs', userId);
@@ -84,7 +84,7 @@ class DialogManager extends Resolver<Dialog> {
   }
 
   /**
-   * Set the dialogs data (stack and previous dialogs).
+   * Sets the dialogs data (stack and previous dialogs).
    */
   async setDialogs(userId: string, dialogs: DialogsData): Promise<void> {
     logger.debug('setDialogs', userId, dialogs);
@@ -92,7 +92,7 @@ class DialogManager extends Resolver<Dialog> {
   }
 
   /**
-   * Update the dialogs.
+   * Updates the dialogs.
    */
   updateWithClassificationResults(
     userId: string,
@@ -143,7 +143,7 @@ class DialogManager extends Resolver<Dialog> {
   }
 
   /**
-   * Update the dialogs.
+   * Updates the dialogs.
    * @param newDialog - new dialog to be added to the dialog stack
    */
   updateWithDialog(dialogs: DialogsData, newDialog: DialogData): void {
@@ -157,7 +157,7 @@ class DialogManager extends Resolver<Dialog> {
   }
 
   /**
-   * Apply an action to the dialogs object.
+   * Applies an action to the dialogs object.
    * @param dialogs - the dialogs object to be updated
    * @returns The new dialogs object with its stack and previous arrays updated
    */
@@ -221,7 +221,7 @@ class DialogManager extends Resolver<Dialog> {
   }
 
   /**
-   * Execute the dialogs.
+   * Executes the dialogs.
    * @param botMessagesAccumulator - the bot messages from previous dialogs
    */
   async execute(
@@ -278,7 +278,7 @@ class DialogManager extends Resolver<Dialog> {
   }
 
   /**
-   * Execute when receiving the classification results and message entities.
+   * Executes when receiving the classification results and message entities.
    */
   async executeClassificationResults(
     userMessage: UserMessage,
@@ -296,7 +296,7 @@ class DialogManager extends Resolver<Dialog> {
   }
 
   /**
-   * Populate and executes the stack.
+   * Populates and executes the stack.
    */
   async executeDialog(
     userMessage: UserMessage,

@@ -55,7 +55,7 @@ class Message extends ValidObject {
   }
 
   /**
-   * Convert a message to json and adds to it the bot and user ids.
+   * Converts a message to json and adds to it the bot and user ids.
    * @param userId - the user id
    * @returns the json message
    */
@@ -77,7 +77,7 @@ class Message extends ValidObject {
   }
 
   /**
-   * Returns the value as json
+   * Returns the value as json.
    * @returns the json value
    */
   valueAsJson(): {} {

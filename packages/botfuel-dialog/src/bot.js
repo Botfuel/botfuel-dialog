@@ -76,7 +76,7 @@ class Bot {
   }
 
   /**
-   * Initialize the bot.
+   * Initializes the bot.
    * @private
    */
   async init(): Promise<void> {
@@ -99,7 +99,7 @@ class Bot {
   }
 
   /**
-   * Handle errors. Adds a user friendly message to common errors.
+   * Handles errors. Adds a user friendly message to common errors.
    */
   handleError(error: Error): void {
     if (error instanceof AuthenticationError) {
@@ -116,7 +116,7 @@ class Bot {
   }
 
   /**
-   * Run the bot.
+   * Runs the bot.
    */
   async run(): Promise<void> {
     logger.debug('run');
@@ -142,7 +142,7 @@ class Bot {
   }
 
   /**
-   * Clean the bot brain.
+   * Cleans the bot brain.
    */
   async clean(): Promise<void> {
     logger.debug('clean');
@@ -155,7 +155,7 @@ class Bot {
   }
 
   /**
-   * Handle a user message.
+   * Handles a user message.
    */
   async handleMessage(userMessage: UserMessage): Promise<BotMessageJson[]> {
     let botMessages: BotMessageJson[] = [];
@@ -186,7 +186,7 @@ class Bot {
   }
 
   /**
-   * Respond to the user.
+   * Responds to the user.
    */
   async respond(userMessage: UserMessage): Promise<BotMessageJson[]> {
     logger.debug('respond', userMessage);
@@ -204,7 +204,7 @@ class Bot {
   }
 
   /**
-   * Compute the responses for a user message of type text.
+   * Computes the responses for a user message of type text.
    * @private
    */
   async respondWhenText(userMessage: TextMessage): Promise<BotMessageJson[]> {
@@ -230,7 +230,7 @@ class Bot {
   }
 
   /**
-   * Compute the responses for a user message of type postback.
+   * Computes the responses for a user message of type postback.
    * @private
    */
   async respondWhenPostback(userMessage: PostbackMessage): Promise<BotMessageJson[]> {
@@ -246,7 +246,7 @@ class Bot {
   }
 
   /**
-   * Compute the responses for a user message of type image.
+   * Computes the responses for a user message of type image.
    * @private
    */
   async respondWhenImage(userMessage: ImageMessage): Promise<BotMessageJson[]> {
@@ -262,7 +262,7 @@ class Bot {
   }
 
   /**
-   * Spellcheck a sentence.
+   * Spellchecks a sentence.
    * @param sentence - a sentence
    * @returns the spellchecked sentence
    */

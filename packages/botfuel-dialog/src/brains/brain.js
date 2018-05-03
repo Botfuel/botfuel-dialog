@@ -36,7 +36,7 @@ class Brain {
   }
 
   /**
-   * Initialize the brain.
+   * Initializes the brain.
    * @private
    */
   async init(): Promise<void> {
@@ -44,7 +44,7 @@ class Brain {
   }
 
   /**
-   * Empty the brain.
+   * Empties the brain.
    * @abstract
    */
   async clean(): Promise<void> {
@@ -52,7 +52,7 @@ class Brain {
   }
 
   /**
-   * Get the init value for creating a new user.
+   * Gets the init value for creating a new user.
    */
   getUserInitValue(userId: string): UserData {
     return {
@@ -63,7 +63,7 @@ class Brain {
   }
 
   /**
-   * Add a user if necessary (if he does not exist).
+   * Adds a user if necessary (if he does not exist).
    */
   async addUserIfNecessary(userId: string): Promise<void> {
     logger.debug('addUserIfNecessary', userId);
@@ -74,7 +74,7 @@ class Brain {
   }
 
   /**
-   * Check if there is a user for a given id.
+   * Checks if there is a user for a given id.
    * @abstract
    */
   async hasUser(userId: string): Promise<boolean> { // eslint-disable-line no-unused-vars
@@ -82,21 +82,21 @@ class Brain {
   }
 
   /**
-   * Add a user.
+   * Adds a user.
    */
   async addUser(userId: string): Promise<UserData> { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
   /**
-   * Get a user.
+   * Gets a user.
    */
   async getUser(userId: string): Promise<UserData> { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
   /**
-   * Get all users.
+   * Gets all users.
    * @returns the users
    */
   async getAllUsers(): Promise<UserData[]> {
@@ -104,7 +104,7 @@ class Brain {
   }
 
   /**
-   * Get the init value for creating a new conversation.
+   * Gets the init value for creating a new conversation.
    */
   getConversationInitValue(): ConversationData {
     return {
@@ -118,7 +118,7 @@ class Brain {
   }
 
   /**
-   * Add a conversation to a user.
+   * Adds a conversation to a user.
    * @returns the last conversation added
    */
   async addConversation(
@@ -128,7 +128,7 @@ class Brain {
   }
 
   /**
-   * Get the last conversation of the user.
+   * Gets the last conversation of the user.
    * @returns the last conversation of the user
    */
   async getLastConversation(
@@ -138,7 +138,7 @@ class Brain {
   }
 
   /**
-   * Set a value for a key within the scope of the user.
+   * Sets a value for a key within the scope of the user.
    * @abstract
    * @returns the updated user
    */
@@ -151,7 +151,7 @@ class Brain {
   }
 
   /**
-   * Get a value for a key within the scope of the user.
+   * Gets a value for a key within the scope of the user.
    */
   async userGet(userId: string, key: string): Promise<mixed> {
     logger.debug('userGet', userId, key);
@@ -160,7 +160,7 @@ class Brain {
   }
 
   /**
-   * Set a value for a key within the scope of the last conversation of a user.
+   * Sets a value for a key within the scope of the last conversation of a user.
    * @returns the updated conversation
    */
   async conversationSet(
@@ -172,7 +172,7 @@ class Brain {
   }
 
   /**
-   * Get the value for a given key within the scope of the last conversation of a user.
+   * Gets the value for a given key within the scope of the last conversation of a user.
    * @returns the value
    */
   async conversationGet(userId: string, key: string): Promise<mixed> {
@@ -182,7 +182,7 @@ class Brain {
   }
 
   /**
-   * Validate the last conversation of an user
+   * Validates the last conversation of an user.
    */
   isConversationValid(conversation: ConversationData): boolean {
     return (
@@ -191,7 +191,7 @@ class Brain {
   }
 
   /**
-   * Get dialogs data from the last conversation
+   * Gets dialogs data from the last conversation.
    */
   async getDialogs(userId: string): Promise<DialogsData> {
     const dialogs = await this.conversationGet(userId, '_dialogs');
@@ -199,7 +199,7 @@ class Brain {
   }
 
   /**
-   * Set dialogs data in the last conversation
+   * Sets dialogs data in the last conversation.
    */
   async setDialogs(userId: string, dialogs: DialogsData): Promise<void> {
     if (dialogs.isNewConversation) {
@@ -210,7 +210,7 @@ class Brain {
   }
 
   /**
-   * Get a value for a key within the global scope.
+   * Gets a value for a key within the global scope.
    * @abstract
    */
   async botGet(key: string): Promise<mixed> { // eslint-disable-line no-unused-vars
@@ -218,7 +218,7 @@ class Brain {
   }
 
   /**
-   * Set a value for a key within the global scope.
+   * Sets a value for a key within the global scope.
    * @abstract
    */
   async botSet<T>(key: string, value: T): Promise<T> { // eslint-disable-line no-unused-vars

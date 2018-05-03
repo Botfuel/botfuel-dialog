@@ -51,14 +51,14 @@ class Nlu {
   }
 
   /**
-   * Initialize the Nlu module.
+   * Initializes the Nlu module.
    */
   async init(): Promise<void> {
     logger.debug('init');
   }
 
   /**
-   * Compute intents and entities.
+   * Computes intents and entities.
    * @param sentence - the sentence
    * @param context - { brain, userMessage }
    */

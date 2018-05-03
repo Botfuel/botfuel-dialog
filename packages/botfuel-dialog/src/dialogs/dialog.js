@@ -120,7 +120,7 @@ class Dialog {
   }
 
   /**
-   * Get the dialog name
+   * Gets the dialog name.
    */
   getName(): string {
     return kebabCase(this.constructor.name).replace(/(dialog|-dialog)/g, ''); // TODO: is this correct?
@@ -138,7 +138,7 @@ class Dialog {
   }
 
   /**
-   * Execute the dialog.
+   * Executes the dialog.
    * @abstract
    * @param userMessage - the user message
    * @param data - the data
@@ -152,7 +152,7 @@ class Dialog {
   }
 
   /**
-   * Build an action
+   * Builds an action.
    * indicating that the current dialog is completed and
    * providing the name of the next dialog to execute.
    * @param name - the name of the next dialog to execute
@@ -174,7 +174,7 @@ class Dialog {
   }
 
   /**
-   * Build an action
+   * Builds an action.
    * indicating that the previous dialog is canceled and
    * optionally providing the name of the next dialog.
    * @param name - the name of the next dialog (optional)
@@ -195,7 +195,7 @@ class Dialog {
   }
 
   /**
-   * Build an action
+   * Builds an action.
    * indicating that a new conversation should be started and
    * optionally providing the name of the next dialog.
    * @param name - the name of the next dialog (optional)
@@ -228,7 +228,7 @@ class Dialog {
   }
 
   /**
-   * Build an action
+   * Builds an action.
    * indicating that current dialog should wait.
    */
   wait(): ActionWait {
@@ -250,7 +250,7 @@ class Dialog {
   }
 
   /**
-   * Merge extraData to data if extraData is an object.
+   * Merges extraData to data if extraData is an object.
    * If extraData is a value then extend data with key "extraData".
    * @param extraData - the extra data
    * @param data - the data
