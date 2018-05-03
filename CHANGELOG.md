@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="7.1.3"></a>
+## [7.1.3](https://github.com/Botfuel/bot-sdk2/compare/v7.1.2...v7.1.3) (2018-05-03)
+
+
+### Bug Fixes
+
+* Add messaging_type in FB responses ([e9fedee](https://github.com/Botfuel/bot-sdk2/commit/e9fedee))
+* Fix messenger adapter ([37a0948](https://github.com/Botfuel/bot-sdk2/commit/37a0948))
+
+
+
+
+
 <a name="7.1.2"></a>
 ## [7.1.2](https://github.com/Botfuel/bot-sdk2/compare/v7.1.1...v7.1.2) (2018-05-02)
 
