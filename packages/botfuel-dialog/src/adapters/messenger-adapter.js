@@ -63,7 +63,9 @@ class MessengerAdapter extends WebAdapter {
     const { object, entry } = req.body;
     if (object === 'page') {
       entry.forEach((entryItem) => {
-        entryItem.messaging.forEach(this.processEvent);
+        entryItem.messaging.forEach(async (event) => {
+          await this.processEvent(event); // Beware to bind processEvent to this.
+        });
       });
       res.sendStatus(200);
     }
@@ -119,6 +121,7 @@ class MessengerAdapter extends WebAdapter {
   getBody(botMessage) {
     const message = this.adapt(botMessage);
     return {
+      messaging_type: 'RESPONSE',
       recipient: {
         id: botMessage.user,
       },
