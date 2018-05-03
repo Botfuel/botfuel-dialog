@@ -48,7 +48,7 @@ const logger = Logger.getLogger('Bot');
  * A bot has :
  * - an {@link Adapter},
  * - a {@link Brain},
- * - a configuration,
+ * - a {@link Config},
  * - a {@link DialogManager},
  * - a {@link MiddlewareManager},
  * - a {@link Nlu} (Natural Language Understanding) module,
