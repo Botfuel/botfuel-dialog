@@ -40,7 +40,7 @@ class ClassificationResult {
   name: string;
   label: ?string;
   resolvePrompt: ?string;
-  answers: ?QnaAnswers;
+  answers: QnaAnswers | void;
 
   static TYPE_QNA = 'QnA';
   static TYPE_INTENT = 'Intent';
