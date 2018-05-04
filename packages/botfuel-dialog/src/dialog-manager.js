@@ -29,7 +29,7 @@ const Resolver = require('./resolver');
 const Dialog = require('./dialogs/dialog');
 const DialogError = require('./errors/dialog-error');
 
-export type DialogManagerExecuteOutput = {|
+type DialogManagerExecuteOutput = {|
   dialogs: DialogsData,
   botMessages: BotMessageJson[],
 |};
