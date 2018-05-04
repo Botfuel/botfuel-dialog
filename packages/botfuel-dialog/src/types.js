@@ -45,13 +45,6 @@ export type UserData = {
 };
 
 
-export type DialogWillDisplayData = {
-};
-
-export type DialogWillCompleteData = {
-};
-
-
 /*
   Message types
 */

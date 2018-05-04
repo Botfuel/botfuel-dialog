@@ -22,8 +22,6 @@ import type {
   UserMessage,
   DialogDataData,
   DialogData,
-  DialogWillDisplayData,
-  DialogWillCompleteData,
 } from '../types';
 import type { BotMessageJson } from '../messages/message';
 
@@ -244,7 +242,7 @@ class Dialog {
    * @param {Object} data - the data
    * @returns - the extra data which will be added to the data passed to the view
    */
-  async dialogWillDisplay(userMessage: UserMessage, data: DialogWillDisplayData): Promise<any> {
+  async dialogWillDisplay(userMessage: UserMessage, data: {}): Promise<any> {
     logger.debug('dialogWillDisplay', userMessage, data);
     return null;
   }
@@ -286,7 +284,7 @@ class Dialog {
    * @param userMessage - the user message
    * @param data - the data passed to the view
    */
-  async dialogWillComplete(userMessage: UserMessage, data: DialogWillCompleteData): Promise<any> {
+  async dialogWillComplete(userMessage: UserMessage, data: {}): Promise<any> {
     logger.debug('dialogWillComplete', userMessage, data);
   }
 }
