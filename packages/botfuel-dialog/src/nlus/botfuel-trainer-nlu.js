@@ -36,7 +36,15 @@ class BotfuelTrainerNlu extends Nlu {
     this.extractor = null;
 
     if (!process.env.BOTFUEL_APP_TOKEN) {
-      throw new SdkError('BOTFUEL_APP_TOKEN are required for using the nlu service');
+      throw new SdkError('BOTFUEL_APP_TOKEN is required for using the nlu service');
+    }
+
+    if (!process.env.BOTFUEL_APP_ID) {
+      throw new SdkError('BOTFUEL_APP_ID is required for using the nlu service');
+    }
+
+    if (!process.env.BOTFUEL_APP_KEY) {
+      throw new SdkError('BOTFUEL_APP_KEY is required for using the nlu service');
     }
   }
 
@@ -89,8 +97,7 @@ class BotfuelTrainerNlu extends Nlu {
     const messageEntities = await this.computeEntities(sentence);
 
     // compute intents
-    let trainerUrl =
-      process.env.BOTFUEL_TRAINER_API_URL || 'https://trainer-api-staging.herokuapp.com/api/v0';
+    let trainerUrl = process.env.BOTFUEL_TRAINER_API_URL || 'https://api.botfuel.io/trainer/api/v0';
 
     if (trainerUrl.slice(-1) !== '/') {
       trainerUrl += '/';
@@ -103,6 +110,8 @@ class BotfuelTrainerNlu extends Nlu {
       },
       headers: {
         'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
+        'App-Id': process.env.BOTFUEL_APP_ID,
+        'App-Key': process.env.BOTFUEL_APP_KEY,
       },
       json: true,
     };
