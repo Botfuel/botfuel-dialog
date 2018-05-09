@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="7.2.0"></a>
+# [7.2.0](https://github.com/Botfuel/botfuel-dialog/compare/v7.1.3...v7.2.0) (2018-05-09)
+
+
+### Features
+
+* support actions message in shell adapter ([8122d92](https://github.com/Botfuel/botfuel-dialog/commit/8122d92))
+
+
+
+
+
 <a name="7.1.3"></a>
 ## [7.1.3](https://github.com/Botfuel/bot-sdk2/compare/v7.1.2...v7.1.3) (2018-05-03)
 
