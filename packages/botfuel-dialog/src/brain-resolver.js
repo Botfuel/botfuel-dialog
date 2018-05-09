@@ -14,23 +14,30 @@
  * limitations under the License.
  */
 
+// @flow
+
+import type Bot from './bot';
+import type Brain from './brains/brain';
+
 const Resolver = require('./resolver');
+
 
 /**
  * The adapter resolver resolves the adapter at startup.
  */
-class BrainResolver extends Resolver {
+class BrainResolver extends Resolver<Brain> {
+  bot: Bot;
+
   /**
    * @constructor
-   * @param {Object} bot - the bot
+   * @param bot - the bot
    */
-  constructor(bot) {
+  constructor(bot: Bot) {
     super(bot.config, 'brain');
     this.bot = bot;
   }
 
-  /** @inheritdoc */
-  resolutionSucceeded(Resolved) {
+  resolutionSucceeded(Resolved: Class<Brain>): Brain {
     return new Resolved(this.bot.config);
   }
 }

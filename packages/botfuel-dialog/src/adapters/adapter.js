@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+// @flow
+
+import type { UserMessage } from '../types';
+import type { BotMessageJson } from '../messages/message';
+import type Bot from '../bot';
+
 const uuidv4 = require('uuid/v4');
 const logger = require('logtown')('Adapter');
 const MissingImplementationError = require('../errors/missing-implementation-error');
@@ -22,11 +28,9 @@ const MissingImplementationError = require('../errors/missing-implementation-err
  * An adapter adapts the messages to the messaging platform.
  */
 class Adapter {
-  /**
-   * @constructor
-   * @param {Object} bot - the bot
-   */
-  constructor(bot) {
+  bot: Bot;
+
+  constructor(bot: Bot) {
     logger.debug('constructor');
     this.bot = bot;
   }
@@ -36,11 +40,8 @@ class Adapter {
    * This adapter is only implemented by the {@link TestAdapter}.
    * This method is called by the {@link Bot}'s play method.
    * @abstract
-   * @async
-   * @param {Object[]} userMessages - the user messages
-   * @returns {Promise.<void>}
    */
-  async play(userMessages) {
+  async play(userMessages: UserMessage[]): Promise<void> {
     logger.debug('play', userMessages);
     throw new MissingImplementationError();
   }
@@ -49,21 +50,16 @@ class Adapter {
    * Adapter's method for running the bot.
    * This method is called by the {@link Bot}'s run method.
    * @abstract
-   * @async
-   * @returns {Promise.<void>}
    */
-  async run() {
+  async run(): Promise<void> {
     logger.debug('run');
     throw new MissingImplementationError();
   }
 
   /**
    * Handles a user message.
-   * @async
-   * @param {Object} userMessage - the user message
-   * @returns {Promise.<void>}
    */
-  async handleMessage(userMessage) {
+  async handleMessage(userMessage: UserMessage): Promise<void> {
     logger.debug('handleMessage', userMessage);
     await this.addUserIfNecessary(userMessage.user);
     const botMessages = await this.bot.handleMessage(this.extendMessage(userMessage));
@@ -81,11 +77,8 @@ class Adapter {
    * Adds the user if necessary.
    * Calls the corresponding method of the brain.
    * Adapters can add specific behaviour.
-   * @async
-   * @param {int} userId - the user id
-   * @returns {Promise.<void>}
    */
-  async addUserIfNecessary(userId) {
+  async addUserIfNecessary(userId: string): Promise<void> {
     logger.debug('addUserIfNecessary', userId);
     await this.bot.brain.addUserIfNecessary(userId);
   }
@@ -93,43 +86,36 @@ class Adapter {
   /**
    * Sends a single bot message to the messaging platform.
    * @abstract
-   * @async
-   * @param {Object} botMessage - the bot message
-   * @returns {Promise.<void>}
    */
-  async sendMessage(botMessage) {
+  async sendMessage(botMessage: BotMessageJson): Promise<void> {
     logger.debug('sendMessage', botMessage);
     throw new MissingImplementationError();
   }
 
   /**
-   * Extends a message with extra properties
+   * Extend a message with extra properties
    * @param {Object} message - bot or user message
    * @returns {Object} the message extended with properties
    */
-  extendMessage(message) {
+  extendMessage<T: UserMessage | BotMessageJson>(message: T): T {
     logger.debug('extendMessage', message);
-    return {
-      id: this.getMessageUUID(),
-      timestamp: this.getMessageTimestamp(),
-      ...message,
-    };
-  }
 
+    message.id = this.getMessageUUID();
+    message.timestamp = this.getMessageTimestamp();
+    return message;
+  }
   /**
    * Generates an uuid
-   * @returns {String} the uuid
    */
-  getMessageUUID() {
+  getMessageUUID(): string {
     logger.debug('getMessageUUID');
     return uuidv4();
   }
 
   /**
-   * Generates a timestamp
-   * @returns {Number} the timestamp
+   * Generates a timestamp.
    */
-  getMessageTimestamp() {
+  getMessageTimestamp(): number {
     logger.debug('getMessageTimestamp');
     return Date.now();
   }

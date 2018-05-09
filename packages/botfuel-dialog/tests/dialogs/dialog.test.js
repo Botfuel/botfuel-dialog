@@ -63,6 +63,7 @@ describe('Dialog', () => {
     expect(dialog.cancelPrevious('greetings')).toEqual({
       newDialog: {
         name: 'greetings',
+        data: {},
       },
       name: Dialog.ACTION_CANCEL,
     });

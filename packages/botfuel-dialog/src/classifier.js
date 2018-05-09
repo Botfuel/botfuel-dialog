@@ -42,7 +42,7 @@ class Classifier {
   }
 
   /**
-   * Get classifier stemmer for it's locale
+   * Gets classifier stemmer for it's locale.
    * @returns {*|Stemmer} - the stemmer
    */
   getStemmer() {
@@ -58,7 +58,7 @@ class Classifier {
   }
 
   /**
-   * Init the classifier
+   * Inits the classifier.
    * @async
    * @returns {Promise.<void|Error>}
    */
@@ -133,7 +133,7 @@ class Classifier {
   }
 
   /**
-   * Checks the model file and intents directory exist
+   * Checks the model file and intents directory exist.
    * @param {String} modelFilePath - the model file path
    * @param {String} intentsDirPath - the intents dir path
    * @returns {Boolean} true if the model file and intents directory exist, false if not
@@ -148,7 +148,7 @@ class Classifier {
   }
 
   /**
-   * Compute features for a sentence
+   * Computes features for a sentence.
    * @param {String} sentence - the sentence
    * @returns {String[]} the tokenized and stemmed sentence
    */
@@ -176,7 +176,7 @@ class Classifier {
   }
 
   /**
-   * Train bot model
+   * Trains bot model.
    * @returns {Promise.<void>}
    */
   async train() {

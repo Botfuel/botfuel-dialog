@@ -14,23 +14,29 @@
  * limitations under the License.
  */
 
+// @flow
+
+import type Bot from './bot';
+import type Nlu from './nlus/nlu';
+
 const Resolver = require('./resolver');
 
 /**
  * The adapter resolver resolves the adapter at startup.
  */
-class NluResolver extends Resolver {
+class NluResolver extends Resolver<Nlu> {
+  bot: Bot;
+
   /**
    * @constructor
-   * @param {Object} bot - the bot
+   * @param bot - the bot
    */
-  constructor(bot) {
+  constructor(bot: Bot) {
     super(bot.config, 'nlu');
     this.bot = bot;
   }
 
-  /** @inheritdoc */
-  resolutionSucceeded(Resolved) {
+  resolutionSucceeded(Resolved: Class<Nlu>): Nlu {
     return new Resolved(this.bot.config);
   }
 }

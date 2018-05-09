@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+// @flow
+
+import type { Config } from './config';
+
 const fs = require('fs');
 const path = require('path');
 const logger = require('logtown')('Resolver');
@@ -23,13 +27,17 @@ const MissingImplementationError = require('./errors/missing-implementation-erro
 /**
  * The adapter resolver resolves the adapter at startup.
  */
-class Resolver {
+class Resolver<Component> {
+  config: Config;
+  kind: string;
+  directories: string[];
+
   /**
    * @constructor
-   * @param {Object} config - the bot config
+   * @param config - the bot config
    * @param {String} kind - the kind of objects we want to resolve
    */
-  constructor(config, kind) {
+  constructor(config: Config, kind: string) {
     this.config = config;
     this.kind = kind;
     this.directories = config.componentRoots
@@ -38,20 +46,20 @@ class Resolver {
   }
 
   /**
-   * Gets the possible paths for a given name.
-   * @param {String} name - the adapter name
-   * @returns {[String]} the possible paths
+   * Gets the possible filenames for a given name.
+   * @param name - the component name
+   * @returns the possible paths
    */
-  getFilenames(name) {
+  getFilenames(name: string): string[] {
     return [`${name}-${this.kind}.js`];
   }
 
   /**
    * Gets the possible paths for a given name.
-   * @param {String} name - the adapter name
-   * @returns {[String]} the possible paths
+   * @param name - the component name
+   * @returns the possible paths
    */
-  getPaths(name) {
+  getPaths(name: string): string[] {
     logger.debug('getPaths', name);
 
     const possibleFilenames = this.getFilenames(name);
@@ -63,10 +71,10 @@ class Resolver {
 
   /**
    * Gets the path for a given name.
-   * @param {String} name - the adapter name
-   * @returns {String|null} the path if exists or null
+   * @param name - the component name
+   * @returns the path if exists or null
    */
-  getPath(name) {
+  getPath(name: string): ?string {
     logger.debug('getPath');
     for (const componentPath of this.getPaths(name)) {
       logger.debug('getPath: test path', componentPath);
@@ -79,15 +87,15 @@ class Resolver {
   }
 
   /**
-   * Resolves the adapter for a given name.
-   * @param {String} name - the adapter name
-   * @returns {Adapter|null} the adapter instance or null
+   * Resolves the component for a given name.
+   * @param name - the component name
+   * @returns the component instance or null
    */
-  resolve(name) {
+  resolve(name: string): Component {
     logger.debug('resolve', name);
     const componentPath = this.getPath(name);
     if (componentPath) {
-      const Resolved = require(componentPath);
+      const Resolved: Class<Component> = require(componentPath);
       return this.resolutionSucceeded(Resolved);
     }
     throw new ResolutionError({
@@ -98,11 +106,13 @@ class Resolver {
   }
 
   /**
-   * Instantiate a component after a successful resolution
-   * @param {String} Resolved - the component class
-   * @returns {Adapter|null} the instance or null
+   * Instantiates a component after a successful resolution
+   * @param Resolved - the component class
+   * @returns the instance
    */
-  resolutionSucceeded() {
+  resolutionSucceeded(
+    componentClass: Class<Component>, // eslint-disable-line no-unused-vars
+  ): Component {
     throw new MissingImplementationError();
   }
 }

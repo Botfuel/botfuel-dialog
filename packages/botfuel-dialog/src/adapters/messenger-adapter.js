@@ -265,7 +265,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /**
-   * Get user profile informations and store it into the brain
+   * Gets user profile informations and store it into the brain.
    * @param {String} userId - the user id
    * @returns {void}
    */

@@ -25,7 +25,7 @@ describe('BotfuelAdapter', () => {
   test('should add properties to the json message', async () => {
     const message = new BotTextMessage('message');
     const extended = new BotfuelAdapter({}).extendMessage(message.toJson(userId));
-    expect(Object.keys(extended)).toEqual(['id', 'timestamp', 'type', 'sender', 'user', 'payload']);
+    expect(Object.keys(extended).sort()).toEqual(['id', 'payload', 'sender', 'timestamp', 'type', 'user']);
     expect(extended).toHaveProperty('user', 'USER');
     expect(extended).toHaveProperty('payload.value', 'message');
   });
