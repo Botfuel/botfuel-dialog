@@ -109,7 +109,8 @@ class Classifier {
           Object.assign(map, {
             [intent.intentName]: fs
               .readFileSync(`${intentsDirPath}/${intent.fileName}`, 'utf8')
-              .toString(),
+              .toString()
+              .replace(/\r/g, ''),
           }),
         {},
       );
@@ -194,7 +195,10 @@ class Classifier {
         const intent = fileName.substring(0, fileName.length - INTENT_SUFFIX.length);
         logger.debug('train: intent', intent);
 
-        const content = fs.readFileSync(`${this.intentDirname}/${fileName}`, 'utf8').toString();
+        const content = fs
+          .readFileSync(`${this.intentDirname}/${fileName}`, 'utf8')
+          .toString()
+          .replace(/\r/g, '');
 
         return content.split('\n').map((line) => {
           logger.debug('train: line', line);
