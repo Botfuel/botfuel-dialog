@@ -20,21 +20,32 @@ const BotfuelTrainerNlu = require('../../src/nlus/botfuel-trainer-nlu');
 const SdkError = require('../../src/errors/sdk-error');
 
 describe('Botfuel Trainer Nlu', () => {
-  const sandbox = sinon.sandbox.create();
+  describe('check credentials', () => {
+    const sandbox = sinon.sandbox.create();
 
-  afterEach(() => {
-    sandbox.restore();
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    test('to throw error if missing BOTFUEL_APP_TOKEN', () => {
+      sandbox.stub(process, 'env').value({ BOTFUEL_APP_ID: '', BOTFUEL_APP_TOKEN: '' });
+      expect(() => new BotfuelTrainerNlu()).toThrowError(SdkError);
+    });
+
+    test('to throw error if missing BOTFUEL_APP_ID', () => {
+      sandbox.stub(process, 'env').value({ BOTFUEL_APP_KEY: '', BOTFUEL_APP_TOKEN: '' });
+      expect(() => new BotfuelTrainerNlu()).toThrowError(SdkError);
+    });
+
+    test('to throw error if missing BOTFUEL_APP_KEY', () => {
+      sandbox.stub(process, 'env').value({ BOTFUEL_APP_ID: '', BOTFUEL_APP_KEY: '' });
+      expect(() => new BotfuelTrainerNlu()).toThrowError(SdkError);
+    });
   });
 
-  test('to throw error if missing BOTFUEL_APP_TOKEN', () => {
-    sandbox.stub(process, 'env').value({ BOTFUEL_APP_TOKEN: undefined });
-    expect(() => new BotfuelTrainerNlu()).toThrowError(SdkError);
-  });
-
+  // IMPORTANT: for REPLAY record, use SDKTest app with ID = 2ecc774b
   describe('compute', () => {
     test('to correctly detect intents ', async () => {
-      // use app token = 1409617651128 to record trainer api response
-      sandbox.stub(process, 'env').value({ BOTFUEL_APP_TOKEN: '1409617651128' });
       const nlu = new BotfuelTrainerNlu();
       // fake extractor
       nlu.extractor = new CompositeExtractor({
@@ -47,8 +58,6 @@ describe('Botfuel Trainer Nlu', () => {
     });
 
     test('to correctly detect qnas', async () => {
-      // use app token = 1409617651128 to record trainer api response
-      sandbox.stub(process, 'env').value({ BOTFUEL_APP_TOKEN: '1409617651128' });
       const nlu = new BotfuelTrainerNlu();
       // fake extractor
       nlu.extractor = new CompositeExtractor({
