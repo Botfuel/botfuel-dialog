@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="7.2.1"></a>
+## [7.2.1](https://github.com/Botfuel/botfuel-dialog/compare/v7.2.0...v7.2.1) (2018-05-11)
+
+
+### Bug Fixes
+
+* Obfuscate BOTFUEL_APP_KEY in logs ([fd38026](https://github.com/Botfuel/botfuel-dialog/commit/fd38026))
+* remove '\r' in Windows intent files when creating model hash ([77ce413](https://github.com/Botfuel/botfuel-dialog/commit/77ce413))
+* remove \r introduce in Windows from corpus file ([03c9d64](https://github.com/Botfuel/botfuel-dialog/commit/03c9d64))
+* update trainer api call uri and add auth key and token ([f49d76f](https://github.com/Botfuel/botfuel-dialog/commit/f49d76f))
+
+
+
+
+
 <a name="7.2.0"></a>
 # [7.2.0](https://github.com/Botfuel/botfuel-dialog/compare/v7.1.3...v7.2.0) (2018-05-09)
 
