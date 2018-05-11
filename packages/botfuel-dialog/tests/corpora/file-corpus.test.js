@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
+const path = require('path');
 const FileCorpus = require('../../src/corpora/file-corpus');
 
 describe('FileCorpus', () => {
   test('should retrieve the correct values', () => {
-    const corpus = new FileCorpus(`${__dirname}/test-corpus.en.txt`);
+    const corpus = new FileCorpus(path.resolve(__dirname, './test-corpus.en.txt'));
     expect(corpus.getValue('that')).not.toBe(null);
     expect(corpus.getValue('not')).toBe(null);
   });
 
   test('should not retrieve empty rows', () => {
-    const corpus = new FileCorpus(`${__dirname}/test-corpus.en.txt`);
+    const corpus = new FileCorpus(path.resolve(__dirname, './test-corpus.en.txt'));
     expect(corpus.matrix.length).toBe(5);
   });
 });
