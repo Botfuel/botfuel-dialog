@@ -69,7 +69,9 @@ const checkCredentials = (config) => {
   if (!BOTFUEL_APP_KEY) {
     logger.warn('Environment variable BOTFUEL_APP_KEY is not defined.');
   } else {
-    logger.info(`BOTFUEL_APP_KEY=${BOTFUEL_APP_KEY}`);
+    const keyEndingChars = BOTFUEL_APP_KEY.slice(BOTFUEL_APP_KEY.length - 4);
+    const obfuscatedKey = `xxxx${keyEndingChars}`;
+    logger.info(`BOTFUEL_APP_KEY=${obfuscatedKey}`);
   }
 };
 
