@@ -1,0 +1,4 @@
+# Declare files that will always have LF (Unix style) line endings on checkout.
+* text = auto
+
+fixtures/** text eol=lf
