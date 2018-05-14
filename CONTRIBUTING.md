@@ -40,10 +40,22 @@ The author of a Pull Request is free to choose the validation criteria that best
 * *simple PR*: the PR contains one small non-breaking change which affects only one part of repository. The PR is required to receive one formal approval from a team member.
 * *complex PR*: the PR contains a breaking change or affects several parts. These PR should be avoided when possible. The PR is required to receive formal approval from at least two team members. All the team members should be notified of the changes.
 
-When a breaking change is merged to master, then sample bots and documentation should be updated as soon as possible (these updates are implicitely part of the Definition of Done of the task).
+The commit messages (that are automatically gathered in [the change log](CHANGELOG.md)) are currently the only upgrade documentation. For a breaking change, the commit message should contain a clear description of all the changes. Ensuring that the commit messages are clear enough, is part of the reviewing process.
 
 After merging a change to master, a new version should be published, except if no code is involved.
 
+### Major versions
+
+When a breaking change is merged to master, then sample bots and documentation should be updated as soon as possible (these updates are implicitely part of the Definition of Done of the task).
+
+In some cases, a breaking change can be replaced by a deprecation:
+* If a method need to be renamed, keep the old method that only prints a warning and calls the new method.
+* If a class should be removed, keep it but print a warning in its constructor.
+
+The warning should be of the form:
+```
+logger.warn("Xxx: deprecated class/method [...] Use Yyy instead.")
+```
 
 ## Run the tests
 
