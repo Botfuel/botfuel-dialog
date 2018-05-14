@@ -18,7 +18,9 @@
     "botfuel-clean": "./build/clean.js"
   },
   "scripts": {
-    "compile": "rm -rf build; ../../node_modules/.bin/babel src --out-dir build; cp -r src/corpora/*.txt build/corpora/",
+    "prebuild": "node ./scripts/prebuild.js ",
+    "build": "babel src --out-dir build",
+    "postbuild": "node ./scripts/postbuild.js",
     "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest",
     "style": "eslint src && eslint tests",
     "docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
