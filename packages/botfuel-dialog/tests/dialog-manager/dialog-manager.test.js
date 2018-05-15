@@ -120,6 +120,37 @@ describe('DialogManager', () => {
     expect(dialogs.previous[0].name).toEqual(classificationDisambiguationDialog.name);
   });
 
+  test('should not understood when no intent and dialog currently exist', async () => {
+    await dm.executeClassificationResults(
+      { user: TEST_USER },
+      [new ClassificationResult({ name: 'waiting', type: ClassificationResult.TYPE_INTENT })],
+      [],
+    );
+    const botMessage = await dm.executeClassificationResults({ user: TEST_USER }, [], []);
+    expect(botMessage).toEqual([new BotTextMessage('Not understood.').toJson(TEST_USER)]);
+  });
+
+  test('should save all messages entities', async () => {
+    const greetingsDialogEntities = {
+      name: 'greetings-entitities',
+      data: {
+        messageEntities: [],
+      },
+    };
+    const dialogs = {
+      stack: [greetingsDialogEntities],
+      previous: [],
+    };
+    const entities = [{ dim: 'paris' }];
+    await dm.updateWithClassificationResults(
+      { user: TEST_USER },
+      dialogs,
+      [],
+      entities,
+    );
+    expect(dialogs.stack[dialogs.stack.length - 1].data.messageEntities).toEqual(entities);
+  });
+
   describe('DialogManager.applyAction', () => {
     describe('Action cancel', () => {
       let dialogs;

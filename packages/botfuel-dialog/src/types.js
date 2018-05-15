@@ -6,7 +6,7 @@ import type ClassificationResult, { QnaAnswers } from './nlus/classification-res
   Data used in the dialogs
 */
 
-export type MessageEntities = {};
+export type MessageEntities = { dim: string }[];
 
 export type DialogDataData = {
   classificationResults?: ClassificationResult[],
