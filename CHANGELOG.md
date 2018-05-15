@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="7.2.2"></a>
+## [7.2.2](https://github.com/Botfuel/bot-sdk2/compare/v7.2.1...v7.2.2) (2018-05-15)
+
+
+### Bug Fixes
+
+* make build script cross platform ([37d1ef6](https://github.com/Botfuel/bot-sdk2/commit/37d1ef6))
+
+
+
+
+
 <a name="7.2.1"></a>
 ## [7.2.1](https://github.com/Botfuel/bot-sdk2/compare/v7.2.0...v7.2.1) (2018-05-11)
 
