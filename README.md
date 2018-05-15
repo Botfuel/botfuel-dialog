@@ -1,6 +1,7 @@
 # Botfuel Dialog
 
 [![CircleCI](https://circleci.com/gh/Botfuel/botfuel-dialog.svg?style=svg)](https://circleci.com/gh/Botfuel/botfuel-dialog)
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/135uxjm0eextpwg5?svg=true)](https://ci.appveyor.com/project/botfuel/botfuel-dialog)
 
 Build highly conversational bots with Botfuel Dialog.
 
