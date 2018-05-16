@@ -62,11 +62,11 @@ class MessengerAdapter extends WebAdapter {
     logger.debug('handleRequest', req.body);
     const { object, entry } = req.body;
     if (object === 'page') {
-      entry.forEach((entryItem) => {
-        entryItem.messaging.forEach(async (event) => {
-          await this.processEvent(event); // Beware to bind processEvent to this.
-        });
-      });
+      for (const entryItem of entry) {
+        for (const event of entryItem.messaging) {
+          await this.processEvent(event); // eslint-disable-line no-await-in-loop
+        }
+      }
       res.sendStatus(200);
     }
   }
