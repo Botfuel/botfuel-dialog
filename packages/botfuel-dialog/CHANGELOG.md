@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="7.2.3"></a>
+## [7.2.3](https://github.com/Botfuel/botfuel-dialog/compare/v7.2.2...v7.2.3) (2018-05-16)
+
+
+### Bug Fixes
+
+* the bot should say when it doesn't understand a sentence ([3b69240](https://github.com/Botfuel/botfuel-dialog/commit/3b69240))
+
+
+
+
+
 <a name="7.2.2"></a>
 ## [7.2.2](https://github.com/Botfuel/botfuel-dialog/compare/v7.2.1...v7.2.2) (2018-05-15)
 
