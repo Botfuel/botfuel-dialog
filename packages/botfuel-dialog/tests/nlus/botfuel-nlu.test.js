@@ -16,10 +16,10 @@
 const sinon = require('sinon');
 const CompositeExtractor = require('../../src/extractors/composite-extractor');
 const ClassificationResult = require('../../src/nlus/classification-result');
-const BotfuelTrainerNlu = require('../../src/nlus/botfuel-trainer-nlu');
+const BotfuelTrainerNlu = require('../../src/nlus/botfuel-nlu');
 const SdkError = require('../../src/errors/sdk-error');
 
-describe('Botfuel Trainer Nlu', () => {
+describe('Botfuel Nlu', () => {
   describe('check credentials', () => {
     const sandbox = sinon.sandbox.create();
 
