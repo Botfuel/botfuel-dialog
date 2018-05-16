@@ -120,10 +120,21 @@ class DialogManager extends Resolver<Dialog> {
     if (newDialog) {
       this.updateWithDialog(dialogs, newDialog);
     } else {
-      const lastDialog: ?DialogData =
+      let lastDialog: ?DialogData =
         dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
       if (lastDialog) {
-        lastDialog.data.messageEntities = messageEntities;
+        if (messageEntities.length !== 0) {
+          lastDialog.data.messageEntities = messageEntities;
+        } else {
+          lastDialog = {
+            name: 'default',
+            characteristics: {
+              reentrant: false,
+            },
+            data: {},
+          };
+          dialogs.stack.push(lastDialog);
+        }
       }
     }
 
