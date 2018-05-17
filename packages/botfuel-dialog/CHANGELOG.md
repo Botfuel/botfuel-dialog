@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="7.2.5"></a>
+## [7.2.5](https://github.com/Botfuel/botfuel-dialog/compare/v7.2.4...v7.2.5) (2018-05-17)
+
+
+### Bug Fixes
+
+* Process messenger events synchronously ([2b2d95a](https://github.com/Botfuel/botfuel-dialog/commit/2b2d95a))
+
+
+
+
+
 <a name="7.2.4"></a>
 ## [7.2.4](https://github.com/Botfuel/botfuel-dialog/compare/v7.2.3...v7.2.4) (2018-05-17)
 
