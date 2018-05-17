@@ -23,7 +23,6 @@ const BotTextMessage = require('./messages/bot-text-message');
 const BotTableMessage = require('./messages/bot-table-message');
 const BotfuelAdapter = require('./adapters/botfuel-adapter');
 const BotfuelNlu = require('./nlus/botfuel-nlu');
-const BotfuelTrainerNlu = require('./nlus/botfuel-trainer-nlu');
 const Brain = require('./brains/brain');
 const Card = require('./messages/card');
 const CardsMessage = require('./messages/cards-message');
@@ -68,7 +67,6 @@ module.exports = {
   BotTextMessage,
   BotfuelAdapter,
   BotfuelNlu,
-  BotfuelTrainerNlu,
   Brain,
   Card,
   CardsMessage,

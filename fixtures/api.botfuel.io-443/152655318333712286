@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=Ask%20me%20my%20name
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Thu, 17 May 2018 10:33:03 GMT
+content-type: application/json
+content-length: 109
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5afd49b7aae0f80011a12b63","label":"name","probability":1.0,"resolvePrompt":"name?","type":"Intent"}]

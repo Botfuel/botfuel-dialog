@@ -28,7 +28,7 @@ const Nlu = require('./nlu');
 /**
  * NLU using Botfuel Trainer API
  */
-class BotfuelTrainerNlu extends Nlu {
+class BotfuelNlu extends Nlu {
   /** @inheritdoc */
   constructor(config) {
     logger.debug('constructor', config);
@@ -135,4 +135,4 @@ class BotfuelTrainerNlu extends Nlu {
   }
 }
 
-module.exports = BotfuelTrainerNlu;
+module.exports = BotfuelNlu;

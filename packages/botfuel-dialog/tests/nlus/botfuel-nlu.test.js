@@ -43,7 +43,7 @@ describe('Botfuel Nlu', () => {
     });
   });
 
-  // IMPORTANT: for REPLAY record, use SDKTest app with ID = 2ecc774b
+  // IMPORTANT: for REPLAY record, use what ever test app that has greetings intent and qna
   describe('compute', () => {
     test('to correctly detect intents ', async () => {
       const nlu = new BotfuelTrainerNlu();
