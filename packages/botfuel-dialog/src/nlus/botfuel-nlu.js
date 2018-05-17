@@ -90,7 +90,7 @@ class BotfuelNlu extends Nlu {
   }
 
   /** @inheritdoc */
-  async compute(sentence /* context */) {
+  async compute(sentence) {
     logger.debug('compute', sentence);
 
     // compute entities
