@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+// @flow
+
+import type { BotMessageJson } from '../messages/message';
+
 const rp = require('request-promise-native');
 const logger = require('logtown')('MessengerAdapter');
 const PostbackMessage = require('../messages/postback-message');
@@ -23,27 +27,66 @@ const WebAdapter = require('./web-adapter');
 
 const FB_GRAPH_URL = 'https://graph.facebook.com/v2.6';
 
+type MessengerEvent = {
+  sender: {
+    id: string,
+  },
+  recipient: {
+    id: string,
+  },
+  timestamp: number,
+  message: {
+    mid: string,
+    seq: number,
+    text: string,
+    attachments: {
+      type: string,
+      payload: {
+        coordinates: {
+          lat: number,
+          long: number,
+        },
+        url: string,
+      }
+    }[],
+  },
+  postback: {
+    payload: string,
+  },
+};
+
+type MessengerBody = {
+  object: 'page',
+  entry: {
+    id: string,
+    time: number,
+    messaging: MessengerEvent[],
+  }[],
+};
+
+
 /**
  * Adapter for the Facebook Messenger messaging platform.
  * @extends WebAdapter
  */
 class MessengerAdapter extends WebAdapter {
   /** @inheritDoc */
-  createRoutes(app) {
+  createRoutes(app: express$Application) {
     logger.debug('createRoutes');
     super.createRoutes(app);
-    app.get('/webhook', (req, res) => this.validateWebhook(req, res));
+    app.get('/webhook', (req: express$Request, res: express$Response) => this.validateWebhook(req, res));
   }
 
   /**
    * Webhook used by Facebook Messenger to validate the bot.
-   * @async
    * @private
-   * @param {Object} req - the request object
-   * @param {Object} res - the response object
-   * @returns {Promise.<void>}
+   * @param req - the request object
+   * @param res - the response object
    */
-  async validateWebhook(req, res) {
+  async validateWebhook(
+    req: express$Request,
+    res: express$Response,
+  ): Promise<void> {
     logger.debug('validateWebhook');
     if (
       req.query['hub.mode'] === 'subscribe' &&
@@ -58,9 +101,13 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /** @inheritDoc */
-  async handleRequest(req, res) {
+  async handleRequest(
+    req: express$Request,
+    res: express$Response,
+  ): Promise<void> {
     logger.debug('handleRequest', req.body);
-    const { object, entry } = req.body;
+    const messengerBody: MessengerBody = (req.body: any);
+    const { object, entry } = messengerBody;
     if (object === 'page') {
       for (const entryItem of entry) {
         for (const event of entryItem.messaging) {
@@ -73,11 +120,9 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Processes a received event (message, postback, ...).
-   * @async
-   * @param {Object} event - the messenger event
-   * @returns {Promise.<void>}
+   * @param event - the messenger event
    */
-  async processEvent(event) {
+  async processEvent(event: MessengerEvent): Promise<void> {
     logger.debug('processEvent', JSON.stringify(event));
     const { sender, message, postback } = event;
     let userMessage = null;
@@ -96,11 +141,14 @@ class MessengerAdapter extends WebAdapter {
       const { dialog, entities } = JSON.parse(postback.payload);
       userMessage = new PostbackMessage(dialog, entities);
     }
-    await this.handleMessage(userMessage.toJson(sender.id));
+
+    if (userMessage) {
+      await this.handleMessage(userMessage.toJson(sender.id));
+    }
   }
 
   /** @inheritDoc */
-  async addUserIfNecessary(userId) {
+  async addUserIfNecessary(userId: string) {
     await super.addUserIfNecessary(userId);
     await this.updateUserProfile(userId);
   }
@@ -118,7 +166,7 @@ class MessengerAdapter extends WebAdapter {
   }
 
   /** @inheritDoc */
-  getBody(botMessage) {
+  getBody(botMessage: BotMessageJson) {
     const message = this.adapt(botMessage);
     return {
       messaging_type: 'RESPONSE',
@@ -131,10 +179,10 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * @private
-   * @param {Object} payload - the payload
-   * @returns {Object} the text
+   * @param payload - the payload
+   * @returns the text
    */
-  adaptText(payload) {
+  adaptText(payload: any) {
     return {
       text: payload.value,
     };
@@ -142,10 +190,10 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * @private
-   * @param {Object} payload - the payload
-   * @returns {Object} the quickreplies
+   * @param payload - the payload
+   * @returns the quickreplies
    */
-  adaptQuickreplies(payload) {
+  adaptQuickreplies(payload: any) {
     return {
       text: payload.options.text,
       quick_replies: payload.value.map(qr => ({
@@ -158,10 +206,10 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * @private
-   * @param {Object} payload - the payload
-   * @returns {Object} the image
+   * @param payload - the payload
+   * @returns the image
    */
-  adaptImage(payload) {
+  adaptImage(payload: any) {
     return {
       attachment: {
         type: 'image',
@@ -174,10 +222,10 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * @private
-   * @param {Object} payload - the payload
-   * @returns {Object} the actions
+   * @param payload - the payload
+   * @returns the actions
    */
-  adaptActions(payload) {
+  adaptActions(payload: any) {
     logger.debug('adaptActions', payload);
     return {
       attachment: {
@@ -193,10 +241,10 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * @private
-   * @param {Object} payload - the payload
-   * @returns {Object} the cards
+   * @param payload - the payload
+   * @returns the cards
    */
-  adaptCards(payload) {
+  adaptCards(payload: any) {
     logger.debug('adaptCards', payload);
     const elements = payload.value.map((card) => {
       const buttons = card.buttons.map(MessengerAdapter.adaptAction);
@@ -216,10 +264,10 @@ class MessengerAdapter extends WebAdapter {
   /**
    * Adapts payload.
    * @private
-   * @param {Object} botMessage - the bot message
-   * @returns {Object} the adapted message
+   * @param botMessage - the bot message
+   * @returns the adapted message
    */
-  adapt(botMessage) {
+  adapt(botMessage: BotMessageJson) {
     logger.debug('adapt', botMessage);
     const { payload } = botMessage;
     switch (botMessage.type) {
@@ -241,10 +289,10 @@ class MessengerAdapter extends WebAdapter {
   /**
    * @private
    * @static
-   * @param {Object} action - the action object
-   * @returns {Object|null} the adapted action or null if action type is not valid
+   * @param action - the action object
+   * @returns the adapted action or null if action type is not valid
    */
-  static adaptAction(action) {
+  static adaptAction(action: any) {
     logger.debug('adaptAction', action);
     switch (action.type) {
       case 'postback':
@@ -266,10 +314,9 @@ class MessengerAdapter extends WebAdapter {
 
   /**
    * Gets user profile informations and store it into the brain.
-   * @param {String} userId - the user id
-   * @returns {void}
+   * @param userId - the user id
    */
-  async updateUserProfile(userId) {
+  async updateUserProfile(userId: string): Promise<void> {
     logger.debug('updateUserProfile', userId);
     // check for user profile informations
     const userProfile = await this.bot.brain.userGet(userId, 'profile');
