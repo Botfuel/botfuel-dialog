@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=What%20is%20the%20expected%20delivery%20date%3F
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Thu, 17 May 2018 11:31:16 GMT
+content-type: application/json
+content-length: 142
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5afd49b8aae0f80011a12b84","label":"delivery-date","probability":0.7922306527813208,"resolvePrompt":"delivery-date?","type":"Intent"}]

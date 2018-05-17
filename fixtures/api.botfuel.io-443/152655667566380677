@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=Can%20I%20pay%20in%20bitcoins%3F
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Thu, 17 May 2018 11:31:15 GMT
+content-type: application/json
+content-length: 324
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"answers":[[{"payload":{"value":"You can pay for your purchase with Visa, Mastercard or using a PayPal account."},"type":"text","value":"You can pay for your purchase with Visa, Mastercard or using a PayPal account."}]],"id":"5afd6167aae0f80011a12c3a","label":"Payment","probability":1.0,"resolvePrompt":"","type":"Qna"}]
