@@ -18,6 +18,8 @@
 
 import type { BotMessageJson } from '../messages/message';
 
+const path = require('path');
+const express = require('express');
 const logger = require('logtown')('BotfuelAdapter');
 const WebAdapter = require('./web-adapter');
 
@@ -32,7 +34,8 @@ class BotfuelAdapter extends WebAdapter {
   createRoutes(app: express$Application) {
     logger.debug('createRoutes');
     super.createRoutes(app);
-    app.get('/webchat/:name', this.renderWebchatFile);
+    // serve static files in the webchat directory
+    app.use('/webchat', express.static(`${this.bot.config.path}/webchat`));
   }
 
   /** @inheritDoc */
@@ -59,17 +62,6 @@ class BotfuelAdapter extends WebAdapter {
   /** @inheritDoc */
   getBody(botMessage: BotMessageJson) {
     return botMessage;
-  }
-
-  /**
-   * Render a file inside the bot webchat directory if exists
-   * It allow to serve webchat directly through the bot
-   * @param req
-   * @param res
-   * @returns {void}
-   */
-  renderWebchatFile(req: express$Request, res: express$Response) {
-    res.sendFile(req.params.name, { root: `${this.bot.config.path}/webchat` });
   }
 }
 
