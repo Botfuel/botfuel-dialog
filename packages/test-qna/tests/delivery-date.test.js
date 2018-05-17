@@ -15,15 +15,11 @@
  */
 /* eslint prefer-arrow-callback: "off" */
 
-const sinon = require('sinon');
 const { Bot, BotTextMessage, UserTextMessage } = require('botfuel-dialog');
 const config = require('../test-config');
 
-const REFERENCE_INSTANT = new Date(2018, 0, 7, 15, 24, 13, 254);
-
 describe('Delivery date', () => {
   test('should give expected delivery date', async () => {
-    const clock = sinon.useFakeTimers(REFERENCE_INSTANT);
     const bot = new Bot(config);
     const { adapter } = bot;
     const { userId } = adapter;
@@ -45,7 +41,5 @@ describe('Delivery date', () => {
     expect(dialogs.stack).toHaveLength(0);
     expect(dialogs.previous.length).toBe(1);
     expect(dialogs.previous[0].name).toBe('delivery-date');
-
-    clock.restore();
   });
 });

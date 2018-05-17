@@ -18,8 +18,8 @@ const { BaseDialog } = require('botfuel-dialog');
 
 class DeliveryDateDialog extends BaseDialog {
   async dialogWillDisplay() {
-    const date = new Date();
-    date.setDate(date.getDate() + 5);
+    // fake delivery date
+    const date = new Date('2018-01-12');
     return { date };
   }
 }

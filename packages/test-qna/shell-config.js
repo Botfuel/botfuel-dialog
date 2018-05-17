@@ -17,8 +17,6 @@
 module.exports = {
   nlu: {
     name: 'botfuel',
-    qna: {
-      when: 'after',
-    },
+    qna: {},
   },
 };
