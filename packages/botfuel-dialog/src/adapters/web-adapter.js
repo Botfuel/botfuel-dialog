@@ -102,10 +102,10 @@ class WebAdapter extends Adapter {
       uri: this.getUrl(botMessage),
       qs: this.getQueryParameters(botMessage),
       body: this.getBody(botMessage),
+      json: true,
     };
-    const options = Object.assign({ method: 'POST', json: true }, requestOptions);
     try {
-      const res = await rp(options).promise();
+      const res = await rp.post(requestOptions);
       if (res.statusCode && res.statusCode !== 200) {
         // not handled on messenger
         logger.error('postResponse: KO', res);
