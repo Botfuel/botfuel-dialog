@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+// @flow
+
+import type { BotMessageJson } from '../messages/message';
+
 const logger = require('logtown')('BotfuelAdapter');
 const WebAdapter = require('./web-adapter');
 
@@ -25,21 +29,22 @@ const CHAT_SERVER_URL = process.env.CHAT_SERVER || 'https://webchat.botfuel.io';
  */
 class BotfuelAdapter extends WebAdapter {
   /** @inheritDoc */
-  createRoutes(app) {
+  createRoutes(app: express$Application) {
     logger.debug('createRoutes');
     super.createRoutes(app);
-    app.get('/webchat/:name', (req, res) => this.renderWebchatFile(req, res));
+    app.get('/webchat/:name', this.renderWebchatFile);
   }
 
   /** @inheritDoc */
-  async handleRequest(req, res) {
+  async handleRequest(req: express$Request, res: express$Response): Promise<void> {
     logger.debug('handleRequest', req.body);
     res.sendStatus(200);
-    await this.handleMessage(req.body);
+    const message = (req.body: any);
+    await this.handleMessage(message);
   }
 
   /** @inheritDoc */
-  getUrl(botMessage) {
+  getUrl(botMessage: BotMessageJson) {
     return `${CHAT_SERVER_URL}/bots/${process.env.BOTFUEL_APP_TOKEN}/users/${
       botMessage.user
     }/conversation/messages`;
@@ -51,7 +56,7 @@ class BotfuelAdapter extends WebAdapter {
   }
 
   /** @inheritDoc */
-  getBody(botMessage) {
+  getBody(botMessage: BotMessageJson) {
     return botMessage;
   }
 
@@ -62,7 +67,7 @@ class BotfuelAdapter extends WebAdapter {
    * @param res
    * @returns {void}
    */
-  renderWebchatFile(req, res) {
+  renderWebchatFile(req: express$Request, res: express$Response) {
     res.sendFile(req.params.name, { root: `${this.bot.config.path}/webchat` });
   }
 }
