@@ -15,9 +15,7 @@
   "dependencies": {
     "botfuel-dialog": "latest"
   },
-  "devDependencies": {
-    "sinon": "^4.1.5"
-  },
+  "devDependencies": {},
   "engines": {
     "node": "8.x"
   }
