@@ -21,7 +21,7 @@ export type BotMessageJson = {
   sender: string,
   user: string,
   payload: {
-    value: {},
+    value: any,
     options?: {},
   },
   id?: string,
@@ -36,7 +36,7 @@ const ValidObject = require('./valid-object');
 class Message extends ValidObject {
   type: string;
   sender: string;
-  value: {};
+  value: any;
   options: ?{};
 
   /**
@@ -46,7 +46,7 @@ class Message extends ValidObject {
    * @param value - the message value
    * @param options - the message options
    */
-  constructor(type: string, sender: string, value: {}, options?: {}) {
+  constructor(type: string, sender: string, value: any, options?: {}) {
     super();
     this.type = type;
     this.sender = sender;
@@ -80,7 +80,7 @@ class Message extends ValidObject {
    * Returns the value as json.
    * @returns the json value
    */
-  valueAsJson(): {} {
+  valueAsJson(): any {
     return this.value;
   }
 
