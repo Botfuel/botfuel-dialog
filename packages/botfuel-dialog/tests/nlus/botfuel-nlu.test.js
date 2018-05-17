@@ -16,7 +16,7 @@
 const sinon = require('sinon');
 const CompositeExtractor = require('../../src/extractors/composite-extractor');
 const ClassificationResult = require('../../src/nlus/classification-result');
-const BotfuelTrainerNlu = require('../../src/nlus/botfuel-nlu');
+const BotfuelNlu = require('../../src/nlus/botfuel-nlu');
 const SdkError = require('../../src/errors/sdk-error');
 
 describe('Botfuel Nlu', () => {
@@ -29,24 +29,24 @@ describe('Botfuel Nlu', () => {
 
     test('to throw error if missing BOTFUEL_APP_TOKEN', () => {
       sandbox.stub(process, 'env').value({ BOTFUEL_APP_ID: '', BOTFUEL_APP_TOKEN: '' });
-      expect(() => new BotfuelTrainerNlu()).toThrowError(SdkError);
+      expect(() => new BotfuelNlu()).toThrowError(SdkError);
     });
 
     test('to throw error if missing BOTFUEL_APP_ID', () => {
       sandbox.stub(process, 'env').value({ BOTFUEL_APP_KEY: '', BOTFUEL_APP_TOKEN: '' });
-      expect(() => new BotfuelTrainerNlu()).toThrowError(SdkError);
+      expect(() => new BotfuelNlu()).toThrowError(SdkError);
     });
 
     test('to throw error if missing BOTFUEL_APP_KEY', () => {
       sandbox.stub(process, 'env').value({ BOTFUEL_APP_ID: '', BOTFUEL_APP_KEY: '' });
-      expect(() => new BotfuelTrainerNlu()).toThrowError(SdkError);
+      expect(() => new BotfuelNlu()).toThrowError(SdkError);
     });
   });
 
   // IMPORTANT: for REPLAY record, use what ever test app that has greetings intent and qna
   describe('compute', () => {
     test('to correctly detect intents ', async () => {
-      const nlu = new BotfuelTrainerNlu();
+      const nlu = new BotfuelNlu();
       // fake extractor
       nlu.extractor = new CompositeExtractor({
         extractors: [],
@@ -58,7 +58,7 @@ describe('Botfuel Nlu', () => {
     });
 
     test('to correctly detect qnas', async () => {
-      const nlu = new BotfuelTrainerNlu();
+      const nlu = new BotfuelNlu();
       // fake extractor
       nlu.extractor = new CompositeExtractor({
         extractors: [],
