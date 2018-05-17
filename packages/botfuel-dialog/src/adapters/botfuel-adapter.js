@@ -25,6 +25,13 @@ const CHAT_SERVER_URL = process.env.CHAT_SERVER || 'https://webchat.botfuel.io';
  */
 class BotfuelAdapter extends WebAdapter {
   /** @inheritDoc */
+  createRoutes(app) {
+    logger.debug('createRoutes');
+    super.createRoutes(app);
+    app.get('/webchat/:name', (req, res) => this.renderWebchatFile(req, res));
+  }
+
+  /** @inheritDoc */
   async handleRequest(req, res) {
     logger.debug('handleRequest', req.body);
     res.sendStatus(200);
@@ -46,6 +53,17 @@ class BotfuelAdapter extends WebAdapter {
   /** @inheritDoc */
   getBody(botMessage) {
     return botMessage;
+  }
+
+  /**
+   * Render a file inside the bot webchat directory if exists
+   * It allow to serve webchat directly through the bot
+   * @param req
+   * @param res
+   * @returns {void}
+   */
+  renderWebchatFile(req, res) {
+    res.sendFile(req.params.name, { root: `${this.bot.config.path}/webchat` });
   }
 }
 
