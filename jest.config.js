@@ -5,7 +5,6 @@ module.exports = {
     '**/packages/botfuel-dialog/src/**/*.js',
     '!packages/botfuel-dialog/src/index.js',
     '!packages/botfuel-dialog/src/run.js',
-    '!packages/botfuel-dialog/src/train.js',
     '!packages/botfuel-dialog/src/clean.js',
   ],
   setupTestFrameworkScriptFile: './setup-jest.js',

@@ -26,7 +26,6 @@ const BotfuelNlu = require('./nlus/botfuel-nlu');
 const Brain = require('./brains/brain');
 const Card = require('./messages/card');
 const CardsMessage = require('./messages/cards-message');
-const Classifier = require('./classifier');
 const ConfirmationDialog = require('./dialogs/confirmation-dialog');
 const ConfirmationView = require('./views/confirmation-view');
 const CorpusExtractor = require('./extractors/corpus-extractor');
@@ -70,7 +69,6 @@ module.exports = {
   Brain,
   Card,
   CardsMessage,
-  Classifier,
   ConfirmationDialog,
   ConfirmationView,
   CorpusExtractor,
