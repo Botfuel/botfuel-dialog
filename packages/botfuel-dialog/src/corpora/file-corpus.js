@@ -36,7 +36,7 @@ class FileCorpus extends Corpus {
         .replace(/\r/g, '') // windows introduce \r
         .split('\n')
         .filter(row => row.length > 0)
-        .map(row => row.split(separator)),
+        .map(row => row.split(separator)), path,
     );
   }
 }
