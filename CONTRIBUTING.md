@@ -103,7 +103,7 @@ BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 
 ### Procedure to create a new test project
 
-Suppose you have a new test project (like test-complexdialogs), here are the steps to follow:
+Suppose you want to create a new test project (like test-complexdialogs), here are the steps to follow:
 
 * Create a new app with the same name as the test project on the portal. Add the intents/QnAs for that app as neccessary.
 * Run this command using the created app's credentials to record the API requests (using `replay`):
@@ -112,7 +112,7 @@ Suppose you have a new test project (like test-complexdialogs), here are the ste
 BOTFUEL_APP_TOKEN=<new app token> BOTFUEL_APP_ID=<new app id> BOTFUEL_APP_KEY=<new app key> REPLAY=record jest ../../<new test project name>
 ```
 
-* Check if new files are added in the `fixtures` folder, then run this command to check if everything works correctly. Note that we change the `REPLAY` environment parameter to `replay`.
+* Make sure new files are added in the `fixtures` folder, and then run the following command to check if everything works correctly. Note that we change the `REPLAY` environment parameter to `replay`.
 
 ```shell
 BOTFUEL_APP_TOKEN=<new app token> BOTFUEL_APP_ID=<new app id> BOTFUEL_APP_KEY=<new app key> REPLAY=replay jest ../../<new test project name>
