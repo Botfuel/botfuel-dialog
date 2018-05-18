@@ -3,11 +3,11 @@
   "version": "7.0.0",
   "private": true,
   "author": "sysadmin@botfuel.io",
-  "description": "Provide minimal examples for resolutions of brains, dialogs, intents, nlus, views",
+  "description":
+    "Provide minimal examples for resolutions of brains, dialogs, intents, nlus, views",
   "license": "Apache-2.0",
   "scripts": {
     "start": "botfuel-run",
-    "train": "botfuel-train",
     "clean": "botfuel-clean",
     "test": "jest",
     "style": "eslint src && eslint tests"

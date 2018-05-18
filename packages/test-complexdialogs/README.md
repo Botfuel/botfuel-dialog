@@ -2,20 +2,18 @@
 
 This bot tests complex dialogs that include digressions, multi-intents, and random access navigation.
 
+## Create an app
+
+Create an app and add intents/QnAs on Botfuel Trainer (https://app.botfuel.io).
+
+See the [Getting Started tutorial](https://docs.botfuel.io/platform/tutorials/getting-started) for how to create a new app.
+
 ## Run the bot
 
 To run this bot in your terminal:
 
 ```shell
 BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn start
-```
-
-## Train the model
-
-Each time you update the intent files, you have to re-train the model with the following command:
-
-```shell
-yarn run train
 ```
 
 ## Run the tests
