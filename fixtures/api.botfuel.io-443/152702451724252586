@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=Could%20you%20send%20me%20an%20invoice%20please%3F
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Tue, 22 May 2018 21:28:37 GMT
+content-type: application/json
+content-length: 424
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"answers":[[{"payload":{"value":"The invoice for your purchase will be sent along with your goods. You can also download an electronic version from your account."},"type":"text","value":"The invoice for your purchase will be sent along with your goods. You can also download an electronic version from your account."}]],"id":"5b048b3ffb647c001113a60a","label":"Invoice","probability":1.0,"resolvePrompt":"","type":"Qna"}]

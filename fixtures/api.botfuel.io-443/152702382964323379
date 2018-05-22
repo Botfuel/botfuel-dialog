@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=My%20name%20is%20John
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Tue, 22 May 2018 21:17:09 GMT
+content-type: application/json
+content-length: 124
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b0485abfb647c001113a5be","label":"name","probability":0.4205157613255812,"resolvePrompt":"name?","type":"Intent"}]

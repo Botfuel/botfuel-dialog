@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=Show%20me%20the%20products.
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Tue, 22 May 2018 21:18:51 GMT
+content-type: application/json
+content-length: 117
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b0485aefb647c001113a5dc","label":"products","probability":1.0,"resolvePrompt":"products?","type":"Intent"}]

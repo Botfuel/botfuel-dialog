@@ -1,0 +1,12 @@
+GET /nlp/entity-extraction?sentence=I%20leave%20from%20London
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 403 Forbidden
+server: openresty/1.11.2.5
+date: Tue, 22 May 2018 21:15:42 GMT
+content-type: text/plain; charset=us-ascii
+transfer-encoding: chunked
+connection: close
+
+Authentication failed, wrong AppId/AppKey or limits has been reached
