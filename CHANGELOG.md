@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="8.0.0"></a>
+# [8.0.0](https://github.com/Botfuel/bot-sdk2/compare/v7.2.6...v8.0.0) (2018-05-22)
+
+
+### Bug Fixes
+
+* fix links to concepts and getting-started in new doc ([7db8e28](https://github.com/Botfuel/bot-sdk2/commit/7db8e28))
+* fix test middlewares ([49861c5](https://github.com/Botfuel/bot-sdk2/commit/49861c5))
+
+
+### Code Refactoring
+
+* botfuel-nlu uses Botfuel Trainer ([c9cb226](https://github.com/Botfuel/bot-sdk2/commit/c9cb226))
+
+
+### BREAKING CHANGES
+
+* the nlu botfuel (default) will use Botfuel Trainer. Bots must be migrated to use Botfuel Trainer. No more intents folder and intents must be created inside the Botfuel Trainer.
+
+
+
+
+
 <a name="7.2.6"></a>
 ## [7.2.6](https://github.com/Botfuel/botfuel-dialog/compare/v7.2.5...v7.2.6) (2018-05-18)
 

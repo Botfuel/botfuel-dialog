@@ -1,6 +1,6 @@
 {
   "name": "botfuel-dialog",
-  "version": "7.2.6",
+  "version": "8.0.0",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel Dialog",
@@ -9,7 +9,9 @@
     "url": "https://github.com/Botfuel/botfuel-dialog"
   },
   "license": "Apache-2.0",
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "bin": {
     "botfuel-run": "./build/run.js",
     "botfuel-clean": "./build/clean.js"

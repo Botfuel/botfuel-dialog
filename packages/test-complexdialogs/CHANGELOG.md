@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="8.0.0"></a>
+# [8.0.0](https://github.com/Botfuel/bot-sdk2/compare/v7.2.6...v8.0.0) (2018-05-22)
+
+
+### Bug Fixes
+
+* fix links to concepts and getting-started in new doc ([7db8e28](https://github.com/Botfuel/bot-sdk2/commit/7db8e28))
+
+
+
+
+
 <a name="7.0.0"></a>
 # [7.0.0](https://github.com/Botfuel/bot-sdk2/compare/v5.1.7...v7.0.0) (2018-04-18)
 
