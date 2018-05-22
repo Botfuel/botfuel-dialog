@@ -27,7 +27,7 @@ class QnasView extends View {
   render(userMessage, { answers }) {
     logger.debug('render', userMessage, { answers });
 
-    return answers[0].map(message => new BotTextMessage(message.value));
+    return answers[0].map(message => new BotTextMessage(message.payload.value));
   }
 }
 
