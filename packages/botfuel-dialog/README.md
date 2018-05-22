@@ -4,10 +4,10 @@
 
 Build highly conversational bots with Botfuel Dialog.
 
-Read [**Getting Started**](https://docs.botfuel.io/dialog/tutorials/getting-started) to learn how to run a bot in minutes.
+Read [**Getting Started**](https://docs.botfuel.io/platform/tutorials/getting-started) to learn how to run a bot in minutes.
 See some [sample bots](https://github.com/topics/botfuel-dialog-samples) written with Botfuel Dialog.
 
-For more explanations about the internals of Botfuel Dialog, see [**Concepts**](https://docs.botfuel.io/dialog/concepts).
+For more explanations about the internals of Botfuel Dialog, see [**Concepts**](https://docs.botfuel.io/platform/concepts).
 
 If you have any issue or question, feel free to [open a ticket](https://github.com/Botfuel/botfuel-dialog/issues).
 

@@ -46,9 +46,9 @@ const checkCredentials = (config) => {
 
   // Botfuel app id/key
   if (!BOTFUEL_APP_ID || !BOTFUEL_APP_KEY) {
-    if (config.nlu.name === BOTFUEL_NLU && config.nlu.qna) {
+    if (config.nlu.name === BOTFUEL_NLU) {
       throw new MissingCredentialsError(
-        'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required to use Botfuel QnA.',
+        'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required to use Botfuel NLU.',
       );
     }
     if (config.spellchecking) {

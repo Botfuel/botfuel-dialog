@@ -1,1 +1,0 @@
-{"classifier":{"examples":{"mute":[[1]]},"features":[],"featurePositions":{},"maxFeaturePosition":0,"classifications":["mute"],"exampleCount":1,"theta":[{"elements":[2.7672959976932656]}]},"docs":[{"label":"mute","text":["mute"]}],"features":{"mute":1},"stemmer":{},"lastAdded":1,"events":{"domain":null,"_events":{},"_eventsCount":0}}

@@ -1,16 +1,17 @@
 {
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap && lerna run build --scope botfuel-dialog && lerna link --force-local",
+    "bootstrap":
+      "lerna bootstrap && lerna run build --scope botfuel-dialog && lerna link --force-local",
     "clean": "lerna clean && node clean.js",
     "type-check": "yarn flow",
     "style": "lerna run style",
     "commitmsg": "node check-commit-msg.js",
-    "pretest": "yarn run bootstrap && yarn run train",
-    "release": "yarn test && lerna run build --scope botfuel-dialog && lerna publish --conventional-commits --changelog-preset=angular",
+    "pretest": "yarn run bootstrap",
+    "release":
+      "yarn test && lerna run build --scope botfuel-dialog && lerna publish --conventional-commits --changelog-preset=angular",
     "unit-test": "BOTFUEL_APP_TOKEN=TEST_BOT jest packages/botfuel-dialog",
-    "test": "jest --forceExit",
-    "train": "lerna run train"
+    "test": "jest --forceExit"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -40,7 +41,5 @@
     "replay": "^2.1.4",
     "shelljs": "^0.8.2"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": ["packages/*"]
 }

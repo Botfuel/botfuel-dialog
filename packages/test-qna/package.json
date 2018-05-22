@@ -7,7 +7,6 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "botfuel-run",
-    "train": "botfuel-train",
     "clean": "botfuel-clean",
     "test": "jest",
     "style": "eslint src && eslint tests"
@@ -15,9 +14,7 @@
   "dependencies": {
     "botfuel-dialog": "latest"
   },
-  "devDependencies": {
-    "sinon": "^5.0.7"
-  },
+  "devDependencies": {},
   "engines": {
     "node": "8.x"
   }

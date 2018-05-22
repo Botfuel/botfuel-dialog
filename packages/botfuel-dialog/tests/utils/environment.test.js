@@ -29,8 +29,8 @@ describe('Environment utils', () => {
   });
 
   describe('When BOTFUEL_APP_TOKEN, BOTFUEL_APP_KEY, BOTFUEL_APP_ID are defined', () => {
-    test('should not throw an error when using spellchecking or qna', async () => {
-      const config = buildConfig({ nlu: { name: 'botfuel', qna: true }, spellchecking: true });
+    test('should not throw an error when using botfuel nlu or spellchecking', async () => {
+      const config = buildConfig({ nlu: { name: 'botfuel' }, spellchecking: true });
       expect(() => checkCredentials(config)).not.toThrowError(MissingCredentialsError);
     });
   });
@@ -58,8 +58,8 @@ describe('Environment utils', () => {
       sandbox.stub(process, 'env').value({ BOTFUEL_APP_ID: undefined });
     });
 
-    test('should throw an error when using botfuel QnA', async () => {
-      const config = buildConfig({ nlu: { name: 'botfuel', qna: true } });
+    test('should throw an error when using botfuel nlu', async () => {
+      const config = buildConfig({ nlu: { name: 'botfuel' } });
       expect(() => checkCredentials(config)).toThrowError(MissingCredentialsError);
     });
 
@@ -68,8 +68,8 @@ describe('Environment utils', () => {
       expect(() => checkCredentials(config)).toThrowError(MissingCredentialsError);
     });
 
-    test('should not throw an error when not using spellchecking or qna', async () => {
-      const config = buildConfig({});
+    test('should not throw an error when not using botfuel-nlu', async () => {
+      const config = buildConfig({ nlu: { name: 'custom' } });
       expect(() => checkCredentials(config)).not.toThrowError(MissingCredentialsError);
     });
   });
@@ -91,8 +91,8 @@ describe('Environment utils', () => {
       expect(f).toThrowError(MissingCredentialsError);
     });
 
-    test('should not throw an error when not using spellchecking or qna', async () => {
-      const config = buildConfig({});
+    test('should not throw an error when not using botfuel-nlu', async () => {
+      const config = buildConfig({ nlu: { name: 'custom' } });
       expect(() => checkCredentials(config)).not.toThrowError(MissingCredentialsError);
     });
   });

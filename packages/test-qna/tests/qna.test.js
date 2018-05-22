@@ -29,10 +29,10 @@ describe('Qna', () => {
     const bot = new Bot(config);
     const { adapter } = bot;
     const { userId } = adapter;
-    await bot.play([new UserTextMessage('Where is bryan ?')]);
+    await bot.play([new UserTextMessage('I love Paris')]);
     expect(bot.adapter.log).toEqual(
       [
-        new UserTextMessage('Where is bryan ?'),
+        new UserTextMessage('I love Paris'),
         new BotTextMessage(
           'I’m sorry, I did not understand your question. Please reach us at contact@my-sample-compagny.com for further assistance.',
         ),
@@ -94,14 +94,14 @@ describe('Qna', () => {
   });
    */
 
-  test('should respond to hello', async () => {
+  test('should respond to help request', async () => {
     const bot = new Bot(config);
     const { adapter } = bot;
     const { userId } = adapter;
-    await bot.play([new UserTextMessage('Hello')]);
+    await bot.play([new UserTextMessage('Can you help me?')]);
     expect(bot.adapter.log).toEqual(
       [
-        new UserTextMessage('Hello'),
+        new UserTextMessage('Can you help me?'),
         new BotTextMessage(
           'Hello! I can provide you with information about our payment and shipping policies.',
         ),

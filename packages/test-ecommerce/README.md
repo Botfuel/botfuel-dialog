@@ -2,6 +2,12 @@
 
 This bot tests how you can implement a bot on Facebook Messenger with structured message like carousel.
 
+## Create an app
+
+Create an app and add intents/QnAs on Botfuel Trainer (https://app.botfuel.io).
+
+See the [Getting Started tutorial](https://docs.botfuel.io/platform/tutorials/getting-started) for how to create a new app.
+
 ## Run the bot
 
 Before running your bot, there are a few steps to connect it to Facebook Messenger:
@@ -16,14 +22,6 @@ Then run the bot with the following environment variables:
 
 ```shell
 FB_VERIFY_TOKEN=<...> FB_PAGE_ACCESS_TOKEN=<...> BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn start messenger-config
-```
-
-## Train the model
-
-Each time you update the intent files, you have to re-train the model with the following command:
-
-```shell
-yarn run train
 ```
 
 ## Run the tests
@@ -42,8 +40,8 @@ BOTFUEL_APP_TOKEN=<...> yarn run clean
 
 ## Need help ?
 
-* See [**Getting Started**](https://docs.botfuel.io/dialog/tutorials/getting-started) to learn how to run a bot in minutes.
-* See [**Concepts**](https://docs.botfuel.io/dialog/concepts) for explanations about the internals of the SDK.
+* See [**Getting Started**](https://docs.botfuel.io/platform/tutorials/getting-started) to learn how to run a bot in minutes.
+* See [**Concepts**](https://docs.botfuel.io/platform/concepts) for explanations about the internals of the SDK.
 
 ## License
 

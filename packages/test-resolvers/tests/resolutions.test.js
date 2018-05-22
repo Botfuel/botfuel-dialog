@@ -41,9 +41,9 @@ describe('Resolutions', () => {
     const bot = new Bot(config);
     const { adapter } = bot;
     const { userId } = adapter;
-    await bot.play([new UserTextMessage('Hello')]);
+    await bot.play([new UserTextMessage('How are you?')]);
     expect(bot.adapter.log).toEqual(
-      [new UserTextMessage('Hello'), new BotTextMessage('Hello human!')].map(msg =>
+      [new UserTextMessage('How are you?'), new BotTextMessage('Hello human!')].map(msg =>
         msg.toJson(userId)),
     );
 
@@ -60,9 +60,9 @@ describe('Resolutions', () => {
     const bot = new Bot(config);
     const { adapter } = bot;
     const { userId } = adapter;
-    await bot.play([new UserTextMessage('Goodbye')]);
+    await bot.play([new UserTextMessage('see you later')]);
     expect(bot.adapter.log).toEqual(
-      [new UserTextMessage('Goodbye'), new BotTextMessage('Goodbye human!')].map(msg =>
+      [new UserTextMessage('see you later'), new BotTextMessage('Goodbye human!')].map(msg =>
         msg.toJson(userId)),
     );
 
