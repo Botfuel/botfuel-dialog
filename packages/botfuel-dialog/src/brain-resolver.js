@@ -21,7 +21,6 @@ import type Brain from './brains/brain';
 
 const Resolver = require('./resolver');
 
-
 /**
  * The adapter resolver resolves the adapter at startup.
  */
