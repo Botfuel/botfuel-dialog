@@ -120,7 +120,7 @@ describe('DialogManager', () => {
     expect(dialogs.previous[0].name).toEqual(classificationDisambiguationDialog.name);
   });
 
-  test('should not understood when no intent and dialog currently exist', async () => {
+  test('Should not understand when no intent and a dialog currently exists', async () => {
     await dm.executeClassificationResults(
       { user: TEST_USER },
       [new ClassificationResult({ name: 'waiting', type: ClassificationResult.TYPE_INTENT })],

@@ -1,6 +1,6 @@
 {
   "name": "botfuel-dialog",
-  "version": "7.2.3",
+  "version": "7.2.6",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel Dialog",
@@ -44,7 +44,7 @@
     "winston": "^2.4.0"
   },
   "devDependencies": {
-    "sinon": "^4.1.5"
+    "sinon": "^5.0.7"
   },
   "engines": {
     "node": "8.x"

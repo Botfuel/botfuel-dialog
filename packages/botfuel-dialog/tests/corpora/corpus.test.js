@@ -15,6 +15,7 @@
  */
 
 const Corpus = require('../../src/corpora/corpus');
+const ExtractorError = require('../../src/errors/extractor-error');
 
 describe('Corpus', () => {
   test('should properly normalize', () => {
@@ -45,5 +46,16 @@ describe('Corpus', () => {
     );
     expect(corpus.getValue('Montbeliard')).toBe('Montbéliard');
     expect(corpus.getValue('Montbeliard', { keepAccents: true })).not.toBe('Montbéliard');
+  });
+
+  test('should throw an ExtractorError', () => {
+    expect(() => new Corpus(
+      [
+        ['should', '', '', ''],
+        ['Olympique Lyonnais', "L'Olympique Lyonnais", 'OL'],
+        ['Football Club de Nantes', 'FCN'],
+        ['Montbéliard'],
+      ],
+    )).toThrow(ExtractorError);
   });
 });

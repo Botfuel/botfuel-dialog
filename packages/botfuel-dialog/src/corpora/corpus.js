@@ -16,6 +16,7 @@
 
 /* eslint-disable valid-jsdoc */
 const Diacritics = require('diacritics');
+const ExtractorError = require('../errors/extractor-error');
 const logger = require('logtown')('Corpus');
 
 /**
@@ -44,9 +45,18 @@ class Corpus {
    * @constructor
    * @param {String[][]} matrix - the corpus matrix,
    * a row of the matrix corresponds to words with common meaning
+   * @param {String} path - the file path
    */
-  constructor(matrix) {
+  constructor(matrix, name) {
     logger.debug('constructor', matrix);
+    for (const row of matrix) {
+      for (const word of row) {
+        if (word.length === 0) {
+          throw new ExtractorError(`The corpus ${name} is not formatted properly.
+           Make sure it doesn’t contain trailing commas.`);
+        }
+      }
+    }
     this.matrix = matrix;
   }
 

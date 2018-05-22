@@ -101,7 +101,6 @@ class DialogManager extends Resolver<Dialog> {
     messageEntities: MessageEntities,
   ): void {
     logger.debug('updateWithClassificationResults', userId, dialogs, classificationResults);
-
     let newDialog: ?DialogData = null;
     if (classificationResults.length > 1) {
       newDialog = {
@@ -123,18 +122,17 @@ class DialogManager extends Resolver<Dialog> {
       let lastDialog: ?DialogData =
         dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
       if (lastDialog) {
-        if (messageEntities.length !== 0) {
-          lastDialog.data.messageEntities = messageEntities;
-        } else {
-          lastDialog = {
-            name: 'default',
-            characteristics: {
-              reentrant: false,
-            },
-            data: {},
-          };
-          dialogs.stack.push(lastDialog);
-        }
+        lastDialog.data.messageEntities = messageEntities;
+      }
+      if (messageEntities.length === 0) {
+        lastDialog = {
+          name: 'default',
+          characteristics: {
+            reentrant: false,
+          },
+          data: {},
+        };
+        dialogs.stack.push(lastDialog);
       }
     }
 

@@ -16,6 +16,7 @@
 
 const path = require('path');
 const FileCorpus = require('../../src/corpora/file-corpus');
+const ExtractorError = require('../../src/errors/extractor-error');
 
 describe('FileCorpus', () => {
   test('should retrieve the correct values', () => {
@@ -27,5 +28,20 @@ describe('FileCorpus', () => {
   test('should not retrieve empty rows', () => {
     const corpus = new FileCorpus(path.resolve(__dirname, './test-corpus.en.txt'));
     expect(corpus.matrix.length).toBe(5);
+  });
+
+  test('should not throw when the corpus file name contains a trailing comma', () => {
+    const corpus = new FileCorpus(path.resolve(__dirname, './test-corpus,comma.txt'));
+    expect(corpus.matrix.length).toBe(5);
+  });
+
+  test('should throw an ExtractorError when the corpus file contains trailing comma', () => {
+    expect(() => new FileCorpus(path.resolve(__dirname, './test-corpus-much-comma.txt')))
+      .toThrow(ExtractorError);
+  });
+
+  test('should throw Extractor Error when corpus file contains a line with only comma', () => {
+    expect(() => new FileCorpus(path.resolve(__dirname, './test-corpus-comma.txt')))
+      .toThrow(ExtractorError);
   });
 });
