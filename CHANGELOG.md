@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="8.0.2"></a>
+## [8.0.2](https://github.com/Botfuel/botfuel-dialog/compare/v8.0.1...v8.0.2) (2018-05-22)
+
+
+### Bug Fixes
+
+* fix QnA message after API updated ([a6cdfbc](https://github.com/Botfuel/botfuel-dialog/commit/a6cdfbc))
+
+
+
+
+
 <a name="8.0.1"></a>
 ## [8.0.1](https://github.com/Botfuel/bot-sdk2/compare/v8.0.0...v8.0.1) (2018-05-22)
 
