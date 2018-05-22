@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=My%20favorite%20cities%20are%20Paris%20and%20Nice
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Tue, 22 May 2018 21:17:56 GMT
+content-type: application/json
+content-length: 128
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b0485acfb647c001113a5cd","label":"cities","probability":0.8347245135756165,"resolvePrompt":"cities?","type":"Intent"}]

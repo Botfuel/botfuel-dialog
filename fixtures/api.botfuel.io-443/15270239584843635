@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=Mute
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Tue, 22 May 2018 21:19:18 GMT
+content-type: application/json
+content-length: 109
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b0485affb647c001113a5e5","label":"mute","probability":1.0,"resolvePrompt":"mute?","type":"Intent"}]

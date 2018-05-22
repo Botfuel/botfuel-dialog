@@ -1,0 +1,13 @@
+GET /nlp/spellchecking?sentence=Show%20me%20the%20detective%20hat.&key=EN_1
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Tue, 22 May 2018 21:18:49 GMT
+content-type: application/json
+content-length: 206
+connection: close
+via: 1.1 vegur
+
+{"originalSentence":"Show me the detective hat.","sentenceTemplate":"Show me the detective hat.","correctWords":[],"originalWords":[],"correctSentence":"Show me the detective hat.","possibleCorrections":[]}

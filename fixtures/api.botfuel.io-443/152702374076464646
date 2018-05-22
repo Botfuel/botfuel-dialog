@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=hello
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Tue, 22 May 2018 21:15:40 GMT
+content-type: application/json
+content-length: 109
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b048832fb647c001113a5f6","label":"greetings","probability":1.0,"resolvePrompt":"","type":"Intent"}]

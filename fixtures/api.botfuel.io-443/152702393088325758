@@ -1,0 +1,13 @@
+GET /nlp/spellchecking?sentence=Thenks&key=EN_1
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Tue, 22 May 2018 21:18:50 GMT
+content-type: application/json
+content-length: 218
+connection: close
+via: 1.1 vegur
+
+{"originalSentence":"Thenks","sentenceTemplate":"{0}","correctWords":["thanks"],"originalWords":["Thenks"],"correctSentence":"thanks","possibleCorrections":[{"corrections":["thanks","thinks"],"originalWord":"Thenks"}]}
