@@ -31,7 +31,7 @@ describe('QnasView', () => {
             answers: [
               [
                 {
-                  value: 'answer',
+                  payload: { value: 'answer' },
                 },
               ],
             ],
@@ -50,10 +50,10 @@ describe('QnasView', () => {
             answers: [
               [
                 {
-                  value: 'answer 1',
+                  payload: { value: 'answer 1' },
                 },
                 {
-                  value: 'answer 2',
+                  payload: { value: 'answer 2' },
                 },
               ],
             ],

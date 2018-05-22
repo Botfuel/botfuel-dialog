@@ -25,7 +25,7 @@ const TEST_CONFIG = require('../../src/config').getConfiguration({
 describe('QnasDialog', () => {
   const bot = new Bot(TEST_CONFIG);
   const dialog = new QnasDialog(bot);
-  const answers = [[{ value: 'answer' }]];
+  const answers = [[{ payload: { value: 'answer' } }]];
 
   test('should return the complete action', async () => {
     const { action } = await dialog.execute({}, { answers });
