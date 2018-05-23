@@ -16,9 +16,11 @@
 
 const QnasView = require('../../src/views/qnas-view');
 const BotTextMessage = require('../../src/messages/bot-text-message');
+const PostbackMessage = require('../../src/messages/postback-message');
+const Bot = require('../../src/bot');
 
 describe('QnasView', () => {
-  describe('renderEntities', () => {
+  describe('render', () => {
     const view = new QnasView({});
 
     test('should display answer', () => {
@@ -60,6 +62,25 @@ describe('QnasView', () => {
           },
         ),
       ).toEqual([new BotTextMessage('answer 1'), new BotTextMessage('answer 2')]);
+    });
+  });
+
+  describe('test QnA view in bot', () => {
+    test('should respond to postback message', async () => {
+      const bot = new Bot({ adapter: { name: 'test' } });
+      const answers = [
+        [
+          {
+            payload: { value: 'answer' },
+          },
+        ],
+      ];
+      await bot.play([new PostbackMessage('qnas', answers)]);
+
+      expect(bot.adapter.log).toEqual(
+        [new PostbackMessage('qnas', answers), new BotTextMessage('answer')].map(msg =>
+          msg.toJson('USER_TEST')),
+      );
     });
   });
 });
