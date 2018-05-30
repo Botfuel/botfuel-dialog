@@ -1,5 +1,6 @@
 # Botfuel Dialog
 
+[![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/botfuel/botfuel-dialog)
 [![CircleCI](https://circleci.com/gh/Botfuel/botfuel-dialog.svg?style=svg)](https://circleci.com/gh/Botfuel/botfuel-dialog)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/135uxjm0eextpwg5?svg=true)](https://ci.appveyor.com/project/botfuel/botfuel-dialog)
 
