@@ -6,6 +6,8 @@ This sample bot illustrates how you can implement a QnA bot using the [Webchat](
 
 Create an app and add QnAs on Botfuel Trainer (https://app.botfuel.io).
 
+You can get examples of intents here : https://github.com/Botfuel/botfuel-dialog/tree/master/packages/test-qna/blob/master/intents.xlsx
+
 See the [Getting Started tutorial](https://docs.botfuel.io/platform/tutorials/getting-started) for how to create a new app.
 
 ## Run the bot

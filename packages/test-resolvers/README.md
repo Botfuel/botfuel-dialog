@@ -1,12 +1,13 @@
-# test-complexdialogs
+# test-complexentities
 
-This bot tests complex dialogs that include digressions, multi-intents, and random access navigation.
+This sample bot illustrates resolvers.
+
 
 ## Create an app
 
 Create an app and add intents/QnAs on Botfuel Trainer (https://app.botfuel.io).
 
-You can get examples of intents here : https://github.com/Botfuel/botfuel-dialog/tree/master/packages/test-complexdialogs/blob/master/intents.xlsx
+You can get examples of intents here : https://github.com/Botfuel/botfuel-dialog/tree/master/packages/test-module/blob/master/intents.xlsx
 
 See the [Getting Started tutorial](https://docs.botfuel.io/platform/tutorials/getting-started) for how to create a new app.
 
