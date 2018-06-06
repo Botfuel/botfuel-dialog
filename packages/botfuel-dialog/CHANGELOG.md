@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="8.0.4"></a>
+## [8.0.4](https://github.com/Botfuel/botfuel-dialog/compare/v8.0.3...v8.0.4) (2018-06-06)
+
+
+### Bug Fixes
+
+* Display intent label or qna title if resolve prompt is empty ([6d9046d](https://github.com/Botfuel/botfuel-dialog/commit/6d9046d))
+
+
+
+
+
 <a name="8.0.3"></a>
 ## [8.0.3](https://github.com/Botfuel/botfuel-dialog/compare/v8.0.2...v8.0.3) (2018-05-23)
 
