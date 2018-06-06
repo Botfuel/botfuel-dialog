@@ -30,10 +30,12 @@ class ClassificationDisambiguationView extends View {
     logger.debug('render', userMessage, { classificationResults, messageEntities });
 
     const postbacks = classificationResults.map((cr) => {
+      const resolvePrompt = cr.resolvePrompt || `[${cr.label.toUpperCase()}]`;
+
       if (cr.isQnA()) {
-        return new Postback(cr.resolvePrompt, cr.name, cr.answers);
+        return new Postback(resolvePrompt, cr.name, cr.answers);
       }
-      return new Postback(cr.resolvePrompt, cr.name, messageEntities);
+      return new Postback(resolvePrompt, cr.name, messageEntities);
     });
 
     return [new BotTextMessage('What do you mean?'), new ActionsMessage(postbacks)];
