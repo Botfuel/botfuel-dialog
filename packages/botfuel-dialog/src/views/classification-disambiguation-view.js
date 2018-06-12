@@ -38,7 +38,11 @@ class ClassificationDisambiguationView extends View {
       return new Postback(resolvePrompt, cr.name, messageEntities);
     });
 
-    return [new BotTextMessage('What do you mean?'), new ActionsMessage(postbacks)];
+    const option = {
+      text: 'disambiguation',
+    };
+
+    return [new BotTextMessage('What do you mean?'), new ActionsMessage(postbacks, option)];
   }
 }
 
