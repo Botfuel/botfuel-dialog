@@ -39,10 +39,10 @@ class ClassificationDisambiguationView extends View {
     });
 
     const option = {
-      text: 'disambiguation',
+      text: 'What do you mean ? ',
     };
 
-    return [new BotTextMessage('What do you mean?'), new ActionsMessage(postbacks, option)];
+    return [new ActionsMessage(postbacks, option)];
   }
 }
 
