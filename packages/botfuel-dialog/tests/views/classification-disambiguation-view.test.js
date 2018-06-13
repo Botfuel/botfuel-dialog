@@ -36,7 +36,9 @@ describe('ClassificationDisambiguationView', () => {
       }),
     ];
     const view = new ClassificationDisambiguationView();
-
+    const option = {
+      text: 'disambiguation',
+    };
     test('should return correct choices for both intents and qnas', () => {
       expect(
         view.render({ user: 'TEST_USER' }, { classificationResults, messageEntities: [] }),
@@ -47,7 +49,7 @@ describe('ClassificationDisambiguationView', () => {
           new Postback('You want delivery information?', 'qnas', [
             [{ value: 'Here is your delivery information' }],
           ]),
-        ]),
+        ], option),
       ]);
     });
   });
