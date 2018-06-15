@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="8.1.0"></a>
+# [8.1.0](https://github.com/Botfuel/botfuel-dialog/compare/v8.0.4...v8.1.0) (2018-06-15)
+
+
+### Features
+
+* Add complex input dialog & view ([b514ec3](https://github.com/Botfuel/botfuel-dialog/commit/b514ec3))
+
+
+
+
+
 <a name="8.0.4"></a>
 ## [8.0.4](https://github.com/Botfuel/botfuel-dialog/compare/v8.0.3...v8.0.4) (2018-06-06)
 
