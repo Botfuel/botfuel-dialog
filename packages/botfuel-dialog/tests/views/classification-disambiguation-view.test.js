@@ -16,7 +16,6 @@
 
 const ClassificationDisambiguationView = require('../../src/views/classification-disambiguation-view');
 const ActionsMessage = require('../../src/messages/actions-message');
-const BotTextMessage = require('../../src/messages/bot-text-message');
 const Postback = require('../../src/messages/postback');
 const ClassificationResult = require('../../src/nlus/classification-result');
 
@@ -36,18 +35,19 @@ describe('ClassificationDisambiguationView', () => {
       }),
     ];
     const view = new ClassificationDisambiguationView();
-
+    const option = {
+      text: 'What do you mean ? ',
+    };
     test('should return correct choices for both intents and qnas', () => {
       expect(
         view.render({ user: 'TEST_USER' }, { classificationResults, messageEntities: [] }),
       ).toEqual([
-        new BotTextMessage('What do you mean?'),
         new ActionsMessage([
           new Postback('You want trip information?', 'trip', []),
           new Postback('You want delivery information?', 'qnas', [
             [{ value: 'Here is your delivery information' }],
           ]),
-        ]),
+        ], option),
       ]);
     });
   });
