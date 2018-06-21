@@ -54,7 +54,8 @@ describe('Disgressions', () => {
         expect(lastConversation).toHaveProperty('travel');
         expect(lastConversation.travel._entities).toHaveProperty('city');
         expect(lastConversation.travel._entities).toHaveProperty('time');
-        expect(lastConversation.travel._entities.city.body).toBe('Paris');
+        expect(lastConversation.travel._entities.city).toHaveProperty('body');
+        expect(lastConversation.travel._entities.city.values[0].value).toBe('Paris');
         expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
       });
     },
@@ -100,10 +101,12 @@ describe('Disgressions', () => {
         expect(lastConversation).toHaveProperty('travel');
         expect(lastConversation.travel._entities).toHaveProperty('city');
         expect(lastConversation.travel._entities).toHaveProperty('time');
-        expect(lastConversation.travel._entities.city.body).toBe('Paris');
+        expect(lastConversation.travel._entities.city).toHaveProperty('body');
+        expect(lastConversation.travel._entities.city.values[0].value).toBe('Paris');
         expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
         expect(lastConversation.name._entities).toHaveProperty('name');
-        expect(lastConversation.name._entities.name.body).toBe('John');
+        expect(lastConversation.name._entities.name).toHaveProperty('body');
+        expect(lastConversation.name._entities.name.values[0].value).toBe('john');
       });
     },
     15000,

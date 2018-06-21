@@ -36,7 +36,8 @@ describe('NameDialog', () => {
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('name');
     expect(lastConversation.name._entities).toHaveProperty('name');
-    expect(lastConversation.name._entities.name.body).toBe('John');
+    expect(lastConversation.name._entities.name).toHaveProperty('body');
+    expect(lastConversation.name._entities.name.values[0].value).toBe('john');
   });
 
   test('should ask for the forename', async () => {
@@ -60,6 +61,7 @@ describe('NameDialog', () => {
     expect(dialogs.stack).toHaveLength(0);
     expect(lastConversation).toHaveProperty('name');
     expect(lastConversation.name._entities).toHaveProperty('name');
-    expect(lastConversation.name._entities.name.body).toBe('John');
+    expect(lastConversation.name._entities.name).toHaveProperty('body');
+    expect(lastConversation.name._entities.name.values[0].value).toBe('john');
   });
 });

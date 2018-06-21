@@ -20,14 +20,11 @@ describe('LocationExtractor', () => {
   test('should extract coordinates', async () => {
     const extractor = new LocationExtractor();
     const entities = await extractor.compute("I'm in NYC at coordinates 40.741895,-73.989308");
-    expect(entities).toEqual([
-      {
-        dim: 'system:location',
-        body: '40.741895,-73.989308',
-        values: [{ value: { lat: '40.741895', long: '-73.989308' }, type: 'coordinates' }],
-        start: 26,
-        end: 46,
-      },
-    ]);
+    expect(entities).toHaveLength(1);
+    expect(entities[0]).toHaveProperty('body');
+    expect(entities[0].dim).toBe('system:location');
+    expect(entities[0].values).toEqual([{ value: { lat: '40.741895', long: '-73.989308' }, type: 'coordinates' }]);
+    expect(entities[0].start).toBe(26);
+    expect(entities[0].end).toBe(46);
   });
 });

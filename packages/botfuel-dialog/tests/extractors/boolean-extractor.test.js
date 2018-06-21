@@ -21,31 +21,20 @@ const extractor = new BooleanExtractor({ locale: 'en' });
 describe('BooleanExtractor', () => {
   test('should properly extract', async () => {
     const entities = await extractor.compute('I say yes you say no');
-    expect(entities).toEqual([
-      {
-        dim: 'system:boolean',
-        body: 'no',
-        values: [
-          {
-            type: 'boolean',
-            value: false,
-          },
-        ],
-        start: 18,
-        end: 20,
-      },
-      {
-        dim: 'system:boolean',
-        body: 'yes',
-        values: [
-          {
-            type: 'boolean',
-            value: true,
-          },
-        ],
-        start: 6,
-        end: 9,
-      },
-    ]);
+    expect(entities).toHaveLength(2);
+    expect(entities[0]).toHaveProperty('body');
+    expect(entities[1]).toHaveProperty('body');
+
+    expect(entities[0].dim).toBe('system:boolean');
+    expect(entities[0].values[0].type).toBe('boolean');
+    expect(entities[0].values[0].value).toBe(false);
+    expect(entities[0].start).toBe(18);
+    expect(entities[0].end).toBe(20);
+
+    expect(entities[1].dim).toBe('system:boolean');
+    expect(entities[1].values[0].type).toBe('boolean');
+    expect(entities[1].values[0].value).toBe(true);
+    expect(entities[1].start).toBe(6);
+    expect(entities[1].end).toBe(9);
   });
 });

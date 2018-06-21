@@ -47,22 +47,18 @@ describe('RegexExtractor', () => {
   test('should extract integers', async () => {
     const extractor = new RegexExtractor({ dimension: 'integer', regex: /[0-9]/ });
     const result = await extractor.compute('I have 1 cat and 2 birds');
-    expect(result).toEqual([
-      {
-        dim: 'integer',
-        body: '1',
-        values: [{ value: '1' }],
-        start: 7,
-        end: 8,
-      },
-      {
-        dim: 'integer',
-        body: '2',
-        values: [{ value: '2' }],
-        start: 17,
-        end: 18,
-      },
-    ]);
+    expect(result).toHaveLength(2);
+    expect(result[0]).toHaveProperty('body');
+    expect(result[0].dim).toBe('integer');
+    expect(result[0].values[0].value).toBe('1');
+    expect(result[0].start).toBe(7);
+    expect(result[0].end).toBe(8);
+
+    expect(result[1]).toHaveProperty('body');
+    expect(result[1].dim).toBe('integer');
+    expect(result[1].values[0].value).toBe('2');
+    expect(result[1].start).toBe(17);
+    expect(result[1].end).toBe(18);
   });
 
   test('should extract a phone number', async () => {
@@ -71,14 +67,10 @@ describe('RegexExtractor', () => {
       regex: /(0[1-9])(?:[ _.-]?(\d{2})){4}/,
     });
     const result = await extractor.compute('My phone number is 0123456789');
-    expect(result).toEqual([
-      {
-        dim: 'phone-number',
-        body: '0123456789',
-        values: [{ value: '0123456789' }],
-        start: 19,
-        end: 29,
-      },
-    ]);
+    expect(result[0]).toHaveProperty('body');
+    expect(result[0].dim).toBe('phone-number');
+    expect(result[0].values[0].value).toBe('0123456789');
+    expect(result[0].start).toBe(19);
+    expect(result[0].end).toBe(29);
   });
 });
