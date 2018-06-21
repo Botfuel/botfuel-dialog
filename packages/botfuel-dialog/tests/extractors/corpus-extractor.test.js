@@ -28,32 +28,21 @@ const extractor = new CorpusExtractor({ dimension: 'teams', corpus: teams });
 describe('CorpusExtractor', () => {
   test('should properly extract', async () => {
     const entities = await extractor.compute("Béziers joue contre l'Olympique Lyonnais");
-    expect(entities).toEqual([
-      {
-        dim: 'teams',
-        body: "L'Olympique Lyonnais",
-        values: [
-          {
-            type: 'string',
-            value: 'Olympique Lyonnais',
-          },
-        ],
-        start: 20,
-        end: 40,
-      },
-      {
-        dim: 'teams',
-        body: 'Béziers',
-        values: [
-          {
-            type: 'string',
-            value: 'Béziers',
-          },
-        ],
-        start: 0,
-        end: 7,
-      },
-    ]);
+    expect(entities).toHaveLength(2);
+    expect(entities[0]).toHaveProperty('body');
+    expect(entities[1]).toHaveProperty('body');
+
+    expect(entities[0].dim).toBe('teams');
+    expect(entities[0].values[0].type).toBe('string');
+    expect(entities[0].values[0].value).toBe('Olympique Lyonnais');
+    expect(entities[0].start).toBe(20);
+    expect(entities[0].end).toBe(40);
+
+    expect(entities[1].dim).toBe('teams');
+    expect(entities[1].values[0].type).toBe('string');
+    expect(entities[1].values[0].value).toBe('Béziers');
+    expect(entities[1].start).toBe(0);
+    expect(entities[1].end).toBe(7);
   });
 
   test('should properly extract when substring', async () => {
@@ -65,43 +54,27 @@ describe('CorpusExtractor', () => {
     const entities = await extractor.compute(
       'Paris Saint-Germain, Paris SG et PSG sont 3 synonymes.',
     );
-    expect(entities).toEqual([
-      {
-        dim: 'teams',
-        body: 'Paris Saint-Germain',
-        values: [
-          {
-            type: 'string',
-            value: 'Paris Saint-Germain',
-          },
-        ],
-        start: 0,
-        end: 19,
-      },
-      {
-        dim: 'teams',
-        body: 'Paris SG',
-        values: [
-          {
-            type: 'string',
-            value: 'Paris Saint-Germain',
-          },
-        ],
-        start: 21,
-        end: 29,
-      },
-      {
-        dim: 'teams',
-        body: 'PSG',
-        values: [
-          {
-            type: 'string',
-            value: 'Paris Saint-Germain',
-          },
-        ],
-        start: 33,
-        end: 36,
-      },
-    ]);
+    expect(entities).toHaveLength(3);
+    expect(entities[0]).toHaveProperty('body');
+    expect(entities[1]).toHaveProperty('body');
+    expect(entities[2]).toHaveProperty('body');
+
+    expect(entities[0].dim).toBe('teams');
+    expect(entities[0].values[0].type).toBe('string');
+    expect(entities[0].values[0].value).toBe('Paris Saint-Germain');
+    expect(entities[0].start).toBe(0);
+    expect(entities[0].end).toBe(19);
+
+    expect(entities[1].dim).toBe('teams');
+    expect(entities[1].values[0].type).toBe('string');
+    expect(entities[1].values[0].value).toBe('Paris Saint-Germain');
+    expect(entities[1].start).toBe(21);
+    expect(entities[1].end).toBe(29);
+
+    expect(entities[2].dim).toBe('teams');
+    expect(entities[2].values[0].type).toBe('string');
+    expect(entities[2].values[0].value).toBe('Paris Saint-Germain');
+    expect(entities[2].start).toBe(33);
+    expect(entities[2].end).toBe(36);
   });
 });

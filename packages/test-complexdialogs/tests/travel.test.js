@@ -40,7 +40,7 @@ describe('TravelDialog', () => {
     expect(dialogs.stack.length).toBe(1);
     expect(lastConversation).toHaveProperty('travel');
     expect(lastConversation.travel._entities).toHaveProperty('city');
-    expect(lastConversation.travel._entities.city.body).toBe('Paris');
+    expect(lastConversation.travel._entities.city.values[0].value).toBe('Paris');
   });
 
   test('should have the proper interaction when the user gives the destination then the date', async () => {
@@ -66,7 +66,7 @@ describe('TravelDialog', () => {
     expect(lastConversation).toHaveProperty('travel');
     expect(lastConversation.travel._entities).toHaveProperty('city');
     expect(lastConversation.travel._entities).toHaveProperty('time');
-    expect(lastConversation.travel._entities.city.body).toBe('Paris');
+    expect(lastConversation.travel._entities.city.values[0].value).toBe('Paris');
     expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
   });
 
@@ -101,7 +101,8 @@ describe('TravelDialog', () => {
     expect(lastConversation).toHaveProperty('travel');
     expect(lastConversation.travel._entities).toHaveProperty('city');
     expect(lastConversation.travel._entities).toHaveProperty('time');
-    expect(lastConversation.travel._entities.city.body).toBe('Berlin');
+    expect(lastConversation.travel._entities.city).toHaveProperty('body');
+    expect(lastConversation.travel._entities.city.values[0].value).toBe('Berlin');
     expect(lastConversation.travel._entities.time.body).toBe('tomorrow');
   });
 
@@ -134,7 +135,8 @@ describe('TravelDialog', () => {
     expect(lastConversation).toHaveProperty('travel');
     expect(lastConversation.travel._entities).toHaveProperty('city');
     expect(lastConversation.travel._entities).toHaveProperty('time');
-    expect(lastConversation.travel._entities.city.body).toBe('Paris');
+    expect(lastConversation.travel._entities.city).toHaveProperty('body');
+    expect(lastConversation.travel._entities.city.values[0].value).toBe('Paris');
     expect(lastConversation.travel._entities.time.body).toBe('the day after tomorrow');
   });
 });
