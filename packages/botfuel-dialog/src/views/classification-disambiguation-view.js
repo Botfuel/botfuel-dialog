@@ -16,7 +16,6 @@
 
 const logger = require('logtown')('IntentResolutionView');
 const ActionsMessage = require('../messages/actions-message');
-const BotTextMessage = require('../messages/bot-text-message');
 const Postback = require('../messages/postback');
 const View = require('./view');
 
@@ -38,7 +37,10 @@ class ClassificationDisambiguationView extends View {
       return new Postback(resolvePrompt, cr.name, messageEntities);
     });
 
-    return [new BotTextMessage('What do you mean?'), new ActionsMessage(postbacks)];
+    const options = {
+      text: 'What do you mean ? ',
+    };
+    return [new ActionsMessage(postbacks, options)];
   }
 }
 
