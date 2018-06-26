@@ -50,7 +50,6 @@ const QuickrepliesMessage = require('./messages/quickreplies-message');
 const RegexExtractor = require('./extractors/regex-extractor');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
-const TestAdapterMessenger = require('request-promise-native');
 const UserImageMessage = require('./messages/user-image-message');
 const UserTextMessage = require('./messages/user-text-message');
 const View = require('./views/view');
@@ -94,7 +93,6 @@ module.exports = {
   RegexExtractor,
   ShellAdapter,
   TestAdapter,
-  TestAdapterMessenger,
   UserImageMessage,
   UserTextMessage,
   View,
