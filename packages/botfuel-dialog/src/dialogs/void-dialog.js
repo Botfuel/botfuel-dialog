@@ -27,7 +27,7 @@ class VoidDialog extends Dialog {
   /** @inheritDoc */
   async execute(userMessage, data) {
     logger.debug('execute', userMessage, data);
-    const action = (await this.dialogWillComplete(userMessage, data)) || this.complete();
+    const action = await this.dialogWillComplete(userMessage, data);
     return {
       action,
       botMessages: [],

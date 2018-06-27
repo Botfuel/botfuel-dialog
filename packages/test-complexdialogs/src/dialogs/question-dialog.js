@@ -18,8 +18,12 @@
 const { PromptDialog } = require('botfuel-dialog');
 
 class QuestionDialog extends PromptDialog {
-  async dialogWillComplete(userMessage) {
-    await this.brain.userSet(userMessage.user, 'isQuestionDialogCompleted', true);
+  async dialogWillComplete(userMessage, data) {
+    if (data.missingEntities.size === 0) {
+      await this.brain.userSet(userMessage.user, 'isQuestionDialogCompleted', true);
+      return this.complete();
+    }
+    return this.wait();
   }
 }
 

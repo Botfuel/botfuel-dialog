@@ -19,6 +19,7 @@ const { BaseDialog } = require('botfuel-dialog');
 class Mute extends BaseDialog {
   dialogWillComplete(userMessage) {
     this.brain.userSet(userMessage.user, '_isMuted', true);
+    return this.complete();
   }
 }
 

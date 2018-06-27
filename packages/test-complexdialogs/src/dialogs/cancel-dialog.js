@@ -14,30 +14,29 @@
  * limitations under the License.
  */
 
-const { ConfirmationDialog } = require('botfuel-dialog');
+const { PromptDialog } = require('botfuel-dialog');
 
-class Cancel extends ConfirmationDialog {
-  async dialogWillComplete(userMessage, { matchedEntities }) {
-    const answer = matchedEntities.boolean.values[0].value;
-
-    // Clean entities for this dialog so it can be reused later
-    await this.brain.conversationSet(userMessage.user, this.parameters.namespace, {});
-
-    if (answer) {
+class CancelDialog extends PromptDialog {
+  async dialogWillComplete(userMessage, data) {
+    if (data.missingEntities.size === 0) {
+      // Clean entities for this dialog so it can be reused later
+      await this.brain.conversationSet(userMessage.user, this.parameters.namespace, {});
+      if (data.matchedEntities.answer.values[0].value === false) {
+        return this.complete();
+      }
       return this.cancelPrevious('greetings');
     }
-
-    return this.complete();
+    return this.wait();
   }
 }
 
-Cancel.params = {
+CancelDialog.params = {
   namespace: 'cancel',
   entities: {
-    boolean: {
+    answer: {
       dim: 'system:boolean',
     },
   },
 };
 
-module.exports = Cancel;
+module.exports = CancelDialog;

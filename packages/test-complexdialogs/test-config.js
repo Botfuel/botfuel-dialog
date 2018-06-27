@@ -19,6 +19,5 @@ module.exports = {
     name: 'test',
   },
   logger: 'error',
-  multiIntent: true,
   path: __dirname,
 };

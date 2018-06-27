@@ -17,8 +17,11 @@
 const { PromptDialog } = require('botfuel-dialog');
 
 class CarDialog extends PromptDialog {
-  async dialogWillComplete() {
-    return this.triggerNext('thanks');
+  async dialogWillComplete(userMessage, data) {
+    if (data.missingEntities.size === 0) {
+      return this.triggerNext('thanks');
+    }
+    return this.wait();
   }
 }
 
