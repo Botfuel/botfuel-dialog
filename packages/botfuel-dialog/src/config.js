@@ -38,7 +38,7 @@ export type Config = {|
   },
   path: string,
   spellchecking: boolean,
-  // custom: Object,
+  custom: Object,
 |};
 
 const fs = require('fs');
