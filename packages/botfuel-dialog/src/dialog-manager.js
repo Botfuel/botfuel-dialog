@@ -175,7 +175,6 @@ class DialogManager extends Resolver<Dialog> {
     action: Action,
   ): DialogsData {
     logger.debug('applyAction', dialogs, action);
-
     let updatedDialogs: DialogsData = dialogs;
     const currentDialog: DialogData = dialogs.stack[dialogs.stack.length - 1];
     const date = Date.now();
@@ -239,7 +238,6 @@ class DialogManager extends Resolver<Dialog> {
     botMessagesAccumulator: BotMessageJson[] = [],
   ): Promise<DialogManagerExecuteOutput> {
     logger.debug('execute', userMessage, dialogs, botMessagesAccumulator);
-
     let botMessages = botMessagesAccumulator;
 
     if (dialogs.stack.length === 0) {
@@ -312,7 +310,6 @@ class DialogManager extends Resolver<Dialog> {
     newDialog: DialogData,
   ): Promise<BotMessageJson[]> {
     logger.debug('executeDialog', userMessage, newDialog);
-
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithDialog(dialogs, newDialog);
