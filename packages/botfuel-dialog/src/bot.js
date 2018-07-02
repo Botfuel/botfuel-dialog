@@ -238,7 +238,7 @@ class Bot {
     const dialog = {
       name: userMessage.payload.value.dialog,
       data: {
-        messageEntities: userMessage.payload.value.entities,
+        messageEntities: userMessage.payload.value.dataDialog.data.messageEntities,
       },
     };
     const botMessages = await this.dm.executeDialog(userMessage, dialog);

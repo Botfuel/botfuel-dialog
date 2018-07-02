@@ -15,7 +15,6 @@
  */
 
 const Action = require('./action');
-
 /**
  * A postback action.
  * @extends Action
@@ -28,14 +27,20 @@ class Postback extends Action {
    * @param {Object[]} entities - the dialog entities
    */
   constructor(text, dialog, entities) {
-    super('postback', text, { dialog, entities });
+    const dataDialog = {
+      name: 'postback',
+      data: {
+        messageEntities: entities,
+      },
+    };
+    super('postback', text, { dialog, dataDialog });
   }
 
   /** @inheritDoc */
   validate() {
     super.validate();
     this.validateString(this.type, this.value.dialog);
-    this.validateArray(this.type, this.value.entities);
+    this.validateArray(this.type, this.value.dataDialog.data.messageEntities);
   }
 }
 
