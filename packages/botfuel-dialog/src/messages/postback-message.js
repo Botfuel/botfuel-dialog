@@ -28,7 +28,13 @@ class PostbackMessage extends Message {
    * @param {Object} [options] - the message options
    */
   constructor(dialog, entities, options) {
-    super('postback', 'user', { dialog, entities }, options);
+    const dataDialog = {
+      name: 'postback',
+      data: {
+        messageEntities: entities,
+      },
+    };
+    super('postback', 'user', { dialog, dataDialog }, options);
     this.validate();
   }
 
@@ -36,7 +42,7 @@ class PostbackMessage extends Message {
   validate() {
     super.validate();
     this.validateString(this.type, this.value.dialog);
-    this.validateArray(this.type, this.value.entities);
+    this.validateArray(this.type, this.value.dataDialog.data.messageEntities);
   }
 }
 

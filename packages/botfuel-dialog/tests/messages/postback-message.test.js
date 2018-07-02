@@ -34,8 +34,13 @@ describe('PostbackMessage', () => {
       user: 'USER',
       payload: {
         value: {
+          dataDialog: {
+            data: {
+              messageEntities: [],
+            },
+            name: 'postback',
+          },
           dialog: 'greetings',
-          entities: [],
         },
       },
     });

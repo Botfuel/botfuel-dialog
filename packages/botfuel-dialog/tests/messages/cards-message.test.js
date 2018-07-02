@@ -57,7 +57,15 @@ describe('CardsMessage', () => {
               {
                 text: 'Buy',
                 type: 'postback',
-                value: { dialog: 'products', entities: [{ dim: 'product', value: '1' }] },
+                value: {
+                  dataDialog: {
+                    data: {
+                      messageEntities: [{ dim: 'product', value: '1' }],
+                    },
+                    name: 'postback',
+                  },
+                  dialog: 'products',
+                },
               },
             ],
             image_url: 'https://image1.jpg',
@@ -73,7 +81,15 @@ describe('CardsMessage', () => {
               {
                 text: 'Buy',
                 type: 'postback',
-                value: { dialog: 'products', entities: [{ dim: 'product', value: '2' }] },
+                value: {
+                  dataDialog: {
+                    data: {
+                      messageEntities: [{ dim: 'product', value: '2' }],
+                    },
+                    name: 'postback',
+                  },
+                  dialog: 'products',
+                },
               },
             ],
             image_url: 'https://image2.jpg',

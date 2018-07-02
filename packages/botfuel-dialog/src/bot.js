@@ -111,6 +111,7 @@ class Bot {
       logger.error(`Could not resolve '${error.name}'`);
     } else if (error instanceof DialogError) {
       logger.error(`Could not execute dialog '${error.name}'`);
+      console.log('could not loaded the dialog');
     }
     throw error;
   }
@@ -221,6 +222,7 @@ class Bot {
     );
 
     logger.debug('respondWhenText: classificationResults', classificationResults, messageEntities);
+    console.log('respondWhenText');
     const botMessages = await this.dm.executeClassificationResults(
       userMessage,
       classificationResults,
@@ -235,10 +237,14 @@ class Bot {
    */
   async respondWhenPostback(userMessage: PostbackMessage): Promise<BotMessageJson[]> {
     logger.debug('respondWhenPostback', userMessage);
+    console.log('payload : ');
+    console.log('================');
+    console.log(userMessage.payload);
+    console.log('================');
     const dialog = {
       name: userMessage.payload.value.dialog,
       data: {
-        messageEntities: userMessage.payload.value.entities,
+        messageEntities: userMessage.payload.value.dataDialog.data.messageEntities,
       },
     };
     const botMessages = await this.dm.executeDialog(userMessage, dialog);
@@ -251,6 +257,7 @@ class Bot {
    */
   async respondWhenImage(userMessage: ImageMessage): Promise<BotMessageJson[]> {
     logger.debug('respondWhenImage', userMessage);
+    console.log('respondWhenImage');
     const dialog: DialogData = {
       name: 'image',
       data: {
