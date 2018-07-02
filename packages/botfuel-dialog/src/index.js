@@ -26,6 +26,7 @@ const BotfuelNlu = require('./nlus/botfuel-nlu');
 const Brain = require('./brains/brain');
 const Card = require('./messages/card');
 const CardsMessage = require('./messages/cards-message');
+const Config = require('./config');
 const ConfirmationDialog = require('./dialogs/confirmation-dialog');
 const ConfirmationView = require('./views/confirmation-view');
 const CorpusExtractor = require('./extractors/corpus-extractor');
@@ -37,7 +38,6 @@ const Link = require('./messages/link');
 const Logger = require('logtown'); // eslint-disable-line
 const MemoryBrain = require('./brains/memory-brain');
 const Message = require('./messages/message');
-const MessengerAdapter = require('./adapters/messenger-adapter');
 const MissingImplementationError = require('./errors/missing-implementation-error');
 const MongoBrain = require('./brains/mongo-brain');
 const Nlu = require('./nlus/nlu');
@@ -69,6 +69,7 @@ module.exports = {
   Brain,
   Card,
   CardsMessage,
+  Config,
   ConfirmationDialog,
   ConfirmationView,
   CorpusExtractor,
@@ -80,7 +81,6 @@ module.exports = {
   Logger: Logger.getLogger,
   MemoryBrain,
   Message,
-  MessengerAdapter,
   MissingImplementationError,
   MongoBrain,
   Nlu,
