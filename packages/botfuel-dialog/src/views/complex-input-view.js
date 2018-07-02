@@ -18,14 +18,14 @@ const BotTextMessage = require('../messages/bot-text-message');
 const View = require('./view');
 
 /**
- * Intent Resolution Dialog's View.
+ * Dialog's View when input is complex
  * @extends View
  */
-class BotfuelComplexInputView extends View {
+class ComplexInputView extends View {
   /** @inheritDoc */
   render() {
     return [new BotTextMessage('Your input is too complex.')];
   }
 }
 
-module.exports = BotfuelComplexInputView;
+module.exports = ComplexInputView;
