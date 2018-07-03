@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="8.3.0"></a>
+# [8.3.0](https://github.com/Botfuel/botfuel-dialog/compare/v8.2.0...v8.3.0) (2018-07-03)
+
+
+### Bug Fixes
+
+* add missing property to Config type ([6c1a873](https://github.com/Botfuel/botfuel-dialog/commit/6c1a873))
+
+
+### Features
+
+* add key 'custom' to config whitelist ([6c731d8](https://github.com/Botfuel/botfuel-dialog/commit/6c731d8))
+
+
+
+
+
+<a name="8.2.0"></a>
+# [8.2.0](https://github.com/Botfuel/botfuel-dialog/compare/v8.1.1...v8.2.0) (2018-07-02)
+
+
+### Features
+
+* remove adapter Messenger. ([9bed673](https://github.com/Botfuel/botfuel-dialog/commit/9bed673))
+
+
+
+
+
 <a name="8.1.1"></a>
 ## [8.1.1](https://github.com/Botfuel/botfuel-dialog/compare/v8.1.0...v8.1.1) (2018-06-26)
 

@@ -17,9 +17,9 @@
 const BaseDialog = require('./base-dialog');
 
 /**
- * The base dialog is a general-purpose dialog used to display basic messages.
- * @extends Dialog
+ * The complex input dialog is a dialog used to display errors.
+ * @extends BaseDialog
  */
-class BotfuelComplexInputDialog extends BaseDialog {}
+class ComplexInputDialog extends BaseDialog {}
 
-module.exports = BotfuelComplexInputDialog;
+module.exports = ComplexInputDialog;
