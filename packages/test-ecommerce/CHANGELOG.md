@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="9.0.0"></a>
+# [9.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v8.3.0...v9.0.0) (2018-07-03)
+
+**Note:** Version bump only for package test-ecommerce
+
+
+
+
+
 <a name="8.2.0"></a>
 # [8.2.0](https://github.com/Botfuel/botfuel-dialog/compare/v8.1.1...v8.2.0) (2018-07-02)
 

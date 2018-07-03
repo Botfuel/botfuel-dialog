@@ -1,6 +1,6 @@
 {
   "name": "botfuel-module-sample",
-  "version": "8.0.0",
+  "version": "9.0.0",
   "author": "sysadmin@botfuel.io",
   "description": "Sample botfuel module to extend Botfuel Dialog",
   "license": "Apache-2.0",

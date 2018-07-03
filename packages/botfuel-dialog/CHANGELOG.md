@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="9.0.0"></a>
+# [9.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v8.3.0...v9.0.0) (2018-07-03)
+
+
+### Code Refactoring
+
+* The dialogWillComplete hook can no longer return null ([7a5a8b8](https://github.com/Botfuel/botfuel-dialog/commit/7a5a8b8))
+
+
+### BREAKING CHANGES
+
+* The dialogWillComplete hook can no longer return null.
+It should instead return a dialog action such as this.complete().
+
+
+
+
+
 <a name="8.3.0"></a>
 # [8.3.0](https://github.com/Botfuel/botfuel-dialog/compare/v8.2.0...v8.3.0) (2018-07-03)
 

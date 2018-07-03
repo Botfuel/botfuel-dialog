@@ -1,6 +1,6 @@
 {
   "name": "sample-botfuel-dialog-complexdialogs",
-  "version": "8.1.1",
+  "version": "9.0.0",
   "private": true,
   "author": "sysadmin@botfuel.io",
   "description": "Sample bot using botfuel-dialog and illustrating complex dialogs",
