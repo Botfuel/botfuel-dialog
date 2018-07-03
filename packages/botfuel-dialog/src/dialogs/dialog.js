@@ -277,7 +277,6 @@ class Dialog {
 
   /**
    * Hook to be overridden before dialog completes.
-   * Does nothing by default.
    * @param userMessage - the user message
    * @param data - the data passed to the view
    */
