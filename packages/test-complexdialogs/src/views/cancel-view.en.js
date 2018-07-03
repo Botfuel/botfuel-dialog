@@ -18,7 +18,7 @@ const { PromptView, BotTextMessage } = require('botfuel-dialog');
 
 class CancelView extends PromptView {
   render(userMessage, { matchedEntities }) {
-    const answer = matchedEntities.boolean && matchedEntities.boolean.values[0].value;
+    const answer = matchedEntities.answer && matchedEntities.answer.values[0].value;
 
     if (answer === true) {
       return [new BotTextMessage('Dialog canceled!')];

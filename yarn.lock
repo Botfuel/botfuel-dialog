@@ -1580,8 +1580,8 @@ boom@2.x.x:
     hoek "2.x.x"
 
 botfuel-dialog@latest:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/botfuel-dialog/-/botfuel-dialog-8.2.0.tgz#b6261cce1777be28cdb2846de777e67fcaac1e18"
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/botfuel-dialog/-/botfuel-dialog-8.3.0.tgz#5cb6bd8ca8136a592bb3a2af06d6d94d8d7cdec5"
   dependencies:
     babel-polyfill "^6.26.0"
     body-parser "^1.18.1"

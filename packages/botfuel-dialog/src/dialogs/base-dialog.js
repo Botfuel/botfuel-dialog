@@ -28,7 +28,7 @@ class BaseDialog extends Dialog {
     const extraData = await this.dialogWillDisplay(userMessage, data);
     data = this.mergeData(extraData, data);
     const botMessages = await this.display(userMessage, data);
-    const action = (await this.dialogWillComplete(userMessage, data)) || this.complete();
+    const action = await this.dialogWillComplete(userMessage, data);
     return {
       action,
       botMessages,

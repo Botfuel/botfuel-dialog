@@ -259,7 +259,6 @@ class Dialog {
     if (!extraData) {
       return data;
     }
-
     // if extraData is an object
     if (typeof extraData === 'object' && !Array.isArray(extraData)) {
       if (data) {
@@ -270,10 +269,8 @@ class Dialog {
           );
         }
       }
-
       return { ...data, ...extraData };
     }
-
     // if extraData is a value
     return { ...data, extraData };
   }
@@ -286,6 +283,7 @@ class Dialog {
    */
   async dialogWillComplete(userMessage: UserMessage, data: {}): Promise<any> {
     logger.debug('dialogWillComplete', userMessage, data);
+    return this.complete();
   }
 }
 

@@ -16,5 +16,4 @@
 
 module.exports = {
   logger: 'info',
-  multiIntent: true,
 };

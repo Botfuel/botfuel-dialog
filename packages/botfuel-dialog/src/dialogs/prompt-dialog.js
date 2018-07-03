@@ -285,16 +285,13 @@ class PromptDialog extends Dialog {
    */
   async execute(userMessage, data) {
     logger.debug('execute', userMessage, data);
-
     // get message entities extracted from the message
     const { messageEntities } = data;
     const userId = userMessage.user;
-
     const dialogCache = await this.brain.conversationGet(userId, this.parameters.namespace);
     const previouslyMatchedEntities = (dialogCache && dialogCache._entities) || {};
     const previousQuestionEntity = (dialogCache && dialogCache._question) || undefined;
     logger.debug('execute: previouslyMatchedEntities', previouslyMatchedEntities);
-
     // Get missing entities and matched entities
     const { missingEntities, matchedEntities } = await this.computeEntities(
       messageEntities,
@@ -303,30 +300,29 @@ class PromptDialog extends Dialog {
       previousQuestionEntity,
     );
     logger.debug('execute', { missingEntities, matchedEntities });
-
     // save matched entities and next question in the brain
     await this.brain.conversationSet(userId, this.parameters.namespace, {
       _entities: matchedEntities,
       _question: missingEntities.size > 0 ? missingEntities.keys().next().value : undefined,
     });
-
     data = { ...data, missingEntities, matchedEntities };
     const extraData = await this.dialogWillDisplay(userMessage, data);
     data = this.mergeData(extraData, data);
-
     const botMessages = await this.display(userMessage, data);
-
-    if (missingEntities.size === 0) {
-      const action = (await this.dialogWillComplete(userMessage, data)) || this.complete();
-      return {
-        action,
-        botMessages,
-      };
-    }
+    const action = await this.dialogWillComplete(userMessage, data);
     return {
-      action: this.wait(),
+      action,
       botMessages,
     };
+  }
+
+  /** @inheritDoc */
+  async dialogWillComplete(userMessage, data) {
+    logger.debug('dialogWillComplete', userMessage, data);
+    if (data.missingEntities.size === 0) {
+      return this.complete();
+    }
+    return this.wait();
   }
 }
 
