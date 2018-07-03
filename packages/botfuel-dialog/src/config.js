@@ -38,6 +38,7 @@ export type Config = {|
   },
   path: string,
   spellchecking: boolean,
+  custom: Object,
 |};
 
 const fs = require('fs');
@@ -67,7 +68,7 @@ const defaultConfig = {
   multiIntent: false,
 };
 
-const whitelist = Object.keys(defaultConfig).concat(['spellchecking']);
+const whitelist = Object.keys(defaultConfig).concat(['spellchecking', 'custom']);
 
 /**
  * Returns the contents of the bot config file.
