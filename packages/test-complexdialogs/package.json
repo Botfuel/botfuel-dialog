@@ -12,7 +12,8 @@
     "style": "eslint src && eslint tests"
   },
   "dependencies": {
-    "botfuel-dialog": "latest"
+    "botfuel-dialog": "latest",
+    "lodash": "^4.17.10"
   },
   "engines": {
     "node": "8.x"
