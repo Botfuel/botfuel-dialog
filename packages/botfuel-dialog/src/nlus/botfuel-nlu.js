@@ -15,6 +15,7 @@
  */
 
 const fs = require('fs');
+const fsExtra = require('fs-extra');
 const rp = require('request-promise-native');
 const dir = require('node-dir');
 const logger = require('logtown')('BotfuelNlu');
@@ -45,6 +46,13 @@ class BotfuelNlu extends Nlu {
 
     if (!process.env.BOTFUEL_APP_KEY) {
       throw new SdkError('BOTFUEL_APP_KEY is required for using the nlu service');
+    }
+
+    if (this.config) {
+      const intentFilterPath = `${this.config.path}/src/intent-filter.js`;
+      if (fsExtra.pathExistsSync(intentFilterPath)) {
+        this.intentFilter = require(intentFilterPath);
+      }
     }
   }
 
@@ -90,8 +98,8 @@ class BotfuelNlu extends Nlu {
   }
 
   /** @inheritdoc */
-  async compute(sentence) {
-    logger.debug('compute', sentence);
+  async compute(sentence, context) {
+    logger.debug('compute', sentence, context);
 
     // compute entities
     const messageEntities = await this.computeEntities(sentence);
@@ -118,8 +126,18 @@ class BotfuelNlu extends Nlu {
 
     const res = await rp(options);
 
-    const classificationResults = res.map(data => new ClassificationResult(data));
-
+    let classificationResults = res.map(data => new ClassificationResult(data));
+    if (this.intentFilter) {
+      for (let i = 0; i < classificationResults.length; i++) {
+        const data = classificationResults[i];
+        if (data.isQnA()) {
+          return { messageEntities, classificationResults };
+        }
+      }
+      let intents = await this.intentFilter(classificationResults, context);
+      intents = intents.slice(0, this.config.multiIntent ? 2 : 1);
+      classificationResults = intents;
+    }
     return { messageEntities, classificationResults };
   }
 
