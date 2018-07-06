@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=Je%20veux
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Thu, 05 Jul 2018 09:39:49 GMT
+content-type: application/json
+content-length: 3
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[]
