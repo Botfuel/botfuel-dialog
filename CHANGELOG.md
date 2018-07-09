@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="9.0.3"></a>
+## [9.0.3](https://github.com/Botfuel/bot-sdk2/compare/v9.0.2...v9.0.3) (2018-07-09)
+
+
+### Bug Fixes
+
+* Do not log unloggable context ([131137c](https://github.com/Botfuel/bot-sdk2/commit/131137c))
+
+
+
+
+
 <a name="9.0.2"></a>
 ## [9.0.2](https://github.com/Botfuel/bot-sdk2/compare/v9.0.1...v9.0.2) (2018-07-09)
 
