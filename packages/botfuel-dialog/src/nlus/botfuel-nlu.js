@@ -99,7 +99,7 @@ class BotfuelNlu extends Nlu {
 
   /** @inheritdoc */
   async compute(sentence, context) {
-    logger.debug('compute', sentence, context);
+    logger.debug('compute', sentence); // Context is not loggable
 
     // compute entities
     const messageEntities = await this.computeEntities(sentence);
