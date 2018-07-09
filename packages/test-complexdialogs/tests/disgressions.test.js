@@ -48,7 +48,7 @@ describe('Disgressions', () => {
         );
         const user = await bot.brain.getUser(userId);
         const dialogs = await bot.brain.getDialogs(userId);
-        const lastConversation = await bot.brain.getLastConversation(userId);
+        const lastConversation = await bot.brain.lastConversation(userId);
         expect(user._conversations.length).toBe(1);
         expect(dialogs.stack).toHaveLength(0);
         expect(lastConversation).toHaveProperty('travel');
@@ -95,7 +95,7 @@ describe('Disgressions', () => {
         );
         const user = await bot.brain.getUser(bot.adapter.userId);
         const dialogs = await bot.brain.getDialogs(userId);
-        const lastConversation = await bot.brain.getLastConversation(bot.adapter.userId);
+        const lastConversation = await bot.brain.lastConversation(bot.adapter.userId);
         expect(user._conversations.length).toBe(1);
         expect(dialogs.stack).toHaveLength(0);
         expect(lastConversation).toHaveProperty('travel');

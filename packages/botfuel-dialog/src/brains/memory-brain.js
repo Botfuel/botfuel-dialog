@@ -78,8 +78,8 @@ class MemoryBrain extends Brain {
   }
 
   /** @inheritdoc */
-  async getLastConversation(userId) {
-    logger.debug('getLastConversation', userId);
+  async lastConversation(userId) {
+    logger.debug('lastConversation', userId);
     const user = await this.getUser(userId);
     const conversation = last(user._conversations);
     return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);
@@ -97,7 +97,7 @@ class MemoryBrain extends Brain {
   /** @inheritdoc */
   async conversationSet(userId, key, value) {
     logger.debug('conversationSet', userId, key, value);
-    const lastConversation = await this.getLastConversation(userId);
+    const lastConversation = await this.lastConversation(userId);
     lastConversation[key] = value;
     return lastConversation;
   }

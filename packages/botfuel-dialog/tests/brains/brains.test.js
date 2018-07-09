@@ -120,7 +120,7 @@ const brainTest = (brainLabel) => {
 
   test('get last user conversation', async () => {
     await brain.addUser(USER_ID);
-    const conversation = await brain.getLastConversation(USER_ID);
+    const conversation = await brain.lastConversation(USER_ID);
     const { _dialogs } = conversation;
     expect(conversation).not.toBe(null);
     expect(_dialogs.stack).toHaveLength(0);
@@ -129,7 +129,7 @@ const brainTest = (brainLabel) => {
   test('get last user conversation when no conversation', async () => {
     await brain.addUser(USER_ID);
     await brain.userSet(USER_ID, '_conversations', []);
-    const conversation = await brain.getLastConversation(USER_ID);
+    const conversation = await brain.lastConversation(USER_ID);
     const { _dialogs } = conversation;
     expect(conversation).not.toBe(null);
     expect(_dialogs.stack).toHaveLength(0);
@@ -317,10 +317,10 @@ describe('Brains', () => {
         }
       });
 
-      test('getLastConversation', async () => {
+      test('lastConversation', async () => {
         expect.assertions(1);
         try {
-          await new Brain(BRAIN_CONFIG).getLastConversation();
+          await new Brain(BRAIN_CONFIG).lastConversation();
         } catch (e) {
           expect(e.message).toEqual('Not implemented!');
         }
