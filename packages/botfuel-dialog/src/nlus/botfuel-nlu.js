@@ -49,9 +49,9 @@ class BotfuelNlu extends Nlu {
     }
 
     if (this.config) {
-      const intentFilterPath = `${this.config.path}/src/intent-filter.js`;
-      if (fsExtra.pathExistsSync(intentFilterPath)) {
-        this.intentFilter = require(intentFilterPath);
+      const classificationFilterPath = `${this.config.path}/src/classification-filter.js`;
+      if (fsExtra.pathExistsSync(classificationFilterPath)) {
+        this.classificationFilter = require(classificationFilterPath);
       }
     }
   }
@@ -127,16 +127,9 @@ class BotfuelNlu extends Nlu {
     const res = await rp(options);
 
     let classificationResults = res.map(data => new ClassificationResult(data));
-    if (this.intentFilter) {
-      for (let i = 0; i < classificationResults.length; i++) {
-        const data = classificationResults[i];
-        if (data.isQnA()) {
-          return { messageEntities, classificationResults };
-        }
-      }
-      let intents = await this.intentFilter(classificationResults, context);
-      intents = intents.slice(0, this.config.multiIntent ? 2 : 1);
-      classificationResults = intents;
+    if (this.classificationFilter) {
+      classificationResults = await this.classificationFilter(classificationResults, context);
+      classificationResults = classificationResults.slice(0, this.config.multiIntent ? 2 : 1);
     }
     return { messageEntities, classificationResults };
   }

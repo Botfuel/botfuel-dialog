@@ -26,6 +26,7 @@ const BotfuelNlu = require('./nlus/botfuel-nlu');
 const Brain = require('./brains/brain');
 const Card = require('./messages/card');
 const CardsMessage = require('./messages/cards-message');
+const ClassificationResult = require('./nlus/classification-result');
 const Config = require('./config');
 const ConfirmationDialog = require('./dialogs/confirmation-dialog');
 const ConfirmationView = require('./views/confirmation-view');
@@ -69,6 +70,7 @@ module.exports = {
   Brain,
   Card,
   CardsMessage,
+  ClassificationResult,
   Config,
   ConfirmationDialog,
   ConfirmationView,
