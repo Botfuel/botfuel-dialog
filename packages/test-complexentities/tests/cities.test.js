@@ -47,7 +47,7 @@ describe('CitiesDialog', () => {
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).toHaveLength(0);
-    const lastConversation = await bot.brain.getLastConversation(userId);
+    const lastConversation = await bot.brain.fetchLastConversation(userId);
     expect(lastConversation).toHaveProperty('cities');
     expect(lastConversation.cities._entities).toHaveProperty('favoriteCities');
     expect(lastConversation.cities._entities.favoriteCities).toHaveLength(5);
@@ -86,7 +86,7 @@ describe('CitiesDialog', () => {
     const dialogs = await bot.brain.getDialogs(userId);
     expect(user._conversations.length).toBe(1);
     expect(dialogs.stack).not.toHaveLength(0);
-    const lastConversation = await bot.brain.getLastConversation(userId);
+    const lastConversation = await bot.brain.fetchLastConversation(userId);
     expect(lastConversation).toHaveProperty('cities');
     expect(lastConversation.cities._entities).toHaveProperty('favoriteCities');
     expect(lastConversation.cities._entities.favoriteCities).toHaveLength(2);

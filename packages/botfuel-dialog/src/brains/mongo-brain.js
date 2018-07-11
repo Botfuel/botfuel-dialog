@@ -131,8 +131,8 @@ class MongoBrain extends Brain {
   }
 
   /** @inheritdoc */
-  async getLastConversation(userId) {
-    logger.debug('getLastConversation', userId);
+  async fetchLastConversation(userId) {
+    logger.debug('fetchLastConversation', userId);
     const user = await this.getUser(userId, { _conversations: { $slice: 1 } });
     const conversation = user._conversations[0];
     return this.isConversationValid(conversation) ? conversation : this.addConversation(userId);

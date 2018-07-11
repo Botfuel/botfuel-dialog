@@ -55,7 +55,7 @@ describe('Adapter', () => {
     await bot.init();
     const message = new UserTextMessage('message').toJson(userId);
     await bot.adapter.handleMessage(message);
-    const conversation = await bot.brain.getLastConversation(userId);
+    const conversation = await bot.brain.fetchLastConversation(userId);
     expect(conversation._dialogs.previous.length).toBe(1);
   });
 

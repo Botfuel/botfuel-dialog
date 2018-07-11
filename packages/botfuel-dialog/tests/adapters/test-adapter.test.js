@@ -37,7 +37,7 @@ describe('TestAdapter', () => {
     const bot = new Bot({ adapter: { name: 'test' } });
     await bot.init();
     await bot.adapter.play(messages);
-    const conversation = await bot.brain.getLastConversation(bot.adapter.userId);
+    const conversation = await bot.brain.fetchLastConversation(bot.adapter.userId);
     expect(conversation._dialogs.previous.length).toBe(2);
   });
 });

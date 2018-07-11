@@ -917,7 +917,7 @@ describe('PromptDialog', () => {
 
       await prompt.brain.addUser(userId);
       await prompt.execute({ user: userId }, messageEntities);
-      const conversation = await prompt.brain.getLastConversation(userId);
+      const conversation = await prompt.brain.fetchLastConversation(userId);
       expect(conversation).toHaveProperty('testdialog');
       expect(conversation.testdialog).toHaveProperty('_entities');
       expect(conversation.testdialog).toHaveProperty('_question');
