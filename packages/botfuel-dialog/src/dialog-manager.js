@@ -299,8 +299,9 @@ class DialogManager extends Resolver<Dialog> {
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithClassificationResults(userId, dialogs, classificationResults, messageEntities);
-    const { dialogs: newDialogs, botMessages } = await this.execute(userMessage, dialogs);
+    let { dialogs: newDialogs, botMessages } = await this.execute(userMessage, dialogs);
     await this.setDialogs(userId, newDialogs);
+    botMessages[classificationResults] = classificationResults
     return botMessages;
   }
 

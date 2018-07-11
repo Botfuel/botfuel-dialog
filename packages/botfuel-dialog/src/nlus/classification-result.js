@@ -27,6 +27,7 @@ export type ClassificationData = {
   label?: string;
   type: string,
   answers?: QnaAnswers,
+  probability: number,
   resolvePrompt?: string,
 };
 
@@ -40,6 +41,7 @@ class ClassificationResult {
   name: string;
   label: ?string;
   resolvePrompt: ?string;
+  probability: number;
   answers: QnaAnswers | void;
 
   static TYPE_QNA = 'QnA';
@@ -54,6 +56,7 @@ class ClassificationResult {
 
     this.type = this.getType(data.type);
     this.label = data.label;
+    this.probability = data.probability;
     this.resolvePrompt = data.resolvePrompt;
 
     const name = data.name || (this.isQnA() ? 'qnas' : data.label);
