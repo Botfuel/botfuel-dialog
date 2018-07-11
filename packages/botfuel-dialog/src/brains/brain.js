@@ -128,11 +128,11 @@ class Brain {
   }
 
   /**
-   * Gets the last conversation of the user.
-   * If the last conversation is not valid anymore, adds a new one and returns it.
+   * Fetches the last conversation of the user. 
+   * If the last conversation found isn't valid anymore, adds a new one and returns it.
    * @returns the last conversation of the user
    */
-  async lastConversation(
+  async fetchLastConversation(
     userId: string, // eslint-disable-line no-unused-vars
   ): Promise<ConversationData> {
     throw new MissingImplementationError();
@@ -178,7 +178,7 @@ class Brain {
    */
   async conversationGet(userId: string, key: string): Promise<mixed> {
     logger.debug('conversationGet', userId, key);
-    const conversation = await this.lastConversation(userId);
+    const conversation = await this.fetchLastConversation(userId);
     return conversation[key];
   }
 
