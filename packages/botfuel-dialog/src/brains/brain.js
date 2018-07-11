@@ -128,7 +128,7 @@ class Brain {
   }
 
   /**
-   * Fetches the last conversation of the user. 
+   * Fetches the last conversation of the user.
    * If the last conversation found isn't valid anymore, adds a new one and returns it.
    * @returns the last conversation of the user
    */
