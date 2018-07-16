@@ -193,10 +193,8 @@ class Bot {
    */
   async respondWhenText(userMessage: TextMessage): Promise<BotMessageJson[]> {
     logger.debug('respondWhenText', userMessage);
-    let sentence = userMessage.payload.value;
-
     const { classificationResults, messageEntities } = await this.nlu.compute(
-      sentence,
+      userMessage.payload.value,
       {
         brain: this.brain,
         userMessage,

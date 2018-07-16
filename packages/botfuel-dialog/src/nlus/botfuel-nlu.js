@@ -157,7 +157,7 @@ class BotfuelNlu extends Nlu {
    * @param sentence - a sentence
    * @returns the spellchecked sentence
    */
-  async spellcheck(sentence: string): Promise<string> {
+  async spellcheck(sentence) {
     if (!this.config.nlu || !this.config.nlu.spellchecking) {
       return sentence;
     }
