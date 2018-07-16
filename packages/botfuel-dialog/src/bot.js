@@ -28,7 +28,6 @@ import type Brain from './brains/brain';
 import type Nlu from './nlus/nlu';
 
 const Logger = require('logtown');
-const { Spellchecking } = require('botfuel-nlp-sdk');
 const AdapterResolver = require('./adapter-resolver');
 const BrainResolver = require('./brain-resolver');
 const NluResolver = require('./nlu-resolver');
@@ -51,8 +50,7 @@ const logger = Logger.getLogger('Bot');
  * - a {@link Config},
  * - a {@link DialogManager},
  * - a {@link MiddlewareManager},
- * - a {@link Nlu} (Natural Language Understanding) module,
- * - an optional {@link Spellchecking} module.
+ * - a {@link Nlu} (Natural Language Understanding) module.
  */
 class Bot {
   adapter: Adapter;
@@ -61,14 +59,12 @@ class Bot {
   dm: DialogManager;
   middlewareManager: MiddlewareManager;
   nlu: Nlu;
-  spellchecking: ?Spellchecking;
 
   constructor(config: RawConfig) {
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
     checkCredentials(this.config);
     this.brain = new BrainResolver(this).resolve(this.config.brain.name);
-    this.spellchecking = null;
     this.nlu = new NluResolver(this).resolve(this.config.nlu.name);
     this.dm = new DialogManager(this);
     this.adapter = new AdapterResolver(this).resolve(this.config.adapter.name);
@@ -84,18 +80,6 @@ class Bot {
     await this.brain.init();
     // NLU
     await this.nlu.init();
-    // Spellchecking
-    if (this.config.spellchecking) {
-      if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
-        logger.error(
-          'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!',
-        );
-      }
-      this.spellchecking = new Spellchecking({
-        appId: process.env.BOTFUEL_APP_ID,
-        appKey: process.env.BOTFUEL_APP_KEY,
-      });
-    }
   }
 
   /**
@@ -210,7 +194,6 @@ class Bot {
   async respondWhenText(userMessage: TextMessage): Promise<BotMessageJson[]> {
     logger.debug('respondWhenText', userMessage);
     let sentence = userMessage.payload.value;
-    sentence = await this.spellcheck(sentence);
 
     const { classificationResults, messageEntities } = await this.nlu.compute(
       sentence,
@@ -259,33 +242,6 @@ class Bot {
     };
     const botMessages = await this.dm.executeDialog(userMessage, dialog);
     return botMessages;
-  }
-
-  /**
-   * Spellchecks a sentence.
-   * @param sentence - a sentence
-   * @returns the spellchecked sentence
-   */
-  async spellcheck(sentence: string): Promise<string> {
-    const key = this.config.spellchecking;
-
-    logger.debug('spellcheck', sentence, key);
-
-    if (!key || !this.spellchecking) {
-      return sentence;
-    }
-
-    try {
-      const result = await this.spellchecking.compute({ sentence, key });
-      logger.debug('spellcheck: result', result);
-      return result.correctSentence;
-    } catch (error) {
-      logger.error('spellcheck: error');
-      if (error.statusCode === 403) {
-        throw new AuthenticationError();
-      }
-      throw error;
-    }
   }
 }
 

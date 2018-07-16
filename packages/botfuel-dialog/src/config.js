@@ -35,9 +35,9 @@ export type Config = {|
   multiintent: boolean,
   nlu: {
     name: string,
+    spellchecking: string,
   },
   path: string,
-  spellchecking: boolean,
   custom: Object,
 |};
 
@@ -67,8 +67,6 @@ const defaultConfig = {
   },
   multiIntent: false,
 };
-
-const whitelist = Object.keys(defaultConfig).concat(['spellchecking', 'custom']);
 
 /**
  * Returns the contents of the bot config file.
@@ -135,10 +133,7 @@ const getComponentRoots = function (config): string[] {
  */
 const getConfiguration = (botConfig: RawConfig = {}): Config => {
   // get the config by extending defaultConfig with botConfig
-  const config = _.merge(
-    defaultConfig,
-    _.omitBy(botConfig, (val, key: string): boolean => !whitelist.includes(key)),
-  );
+  const config = _.merge(defaultConfig, botConfig);
 
   Object.assign(defaultConfig);
 

@@ -25,6 +25,7 @@ const CompositeExtractor = require('../extractors/composite-extractor');
 const SdkError = require('../errors/sdk-error');
 const ClassificationResult = require('./classification-result');
 const Nlu = require('./nlu');
+const { Spellchecking } = require('botfuel-nlp-sdk');
 
 /**
  * NLU using Botfuel Trainer API
@@ -54,6 +55,10 @@ class BotfuelNlu extends Nlu {
         this.classificationFilter = require(classificationFilterPath);
       }
     }
+    this.spellchecking = new Spellchecking({
+      appId: process.env.BOTFUEL_APP_ID,
+      appKey: process.env.BOTFUEL_APP_KEY,
+    });
   }
 
   /**
@@ -101,6 +106,8 @@ class BotfuelNlu extends Nlu {
   async compute(sentence, context) {
     logger.debug('compute', sentence); // Context is not loggable
 
+    sentence = await this.spellcheck(sentence);
+
     // compute entities
     const messageEntities = await this.computeEntities(sentence);
 
@@ -143,6 +150,22 @@ class BotfuelNlu extends Nlu {
     logger.debug('computeEntities', sentence);
     const entities = await this.extractor.compute(sentence);
     return entities;
+  }
+
+  /**
+   * Spellchecks a sentence.
+   * @param sentence - a sentence
+   * @returns the spellchecked sentence
+   */
+  async spellcheck(sentence: string): Promise<string> {
+    if (!this.config.nlu || !this.config.nlu.spellchecking) {
+      return sentence;
+    }
+    const key = this.config.nlu.spellchecking;
+    logger.debug('spellcheck', sentence, key);
+    const result = await this.spellchecking.compute({ sentence, key });
+    logger.debug('spellcheck: result', result);
+    return result.correctSentence;
   }
 }
 
