@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-module.exports = {
-  adapter: {
-    name: 'test',
-  },
-  nlu: {
-    name: 'botfuel',
-    qna: {},
-  },
-  path: __dirname,
-};
+const logger = require('logtown')('CatchView');
+const BotTextMessage = require('../messages/bot-text-message');
+const View = require('./view');
+
+/**
+ * @extends View
+ */
+class CatchView extends View {
+  /** @inheritDoc */
+  render(userMessage, data) {
+    logger.debug('render', userMessage, data);
+    return [
+      new BotTextMessage('The following error occured:'),
+      new BotTextMessage(JSON.stringify(data.error)),
+      new BotTextMessage('Starting a new conversation...'),
+    ];
+  }
+}
+
+module.exports = CatchView;

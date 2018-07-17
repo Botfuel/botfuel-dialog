@@ -21,6 +21,5 @@ module.exports = {
   nlu: {
     spellchecking: 'EN_1',
   },
-  logger: 'error',
   path: __dirname,
 };

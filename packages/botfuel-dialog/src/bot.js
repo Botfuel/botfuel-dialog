@@ -61,6 +61,7 @@ class Bot {
   nlu: Nlu;
 
   constructor(config: RawConfig) {
+    logger.debug('constructor', config);
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
     checkCredentials(this.config);
@@ -76,27 +77,9 @@ class Bot {
    * @private
    */
   async init(): Promise<void> {
-    // Brain
+    logger.debug('init');
     await this.brain.init();
-    // NLU
     await this.nlu.init();
-  }
-
-  /**
-   * Handles errors. Adds a user friendly message to common errors.
-   */
-  handleError(error: Error): void {
-    if (error instanceof AuthenticationError) {
-      logger.error('Botfuel API authentication failed!');
-      logger.error(
-        'Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io',
-      );
-    } else if (error instanceof ResolutionError) {
-      logger.error(`Could not resolve '${error.name}'`);
-    } else if (error instanceof DialogError) {
-      logger.error(`Could not execute dialog '${error.name}'`);
-    }
-    throw error;
   }
 
   /**
@@ -104,12 +87,8 @@ class Bot {
    */
   async run(): Promise<void> {
     logger.debug('run');
-    try {
-      await this.init();
-      await this.adapter.run();
-    } catch (error) {
-      this.handleError(error);
-    }
+    await this.init();
+    await this.adapter.run();
   }
 
   /**
@@ -117,12 +96,8 @@ class Bot {
    */
   async play(userMessages: UserMessage[]): Promise<void> {
     logger.debug('play', userMessages);
-    try {
-      await this.init();
-      await this.adapter.play(userMessages);
-    } catch (error) {
-      this.handleError(error);
-    }
+    await this.init();
+    await this.adapter.play(userMessages);
   }
 
   /**
@@ -130,43 +105,40 @@ class Bot {
    */
   async clean(): Promise<void> {
     logger.debug('clean');
-    try {
-      await this.brain.init();
-      await this.brain.clean();
-    } catch (error) {
-      this.handleError(error);
-    }
+    await this.brain.init();
+    await this.brain.clean();
   }
 
   /**
    * Handles a user message.
    */
   async handleMessage(userMessage: UserMessage): Promise<BotMessageJson[]> {
-    let botMessages: BotMessageJson[] = [];
-
     logger.debug('handleMessage', userMessage);
-
-    const contextIn = {
-      user: userMessage.user,
-      brain: this.brain,
-      userMessage,
-      config: this.config,
-    };
-
-    await this.middlewareManager.in(contextIn, async () => {
-      botMessages = await this.respond(userMessage);
-    });
-
-    const contextOut = {
-      user: userMessage.user,
-      brain: this.brain,
-      botMessages,
-      config: this.config,
-      userMessage,
-    };
-    await this.middlewareManager.out(contextOut, async () => {});
-
-    return botMessages;
+    try {
+      const contextIn = {
+        user: userMessage.user,
+        brain: this.brain,
+        userMessage,
+        config: this.config,
+      };
+      let botMessages: BotMessageJson[] = [];
+      await this.middlewareManager.in(contextIn, async () => {
+        logger.debug('handleMessage: responding');
+        botMessages = await this.respond(userMessage);
+      });
+      const contextOut = {
+        user: userMessage.user,
+        brain: this.brain,
+        botMessages,
+        config: this.config,
+        userMessage,
+      };
+      await this.middlewareManager.out(contextOut, async () => {});
+      return botMessages;
+    } catch (error) {
+      logger.debug('handleMessage: catching error', error);
+      return this.respondWhenError(userMessage, error);
+    }
   }
 
   /**
@@ -174,15 +146,16 @@ class Bot {
    */
   async respond(userMessage: UserMessage): Promise<BotMessageJson[]> {
     logger.debug('respond', userMessage);
-
-    // TODO Replace Conditional with Polymorphism (Fowler)
     switch (userMessage.type) {
       case 'postback':
+        logger.debug('respond: postback', userMessage);
         return this.respondWhenPostback(userMessage);
       case 'image':
+        logger.debug('respond: image', userMessage);
         return this.respondWhenImage(userMessage);
       case 'text':
       default:
+        logger.debug('respond: text', userMessage);
         return this.respondWhenText(userMessage);
     }
   }
@@ -200,14 +173,12 @@ class Bot {
         userMessage,
       },
     );
-
     logger.debug('respondWhenText: classificationResults', classificationResults, messageEntities);
-    const botMessages = await this.dm.executeClassificationResults(
+    return this.dm.executeClassificationResults(
       userMessage,
       classificationResults,
       messageEntities,
     );
-    return botMessages;
   }
 
   /**
@@ -222,8 +193,7 @@ class Bot {
         messageEntities: userMessage.payload.value.entities,
       },
     };
-    const botMessages = await this.dm.executeDialog(userMessage, dialog);
-    return botMessages;
+    return this.dm.executeDialog(userMessage, dialog);
   }
 
   /**
@@ -238,8 +208,28 @@ class Bot {
         url: userMessage.payload.value,
       },
     };
-    const botMessages = await this.dm.executeDialog(userMessage, dialog);
-    return botMessages;
+    return this.dm.executeDialog(userMessage, dialog);
+  }
+
+  async respondWhenError(userMessage: UserMessage, error): Promise<BotMessageJson[]> {
+    logger.debug('respondWhenError', userMessage, error);
+    if (error instanceof AuthenticationError) {
+      logger.error('Botfuel API authentication failed!');
+      logger.error(
+        'Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io',
+      );
+    } else if (error instanceof ResolutionError) {
+      logger.error(`Could not resolve '${error.name}'`);
+    } else if (error instanceof DialogError) {
+      logger.error(`Could not execute dialog '${error.name}'`);
+    }
+    const catchDialog = {
+      name: 'catch',
+      data: {
+        error,
+      },
+    };
+    return this.dm.executeDialog(userMessage, catchDialog);
   }
 }
 

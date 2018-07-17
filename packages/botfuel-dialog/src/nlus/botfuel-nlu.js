@@ -22,6 +22,7 @@ const logger = require('logtown')('BotfuelNlu');
 const BooleanExtractor = require('../extractors/boolean-extractor');
 const LocationExtractor = require('../extractors/location-extractor');
 const CompositeExtractor = require('../extractors/composite-extractor');
+const AuthenticationError = require('../errors/authentication-error');
 const SdkError = require('../errors/sdk-error');
 const ClassificationResult = require('./classification-result');
 const Nlu = require('./nlu');
@@ -100,34 +101,42 @@ class BotfuelNlu extends Nlu {
   /** @inheritdoc */
   async compute(sentence, context) {
     logger.debug('compute', sentence); // Context is not loggable
-    // spellchecking
-    sentence = await this.spellcheck(sentence);
-    // computing entities
-    const messageEntities = await this.extractor.compute(sentence);
-    // computing intents
-    let trainerUrl = process.env.BOTFUEL_TRAINER_API_URL || 'https://api.botfuel.io/trainer/api/v0';
-    if (trainerUrl.slice(-1) !== '/') {
-      trainerUrl += '/';
+    try {
+      // spellchecking
+      sentence = await this.spellcheck(sentence);
+      // computing entities
+      const messageEntities = await this.extractor.compute(sentence);
+      // computing intents
+      let trainerUrl = process.env.BOTFUEL_TRAINER_API_URL || 'https://api.botfuel.io/trainer/api/v0';
+      if (trainerUrl.slice(-1) !== '/') {
+        trainerUrl += '/';
+      }
+      const options = {
+        uri: `${trainerUrl}classify`,
+        qs: {
+          sentence,
+        },
+        headers: {
+          'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
+          'App-Id': process.env.BOTFUEL_APP_ID,
+          'App-Key': process.env.BOTFUEL_APP_KEY,
+        },
+        json: true,
+      };
+      const res = await rp(options);
+      let classificationResults = res.map(data => new ClassificationResult(data));
+      if (this.classificationFilter) {
+        classificationResults = await this.classificationFilter(classificationResults, context);
+        classificationResults = classificationResults.slice(0, this.config.multiIntent ? 2 : 1);
+      }
+      return { messageEntities, classificationResults };
+    } catch (error) {
+      logger.error('compute: error', error.statusCode);
+      if (error.statusCode === 403) {
+        throw new AuthenticationError();
+      }
+      throw error;
     }
-    const options = {
-      uri: `${trainerUrl}classify`,
-      qs: {
-        sentence,
-      },
-      headers: {
-        'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
-        'App-Id': process.env.BOTFUEL_APP_ID,
-        'App-Key': process.env.BOTFUEL_APP_KEY,
-      },
-      json: true,
-    };
-    const res = await rp(options);
-    let classificationResults = res.map(data => new ClassificationResult(data));
-    if (this.classificationFilter) {
-      classificationResults = await this.classificationFilter(classificationResults, context);
-      classificationResults = classificationResults.slice(0, this.config.multiIntent ? 2 : 1);
-    }
-    return { messageEntities, classificationResults };
   }
 
   /**

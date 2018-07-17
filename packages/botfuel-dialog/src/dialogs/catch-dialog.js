@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-module.exports = {
-  adapter: {
-    name: 'test',
-  },
-  nlu: {
-    name: 'botfuel',
-    qna: {},
-  },
-  path: __dirname,
-};
+const BaseDialog = require('./base-dialog');
+const logger = require('logtown')('CatchDialog');
+
+/**
+ * @extends BaseDialog
+ */
+class CatchDialog extends BaseDialog {
+  dialogWillComplete() {
+    logger.debug('dialogWillComplete');
+    return this.startNewConversation();
+  }
+}
+
+module.exports = CatchDialog;
