@@ -36,19 +36,15 @@ class BotfuelNlu extends Nlu {
     logger.debug('constructor', config);
     super(config);
     this.extractor = null;
-
     if (!process.env.BOTFUEL_APP_TOKEN) {
       throw new SdkError('BOTFUEL_APP_TOKEN is required for using the nlu service');
     }
-
     if (!process.env.BOTFUEL_APP_ID) {
       throw new SdkError('BOTFUEL_APP_ID is required for using the nlu service');
     }
-
     if (!process.env.BOTFUEL_APP_KEY) {
       throw new SdkError('BOTFUEL_APP_KEY is required for using the nlu service');
     }
-
     if (this.config) {
       const classificationFilterPath = `${this.config.path}/src/classification-filter.js`;
       if (fsExtra.pathExistsSync(classificationFilterPath)) {
@@ -95,7 +91,6 @@ class BotfuelNlu extends Nlu {
   async init() {
     logger.debug('init');
     super.init();
-
     // Extractors
     this.extractor = new CompositeExtractor({
       extractors: this.getExtractors(`${this.config.path}/src/extractors`),
@@ -105,19 +100,15 @@ class BotfuelNlu extends Nlu {
   /** @inheritdoc */
   async compute(sentence, context) {
     logger.debug('compute', sentence); // Context is not loggable
-
+    // spellchecking
     sentence = await this.spellcheck(sentence);
-
-    // compute entities
-    const messageEntities = await this.computeEntities(sentence);
-
-    // compute intents
+    // computing entities
+    const messageEntities = await this.extractor.compute(sentence);
+    // computing intents
     let trainerUrl = process.env.BOTFUEL_TRAINER_API_URL || 'https://api.botfuel.io/trainer/api/v0';
-
     if (trainerUrl.slice(-1) !== '/') {
       trainerUrl += '/';
     }
-
     const options = {
       uri: `${trainerUrl}classify`,
       qs: {
@@ -130,9 +121,7 @@ class BotfuelNlu extends Nlu {
       },
       json: true,
     };
-
     const res = await rp(options);
-
     let classificationResults = res.map(data => new ClassificationResult(data));
     if (this.classificationFilter) {
       classificationResults = await this.classificationFilter(classificationResults, context);
@@ -142,26 +131,15 @@ class BotfuelNlu extends Nlu {
   }
 
   /**
-   * Computes entities using the classifier.
-   * @param {String} sentence - the user sentence
-   * @returns {Object} entities
-   */
-  async computeEntities(sentence) {
-    logger.debug('computeEntities', sentence);
-    const entities = await this.extractor.compute(sentence);
-    return entities;
-  }
-
-  /**
    * Spellchecks a sentence.
    * @param sentence - a sentence
    * @returns the spellchecked sentence
    */
   async spellcheck(sentence) {
-    if (!this.config.nlu || !this.config.nlu.spellchecking) {
+    const key = this.config.nlu.spellchecking;
+    if (!key) {
       return sentence;
     }
-    const key = this.config.nlu.spellchecking;
     logger.debug('spellcheck', sentence, key);
     const result = await this.spellchecking.compute({ sentence, key });
     logger.debug('spellcheck: result', result);
