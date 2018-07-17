@@ -1,6 +1,6 @@
 {
   "name": "botfuel-dialog",
-  "version": "9.0.3",
+  "version": "9.0.4",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel Dialog",
@@ -51,5 +51,5 @@
   "engines": {
     "node": "8.x"
   },
-  "gitHead": "6b45c41d2247933790f600ee189a77c728537155"
+  "gitHead": "a70c94790c8482d3fbae4ed7a349e4be036fe10a"
 }
