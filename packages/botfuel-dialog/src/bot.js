@@ -211,7 +211,7 @@ class Bot {
     return this.dm.executeDialog(userMessage, dialog);
   }
 
-  async respondWhenError(userMessage: UserMessage, error): Promise<BotMessageJson[]> {
+  async respondWhenError(userMessage: UserMessage, error: Error): Promise<BotMessageJson[]> {
     logger.debug('respondWhenError', userMessage, error);
     if (error instanceof AuthenticationError) {
       logger.error('Botfuel API authentication failed!');
