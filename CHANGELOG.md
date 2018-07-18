@@ -30,6 +30,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 * The spellchecking is now configured in the NLU section.
 
+<a name="9.0.4"></a>
+## [9.0.4](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.3...v9.0.4) (2018-07-17)
+
+### BREAKING CHANGES
+
+* Rename the method getLastConversation() to fetchLastConversation()
+
+**Note:** Version bump only for package botfuel-dialog
+
 
 
 

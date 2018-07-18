@@ -14,7 +14,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-
 <a name="9.0.0"></a>
 # [9.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v8.3.0...v9.0.0) (2018-07-03)
 
