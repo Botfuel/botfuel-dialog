@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="10.0.2"></a>
+## [10.0.2](https://github.com/Botfuel/botfuel-dialog/compare/v10.0.1...v10.0.2) (2018-07-18)
+
+
+
+<a name="9.0.4"></a>
+## [9.0.4](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.3...v9.0.4) (2018-07-17)
+
+**Note:** Version bump only for package test-complexentities
+
+
+
+
+
 <a name="10.0.0"></a>
 # [10.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.3...v10.0.0) (2018-07-18)
 
