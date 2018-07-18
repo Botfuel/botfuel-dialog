@@ -1,6 +1,6 @@
 {
   "name": "botfuel-module-sample",
-  "version": "10.0.0",
+  "version": "10.0.1",
   "author": "sysadmin@botfuel.io",
   "description": "Sample botfuel module to extend Botfuel Dialog",
   "license": "Apache-2.0",
@@ -16,5 +16,6 @@
   },
   "engines": {
     "node": "8.x"
-  }
+  },
+  "gitHead": "3a1007084d99a219280c317da90b666561b11984"
 }
