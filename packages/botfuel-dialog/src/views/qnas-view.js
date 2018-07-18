@@ -24,11 +24,11 @@ const View = require('./view');
  */
 class QnasView extends View {
   /** @inheritDoc */
-  render(userMessage, { answers, messageEntities }) {
-    logger.debug('render', userMessage, { answers, messageEntities });
+  render(userMessage, { answers, dialogData }) {
+    logger.debug('render', userMessage, { answers, dialogData });
 
     // for postback actions, answers are stored in messageEntities
-    return (answers || messageEntities)[0].map(
+    return (answers || userMessage.payload.value.dataDialog.data.messageEntities)[0].map(
       message => new BotTextMessage(message.payload.value),
     );
   }
