@@ -25,20 +25,14 @@ describe('Config', () => {
     expect(noConfig).toEqual(defaultConfig);
   });
 
-  test('should return a valid configuration when one provided', () => {
-    const config = getConfiguration({ adapter: { name: 'botfuel' }, outOfScope: true });
-    expect(config.adapter.name).toEqual('botfuel');
-    expect(config.outOfScope).toBe(undefined);
-  });
-
   test('should return a valid configuration when qna provided', () => {
     const config = getConfiguration({ nlu: { qna: { when: 'before' } } });
     expect(config.nlu.qna.when).toEqual('before');
   });
 
   test('should return a valid configuration when spellchecking provided', () => {
-    const config = getConfiguration({ spellchecking: 'EN_1' });
-    expect(config.spellchecking).toEqual('EN_1');
+    const config = getConfiguration({ nlu: { spellchecking: 'EN_1' } });
+    expect(config.nlu.spellchecking).toEqual('EN_1');
   });
 
   test('should return empty object when no config filename provided', () => {
@@ -48,11 +42,5 @@ describe('Config', () => {
 
   test('should throw an error when file not exists', () => {
     expect(() => resolveConfigFile('invalid')).toThrow();
-  });
-
-  test('should merge correctly config', () => {
-    const config = getConfiguration({ nlu: { name: 'custom' } });
-    expect(config.adapter.name).toEqual('botfuel');
-    expect(config.nlu.intentThreshold).toBeDefined();
   });
 });

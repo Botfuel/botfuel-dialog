@@ -15,7 +15,6 @@
  */
 
 // @flow
-
 export type RawConfig = {
   [string]: {},
 };
@@ -35,10 +34,9 @@ export type Config = {|
   multiintent: boolean,
   nlu: {
     name: string,
+    spellchecking: string,
   },
   path: string,
-  spellchecking: boolean,
-  custom: Object,
 |};
 
 const fs = require('fs');
@@ -48,27 +46,23 @@ const logger = require('logtown')('Config');
 const LoggerManager = require('./logger-manager');
 const ConfigurationError = require('./errors/configuration-error');
 
-const DEFAULT_CONVERSATION_DURATION = 86400000; // one day in ms
-
 const defaultConfig = {
-  path: process.cwd(),
-  locale: 'en',
   adapter: {
     name: 'shell',
   },
   brain: {
     name: 'memory',
+    conversationDuration: 86400000, // one day in ms
   },
+  locale: 'en',
   logger: 'info',
+  multiIntent: false,
   modules: [],
   nlu: {
     name: 'botfuel',
-    intentThreshold: 0.8,
   },
-  multiIntent: false,
+  path: process.cwd(),
 };
-
-const whitelist = Object.keys(defaultConfig).concat(['spellchecking', 'custom']);
 
 /**
  * Returns the contents of the bot config file.
@@ -78,21 +72,17 @@ const whitelist = Object.keys(defaultConfig).concat(['spellchecking', 'custom'])
 const resolveConfigFile = (configFileName: string): RawConfig => {
   // configure the logger with default configuration first the be able to log errors
   LoggerManager.configure(defaultConfig);
-
   if (!configFileName) {
     logger.info("You didn't specify any config file, using default config.");
     return {};
   }
-
   const configPath = path.resolve(process.cwd(), configFileName);
-
   try {
     return require(configPath);
   } catch (error) {
     if (error.code === 'MODULE_NOT_FOUND') {
       logger.error(`Could not load config file ${configPath}`);
     }
-
     throw error;
   }
 };
@@ -100,16 +90,13 @@ const resolveConfigFile = (configFileName: string): RawConfig => {
 const getComponentRoots = function (config): string[] {
   const botRoot = `${config.path}/src`;
   const sdkRoot = __dirname;
-
   const moduleRoots = config.modules.map((packageName) => {
     if (typeof packageName !== 'string') {
       throw new ConfigurationError(
         'Parameter "modules" of configuration should be a list of package names.',
       );
     }
-
     const moduleBasePath = path.dirname(require.resolve(packageName));
-
     const { botfuelModuleRoot } = require(packageName);
     if (typeof botfuelModuleRoot !== 'string') {
       throw new ConfigurationError(
@@ -124,7 +111,6 @@ const getComponentRoots = function (config): string[] {
     }
     return absolutePath;
   });
-
   return [botRoot, ...moduleRoots, sdkRoot];
 };
 
@@ -135,18 +121,8 @@ const getComponentRoots = function (config): string[] {
  */
 const getConfiguration = (botConfig: RawConfig = {}): Config => {
   // get the config by extending defaultConfig with botConfig
-  const config = _.merge(
-    defaultConfig,
-    _.omitBy(botConfig, (val, key: string): boolean => !whitelist.includes(key)),
-  );
-
-  Object.assign(defaultConfig);
-
-  config.brain.conversationDuration =
-    config.brain.conversationDuration || DEFAULT_CONVERSATION_DURATION;
-
+  const config = _.merge(defaultConfig, botConfig);
   config.componentRoots = getComponentRoots(config);
-
   // reconfigure the logger with the final config
   LoggerManager.configure(config);
   // return default config extended by bot config

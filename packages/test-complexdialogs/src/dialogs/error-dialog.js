@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-module.exports = {
-  adapter: {
-    name: 'test',
-  },
-  nlu: {
-    name: 'botfuel',
-    qna: {},
-  },
-  path: __dirname,
-};
+const { SdkError, BaseDialog } = require('botfuel-dialog');
+
+class ErrorDialog extends BaseDialog {
+  async dialogWillDisplay() {
+    throw new SdkError('bla');
+  }
+}
+
+module.exports = ErrorDialog;

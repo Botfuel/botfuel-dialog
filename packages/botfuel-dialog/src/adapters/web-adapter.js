@@ -115,7 +115,6 @@ class WebAdapter extends Adapter {
     try {
       const res = await rp.post(requestOptions);
       if (res.statusCode && res.statusCode !== 200) {
-        // not handled on messenger
         logger.error('postResponse: KO', res);
       } else {
         logger.debug('postResponse: OK');

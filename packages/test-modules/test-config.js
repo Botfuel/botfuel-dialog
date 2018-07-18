@@ -23,8 +23,6 @@ module.exports = {
     name: 'sample-module',
     brainSecretSauce: 42,
   },
-  locale: 'en',
-  logger: 'error',
   modules: ['botfuel-module-sample'],
   nlu: {
     name: 'sample-module',

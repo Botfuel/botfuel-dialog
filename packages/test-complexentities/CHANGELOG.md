@@ -3,11 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-<a name="9.0.4"></a>
-## [9.0.4](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.3...v9.0.4) (2018-07-17)
+<a name="10.0.0"></a>
+# [10.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.3...v10.0.0) (2018-07-18)
 
-**Note:** Version bump only for package test-complexentities
 
+### Features
+
+* Catch dialog and view allow the bot to gracefully handle errors. ([792a597](https://github.com/Botfuel/botfuel-dialog/commit/792a597))
 
 
 

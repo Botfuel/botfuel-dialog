@@ -51,11 +51,6 @@ const checkCredentials = (config) => {
         'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required to use Botfuel NLU.',
       );
     }
-    if (config.spellchecking) {
-      throw new MissingCredentialsError(
-        'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required to use the spellchecking service.',
-      );
-    }
   }
 
   // Botfuel app id

@@ -3,12 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="10.0.1"></a>
+## [10.0.1](https://github.com/Botfuel/botfuel-dialog/compare/v10.0.0...v10.0.1) (2018-07-18)
+
+**Note:** Version bump only for package botfuel-dialog
+
+
+
+
+
+<a name="10.0.0"></a>
+# [10.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.3...v10.0.0) (2018-07-18)
+
+
+### Bug Fixes
+
+* Configure the spellchecking in the NLU section ([c1f889e](https://github.com/Botfuel/botfuel-dialog/commit/c1f889e))
+
+
+### Features
+
+* Catch dialog and view allow the bot to gracefully handle errors. ([792a597](https://github.com/Botfuel/botfuel-dialog/commit/792a597))
+
+
+### BREAKING CHANGES
+
+* The spellchecking is now configured in the NLU section.
+
 <a name="9.0.4"></a>
 ## [9.0.4](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.3...v9.0.4) (2018-07-17)
 
-### BREAKING CHANGES 
- 
-* Rename the method getLastConversation() to fetchLastConversation() 
+### BREAKING CHANGES
+
+* Rename the method getLastConversation() to fetchLastConversation()
 
 **Note:** Version bump only for package botfuel-dialog
 

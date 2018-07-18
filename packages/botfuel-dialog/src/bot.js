@@ -28,7 +28,6 @@ import type Brain from './brains/brain';
 import type Nlu from './nlus/nlu';
 
 const Logger = require('logtown');
-const { Spellchecking } = require('botfuel-nlp-sdk');
 const AdapterResolver = require('./adapter-resolver');
 const BrainResolver = require('./brain-resolver');
 const NluResolver = require('./nlu-resolver');
@@ -51,8 +50,7 @@ const logger = Logger.getLogger('Bot');
  * - a {@link Config},
  * - a {@link DialogManager},
  * - a {@link MiddlewareManager},
- * - a {@link Nlu} (Natural Language Understanding) module,
- * - an optional {@link Spellchecking} module.
+ * - a {@link Nlu} (Natural Language Understanding) module.
  */
 class Bot {
   adapter: Adapter;
@@ -61,14 +59,13 @@ class Bot {
   dm: DialogManager;
   middlewareManager: MiddlewareManager;
   nlu: Nlu;
-  spellchecking: ?Spellchecking;
 
   constructor(config: RawConfig) {
+    logger.debug('constructor', config);
     this.config = getConfiguration(config);
     logger.debug('constructor', this.config);
     checkCredentials(this.config);
     this.brain = new BrainResolver(this).resolve(this.config.brain.name);
-    this.spellchecking = null;
     this.nlu = new NluResolver(this).resolve(this.config.nlu.name);
     this.dm = new DialogManager(this);
     this.adapter = new AdapterResolver(this).resolve(this.config.adapter.name);
@@ -80,39 +77,9 @@ class Bot {
    * @private
    */
   async init(): Promise<void> {
-    // Brain
+    logger.debug('init');
     await this.brain.init();
-    // NLU
     await this.nlu.init();
-    // Spellchecking
-    if (this.config.spellchecking) {
-      if (!process.env.BOTFUEL_APP_ID || !process.env.BOTFUEL_APP_KEY) {
-        logger.error(
-          'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the spellchecking service!',
-        );
-      }
-      this.spellchecking = new Spellchecking({
-        appId: process.env.BOTFUEL_APP_ID,
-        appKey: process.env.BOTFUEL_APP_KEY,
-      });
-    }
-  }
-
-  /**
-   * Handles errors. Adds a user friendly message to common errors.
-   */
-  handleError(error: Error): void {
-    if (error instanceof AuthenticationError) {
-      logger.error('Botfuel API authentication failed!');
-      logger.error(
-        'Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io',
-      );
-    } else if (error instanceof ResolutionError) {
-      logger.error(`Could not resolve '${error.name}'`);
-    } else if (error instanceof DialogError) {
-      logger.error(`Could not execute dialog '${error.name}'`);
-    }
-    throw error;
   }
 
   /**
@@ -120,12 +87,8 @@ class Bot {
    */
   async run(): Promise<void> {
     logger.debug('run');
-    try {
-      await this.init();
-      await this.adapter.run();
-    } catch (error) {
-      this.handleError(error);
-    }
+    await this.init();
+    await this.adapter.run();
   }
 
   /**
@@ -133,12 +96,8 @@ class Bot {
    */
   async play(userMessages: UserMessage[]): Promise<void> {
     logger.debug('play', userMessages);
-    try {
-      await this.init();
-      await this.adapter.play(userMessages);
-    } catch (error) {
-      this.handleError(error);
-    }
+    await this.init();
+    await this.adapter.play(userMessages);
   }
 
   /**
@@ -146,43 +105,40 @@ class Bot {
    */
   async clean(): Promise<void> {
     logger.debug('clean');
-    try {
-      await this.brain.init();
-      await this.brain.clean();
-    } catch (error) {
-      this.handleError(error);
-    }
+    await this.brain.init();
+    await this.brain.clean();
   }
 
   /**
    * Handles a user message.
    */
   async handleMessage(userMessage: UserMessage): Promise<BotMessageJson[]> {
-    let botMessages: BotMessageJson[] = [];
-
     logger.debug('handleMessage', userMessage);
-
-    const contextIn = {
-      user: userMessage.user,
-      brain: this.brain,
-      userMessage,
-      config: this.config,
-    };
-
-    await this.middlewareManager.in(contextIn, async () => {
-      botMessages = await this.respond(userMessage);
-    });
-
-    const contextOut = {
-      user: userMessage.user,
-      brain: this.brain,
-      botMessages,
-      config: this.config,
-      userMessage,
-    };
-    await this.middlewareManager.out(contextOut, async () => {});
-
-    return botMessages;
+    try {
+      const contextIn = {
+        user: userMessage.user,
+        brain: this.brain,
+        userMessage,
+        config: this.config,
+      };
+      let botMessages: BotMessageJson[] = [];
+      await this.middlewareManager.in(contextIn, async () => {
+        logger.debug('handleMessage: responding');
+        botMessages = await this.respond(userMessage);
+      });
+      const contextOut = {
+        user: userMessage.user,
+        brain: this.brain,
+        botMessages,
+        config: this.config,
+        userMessage,
+      };
+      await this.middlewareManager.out(contextOut, async () => {});
+      return botMessages;
+    } catch (error) {
+      logger.debug('handleMessage: catching error', error);
+      return this.respondWhenError(userMessage, error);
+    }
   }
 
   /**
@@ -190,15 +146,16 @@ class Bot {
    */
   async respond(userMessage: UserMessage): Promise<BotMessageJson[]> {
     logger.debug('respond', userMessage);
-
-    // TODO Replace Conditional with Polymorphism (Fowler)
     switch (userMessage.type) {
       case 'postback':
+        logger.debug('respond: postback', userMessage);
         return this.respondWhenPostback(userMessage);
       case 'image':
+        logger.debug('respond: image', userMessage);
         return this.respondWhenImage(userMessage);
       case 'text':
       default:
+        logger.debug('respond: text', userMessage);
         return this.respondWhenText(userMessage);
     }
   }
@@ -209,24 +166,19 @@ class Bot {
    */
   async respondWhenText(userMessage: TextMessage): Promise<BotMessageJson[]> {
     logger.debug('respondWhenText', userMessage);
-    let sentence = userMessage.payload.value;
-    sentence = await this.spellcheck(sentence);
-
     const { classificationResults, messageEntities } = await this.nlu.compute(
-      sentence,
+      userMessage.payload.value,
       {
         brain: this.brain,
         userMessage,
       },
     );
-
     logger.debug('respondWhenText: classificationResults', classificationResults, messageEntities);
-    const botMessages = await this.dm.executeClassificationResults(
+    return this.dm.executeClassificationResults(
       userMessage,
       classificationResults,
       messageEntities,
     );
-    return botMessages;
   }
 
   /**
@@ -241,8 +193,7 @@ class Bot {
         messageEntities: userMessage.payload.value.entities,
       },
     };
-    const botMessages = await this.dm.executeDialog(userMessage, dialog);
-    return botMessages;
+    return this.dm.executeDialog(userMessage, dialog);
   }
 
   /**
@@ -257,35 +208,28 @@ class Bot {
         url: userMessage.payload.value,
       },
     };
-    const botMessages = await this.dm.executeDialog(userMessage, dialog);
-    return botMessages;
+    return this.dm.executeDialog(userMessage, dialog);
   }
 
-  /**
-   * Spellchecks a sentence.
-   * @param sentence - a sentence
-   * @returns the spellchecked sentence
-   */
-  async spellcheck(sentence: string): Promise<string> {
-    const key = this.config.spellchecking;
-
-    logger.debug('spellcheck', sentence, key);
-
-    if (!key || !this.spellchecking) {
-      return sentence;
+  async respondWhenError(userMessage: UserMessage, error: Error): Promise<BotMessageJson[]> {
+    logger.debug('respondWhenError', userMessage, error);
+    if (error instanceof AuthenticationError) {
+      logger.error('Botfuel API authentication failed!');
+      logger.error(
+        'Please check your app’s credentials and that its plan limits haven’t been reached on https://api.botfuel.io',
+      );
+    } else if (error instanceof ResolutionError) {
+      logger.error(`Could not resolve '${error.name}'`);
+    } else if (error instanceof DialogError) {
+      logger.error(`Could not execute dialog '${error.name}'`);
     }
-
-    try {
-      const result = await this.spellchecking.compute({ sentence, key });
-      logger.debug('spellcheck: result', result);
-      return result.correctSentence;
-    } catch (error) {
-      logger.error('spellcheck: error');
-      if (error.statusCode === 403) {
-        throw new AuthenticationError();
-      }
-      throw error;
-    }
+    const catchDialog = {
+      name: 'catch',
+      data: {
+        error,
+      },
+    };
+    return this.dm.executeDialog(userMessage, catchDialog);
   }
 }
 
