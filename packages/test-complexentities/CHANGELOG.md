@@ -8,13 +8,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-<a name="9.0.4"></a>
-## [9.0.4](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.3...v9.0.4) (2018-07-17)
-
-**Note:** Version bump only for package test-complexentities
-
-
-
 
 
 <a name="10.0.0"></a>
