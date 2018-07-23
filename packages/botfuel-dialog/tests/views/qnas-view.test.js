@@ -75,10 +75,10 @@ describe('QnasView', () => {
           },
         ],
       ];
-      await bot.play([new PostbackMessage('qnas', answers)]);
+      await bot.play([new PostbackMessage({ name: 'qnas', data: { messageEntities: answers } })]);
 
       expect(bot.adapter.log).toEqual(
-        [new PostbackMessage('qnas', answers), new BotTextMessage('answer')].map(msg =>
+        [new PostbackMessage({ name: 'qnas', data: { messageEntities: answers } }), new BotTextMessage('answer')].map(msg =>
           msg.toJson('USER_TEST')),
       );
     });

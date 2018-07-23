@@ -236,9 +236,9 @@ class Bot {
   async respondWhenPostback(userMessage: PostbackMessage): Promise<BotMessageJson[]> {
     logger.debug('respondWhenPostback', userMessage);
     const dialog = {
-      name: userMessage.payload.value.dialog,
+      name: userMessage.payload.value.name,
       data: {
-        messageEntities: userMessage.payload.value.entities,
+        messageEntities: userMessage.payload.value.data.messageEntities,
       },
     };
     const botMessages = await this.dm.executeDialog(userMessage, dialog);
