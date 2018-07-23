@@ -29,7 +29,7 @@ const PRODUCTS = require('../../PRODUCTS.json');
 const productToCard = (key, product) =>
   new Card(product.title, WebAdapter.getStaticUrl(product.imageUrl), [
     new Link('Details', product.link),
-    new Postback('Buy', 'products', [{ dim: 'product', values: [key] }]),
+    new Postback('Buy', { name: 'products', data: { messageEntities: [{ dim: 'product', values: [key] }] } }),
   ]);
 
 class ProductsView extends PromptView {

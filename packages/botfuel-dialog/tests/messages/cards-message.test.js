@@ -34,11 +34,11 @@ describe('CardsMessage', () => {
     const message = new CardsMessage([
       new Card('Card 1', 'https://image1.jpg', [
         new Link('Details', 'https://image1'),
-        new Postback('Buy', 'products', [{ dim: 'product', value: '1' }]),
+        new Postback('Buy', { name: 'products', data: { messageEntities: [{ dim: 'product', value: '1' }] } }),
       ]),
       new Card('Card 2', 'https://image2.jpg', [
         new Link('Details', 'https://image2'),
-        new Postback('Buy', 'products', [{ dim: 'product', value: '2' }]),
+        new Postback('Buy', { name: 'products', data: { messageEntities: [{ dim: 'product', value: '2' }] } }),
       ]),
     ]);
     expect(message.toJson('USER')).toEqual({
@@ -57,7 +57,12 @@ describe('CardsMessage', () => {
               {
                 text: 'Buy',
                 type: 'postback',
-                value: { dialog: 'products', entities: [{ dim: 'product', value: '1' }] },
+                value: {
+                  name: 'products',
+                  data: {
+                    messageEntities: [{ dim: 'product', value: '1' }],
+                  },
+                },
               },
             ],
             image_url: 'https://image1.jpg',
@@ -73,7 +78,7 @@ describe('CardsMessage', () => {
               {
                 text: 'Buy',
                 type: 'postback',
-                value: { dialog: 'products', entities: [{ dim: 'product', value: '2' }] },
+                value: { name: 'products', data: { messageEntities: [{ dim: 'product', value: '2' }] } },
               },
             ],
             image_url: 'https://image2.jpg',
