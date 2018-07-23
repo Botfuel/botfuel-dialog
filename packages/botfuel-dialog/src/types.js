@@ -53,10 +53,7 @@ export type PostbackMessage = {
   type: 'postback',
   user: string,
   payload: {
-    value: {
-      dialog: string,
-      entities: MessageEntities,
-    },
+    value: DialogData,
   },
   id?: string,
   timestamp?: number,

@@ -257,6 +257,7 @@ class DialogManager extends Resolver<Dialog> {
     } else {
       const dialogInstance: Dialog = this.resolve(dialog.name);
       // See https://github.com/facebook/flow/issues/5294
+
       const executeResult: ExecuteResult = await dialogInstance.execute(
         userMessage,
         dialog.data,

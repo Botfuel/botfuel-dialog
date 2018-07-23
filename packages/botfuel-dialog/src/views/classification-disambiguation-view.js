@@ -27,14 +27,15 @@ class ClassificationDisambiguationView extends View {
   /** @inheritDoc */
   render(userMessage, { classificationResults, messageEntities }) {
     logger.debug('render', userMessage, { classificationResults, messageEntities });
-
     const postbacks = classificationResults.map((cr) => {
       const resolvePrompt = cr.resolvePrompt || `[${cr.label.toUpperCase()}]`;
-
       if (cr.isQnA()) {
-        return new Postback(resolvePrompt, cr.name, cr.answers);
+        const postback = new Postback(resolvePrompt,
+          { name: cr.name, data: { messageEntities: cr.answers } });
+        return postback;
       }
-      return new Postback(resolvePrompt, cr.name, messageEntities);
+      return new Postback(resolvePrompt,
+        { name: cr.name, data: { messageEntities } });
     });
 
     const options = {
