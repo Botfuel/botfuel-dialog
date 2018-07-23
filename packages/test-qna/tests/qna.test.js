@@ -17,9 +17,7 @@
 
 const {
   Bot,
-  // ActionsMessage,
   BotTextMessage,
-  // Postback,
   UserTextMessage,
 } = require('botfuel-dialog');
 const config = require('../test-config');
@@ -46,53 +44,6 @@ describe('Qna', () => {
     expect(dialogs.previous.length).toBe(1);
     expect(dialogs.previous[0].name).toBe('default');
   });
-
-  /**
-  test('should respond with many qnas when question not fully understood', async () => {
-    const bot = new Bot(config);
-    const userId = bot.adapter.userId;
-    await bot.play([new UserTextMessage('get an')]);
-    expect(bot.adapter.log).toEqual(
-      [
-        new UserTextMessage('get an invoice'),
-        new BotTextMessage('What do you mean?'),
-        new ActionsMessage([
-          new Postback('Will I get an invoice?', 'qnas', [
-            {
-              dim: 'qnas',
-              value: [
-                {
-                  answer:
-                    'The invoice for your purchase will be sent along with your goods.
-                    You can also download an electronic version from your account.',
-                },
-              ],
-            },
-          ]),
-          new Postback('Can I get an invoice ?', 'qnas', [
-            {
-              dim: 'qnas',
-              value: [
-                {
-                  answer:
-                    'Of curse! The invoice for your purchase will be sent along with your goods.
-                    You can also download an electronic version from your account.',
-                },
-              ],
-            },
-          ]),
-        ]),
-      ].map(msg => msg.toJson(userId)),
-    );
-    const user = await bot.brain.getUser(userId);
-    const dialogs = await bot.brain.getDialogs(userId);
-    expect(user.userId).toBe(userId);
-    expect(user.conversations.length).toBe(1);
-    expect(dialogs.stack.length).toBe(1);
-    expect(dialogs.stack[0].name).toBe('qnas');
-    expect(dialogs.previous).toHaveLength(0);
-  });
-   */
 
   test('should respond to help request', async () => {
     const bot = new Bot(config);

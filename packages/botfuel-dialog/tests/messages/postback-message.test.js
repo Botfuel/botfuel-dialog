@@ -19,23 +19,26 @@ const MessageError = require('../../src/errors/message-error');
 
 describe('PostbackMessage', () => {
   test('should throw an exception dialog name is not a string', async () => {
-    expect(() => new PostbackMessage(123, [])).toThrow(MessageError);
+    expect(() => new PostbackMessage({ name: 123, data: { messageEntities: [] } }))
+      .toThrow(MessageError);
   });
 
   test('should throw an exception when entities are not an array', async () => {
-    expect(() => new PostbackMessage('greetings', 'hello')).toThrow(MessageError);
+    expect(() => new PostbackMessage({ name: 'greetings', data: { messageEntities: 'hello' } })).toThrow(MessageError);
   });
 
   test('should generate the proper json', async () => {
-    const message = new PostbackMessage('greetings', []);
+    const message = new PostbackMessage({ name: 'greetings', data: { messageEntities: [] } });
     expect(message.toJson('USER')).toEqual({
       type: 'postback',
       sender: 'user',
       user: 'USER',
       payload: {
         value: {
-          dialog: 'greetings',
-          entities: [],
+          name: 'greetings',
+          data: {
+            messageEntities: [],
+          },
         },
       },
     });

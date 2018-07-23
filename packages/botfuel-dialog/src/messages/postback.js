@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+// @flow
+
+import type { DialogData } from './../types';
+
 const Action = require('./action');
 
 /**
@@ -24,18 +28,17 @@ class Postback extends Action {
   /**
    * @constructor
    * @param {String} text - the postback text
-   * @param {String} dialog - the postback dialog name
-   * @param {Object[]} entities - the dialog entities
+   * @param {DialogData} dialogData - the postback dialog information, like name or entities
    */
-  constructor(text, dialog, entities) {
-    super('postback', text, { dialog, entities });
+  constructor(text: string, dialogData: DialogData) {
+    super('postback', text, dialogData);
   }
 
   /** @inheritDoc */
   validate() {
     super.validate();
-    this.validateString(this.type, this.value.dialog);
-    this.validateArray(this.type, this.value.entities);
+    this.validateString(this.type, this.value.name);
+    this.validateArray(this.type, this.value.data.messageEntities);
   }
 }
 

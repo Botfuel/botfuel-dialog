@@ -43,10 +43,10 @@ describe('ClassificationDisambiguationView', () => {
         view.render({ user: 'TEST_USER' }, { classificationResults, messageEntities: [] }),
       ).toEqual([
         new ActionsMessage([
-          new Postback('You want trip information?', 'trip', []),
-          new Postback('You want delivery information?', 'qnas', [
-            [{ value: 'Here is your delivery information' }],
-          ]),
+          new Postback('You want trip information?', { name: 'trip', data: { messageEntities: [] } }),
+          new Postback('You want delivery information?', { name: 'qnas',
+            data: { messageEntities: [
+              [{ value: 'Here is your delivery information' }]] } }),
         ], option),
       ]);
     });
