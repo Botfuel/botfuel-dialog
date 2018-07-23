@@ -18,6 +18,5 @@ module.exports = {
   adapter: {
     name: 'test',
   },
-  logger: 'error',
   path: __dirname,
 };

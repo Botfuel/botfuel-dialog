@@ -49,6 +49,7 @@ const PromptView = require('./views/prompt-view');
 const QnasView = require('./views/qnas-view');
 const QuickrepliesMessage = require('./messages/quickreplies-message');
 const RegexExtractor = require('./extractors/regex-extractor');
+const SdkError = require('./errors/sdk-error');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
 const UserImageMessage = require('./messages/user-image-message');
@@ -93,6 +94,7 @@ module.exports = {
   QnasView,
   QuickrepliesMessage,
   RegexExtractor,
+  SdkError,
   ShellAdapter,
   TestAdapter,
   UserImageMessage,

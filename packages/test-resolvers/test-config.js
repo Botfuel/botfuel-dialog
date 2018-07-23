@@ -23,8 +23,6 @@ module.exports = {
     name: 'custom',
     brainSecretSauce: 42,
   },
-  locale: 'en',
-  logger: 'error',
   nlu: {
     name: 'custom',
     nluSecretSauce: 43,

@@ -156,6 +156,7 @@ class DialogManager extends Resolver<Dialog> {
    * @param newDialog - new dialog to be added to the dialog stack
    */
   updateWithDialog(dialogs: DialogsData, newDialog: DialogData): void {
+    logger.debug('updateWithDialog', dialogs, newDialog);
     const lastDialog = dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
     if (lastDialog && lastDialog.name === newDialog.name) {
       lastDialog.data = newDialog.data;
@@ -175,14 +176,11 @@ class DialogManager extends Resolver<Dialog> {
     action: Action,
   ): DialogsData {
     logger.debug('applyAction', dialogs, action);
-
     let updatedDialogs: DialogsData = dialogs;
     const currentDialog: DialogData = dialogs.stack[dialogs.stack.length - 1];
     const date = Date.now();
-
     if (action.name === Dialog.ACTION_CANCEL) {
       const { newDialog } = action;
-
       updatedDialogs = {
         ...dialogs,
         stack: dialogs.stack.slice(0, -2),
@@ -200,7 +198,6 @@ class DialogManager extends Resolver<Dialog> {
       };
     } else if (action.name === Dialog.ACTION_NEXT) {
       const { newDialog } = action;
-
       updatedDialogs = {
         ...dialogs,
         stack: dialogs.stack.slice(0, -1),
@@ -210,7 +207,6 @@ class DialogManager extends Resolver<Dialog> {
       return updatedDialogs;
     } else if (action.name === Dialog.ACTION_NEW_CONVERSATION) {
       const { newDialog } = action;
-
       updatedDialogs = {
         ...dialogs,
         stack: [],
@@ -222,7 +218,6 @@ class DialogManager extends Resolver<Dialog> {
       }
       return updatedDialogs;
     }
-
     throw new DialogError({
       name: currentDialog,
       message: `Unknown action '${action.name}' in '${currentDialog.name}'`,
@@ -239,16 +234,13 @@ class DialogManager extends Resolver<Dialog> {
     botMessagesAccumulator: BotMessageJson[] = [],
   ): Promise<DialogManagerExecuteOutput> {
     logger.debug('execute', userMessage, dialogs, botMessagesAccumulator);
-
     let botMessages = botMessagesAccumulator;
-
     if (dialogs.stack.length === 0) {
       return {
         dialogs,
         botMessages,
       };
     }
-
     const dialog: DialogData = dialogs.stack[dialogs.stack.length - 1];
     if (dialog.blocked) {
       dialog.blocked = false;
@@ -264,16 +256,13 @@ class DialogManager extends Resolver<Dialog> {
       });
     } else {
       const dialogInstance: Dialog = this.resolve(dialog.name);
-
       // See https://github.com/facebook/flow/issues/5294
       const executeResult: ExecuteResult = await dialogInstance.execute(
         userMessage,
         dialog.data,
       );
       const { action, botMessages: newBotMessages } = executeResult;
-
       botMessages = botMessages.concat(newBotMessages);
-
       logger.debug('execute: action', action);
       if (action.name === Dialog.ACTION_WAIT) {
         return {
@@ -294,8 +283,7 @@ class DialogManager extends Resolver<Dialog> {
     classificationResults: ClassificationResult[],
     messageEntities: MessageEntities,
   ): Promise<BotMessageJson[]> {
-    logger.debug('classificationResult', userMessage, classificationResults, messageEntities);
-
+    logger.debug('executeClassificationResults', userMessage, classificationResults, messageEntities);
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithClassificationResults(userId, dialogs, classificationResults, messageEntities);
@@ -312,7 +300,6 @@ class DialogManager extends Resolver<Dialog> {
     newDialog: DialogData,
   ): Promise<BotMessageJson[]> {
     logger.debug('executeDialog', userMessage, newDialog);
-
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithDialog(dialogs, newDialog);

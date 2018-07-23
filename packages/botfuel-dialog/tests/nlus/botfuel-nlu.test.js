@@ -46,7 +46,7 @@ describe('Botfuel Nlu', () => {
   // IMPORTANT: for REPLAY record, use what ever test app that has greetings intent and qna
   describe('compute', () => {
     test('to correctly detect intents ', async () => {
-      const nlu = new BotfuelNlu();
+      const nlu = new BotfuelNlu({ nlu: {} });
       // fake extractor
       nlu.extractor = new CompositeExtractor({
         extractors: [],
@@ -58,7 +58,7 @@ describe('Botfuel Nlu', () => {
     });
 
     test('to correctly detect qnas', async () => {
-      const nlu = new BotfuelNlu();
+      const nlu = new BotfuelNlu({ nlu: {} });
       // fake extractor
       nlu.extractor = new CompositeExtractor({
         extractors: [],

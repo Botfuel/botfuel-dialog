@@ -3,8 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="10.0.2"></a>
+## [10.0.2](https://github.com/Botfuel/botfuel-dialog/compare/v10.0.1...v10.0.2) (2018-07-18)
+
+
+
+
+
+<a name="10.0.1"></a>
+## [10.0.1](https://github.com/Botfuel/botfuel-dialog/compare/v10.0.0...v10.0.1) (2018-07-18)
+
+**Note:** Version bump only for package botfuel-dialog
+
+
+
+
+
+<a name="10.0.0"></a>
+# [10.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.3...v10.0.0) (2018-07-18)
+
+
+### Bug Fixes
+
+* Configure the spellchecking in the NLU section ([c1f889e](https://github.com/Botfuel/botfuel-dialog/commit/c1f889e))
+
+
+### Features
+
+* Catch dialog and view allow the bot to gracefully handle errors. ([792a597](https://github.com/Botfuel/botfuel-dialog/commit/792a597))
+
+
+### BREAKING CHANGES
+
+* The spellchecking is now configured in the NLU section.
+
 <a name="9.0.4"></a>
 ## [9.0.4](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.3...v9.0.4) (2018-07-17)
+
+### BREAKING CHANGES
+
+* Rename the method getLastConversation() to fetchLastConversation()
 
 **Note:** Version bump only for package botfuel-dialog
 
@@ -13,24 +51,24 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 <a name="9.0.3"></a>
-## [9.0.3](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.2...v9.0.3) (2018-07-09)
+## [9.0.3](https://github.com/Botfuel/bot-sdk2/compare/v9.0.2...v9.0.3) (2018-07-09)
 
 
 ### Bug Fixes
 
-* Do not log unloggable context ([131137c](https://github.com/Botfuel/botfuel-dialog/commit/131137c))
+* Do not log unloggable context ([131137c](https://github.com/Botfuel/bot-sdk2/commit/131137c))
 
 
 
 
 
 <a name="9.0.2"></a>
-## [9.0.2](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.1...v9.0.2) (2018-07-09)
+## [9.0.2](https://github.com/Botfuel/bot-sdk2/compare/v9.0.1...v9.0.2) (2018-07-09)
 
 
 ### Bug Fixes
 
-* In classif filter, filter both qnas and intents ([1e76504](https://github.com/Botfuel/botfuel-dialog/commit/1e76504))
+* In classif filter, filter both qnas and intents ([1e76504](https://github.com/Botfuel/bot-sdk2/commit/1e76504))
 
 
 
@@ -73,6 +111,7 @@ It should instead return a dialog action such as this.complete().
 ### Bug Fixes
 
 * add missing property to Config type ([6c1a873](https://github.com/Botfuel/botfuel-dialog/commit/6c1a873))
+* fix yarn.lock ([13375cc](https://github.com/Botfuel/botfuel-dialog/commit/13375cc))
 
 
 ### Features
@@ -156,26 +195,27 @@ It should instead return a dialog action such as this.complete().
 
 
 <a name="8.0.1"></a>
-## [8.0.1](https://github.com/Botfuel/botfuel-dialog/compare/v8.0.0...v8.0.1) (2018-05-22)
+## [8.0.1](https://github.com/Botfuel/bot-sdk2/compare/v8.0.0...v8.0.1) (2018-05-22)
 
-**Note:** Version bump only for package botfuel-dialog
+**Note:** Version bump only for package bot-sdk2
 
 
 
 
 
 <a name="8.0.0"></a>
-# [8.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v7.2.6...v8.0.0) (2018-05-22)
+# [8.0.0](https://github.com/Botfuel/bot-sdk2/compare/v7.2.6...v8.0.0) (2018-05-22)
 
 
 ### Bug Fixes
 
-* fix links to concepts and getting-started in new doc ([7db8e28](https://github.com/Botfuel/botfuel-dialog/commit/7db8e28))
+* fix links to concepts and getting-started in new doc ([7db8e28](https://github.com/Botfuel/bot-sdk2/commit/7db8e28))
+* fix test middlewares ([49861c5](https://github.com/Botfuel/bot-sdk2/commit/49861c5))
 
 
 ### Code Refactoring
 
-* botfuel-nlu uses Botfuel Trainer ([c9cb226](https://github.com/Botfuel/botfuel-dialog/commit/c9cb226))
+* botfuel-nlu uses Botfuel Trainer ([c9cb226](https://github.com/Botfuel/bot-sdk2/commit/c9cb226))
 
 
 ### BREAKING CHANGES
@@ -199,12 +239,12 @@ It should instead return a dialog action such as this.complete().
 
 
 <a name="7.2.5"></a>
-## [7.2.5](https://github.com/Botfuel/botfuel-dialog/compare/v7.2.4...v7.2.5) (2018-05-17)
+## [7.2.5](https://github.com/Botfuel/bot-sdk2/compare/v7.2.4...v7.2.5) (2018-05-17)
 
 
 ### Bug Fixes
 
-* Process messenger events synchronously ([2b2d95a](https://github.com/Botfuel/botfuel-dialog/commit/2b2d95a))
+* Process messenger events synchronously ([2b2d95a](https://github.com/Botfuel/bot-sdk2/commit/2b2d95a))
 
 
 
@@ -235,27 +275,27 @@ It should instead return a dialog action such as this.complete().
 
 
 <a name="7.2.2"></a>
-## [7.2.2](https://github.com/Botfuel/botfuel-dialog/compare/v7.2.1...v7.2.2) (2018-05-15)
+## [7.2.2](https://github.com/Botfuel/bot-sdk2/compare/v7.2.1...v7.2.2) (2018-05-15)
 
 
 ### Bug Fixes
 
-* make build script cross platform ([37d1ef6](https://github.com/Botfuel/botfuel-dialog/commit/37d1ef6))
+* make build script cross platform ([37d1ef6](https://github.com/Botfuel/bot-sdk2/commit/37d1ef6))
 
 
 
 
 
 <a name="7.2.1"></a>
-## [7.2.1](https://github.com/Botfuel/botfuel-dialog/compare/v7.2.0...v7.2.1) (2018-05-11)
+## [7.2.1](https://github.com/Botfuel/bot-sdk2/compare/v7.2.0...v7.2.1) (2018-05-11)
 
 
 ### Bug Fixes
 
-* Obfuscate BOTFUEL_APP_KEY in logs ([fd38026](https://github.com/Botfuel/botfuel-dialog/commit/fd38026))
-* remove '\r' in Windows intent files when creating model hash ([77ce413](https://github.com/Botfuel/botfuel-dialog/commit/77ce413))
-* remove \r introduce in Windows from corpus file ([03c9d64](https://github.com/Botfuel/botfuel-dialog/commit/03c9d64))
-* update trainer api call uri and add auth key and token ([f49d76f](https://github.com/Botfuel/botfuel-dialog/commit/f49d76f))
+* Obfuscate BOTFUEL_APP_KEY in logs ([fd38026](https://github.com/Botfuel/bot-sdk2/commit/fd38026))
+* remove '\r' in Windows intent files when creating model hash ([77ce413](https://github.com/Botfuel/bot-sdk2/commit/77ce413))
+* remove \r introduce in Windows from corpus file ([03c9d64](https://github.com/Botfuel/bot-sdk2/commit/03c9d64))
+* update trainer api call uri and add auth key and token ([f49d76f](https://github.com/Botfuel/bot-sdk2/commit/f49d76f))
 
 
 
@@ -274,13 +314,31 @@ It should instead return a dialog action such as this.complete().
 
 
 <a name="7.1.3"></a>
-## [7.1.3](https://github.com/Botfuel/botfuel-dialog/compare/v7.1.2...v7.1.3) (2018-05-03)
+## [7.1.3](https://github.com/Botfuel/bot-sdk2/compare/v7.1.2...v7.1.3) (2018-05-03)
 
 
 ### Bug Fixes
 
-* Add messaging_type in FB responses ([e9fedee](https://github.com/Botfuel/botfuel-dialog/commit/e9fedee))
-* Fix messenger adapter ([37a0948](https://github.com/Botfuel/botfuel-dialog/commit/37a0948))
+* Add messaging_type in FB responses ([e9fedee](https://github.com/Botfuel/bot-sdk2/commit/e9fedee))
+* Fix messenger adapter ([37a0948](https://github.com/Botfuel/bot-sdk2/commit/37a0948))
+
+
+
+
+
+<a name="7.1.2"></a>
+## [7.1.2](https://github.com/Botfuel/bot-sdk2/compare/v7.1.1...v7.1.2) (2018-05-02)
+
+**Note:** Version bump only for package bot-sdk2
+
+
+
+
+
+<a name="7.1.1"></a>
+## [7.1.1](https://github.com/Botfuel/bot-sdk2/compare/v7.1.0...v7.1.1) (2018-05-02)
+
+**Note:** Version bump only for package bot-sdk2
 
 
 
@@ -304,110 +362,54 @@ It should instead return a dialog action such as this.complete().
 
 
 <a name="7.0.1"></a>
-## [7.0.1](https://github.com/Botfuel/botfuel-dialog/compare/v7.0.0...v7.0.1) (2018-04-25)
+## [7.0.1](https://github.com/Botfuel/bot-sdk2/compare/v7.0.0...v7.0.1) (2018-04-25)
 
-**Note:** Version bump only for package botfuel-dialog
+**Note:** Version bump only for package bot-sdk2
 
 
 
 
 
 <a name="7.0.0"></a>
-# [7.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.7...v7.0.0) (2018-04-18)
+# [7.0.0](https://github.com/Botfuel/bot-sdk2/compare/v5.1.7...v7.0.0) (2018-04-18)
 
 
 ### Bug Fixes
 
-* fix merge config to default config ([6d9943c](https://github.com/Botfuel/botfuel-dialog/commit/6d9943c))
-* Update predefined dialogs ([988e025](https://github.com/Botfuel/botfuel-dialog/commit/988e025))
+* Fix merge config with default config ([6d9943c](https://github.com/Botfuel/bot-sdk2/commit/6d9943c))
+* Apply breaking change on predefined dialogs ([988e025](https://github.com/Botfuel/bot-sdk2/commit/988e025))
 
 
 ### Code Refactoring
 
-* Do not call adapters in dialogs ([656d884](https://github.com/Botfuel/botfuel-dialog/commit/656d884))
-* Do not pass brain and config to Dialog constructor ([b2eec6f](https://github.com/Botfuel/botfuel-dialog/commit/b2eec6f))
-* Pass bot messages by return value ([2501685](https://github.com/Botfuel/botfuel-dialog/commit/2501685))
+* Do not call adapters in dialogs ([656d884](https://github.com/Botfuel/bot-sdk2/commit/656d884))
+* Do not pass brain and config to Dialog constructor ([b2eec6f](https://github.com/Botfuel/bot-sdk2/commit/b2eec6f))
+* Pass bot messages by return value ([2501685](https://github.com/Botfuel/bot-sdk2/commit/2501685))
 
 
 ### BREAKING CHANGES
 
 * Do not pass brain and config to Dialog
 constructor because the bot is already passed.
-* * Dialog.execute() returns an object with keys action and
-botMessage().
-* * Add new parameters Bot of Dialog constructor
-* Remove 1st paramters Adapter of methods
-Dialog.execute(), Dialog.display()
+  * Dialog.execute() returns an object with keys `action` and
+`botMessages`.
+  * Add new parameters `bot` of `Dialog` constructor
+* Remove 1st paramters `adapter` of methods
+`Dialog.execute()`, `Dialog.display()`
 
 
 
 
 
-<a name="5.1.7"></a>
-## [5.1.7](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.6...v5.1.7) (2018-04-16)
-
-**Note:** Version bump only for package botfuel-dialog
+<a name="6.0.0"></a>
+# [6.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.0...v6.0.0) (2018-04-17)
 
 
+### BREAKING CHANGE
 
+* Changed TextDialog to BaseDialog, and removed TextView. Now, if you would like to use a TextDialog, you use a BaseDialog instead, and if you would like to use a TextView, you use a general View instead (and you must implement render yourself. ([94a4763](https://github.com/Botfuel/botfuel-dialog/commit/94a4763))
 
-
-<a name="5.1.6"></a>
-## [5.1.6](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.5...v5.1.6) (2018-04-16)
-
-**Note:** Version bump only for package botfuel-dialog
-
-
-
-
-
-<a name="5.1.5"></a>
-## [5.1.5](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.4...v5.1.5) (2018-04-16)
-
-**Note:** Version bump only for package botfuel-dialog
-
-
-
-
-
-<a name="5.1.4"></a>
-## [5.1.4](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.3...v5.1.4) (2018-04-16)
-
-**Note:** Version bump only for package botfuel-dialog
-
-
-
-
-
-<a name="5.1.3"></a>
-## [5.1.3](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.2...v5.1.3) (2018-04-16)
-
-**Note:** Version bump only for package botfuel-dialog
-
-
-
-
-
-<a name="5.1.2"></a>
-## [5.1.2](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.1...v5.1.2) (2018-04-16)
-
-**Note:** Version bump only for package botfuel-dialog
-
-
-
-
-
-<a name="5.1.1"></a>
-## [5.1.1](https://github.com/Botfuel/botfuel-dialog/compare/v5.1.0...v5.1.1) (2018-04-16)
-
-
-### Bug Fixes
-
-* bug in default view ([2bc3ca1](https://github.com/Botfuel/botfuel-dialog/commit/2bc3ca1))
-* render instead of getTexts ([5db077b](https://github.com/Botfuel/botfuel-dialog/commit/5db077b))
-
-
-
+* Change data structure in dialog: the data in dialog.execute function will contains all the necessary entities (like messageEntities, missingEntities, matchedEntities...) and possibly other keys from extraData ([4640b46](https://github.com/Botfuel/botfuel-dialog/commit/4640b46))
 
 
 <a name="5.1.0"></a>
@@ -417,14 +419,12 @@ Dialog.execute(), Dialog.display()
 ### Bug Fixes
 
 * Fix lerna run style ([b7206ea](https://github.com/Botfuel/botfuel-dialog/commit/b7206ea))
+* fix tests after renaming botfuel-module-sample ([1448707](https://github.com/Botfuel/botfuel-dialog/commit/1448707))
 
 
 ### Features
 
 * botfuel nlu use trainer api ([083f578](https://github.com/Botfuel/botfuel-dialog/commit/083f578))
-
-
-
 
 
 <a name="5.0.0"></a>
@@ -434,20 +434,15 @@ Dialog.execute(), Dialog.display()
 ### Bug Fixes
 
 * correct style ([b04114b](https://github.com/Botfuel/botfuel-dialog/commit/b04114b))
+* fix style ([6671e78](https://github.com/Botfuel/botfuel-dialog/commit/6671e78))
+* fix style ([3108976](https://github.com/Botfuel/botfuel-dialog/commit/3108976))
 * remove undefined value in matchedEntities object ([8f9555d](https://github.com/Botfuel/botfuel-dialog/commit/8f9555d))
-
-
-### Code Refactoring
-
-* (breaking change) store prompt dialog in brain with new strucutre {entities: ..., question:...} ([599b8c8](https://github.com/Botfuel/botfuel-dialog/commit/599b8c8))
 
 
 ### BREAKING CHANGES
 
-* this can cause conflict on running bot with MongoBrain
-
-
-
+* Store prompt dialog in brain with new strucutre {entities: ..., question:...}, this can cause conflict on running bot with MongoBrain ([599b8c8](https://github.com/Botfuel/botfuel-dialog/commit/599b8c8))
+* `missingEntities` is now a Map instead of a plain Object
 
 
 <a name="4.4.3"></a>
@@ -461,25 +456,34 @@ Dialog.execute(), Dialog.display()
 
 
 
-
-
 <a name="4.4.2"></a>
 ## [4.4.2](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.1...v4.4.2) (2018-03-26)
 
 
+### Features
+
+* add LocationExtractor and use it in Botfuel NLU
+* add 'system:entity' entity
+
+### Bug Fixes
+
+* pass url value instead of payload containing url in MessengerAdapter for UserImageMessage
 
 
 
-**Note:** Version bump only for package botfuel-dialog
+
+**Note:** Version bump only for package undefined
 
 <a name="4.4.1"></a>
 ## [4.4.1](https://github.com/Botfuel/botfuel-dialog/compare/v4.4.0...v4.4.1) (2018-03-23)
 
 
+### Bug fixes
+
+* export Message class ([f69c162](https://github.com/Botfuel/botfuel-dialog/commit/f69c162))
 
 
 
-**Note:** Version bump only for package botfuel-dialog
 
 <a name="4.4.0"></a>
 # [4.4.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.3.4...v4.4.0) (2018-03-22)
@@ -492,42 +496,27 @@ Dialog.execute(), Dialog.display()
 
 
 
-
 <a name="4.3.4"></a>
 ## [4.3.4](https://github.com/Botfuel/botfuel-dialog/compare/v4.3.1...v4.3.4) (2018-03-22)
 
 
+### Features
+
+* add RegexExtractor ([59d0a60](https://github.com/Botfuel/botfuel-dialog/commit/59d0a60))
 
 
 
-**Note:** Version bump only for package botfuel-dialog
-
-<a name="4.3.3"></a>
-## [4.3.3](https://github.com/Botfuel/botfuel-dialog/compare/v4.3.2...v4.3.3) (2018-03-22)
-
-
-
-
-
-**Note:** Version bump only for package botfuel-dialog
-
-<a name="4.3.2"></a>
-## [4.3.2](https://github.com/Botfuel/botfuel-dialog/compare/v4.3.1...v4.3.2) (2018-03-22)
-
-
-
-
-
-**Note:** Version bump only for package botfuel-dialog
 
 <a name="4.3.1"></a>
 ## [4.3.1](https://github.com/Botfuel/botfuel-dialog/compare/v4.3.0...v4.3.1) (2018-03-20)
 
 
+### Bug Fixes
+
+* update contributtion for publish ([044ff14](https://github.com/Botfuel/botfuel-dialog/commit/044ff14))
+* exporting extractor ([32ff36db](https://github.com/Botfuel/botfuel-dialog/commit/32ff36db))
 
 
-
-**Note:** Version bump only for package botfuel-dialog
 
 <a name="4.3.0"></a>
 # [4.3.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.2.0...v4.3.0) (2018-03-16)
@@ -550,25 +539,42 @@ Dialog.execute(), Dialog.display()
 
 
 <a name="4.2.0"></a>
-# [4.2.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.1.0...v4.2.0) (2018-03-12)
+# [4.2.0](https://github.com/Botfuel/bot-sdk2/compare/v4.1.0...v4.2.0) (2018-03-12)
 
 
 ### Features
 
-* expose MissingImplementationError ([5755bd5](https://github.com/Botfuel/botfuel-dialog/commit/5755bd5))
-* Support modules ([ecab4eb](https://github.com/Botfuel/botfuel-dialog/commit/ecab4eb))
+* expose MissingImplementationError ([5755bd5](https://github.com/Botfuel/bot-sdk2/commit/5755bd5))
+* Support modules ([ecab4eb](https://github.com/Botfuel/bot-sdk2/commit/ecab4eb))
 
 
 
 
+
+<a name="4.1.0"></a>
+## [4.1.0](https://github.com/Botfuel/botfuel-dialog/compare/v4.0.0...v4.1.0) (2018-03-12)
+
+### New features
+
+* Assign uuid to conversations
+
+### Refactoring
+
+* Rename the methods used by the web adapter to build POST request
+* `getUri` -> `getUrl`
+* `getQs` -> `getQueryParameters`
+
+### Bug fixes
+
+* Fix dialog resolution for custom adapters
 
 <a name="4.0.0"></a>
 # [4.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v3.0.1...v4.0.0) (2018-03-02)
 
 
-### Chores
+### Bug Fixes
 
-* Fake commit ([c63519f](https://github.com/Botfuel/botfuel-dialog/commit/c63519f))
+* Fix greetings dialog ([de03b2e](https://github.com/Botfuel/botfuel-dialog/commit/de03b2e))
 
 
 ### BREAKING CHANGES
@@ -577,17 +583,42 @@ Dialog.execute(), Dialog.display()
 
 
 
-
-
 <a name="3.0.1"></a>
-## [3.0.1](https://github.com/Botfuel/botfuel-dialog/compare/v3.0.0...v3.0.1) (2018-03-01)
+## [3.0.1](https://github.com/Botfuel/bot-sdk2/compare/v3.0.0...v3.0.1) (2018-03-01)
 
 
 ### Bug Fixes
 
-* Fix shell adapter broken by [#120](https://github.com/Botfuel/botfuel-dialog/issues/120) ([f1b38b7](https://github.com/Botfuel/botfuel-dialog/commit/f1b38b7))
+* Fix shell adapter broken by [#120](https://github.com/Botfuel/bot-sdk2/issues/120) ([f1b38b7](https://github.com/Botfuel/bot-sdk2/commit/f1b38b7))
 
 
+
+
+
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v2.1.5...v3.0.0) (2018-03-01)
+
+### Breaking changes
+
+* Add members brain, nlu, adapters to the bot config ([7d3f080](https://github.com/Botfuel/botfuel-dialog/commit/7d3f080)). See [this sample config](https://github.com/Botfuel/botfuel-dialog/blob/master/packages/test-resolvers/test-config.js).
+
+* Now the exported class `Nlu` is an abstract class that is subclassed by `BotfuelNlu`. ([821a863](https://github.com/Botfuel/botfuel-dialog/commit/821a863))
+
+* Some renamings ([#124](https://github.com/Botfuel/botfuel-dialog/pull/124)):
+* `brain.getValue` -> `brain.botGet`
+* `brain.setValue` -> `brain.botSet`
+* `adapter.initUserIfNecessary` -> `adapter.addUserIfNecessary`
+* `brain.initUserIfNecessary` -> `brain.addUserIfNecessary`
+
+### Features
+
+The package [test-resolvers](https://github.com/Botfuel/botfuel-dialog/tree/master/packages/test-resolvers) provides samples for the following new features:
+
+* NLU modules can be resolved and loaded ([44fc9c2](https://github.com/Botfuel/botfuel-dialog/commit/44fc9c2)).
+
+* Brain modules can be resolved and loaded ([e81c4bb](https://github.com/Botfuel/botfuel-dialog/commit/e81c4bb)).
+
+* Export base brain class to allow suclassing ([7133ca8](https://github.com/Botfuel/botfuel-dialog/commit/7133ca8)).
 
 
 
@@ -597,7 +628,7 @@ Dialog.execute(), Dialog.display()
 
 
 
-**Note:** Version bump only for package botfuel-dialog
+**Note:** Version bump only for package undefined
 
 <a name="2.1.4"></a>
 ## [2.1.4](https://github.com/Botfuel/botfuel-dialog/compare/v2.1.3...v2.1.4) (2018-02-26)
@@ -618,7 +649,7 @@ Dialog.execute(), Dialog.display()
 
 
 
-**Note:** Version bump only for package botfuel-dialog
+**Note:** Version bump only for package undefined
 
 <a name="2.1.2"></a>
 ## [2.1.2](https://github.com/Botfuel/botfuel-dialog/compare/v2.1.1...v2.1.2) (2018-02-20)
@@ -638,7 +669,7 @@ Dialog.execute(), Dialog.display()
 
 
 
-**Note:** Version bump only for package botfuel-dialog
+**Note:** Version bump only for package undefined
 
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/Botfuel/botfuel-dialog/compare/v2.0.0...v2.1.0) (2018-02-14)
@@ -668,14 +699,6 @@ Dialog.execute(), Dialog.display()
 * Standardized dialog hooks ([80f1e45](https://github.com/Botfuel/botfuel-dialog/commit/80f1e45))
 
 
-* Merge pull request #111 from Botfuel/hooks ([adaaa3e](https://github.com/Botfuel/botfuel-dialog/commit/adaaa3e)), closes [#111](https://github.com/Botfuel/botfuel-dialog/issues/111)
-
-
-### BREAKING CHANGES
-
-* Standardized dialog hooks
-
-
 
 
 <a name="1.9.0"></a>
@@ -696,13 +719,13 @@ Dialog.execute(), Dialog.display()
 
 
 <a name="1.8.3"></a>
-## [1.8.3](https://github.com/Botfuel/botfuel-dialog/compare/v1.8.2...v1.8.3) (2018-02-09)
+## [1.8.3](https://github.com/Botfuel/bot-sdk2/compare/v1.8.2...v1.8.3) (2018-02-09)
 
 
 ### Bug Fixes
 
-* Give context to intent filter when no QnA ([814c0ff](https://github.com/Botfuel/botfuel-dialog/commit/814c0ff))
-* refactor Message.toJson() method ([bf256c6](https://github.com/Botfuel/botfuel-dialog/commit/bf256c6))
+* Give context to intent filter when no QnA ([814c0ff](https://github.com/Botfuel/bot-sdk2/commit/814c0ff))
+* refactor Message.toJson() method ([bf256c6](https://github.com/Botfuel/bot-sdk2/commit/bf256c6))
 
 
 
@@ -711,30 +734,44 @@ Dialog.execute(), Dialog.display()
 ## [1.8.2](https://github.com/Botfuel/botfuel-dialog/compare/v1.8.1...v1.8.2) (2018-02-06)
 
 
+### Bug Fixes
+
+* test-qna tests ([80997d7](https://github.com/Botfuel/botfuel-dialog/commit/80997d7))
 
 
-**Note:** Version bump only for package botfuel-dialog
+
 
 <a name="1.8.1"></a>
-## [1.8.1](https://github.com/Botfuel/botfuel-dialog/compare/v1.8.0...v1.8.1) (2018-02-01)
+## [1.8.1](https://github.com/Botfuel/bot-sdk2/compare/v1.8.0...v1.8.1) (2018-02-01)
 
 
 ### Bug Fixes
 
-* Check for bot message when extracting user ([1c95274](https://github.com/Botfuel/botfuel-dialog/commit/1c95274))
-* Fix compile command ([743affd](https://github.com/Botfuel/botfuel-dialog/commit/743affd))
+* Check for bot message when extracting user ([1c95274](https://github.com/Botfuel/bot-sdk2/commit/1c95274))
+* Fix compile command ([743affd](https://github.com/Botfuel/bot-sdk2/commit/743affd))
 
 
 
 
 <a name="1.8.0"></a>
-# [1.8.0](https://github.com/Botfuel/botfuel-dialog/compare/v1.7.1...v1.8.0) (2018-02-01)
+# [1.8.0](https://github.com/Botfuel/bot-sdk2/compare/v1.7.1...v1.8.0) (2018-02-01)
 
 
 ### Features
 
-* Define conversation duration in the config ([e24535d](https://github.com/Botfuel/botfuel-dialog/commit/e24535d))
-* info logger ([3a66941](https://github.com/Botfuel/botfuel-dialog/commit/3a66941))
+* Define conversation duration in the config ([e24535d](https://github.com/Botfuel/bot-sdk2/commit/e24535d))
+* info logger ([3a66941](https://github.com/Botfuel/bot-sdk2/commit/3a66941))
+
+
+
+
+<a name="1.7.1"></a>
+## [1.7.1](https://github.com/Botfuel/botfuel-dialog/compare/v1.7.0...v1.7.1) (2018-01-24)
+
+
+### Bug Fixes
+
+* Fix mute dialog + test in test-middlewares ([d1d88d9](https://github.com/Botfuel/botfuel-dialog/commit/d1d88d9))
 
 
 
@@ -751,20 +788,20 @@ Dialog.execute(), Dialog.display()
 
 
 <a name="1.6.0"></a>
-# [1.6.0](https://github.com/Botfuel/botfuel-dialog/compare/v1.5.0...v1.6.0) (2018-01-22)
+# [1.6.0](https://github.com/Botfuel/bot-sdk2/compare/v1.5.0...v1.6.0) (2018-01-22)
 
 
 ### Features
 
-* Add changelog ([65660ef](https://github.com/Botfuel/botfuel-dialog/commit/65660ef))
+* Add changelog ([65660ef](https://github.com/Botfuel/bot-sdk2/commit/65660ef))
 
 
 
 
 <a name="1.5.1"></a>
-## [1.5.1](https://github.com/Botfuel/botfuel-dialog/compare/v1.5.0...v1.5.1) (2018-01-22)
+## [1.5.1](https://github.com/Botfuel/bot-sdk2/compare/v1.5.0...v1.5.1) (2018-01-22)
 
 
 
 
-**Note:** Version bump only for package botfuel-dialog
+**Note:** Version bump only for package root
