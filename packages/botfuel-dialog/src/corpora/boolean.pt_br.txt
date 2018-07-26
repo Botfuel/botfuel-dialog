@@ -1,0 +1,2 @@
+0,falso,não,ko,incorreto
+1,real,sim,ok,corrigir
