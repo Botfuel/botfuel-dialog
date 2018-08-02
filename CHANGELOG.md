@@ -9,7 +9,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-* restrict config access in resolvers ([6f88977](https://github.com/Botfuel/botfuel-dialog/commit/6f88977))
 * Send error data properly to CatchDialog ([a0956d3](https://github.com/Botfuel/botfuel-dialog/commit/a0956d3))
 
 
@@ -18,10 +17,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * add custom property to Config type ([75129ba](https://github.com/Botfuel/botfuel-dialog/commit/75129ba))
 * add pt_br in sdk ([5dc5dc9](https://github.com/Botfuel/botfuel-dialog/commit/5dc5dc9))
 * allow access to config.custom property in a dialog via dialog.config ([8f271c4](https://github.com/Botfuel/botfuel-dialog/commit/8f271c4))
-* postback fexible ([16293b2](https://github.com/Botfuel/botfuel-dialog/commit/16293b2))
 
 
+### BREAKING CHANGES
 
+* postback data flexible ([16293b2](https://github.com/Botfuel/botfuel-dialog/commit/16293b2))
+   -> dialog and entities became dialogData in postback-message and postback
+      the dialogData structure is : dialogData : { name: dialog, data: { messageEntities: entities}}
+* restrict config access in resolvers ([6f88977](https://github.com/Botfuel/botfuel-dialog/commit/6f88977))
+  -> could not access the entire bot configuration through Dialog.viewResolver.config anymore
 
 
 <a name="10.0.2"></a>
