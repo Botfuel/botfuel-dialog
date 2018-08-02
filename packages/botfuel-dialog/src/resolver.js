@@ -28,7 +28,6 @@ const MissingImplementationError = require('./errors/missing-implementation-erro
  * The adapter resolver resolves the adapter at startup.
  */
 class Resolver<Component> {
-  config: Config;
   kind: string;
   directories: string[];
 
@@ -38,7 +37,6 @@ class Resolver<Component> {
    * @param {String} kind - the kind of objects we want to resolve
    */
   constructor(config: Config, kind: string) {
-    this.config = config;
     this.kind = kind;
     this.directories = config.componentRoots
       .map(componentRoot => path.join(componentRoot, `${kind}s`))
