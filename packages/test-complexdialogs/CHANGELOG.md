@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.0.0"></a>
+# [11.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v10.0.2...v11.0.0) (2018-08-02)
+
+
+### Bug Fixes
+
+* Send error data properly to CatchDialog ([a0956d3](https://github.com/Botfuel/botfuel-dialog/commit/a0956d3))
+
+
+
+
+
 <a name="10.0.2"></a>
 ## [10.0.2](https://github.com/Botfuel/botfuel-dialog/compare/v10.0.1...v10.0.2) (2018-07-18)
 
