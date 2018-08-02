@@ -3,6 +3,12 @@
 import type ClassificationResult, { QnaAnswers } from './nlus/classification-result';
 
 /*
+  Error types
+*/
+
+export type ErrorObject = { [key: string]: any };
+
+/*
   Data used in the dialogs
 */
 
@@ -13,8 +19,8 @@ export type DialogDataData = {
   messageEntities?: MessageEntities,
   answers?: QnaAnswers,
   url?: string,
+  error?: ErrorObject,
 };
-
 
 export type DialogData = {
   name: string,
@@ -43,7 +49,6 @@ export type UserData = {
   _conversations: ConversationData[],
   _createdAt: number,
 };
-
 
 /*
   Message types

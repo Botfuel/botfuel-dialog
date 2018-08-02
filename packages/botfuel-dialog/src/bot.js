@@ -19,8 +19,11 @@
 import type { Config, RawConfig } from './config';
 import type {
   UserMessage,
-  PostbackMessage, ImageMessage, TextMessage,
+  PostbackMessage,
+  ImageMessage,
+  TextMessage,
   DialogData,
+  ErrorObject,
 } from './types';
 import type { BotMessageJson } from './messages/message';
 import type Adapter from './adapters/adapter';
@@ -211,8 +214,9 @@ class Bot {
     return this.dm.executeDialog(userMessage, dialog);
   }
 
-  async respondWhenError(userMessage: UserMessage, error: Error): Promise<BotMessageJson[]> {
+  async respondWhenError(userMessage: UserMessage, error: ErrorObject): Promise<BotMessageJson[]> {
     logger.debug('respondWhenError', userMessage, error);
+
     if (error instanceof AuthenticationError) {
       logger.error('Botfuel API authentication failed!');
       logger.error(
@@ -223,12 +227,25 @@ class Bot {
     } else if (error instanceof DialogError) {
       logger.error(`Could not execute dialog '${error.name}'`);
     }
+
+    const keys = Object.getOwnPropertyNames(error);
+    // error is not a standard JS Object so we have to copy each property
+    // one by one
+    const errorObject = keys.reduce(
+      (obj, key) => ({
+        ...obj,
+        [key]: error[key],
+      }),
+      {},
+    );
+
     const catchDialog = {
       name: 'catch',
       data: {
-        error,
+        error: errorObject,
       },
     };
+
     return this.dm.executeDialog(userMessage, catchDialog);
   }
 }

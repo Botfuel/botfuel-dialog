@@ -28,7 +28,7 @@ describe('ErrorDialog', () => {
       [
         new UserTextMessage('error'),
         new BotTextMessage('The following error occured:'),
-        new BotTextMessage('{"name":"SdkError"}'),
+        new BotTextMessage('name: SdkError, message: bla'),
         new BotTextMessage('Starting a new conversation...'),
       ].map(msg => msg.toJson(userId)),
     );
