@@ -25,7 +25,7 @@ const Resolver = require('./resolver');
  * The view resolver resolves the view for a given dialog.
  */
 class ViewResolver extends Resolver<View> {
-  config: Config;
+  locale: string;
 
   /**
    * @constructor
@@ -33,10 +33,11 @@ class ViewResolver extends Resolver<View> {
    */
   constructor(config: Config) {
     super(config, 'view');
+    this.locale = config.locale;
   }
 
   getFilenames(name: string): string[] {
-    return [`${name}-${this.kind}.${this.config.locale}.js`, `${name}-${this.kind}.js`];
+    return [`${name}-${this.kind}.${this.locale}.js`, `${name}-${this.kind}.js`];
   }
 
   resolutionSucceeded(Resolved: Class<View>): View {
