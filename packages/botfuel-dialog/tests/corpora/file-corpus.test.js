@@ -36,12 +36,22 @@ describe('FileCorpus', () => {
   });
 
   test('should throw an ExtractorError when the corpus file contains trailing comma', () => {
-    expect(() => new FileCorpus(path.resolve(__dirname, './test-corpus-much-comma.txt')))
-      .toThrow(ExtractorError);
+    expect(() => new FileCorpus(path.resolve(__dirname, './test-corpus-much-comma.txt'))).toThrow(
+      ExtractorError,
+    );
   });
 
   test('should throw Extractor Error when corpus file contains a line with only comma', () => {
-    expect(() => new FileCorpus(path.resolve(__dirname, './test-corpus-comma.txt')))
-      .toThrow(ExtractorError);
+    expect(() => new FileCorpus(path.resolve(__dirname, './test-corpus-comma.txt'))).toThrow(
+      ExtractorError,
+    );
+  });
+
+  test('should retrieve values for leading or trailing spaces', () => {
+    const corpus = new FileCorpus(path.resolve(__dirname, './test-corpus-spaces.txt'));
+    expect(corpus.getValue('coucou')).toBe('hello');
+    expect(corpus.getValue('hi')).toBe('hello');
+    expect(corpus.getValue('salut')).toBe('hello');
+    expect(corpus.getValue('yo')).toBe('hello');
   });
 });
