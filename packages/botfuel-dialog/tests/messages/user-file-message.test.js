@@ -15,6 +15,7 @@
  */
 const UserFileMessage = require('../../src/messages/user-file-message');
 const MessageError = require('../../src/errors/message-error');
+
 describe('UserFileMessage', () => {
   test('should throw an exception when malformed', async () => {
     expect(() => new UserFileMessage(null)).toThrow(MessageError);
