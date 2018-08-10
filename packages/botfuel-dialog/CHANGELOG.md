@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.1.0"></a>
+# [11.1.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.0.0...v11.1.0) (2018-08-10)
+
+
+### Bug Fixes
+
+* Do not take values leading/trailing spaces into account in corpora ([2c0683b](https://github.com/Botfuel/botfuel-dialog/commit/2c0683b))
+
+
+### Features
+
+* return the original sentence when spellchecking error instead of triggering the catch-dialog, except if the error is due to authentication ([d5cf843](https://github.com/Botfuel/botfuel-dialog/commit/d5cf843))
+
+
+
+
+
 <a name="11.0.0"></a>
 # [11.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v10.0.2...v11.0.0) (2018-08-02)
 

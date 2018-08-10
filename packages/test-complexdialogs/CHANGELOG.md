@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.1.0"></a>
+# [11.1.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.0.0...v11.1.0) (2018-08-10)
+
+
+### Bug Fixes
+
+* rename intent-filter.js to classification-filter.js in testcomplexdialog ([a12a3b9](https://github.com/Botfuel/botfuel-dialog/commit/a12a3b9))
+* rename intentFIlter test and function ([0018810](https://github.com/Botfuel/botfuel-dialog/commit/0018810))
+
+
+
+
+
 <a name="11.0.0"></a>
 # [11.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v10.0.2...v11.0.0) (2018-08-02)
 
