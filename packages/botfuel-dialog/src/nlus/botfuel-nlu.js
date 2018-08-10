@@ -101,9 +101,9 @@ class BotfuelNlu extends Nlu {
   /** @inheritdoc */
   async compute(sentence, context) {
     logger.debug('compute', sentence); // Context is not loggable
+    // spellchecking (done outside the try/catch block to prevent catch-dialog to be triggered)
+    sentence = await this.spellcheck(sentence);
     try {
-      // spellchecking
-      sentence = await this.spellcheck(sentence);
       // computing entities
       const messageEntities = await this.extractor.compute(sentence);
       // computing intents
@@ -149,10 +149,19 @@ class BotfuelNlu extends Nlu {
     if (!key) {
       return sentence;
     }
-    logger.debug('spellcheck', sentence, key);
-    const result = await this.spellchecking.compute({ sentence, key });
-    logger.debug('spellcheck: result', result);
-    return result.correctSentence;
+    try {
+      logger.debug('spellcheck', sentence, key);
+      const result = await this.spellchecking.compute({ sentence, key });
+      logger.debug('spellcheck: result', result);
+      return result.correctSentence;
+    } catch (error) {
+      logger.error('spellchecking: error', error);
+      if (error.statusCode === 403) {
+        throw new AuthenticationError();
+      }
+      // in case of spellchecking error returns the original sentence
+      return sentence;
+    }
   }
 }
 
