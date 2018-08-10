@@ -101,7 +101,9 @@ class BotfuelNlu extends Nlu {
   /** @inheritdoc */
   async compute(sentence, context) {
     logger.debug('compute', sentence); // Context is not loggable
-    // spellchecking (done outside the try/catch block to prevent catch-dialog to be triggered)
+    // spellchecking
+    // this is done outside the try/catch block to prevent catch-dialog to be triggered
+    // if the error is not related to authentication
     sentence = await this.spellcheck(sentence);
     try {
       // computing entities
