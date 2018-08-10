@@ -1,4 +1,4 @@
-async function intentFilter(intents, { userMessage }) {
+async function classificationFilter(intents, { userMessage }) {
   if (userMessage.payload.value === 'Je veux') {
     return [];
   }
@@ -13,4 +13,4 @@ async function intentFilter(intents, { userMessage }) {
   return intents;
 }
 
-module.exports = intentFilter;
+module.exports = classificationFilter;

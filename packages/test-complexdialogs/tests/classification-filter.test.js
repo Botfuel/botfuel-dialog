@@ -18,7 +18,7 @@
 const { Bot, BotTextMessage, UserTextMessage } = require('botfuel-dialog');
 const config = require('../test-config');
 
-describe('intent filter', () => {
+describe('classification filter', () => {
   test('should clear classificationResults', async () => {
     const bot = new Bot(config);
     const { adapter } = bot;
