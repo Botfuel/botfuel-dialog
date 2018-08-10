@@ -1,0 +1,15 @@
+GET /nlp/spellchecking?sentence=helllo&key=UNKNOWN_KEY
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 500 INTERNAL SERVER ERROR
+server: openresty/1.11.2.5
+date: Fri, 10 Aug 2018 10:57:14 GMT
+content-type: application/json
+content-length: 39
+connection: close
+via: 1.1 vegur
+
+{
+  "error": "Internal server error"
+}
