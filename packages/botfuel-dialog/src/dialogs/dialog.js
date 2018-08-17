@@ -98,6 +98,7 @@ class Dialog {
   parameters: DialogParameters;
   viewResolver: ViewResolver;
   name: string;
+  config: Object;
 
   /*
    * @param {Object} characteristics - the characteristics of the dialog
@@ -115,6 +116,7 @@ class Dialog {
     this.parameters = parameters;
     this.viewResolver = new ViewResolver(config);
     this.name = this.getName();
+    this.config = config.custom;
   }
 
   /**

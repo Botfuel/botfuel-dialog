@@ -33,10 +33,11 @@ class FileCorpus extends Corpus {
       fs
         .readFileSync(path, 'utf8') // TODO: async?
         .toString()
-        .replace(/\r/g, '') // windows introduce \r
+        .replace(/\r/g, '') // windows introduces \r
         .split('\n')
         .filter(row => row.length > 0)
-        .map(row => row.split(separator)), path,
+        .map(row => row.split(separator).map(word => word.trim())),
+      path,
     );
   }
 }

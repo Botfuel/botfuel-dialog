@@ -21,6 +21,9 @@ const TEST_CONFIG = require('../../src/config').getConfiguration({
   brain: {
     name: 'memory',
   },
+  custom: {
+    foo: 'bar',
+  },
 });
 
 describe('Dialog', () => {
@@ -118,5 +121,10 @@ describe('Dialog', () => {
       expect(dialog.mergeData(undefined, {})).toEqual({ extraData: undefined });
       expect(dialog.mergeData(['a', 'b'], {})).toEqual({ extraData: ['a', 'b'] });
     });
+  });
+
+  // config access
+  test('should have access to config custom property', () => {
+    expect(dialog.config).toEqual({ foo: 'bar' });
   });
 });

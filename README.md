@@ -9,7 +9,7 @@ Build highly conversational bots with Botfuel Dialog.
 
 ## Start writing a bot using Botfuel Dialog
 
-Read [**Getting Started**](https://docs.botfuel.io/platform/tutorials/getting-started) to learn how to run a bot in minutes.
+Read [**Getting Started**](https://tutorials.botfuel.io/#/codelab/getting-started?step=1) to learn how to run a bot in minutes.
 
 For more explanations about the internals of Botfuel Dialog, see [**Concepts**](https://docs.botfuel.io/platform/concepts).
 

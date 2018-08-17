@@ -40,6 +40,12 @@ describe('Config', () => {
     expect(resolved).toEqual({});
   });
 
+  test('should have a custom property if provided', () => {
+    const config = getConfiguration({ custom: { foo: 'bar' } });
+    expect(config).toHaveProperty('custom');
+    expect(config.custom).toEqual({ foo: 'bar' });
+  });
+
   test('should throw an error when file not exists', () => {
     expect(() => resolveConfigFile('invalid')).toThrow();
   });

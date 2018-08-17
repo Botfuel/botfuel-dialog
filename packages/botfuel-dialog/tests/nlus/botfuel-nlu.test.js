@@ -69,4 +69,27 @@ describe('Botfuel Nlu', () => {
       expect(classificationResults[0].type).toEqual(ClassificationResult.TYPE_QNA);
     });
   });
+
+  describe('spellchecking', () => {
+    test('should return the original sentence when no spellchecking key', async () => {
+      const nlu = new BotfuelNlu({ nlu: {} });
+      const sentence = 'helllo';
+      const result = await nlu.spellcheck(sentence);
+      expect(result).toEqual('helllo');
+    });
+
+    test('should correct the spelling in a sentence', async () => {
+      const nlu = new BotfuelNlu({ nlu: { spellchecking: 'EN_1' } });
+      const sentence = 'helllo';
+      const result = await nlu.spellcheck(sentence);
+      expect(result).toEqual('hello');
+    });
+
+    test('should return the original sentence when error', async () => {
+      const nlu = new BotfuelNlu({ nlu: { spellchecking: 'UNKNOWN_KEY' } });
+      const sentence = 'helllo';
+      const result = await nlu.spellcheck(sentence);
+      expect(result).toEqual('helllo');
+    });
+  });
 });

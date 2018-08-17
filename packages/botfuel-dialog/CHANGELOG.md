@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.1.0"></a>
+# [11.1.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.0.0...v11.1.0) (2018-08-10)
+
+
+### Bug Fixes
+
+* Do not take values leading/trailing spaces into account in corpora ([2c0683b](https://github.com/Botfuel/botfuel-dialog/commit/2c0683b))
+
+
+### Features
+
+* return the original sentence when spellchecking error instead of triggering the catch-dialog, except if the error is due to authentication ([d5cf843](https://github.com/Botfuel/botfuel-dialog/commit/d5cf843))
+
+
+
+
+
+<a name="11.0.0"></a>
+# [11.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v10.0.2...v11.0.0) (2018-08-02)
+
+
+### Bug Fixes
+
+* restrict config access in resolvers ([6f88977](https://github.com/Botfuel/botfuel-dialog/commit/6f88977))
+* Send error data properly to CatchDialog ([a0956d3](https://github.com/Botfuel/botfuel-dialog/commit/a0956d3))
+
+
+### Features
+
+* add custom property to Config type ([75129ba](https://github.com/Botfuel/botfuel-dialog/commit/75129ba))
+* add pt_br in sdk ([5dc5dc9](https://github.com/Botfuel/botfuel-dialog/commit/5dc5dc9))
+* allow access to config.custom property in a dialog via dialog.config ([8f271c4](https://github.com/Botfuel/botfuel-dialog/commit/8f271c4))
+* change dialog and entities to dialogData ([59c9bb1](https://github.com/Botfuel/botfuel-dialog/commit/59c9bb1))
+* postback fexible ([16293b2](https://github.com/Botfuel/botfuel-dialog/commit/16293b2))
+
+
+### BREAKING CHANGES
+
+* dialog and entities to dialogEntities
+dialog and entities became dialogData in postback-message and postback 
+the dialogData structure is : dialogData : { name: dialog, data: { messageEntities: entities}}
+
+
+
+
+
 <a name="10.0.2"></a>
 ## [10.0.2](https://github.com/Botfuel/botfuel-dialog/compare/v10.0.1...v10.0.2) (2018-07-18)
 

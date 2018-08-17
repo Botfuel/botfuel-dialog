@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.0.0"></a>
+# [11.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v10.0.2...v11.0.0) (2018-08-02)
+
+
+### Features
+
+* change dialog and entities to dialogData ([59c9bb1](https://github.com/Botfuel/botfuel-dialog/commit/59c9bb1))
+* postback fexible ([16293b2](https://github.com/Botfuel/botfuel-dialog/commit/16293b2))
+
+
+### BREAKING CHANGES
+
+* dialog and entities to dialogEntities
+dialog and entities became dialogData in postback-message and postback 
+the dialogData structure is : dialogData : { name: dialog, data: { messageEntities: entities}}
+
+
+
+
+
 <a name="10.0.0"></a>
 # [10.0.0](https://github.com/Botfuel/botfuel-dialog/compare/v9.0.3...v10.0.0) (2018-07-18)
 

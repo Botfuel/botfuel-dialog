@@ -16,7 +16,6 @@
 
 // @flow
 
-import type { Config } from './config';
 import type { UserMessage, DialogData, DialogsData, MessageEntities } from './types';
 import type { BotMessageJson } from './messages/message';
 import type Bot from './bot';
@@ -41,7 +40,7 @@ type DialogManagerExecuteOutput = {|
 class DialogManager extends Resolver<Dialog> {
   bot: Bot;
   brain: Brain;
-  config: Config;
+  adapterName: string;
 
   constructor(bot: Bot) {
     const { brain, config } = bot;
@@ -50,10 +49,11 @@ class DialogManager extends Resolver<Dialog> {
 
     this.bot = bot;
     this.brain = brain;
+    this.adapterName = config.adapter.name;
   }
 
   getFilenames(name: string): string[] {
-    return [`${name}-${this.kind}.${this.config.adapter.name}.js`, `${name}-${this.kind}.js`];
+    return [`${name}-${this.kind}.${this.adapterName}.js`, `${name}-${this.kind}.js`];
   }
 
   resolutionSucceeded(Resolved: Class<Dialog>): Dialog {
