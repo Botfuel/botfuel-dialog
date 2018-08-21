@@ -53,6 +53,7 @@ const SdkError = require('./errors/sdk-error');
 const ShellAdapter = require('./adapters/shell-adapter');
 const TestAdapter = require('./adapters/test-adapter');
 const UserImageMessage = require('./messages/user-image-message');
+const UserFileMessage = require('./messages/user-file-message');
 const UserTextMessage = require('./messages/user-text-message');
 const View = require('./views/view');
 const WebAdapter = require('./adapters/web-adapter');
@@ -99,6 +100,7 @@ module.exports = {
   TestAdapter,
   UserImageMessage,
   UserTextMessage,
+  UserFileMessage,
   View,
   WebAdapter,
   WsExtractor,

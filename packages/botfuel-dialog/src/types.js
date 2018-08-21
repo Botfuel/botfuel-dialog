@@ -74,6 +74,16 @@ export type ImageMessage = {
   timestamp?: number,
 };
 
+export type FileMessage = {
+  type: 'file',
+  user: string,
+  payload: {
+    value: string,
+  },
+  id?: string,
+  timestamp?: number,
+};
+
 export type TextMessage = {
   type: 'text',
   user: string,
@@ -84,4 +94,4 @@ export type TextMessage = {
   timestamp?: number,
 };
 
-export type UserMessage = PostbackMessage | ImageMessage | TextMessage;
+export type UserMessage = PostbackMessage | ImageMessage | FileMessage | TextMessage;

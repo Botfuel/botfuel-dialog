@@ -22,6 +22,7 @@ import type {
   PostbackMessage,
   ImageMessage,
   TextMessage,
+  FileMessage,
   DialogData,
   ErrorObject,
 } from './types';
@@ -156,6 +157,9 @@ class Bot {
       case 'image':
         logger.debug('respond: image', userMessage);
         return this.respondWhenImage(userMessage);
+      case 'file':
+        logger.debug('respond: file', userMessage);
+        return this.respondWhenFile(userMessage);
       case 'text':
       default:
         logger.debug('respond: text', userMessage);
@@ -213,6 +217,23 @@ class Bot {
     };
     return this.dm.executeDialog(userMessage, dialog);
   }
+
+  /**
+   * Computes the responses for a user message of type file.
+   * @private
+   */
+  async respondWhenFile(userMessage: FileMessage): Promise<BotMessageJson[]> {
+    logger.debug('respondWhenFile', userMessage);
+    const dialog: DialogData = {
+      name: 'file',
+      data: {
+        url: userMessage.payload.value,
+      },
+    };
+    const botMessages = await this.dm.executeDialog(userMessage, dialog);
+    return botMessages;
+  }
+
 
   async respondWhenError(userMessage: UserMessage, error: ErrorObject): Promise<BotMessageJson[]> {
     logger.debug('respondWhenError', userMessage, error);
