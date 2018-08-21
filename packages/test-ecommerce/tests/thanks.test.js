@@ -23,9 +23,9 @@ describe('ThanksDialog', () => {
     const bot = new Bot(config);
     const { adapter } = bot;
     const { userId } = adapter;
-    await bot.play([new UserTextMessage('Thenks')]);
+    await bot.play([new UserTextMessage('Thenk')]);
     expect(bot.adapter.log).toEqual(
-      [new UserTextMessage('Thenks'), new BotTextMessage("You're welcome!")].map(msg =>
+      [new UserTextMessage('Thenk'), new BotTextMessage("You're welcome!")].map(msg =>
         msg.toJson(userId)),
     );
     const user = await bot.brain.getUser(userId);
