@@ -26,7 +26,7 @@ const AuthenticationError = require('../errors/authentication-error');
 const SdkError = require('../errors/sdk-error');
 const ClassificationResult = require('./classification-result');
 const Nlu = require('./nlu');
-const { Spellchecking } = require('botfuel-nlp-sdk');
+const Spellchecking = require('../nlp/resources/spellchecking');
 
 /**
  * NLU using Botfuel Trainer API
@@ -155,6 +155,7 @@ class BotfuelNlu extends Nlu {
       logger.debug('spellcheck', sentence, key);
       const result = await this.spellchecking.compute({ sentence, key });
       logger.debug('spellcheck: result', result);
+      // console.log('correct sentence : ', result.correctSentence);
       return result.correctSentence;
     } catch (error) {
       logger.error('spellchecking: error', error);
@@ -162,6 +163,7 @@ class BotfuelNlu extends Nlu {
         throw new AuthenticationError();
       }
       // in case of spellchecking error returns the original sentence
+      // console.log('sentence : ', sentence);
       return sentence;
     }
   }
