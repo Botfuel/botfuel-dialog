@@ -1,6 +1,6 @@
 {
   "name": "test-ecommerce",
-  "version": "11.0.0",
+  "version": "11.1.1",
   "private": true,
   "author": "sysadmin@botfuel.io",
   "description": "Bot testing and illustrating an ecommerce botfuel-dialog bot",
