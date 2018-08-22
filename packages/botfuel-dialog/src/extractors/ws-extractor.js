@@ -36,10 +36,7 @@ class WsExtractor extends Extractor {
         'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the entity extraction service.',
       );
     }
-    this.client = new EntityExtraction({
-      appId: process.env.BOTFUEL_APP_ID,
-      appKey: process.env.BOTFUEL_APP_KEY,
-    });
+    this.client = new EntityExtraction();
   }
 
   /** @inheritDoc */

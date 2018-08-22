@@ -33,9 +33,9 @@ class ApiResource {
       return returns;
     }, {});
 
-  constructor({ appId, appKey }) {
+  constructor() {
     const baseOptions = {
-      headers: { 'App-Id': appId, 'App-Key': appKey },
+      headers: { 'App-Id': process.env.BOTFUEL_APP_ID, 'App-Key': process.env.BOTFUEL_APP_KEY },
       rejectUnauthorized: false,
       json: true,
     };

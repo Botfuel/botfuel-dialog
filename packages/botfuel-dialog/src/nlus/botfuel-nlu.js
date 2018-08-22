@@ -52,10 +52,7 @@ class BotfuelNlu extends Nlu {
         this.classificationFilter = require(classificationFilterPath);
       }
     }
-    this.spellchecking = new Spellchecking({
-      appId: process.env.BOTFUEL_APP_ID,
-      appKey: process.env.BOTFUEL_APP_KEY,
-    });
+    this.spellchecking = new Spellchecking();
   }
 
   /**
