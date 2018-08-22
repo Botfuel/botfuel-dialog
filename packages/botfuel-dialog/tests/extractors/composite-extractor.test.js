@@ -21,13 +21,12 @@ describe('CompositeExtractor', () => {
   test('should properly extract', async () => {
     const extractor = new CompositeExtractor({ extractors: [new WsExtractor({ locale: 'en' })] });
     const entities = await extractor.compute('I leave from Paris');
-
     expect(entities).toHaveLength(1);
     expect(entities[0]).toHaveProperty('body');
     expect(entities[0].dim).toBe('city');
     expect(entities[0].values[0].type).toBe('string');
     expect(entities[0].values[0].value).toBe('Paris');
-    expect(entities[0].start).toBe(13);
+    expect(entities[0].start).toBe(8);
     expect(entities[0].end).toBe(18);
   });
 });

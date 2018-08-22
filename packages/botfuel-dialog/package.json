@@ -43,7 +43,8 @@
     "request-promise-native": "^1.0.5",
     "uuid": "^3.2.1",
     "valid-url": "^1.0.9",
-    "winston": "^2.4.0"
+    "winston": "^2.4.0",
+    "url-join": "^2.0.2"
   },
   "devDependencies": {
     "sinon": "^5.0.7"
@@ -51,5 +52,5 @@
   "engines": {
     "node": "8.x"
   },
-  "gitHead": "3a1007084d99a219280c317da90b666561b11984"
+  "gitHead": "a70c94790c8482d3fbae4ed7a349e4be036fe10a"
 }

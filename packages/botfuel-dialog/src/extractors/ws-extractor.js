@@ -15,7 +15,7 @@
  */
 
 const { clone, extend } = require('lodash');
-const nlp = require('botfuel-nlp-sdk');
+const EntityExtraction = require('../nlp/resources/entity-extraction');
 const logger = require('logtown')('WsExtractor');
 const AuthenticationError = require('../errors/authentication-error');
 const MissingCredentialsError = require('../errors/missing-credentials-error');
@@ -36,10 +36,7 @@ class WsExtractor extends Extractor {
         'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the entity extraction service.',
       );
     }
-    this.client = new nlp.EntityExtraction({
-      appId: process.env.BOTFUEL_APP_ID,
-      appKey: process.env.BOTFUEL_APP_KEY,
-    });
+    this.client = new EntityExtraction();
   }
 
   /** @inheritDoc */

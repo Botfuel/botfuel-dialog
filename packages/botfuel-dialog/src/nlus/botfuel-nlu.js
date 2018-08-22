@@ -26,7 +26,7 @@ const AuthenticationError = require('../errors/authentication-error');
 const SdkError = require('../errors/sdk-error');
 const ClassificationResult = require('./classification-result');
 const Nlu = require('./nlu');
-const { Spellchecking } = require('botfuel-nlp-sdk');
+const Spellchecking = require('../nlp/resources/spellchecking');
 
 /**
  * NLU using Botfuel Trainer API
@@ -52,10 +52,7 @@ class BotfuelNlu extends Nlu {
         this.classificationFilter = require(classificationFilterPath);
       }
     }
-    this.spellchecking = new Spellchecking({
-      appId: process.env.BOTFUEL_APP_ID,
-      appKey: process.env.BOTFUEL_APP_KEY,
-    });
+    this.spellchecking = new Spellchecking();
   }
 
   /**
