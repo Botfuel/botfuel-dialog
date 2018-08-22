@@ -84,12 +84,5 @@ describe('Botfuel Nlu', () => {
       const result = await nlu.spellcheck(sentence);
       expect(result).toEqual('hello');
     });
-
-    test('should return the original sentence when error', async () => {
-      const nlu = new BotfuelNlu({ nlu: { spellchecking: 'UNKNOWN_KEY' } });
-      const sentence = 'helllo';
-      const result = await nlu.spellcheck(sentence);
-      expect(result).toEqual('helllo');
-    });
   });
 });
