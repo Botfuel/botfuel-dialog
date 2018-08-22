@@ -18,7 +18,7 @@ const CompositeExtractor = require('../../src/extractors/composite-extractor');
 const WsExtractor = require('../../src/extractors/ws-extractor');
 
 describe('CompositeExtractor', () => {
-  test.only('should properly extract', async () => {
+  test('should properly extract', async () => {
     const extractor = new CompositeExtractor({ extractors: [new WsExtractor({ locale: 'en' })] });
     const entities = await extractor.compute('I leave from Paris');
     expect(entities).toHaveLength(1);
