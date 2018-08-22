@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=thank
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Wed, 22 Aug 2018 12:40:00 GMT
+content-type: application/json
+content-length: 128
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b0485aefb647c001113a5e2","label":"thanks","probability":0.5946467123890823,"resolvePrompt":"thanks?","type":"Intent"}]

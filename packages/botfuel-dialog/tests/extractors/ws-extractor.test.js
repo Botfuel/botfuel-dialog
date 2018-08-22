@@ -32,7 +32,7 @@ describe('WsExtractor', () => {
     expect(entities[0]).toHaveProperty('body');
     expect(entities[0].values[0].type).toBe('string');
     expect(entities[0].values[0].value).toBe('Paris');
-    expect(entities[0].start).toBe(13);
+    expect(entities[0].start).toBe(8);
     expect(entities[0].end).toBe(18);
   });
 
