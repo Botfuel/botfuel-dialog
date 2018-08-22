@@ -18,13 +18,15 @@ import config from '../config';
 import ApiResource from './api-resource';
 
 export default class Spellchecking extends ApiResource {
-  compute({ sentence, key }) {
+  compute({ sentence }) {
     const options = {
       method: 'GET',
       uri: config.SPELLCHECKING_API,
       qs: {
         sentence,
-        key,
+      },
+      headers: {
+        'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
       },
     };
     return this.rp(options);

@@ -46,6 +46,7 @@ class ApiResource {
         ...options,
         ...(options.qs && { qs: this.constructor.cleanParameters(options.qs) }),
         ...(options.body && { body: this.constructor.cleanParameters(options.body) }),
+        headers: { ...baseOptions.headers, ...options.headers },
       });
   }
 }
