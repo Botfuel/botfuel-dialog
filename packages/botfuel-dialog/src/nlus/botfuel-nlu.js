@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import configRoute from './configRoute';
 
 const fs = require('fs');
 const fsExtra = require('fs-extra');
@@ -27,6 +26,14 @@ const AuthenticationError = require('../errors/authentication-error');
 const SdkError = require('../errors/sdk-error');
 const ClassificationResult = require('./classification-result');
 const Nlu = require('./nlu');
+const urlJoin = require('url-join');
+
+const PROXY_HOST = process.env.BOTFUEL_PROXY_HOST || 'https://api.botfuel.io';
+const SPELLCHECKING_ROUTE = '/nlp/spellchecking';
+const SPELLCHECKING_VERSION = 'v1';
+
+const SPELLCHECKING_API = process.env.BOTFUEL_SPELLCHECKING_API_URL ||
+                        urlJoin(PROXY_HOST, SPELLCHECKING_ROUTE, SPELLCHECKING_VERSION);
 
 /**
  * NLU using Botfuel Trainer API
@@ -151,7 +158,7 @@ class BotfuelNlu extends Nlu {
       logger.debug('spellcheck', sentence, key);
       const options = {
         method: 'GET',
-        uri: configRoute.SPELLCHECKING_API,
+        uri: SPELLCHECKING_API,
         qs: {
           sentence,
         },
