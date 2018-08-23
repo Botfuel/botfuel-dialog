@@ -62,7 +62,6 @@ class WsExtractor extends Extractor {
       logger.debug('compute', sentence);
       const query = clone(this.parameters);
       extend(query, { sentence });
-      
       const options = {
         method: 'GET',
         uri: ENTITY_EXTRACTION_API,
