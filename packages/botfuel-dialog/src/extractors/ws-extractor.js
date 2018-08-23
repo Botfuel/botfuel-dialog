@@ -15,7 +15,7 @@
  */
 
 const { clone, extend } = require('lodash');
-const EntityExtraction = require('../nlp/resources/entity-extraction');
+const EntityExtraction = require('../nlus/entity-extraction');
 const logger = require('logtown')('WsExtractor');
 const AuthenticationError = require('../errors/authentication-error');
 const MissingCredentialsError = require('../errors/missing-credentials-error');

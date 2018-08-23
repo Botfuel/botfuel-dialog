@@ -16,10 +16,11 @@
 
 /* eslint-disable camelcase */
 
-import config from '../config';
-import ApiResource from './api-resource';
+import rp from 'request-promise-native';
 
-class EntityExtraction extends ApiResource {
+import configRoute from './configRoute';
+
+class EntityExtraction {
   compute({
     sentence,
     dimensions,
@@ -31,7 +32,7 @@ class EntityExtraction extends ApiResource {
   }) {
     const options = {
       method: 'GET',
-      uri: config.ENTITY_EXTRACTION_API,
+      uri: configRoute.ENTITY_EXTRACTION_API,
       // Needed so that arrays are serialized to foo=bar&foo=baz
       // Instead of foo[0]=bar&foo[1]=baz
       // (dimensions for example)
@@ -45,8 +46,14 @@ class EntityExtraction extends ApiResource {
         keep_quotes,
         keep_accents,
       },
+      headers: {
+        'App-Id': process.env.BOTFUEL_APP_ID,
+        'App-Key': process.env.BOTFUEL_APP_KEY,
+      },
+      rejectUnauthorized: false,
+      json: true,
     };
-    return this.rp(options);
+    return rp({ ...options });
   }
 }
 

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import configRoute from './configRoute';
 
 const fs = require('fs');
 const fsExtra = require('fs-extra');
@@ -26,7 +27,6 @@ const AuthenticationError = require('../errors/authentication-error');
 const SdkError = require('../errors/sdk-error');
 const ClassificationResult = require('./classification-result');
 const Nlu = require('./nlu');
-const Spellchecking = require('../nlp/resources/spellchecking');
 
 /**
  * NLU using Botfuel Trainer API
@@ -52,7 +52,6 @@ class BotfuelNlu extends Nlu {
         this.classificationFilter = require(classificationFilterPath);
       }
     }
-    this.spellchecking = new Spellchecking();
   }
 
   /**
@@ -150,7 +149,22 @@ class BotfuelNlu extends Nlu {
     }
     try {
       logger.debug('spellcheck', sentence, key);
-      const result = await this.spellchecking.compute({ sentence, key });
+      const options = {
+        method: 'GET',
+        uri: configRoute.SPELLCHECKING_API,
+        qs: {
+          sentence,
+        },
+        rejectUnauthorized: false,
+        json: true,
+        headers: {
+          'App-Id': process.env.BOTFUEL_APP_ID,
+          'App-Key': process.env.BOTFUEL_APP_KEY,
+          'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
+        },
+      };
+      const result = await this.rp(options);
+
       logger.debug('spellcheck: result', result);
       return result.correctSentence;
     } catch (error) {
