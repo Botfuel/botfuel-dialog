@@ -163,8 +163,7 @@ class BotfuelNlu extends Nlu {
           'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
         },
       };
-      const result = await this.rp(options);
-
+      const result = await rp({ ...options });
       logger.debug('spellcheck: result', result);
       return result.correctSentence;
     } catch (error) {

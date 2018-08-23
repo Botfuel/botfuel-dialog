@@ -21,6 +21,15 @@ import rp from 'request-promise-native';
 import configRoute from './configRoute';
 
 class EntityExtraction {
+
+  cleanParameters = params =>
+    Object.keys(params).reduce((returns, element) => {
+      if (params[element] !== undefined) {
+        return { ...returns, [element]: params[element] };
+      }
+      return returns;
+    }, {});
+
   compute({
     sentence,
     dimensions,
@@ -53,7 +62,8 @@ class EntityExtraction {
       rejectUnauthorized: false,
       json: true,
     };
-    return rp({ ...options });
+    return rp({ ...options,
+      ...(options.qs && { qs: this.cleanParameters(options.qs) }) });
   }
 }
 
