@@ -26,7 +26,14 @@ const AuthenticationError = require('../errors/authentication-error');
 const SdkError = require('../errors/sdk-error');
 const ClassificationResult = require('./classification-result');
 const Nlu = require('./nlu');
-const Spellchecking = require('../nlp/resources/spellchecking');
+const urlJoin = require('url-join');
+
+const PROXY_HOST = process.env.BOTFUEL_PROXY_HOST || 'https://api.botfuel.io';
+const SPELLCHECKING_ROUTE = '/nlp/spellchecking';
+const SPELLCHECKING_VERSION = 'v1';
+
+const SPELLCHECKING_API = process.env.BOTFUEL_SPELLCHECKING_API_URL ||
+                        urlJoin(PROXY_HOST, SPELLCHECKING_ROUTE, SPELLCHECKING_VERSION);
 
 /**
  * NLU using Botfuel Trainer API
@@ -52,7 +59,6 @@ class BotfuelNlu extends Nlu {
         this.classificationFilter = require(classificationFilterPath);
       }
     }
-    this.spellchecking = new Spellchecking();
   }
 
   /**
@@ -150,7 +156,21 @@ class BotfuelNlu extends Nlu {
     }
     try {
       logger.debug('spellcheck', sentence, key);
-      const result = await this.spellchecking.compute({ sentence, key });
+      const options = {
+        method: 'GET',
+        uri: SPELLCHECKING_API,
+        qs: {
+          sentence,
+        },
+        rejectUnauthorized: false,
+        json: true,
+        headers: {
+          'App-Id': process.env.BOTFUEL_APP_ID,
+          'App-Key': process.env.BOTFUEL_APP_KEY,
+          'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
+        },
+      };
+      const result = await rp({ ...options });
       logger.debug('spellcheck: result', result);
       return result.correctSentence;
     } catch (error) {

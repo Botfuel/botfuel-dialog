@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
+import rp from 'request-promise-native';
+
 const { clone, extend } = require('lodash');
-const EntityExtraction = require('../nlp/resources/entity-extraction');
 const logger = require('logtown')('WsExtractor');
 const AuthenticationError = require('../errors/authentication-error');
 const MissingCredentialsError = require('../errors/missing-credentials-error');
 const Extractor = require('./extractor');
+const urlJoin = require('url-join');
+
+
+const PROXY_HOST = process.env.BOTFUEL_PROXY_HOST || 'https://api.botfuel.io';
+const ENTITY_EXTRACTION_ROUTE = '/nlp/entity-extraction';
+const ENTITY_EXTRACTION_VERSION = 'v0';
+
+const ENTITY_EXTRACTION_API = process.env.BOTFUEL_ENTITY_EXTRACTION_API_URL ||
+                           urlJoin(PROXY_HOST, ENTITY_EXTRACTION_ROUTE, ENTITY_EXTRACTION_VERSION);
 
 /**
  * Entity extraction web service based extractor.
@@ -36,8 +46,15 @@ class WsExtractor extends Extractor {
         'BOTFUEL_APP_ID and BOTFUEL_APP_KEY are required for using the entity extraction service.',
       );
     }
-    this.client = new EntityExtraction();
   }
+
+  cleanParameters = params =>
+    Object.keys(params).reduce((returns, element) => {
+      if (params[element] !== undefined) {
+        return { ...returns, [element]: params[element] };
+      }
+      return returns;
+    }, {});
 
   /** @inheritDoc */
   async compute(sentence) {
@@ -45,7 +62,32 @@ class WsExtractor extends Extractor {
       logger.debug('compute', sentence);
       const query = clone(this.parameters);
       extend(query, { sentence });
-      const entities = await this.client.compute(query);
+      const options = {
+        method: 'GET',
+        uri: ENTITY_EXTRACTION_API,
+        // Needed so that arrays are serialized to foo=bar&foo=baz
+        // Instead of foo[0]=bar&foo[1]=baz
+        // (dimensions for example)
+        useQuerystring: true,
+        qs: {
+          sentence: query.sentence,
+          dimensions: query.dimensions,
+          antidimensions: query.antidimensions,
+          timezone: query.timezone,
+          case_sensitive: query.case_sensitive,
+          keep_quotes: query.keep_quotes,
+          keep_accents: query.keep_accents,
+        },
+        headers: {
+          'App-Id': process.env.BOTFUEL_APP_ID,
+          'App-Key': process.env.BOTFUEL_APP_KEY,
+        },
+        rejectUnauthorized: false,
+        json: true,
+      };
+      const entities = await rp({ ...options,
+        ...(options.qs && { qs: this.cleanParameters(options.qs) }) });
+
       return entities.map(entity => ({
         ...entity,
         start: entity.start,
