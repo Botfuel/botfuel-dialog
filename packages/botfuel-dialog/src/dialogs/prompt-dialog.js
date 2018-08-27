@@ -72,8 +72,10 @@ class PromptDialog extends Dialog {
     // Check if the parameter is already fulfilled with its initial value
     // If so, we replace the fulfilled parameter’s entity
     // with the first candidate of the same dimension
-    const replace = entity.isFulfilled(initialValue, { dialogEntities: {}, dialogParameters: this.parameters })
-      && sameDimCandidates.length >= 1;
+    const replace = entity.isFulfilled(initialValue, {
+      dialogEntities: {},
+      dialogParameters: this.parameters,
+    }) && sameDimCandidates.length >= 1;
     if (replace) {
       const chosenCandidate = sameDimCandidates[0];
       candidates = filterIntersectingEntities(candidates, chosenCandidate);
@@ -85,7 +87,10 @@ class PromptDialog extends Dialog {
     }
     return candidates.filter(candidate => candidate.dim === entity.dim).reduce(
       ({ newValue, remainingCandidates }, candidate) => {
-        if (entity.isFulfilled(newValue, { dialogEntities: {}, dialogParameters: this.parameters })) {
+        if (entity.isFulfilled(newValue, {
+          dialogEntities: {},
+          dialogParameters: this.parameters,
+        })) {
           return { newValue, remainingCandidates };
         }
         return {
