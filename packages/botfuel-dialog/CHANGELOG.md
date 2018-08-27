@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.2.0"></a>
+# [11.2.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.1.2...v11.2.0) (2018-08-27)
+
+
+### Features
+
+* Pass dialog parameters to isFulfilled function ([92eb244](https://github.com/Botfuel/botfuel-dialog/commit/92eb244))
+
+
+
+
+
 <a name="11.1.2"></a>
 ## [11.1.2](https://github.com/Botfuel/botfuel-dialog/compare/v11.1.1...v11.1.2) (2018-08-24)
 
