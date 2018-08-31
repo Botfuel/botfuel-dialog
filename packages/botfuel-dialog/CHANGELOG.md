@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.3.0"></a>
+# [11.3.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.2.0...v11.3.0) (2018-08-31)
+
+
+### Bug Fixes
+
+* Fix postback messages selection when using shell adapter ([b870596](https://github.com/Botfuel/botfuel-dialog/commit/b870596))
+
+
+### Features
+
+* trigger complex-input when text message is more than 256 chars ([5a4c25f](https://github.com/Botfuel/botfuel-dialog/commit/5a4c25f))
+
+
+
+
+
 <a name="11.2.0"></a>
 # [11.2.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.1.2...v11.2.0) (2018-08-27)
 
