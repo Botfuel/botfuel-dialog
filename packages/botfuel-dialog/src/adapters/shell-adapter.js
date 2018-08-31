@@ -80,10 +80,10 @@ class ShellAdapter extends Adapter {
         const selected = actions[id - 1];
         // postback
         if (selected.type === 'postback') {
-          const userMessage = new PostbackMessage(
-            selected.value.dialog,
-            selected.value.entities,
-          ).toJson(this.userId);
+          const userMessage = new PostbackMessage({
+            name: selected.value.name,
+            data: selected.value.data,
+          }).toJson(this.userId);
           await this.handleMessage(userMessage);
           // link
         } else if (selected.type === 'link') {
