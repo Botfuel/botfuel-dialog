@@ -173,6 +173,18 @@ class Bot {
    */
   async respondWhenText(userMessage: TextMessage): Promise<BotMessageJson[]> {
     logger.debug('respondWhenText', userMessage);
+
+    // If text input is too long then trigger the complex-input dialog
+    if (userMessage.payload.value.length > 256) {
+      logger.error('respondWhenText: input is too long.');
+      const complexInputDialog: DialogData = {
+        name: 'complex-input',
+        data: {},
+      };
+
+      return this.dm.executeDialog(userMessage, complexInputDialog);
+    }
+
     const { classificationResults, messageEntities } = await this.nlu.compute(
       userMessage.payload.value,
       {
@@ -230,8 +242,7 @@ class Bot {
         url: userMessage.payload.value,
       },
     };
-    const botMessages = await this.dm.executeDialog(userMessage, dialog);
-    return botMessages;
+    return this.dm.executeDialog(userMessage, dialog);
   }
 
 
