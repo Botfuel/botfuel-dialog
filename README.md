@@ -14,11 +14,11 @@ Build highly conversational bots with Botfuel Dialog.
 Botfuel Dialog is an open source SDK that helps you build highly conversational chatbots using the MVC design pattern on top of Botfuel NLU.
 
 ## Follow us
-<div style="display:flex; justify-content: space-around;">
+<center>
   <a href="" target="_blank" alt="Twitter"><img src="./.github/assets/social-twitter.png" title="Twitter"></a>
   <a href="" target="_blank" alt="Facebook"><img src="./.github/assets/social-facebook.png" title="Facebook"></a>
   <a href="" target="_blank" alt="Medium"><img src="./.github/assets/social-medium.png" title="Medium"></a>
-</div>
+</center>
 
 ## ❤ Support us
 
@@ -34,20 +34,9 @@ If you want to know more about how to use Botfuel, please take a look at our <a 
 
 Use one of our adapters or create your own to make your bot compatible with any platform.
 
-<div style="display:flex; justify-content:space-around">
-  <div style="width: 20%; text-align:center;">
-    <img src="./.github/assets/adapter-web.png">
-    Webchat
-  </div>
-  <div style="width: 20%; text-align:center;">
-    <img src="./.github/assets/adapter-messenger.png">
-    Facebook Messenger
-  </div>
-  <div style="width: 20%; text-align:center;">
-    <img src="./.github/assets/adapter-assistant.png">
-    Google Assistant/Home
-  </div>
-</div>
+<center>
+  <img src="./.github/assets/adapters.png">
+</center>
 
 ## Check out our sample bots
 
