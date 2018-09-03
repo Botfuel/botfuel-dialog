@@ -15,9 +15,9 @@ Botfuel Dialog is an open source SDK that helps you build highly conversational 
 
 ## Follow us
 <center>
-  <a href="" target="_blank" alt="Twitter"><img src="./.github/assets/social-twitter.png" title="Twitter"></a>
-  <a href="" target="_blank" alt="Facebook"><img src="./.github/assets/social-facebook.png" title="Facebook"></a>
-  <a href="" target="_blank" alt="Medium"><img src="./.github/assets/social-medium.png" title="Medium"></a>
+  <a href="https://twitter.com/botfuel" target="_blank" alt="Twitter"><img src="./.github/assets/social-twitter.png" title="Twitter"></a>
+  <a href="https://www.facebook.com/botfuel" target="_blank" alt="Facebook"><img src="./.github/assets/social-facebook.png" title="Facebook"></a>
+  <a href="https://medium.com/botfuel" target="_blank" alt="Medium"><img src="./.github/assets/social-medium.png" title="Medium"></a>
 </center>
 
 ## ❤ Support us
