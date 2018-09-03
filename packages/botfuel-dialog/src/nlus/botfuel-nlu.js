@@ -32,8 +32,9 @@ const PROXY_HOST = process.env.BOTFUEL_PROXY_HOST || 'https://api.botfuel.io';
 const SPELLCHECKING_ROUTE = '/nlp/spellchecking';
 const SPELLCHECKING_VERSION = 'v1';
 
-const SPELLCHECKING_API = process.env.BOTFUEL_SPELLCHECKING_API_URL ||
-                        urlJoin(PROXY_HOST, SPELLCHECKING_ROUTE, SPELLCHECKING_VERSION);
+const SPELLCHECKING_API =
+  process.env.BOTFUEL_SPELLCHECKING_API_URL ||
+  urlJoin(PROXY_HOST, SPELLCHECKING_ROUTE, SPELLCHECKING_VERSION);
 
 /**
  * NLU using Botfuel Trainer API
@@ -112,7 +113,8 @@ class BotfuelNlu extends Nlu {
       // computing entities
       const messageEntities = await this.extractor.compute(sentence);
       // computing intents
-      let trainerUrl = process.env.BOTFUEL_TRAINER_API_URL || 'https://api.botfuel.io/trainer/api/v0';
+      let trainerUrl =
+        process.env.BOTFUEL_TRAINER_API_URL || 'https://api.botfuel.io/trainer/api/v0';
       if (trainerUrl.slice(-1) !== '/') {
         trainerUrl += '/';
       }
@@ -150,12 +152,8 @@ class BotfuelNlu extends Nlu {
    * @returns the spellchecked sentence
    */
   async spellcheck(sentence) {
-    const key = this.config.nlu.spellchecking;
-    if (!key) {
-      return sentence;
-    }
     try {
-      logger.debug('spellcheck', sentence, key);
+      logger.debug('spellcheck', sentence);
       const options = {
         method: 'GET',
         uri: SPELLCHECKING_API,
