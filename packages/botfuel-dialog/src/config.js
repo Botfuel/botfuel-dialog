@@ -34,7 +34,6 @@ export type Config = {|
   multiintent: boolean,
   nlu: {
     name: string,
-    spellchecking: string,
   },
   path: string,
   custom: Object,
