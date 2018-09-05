@@ -34,6 +34,7 @@ export type Config = {|
   multiintent: boolean,
   nlu: {
     name: string,
+    spellchecking: boolean,
   },
   path: string,
   custom: Object,
@@ -60,6 +61,7 @@ const defaultConfig = {
   modules: [],
   nlu: {
     name: 'botfuel',
+    spellchecking: false,
   },
   path: process.cwd(),
 };
