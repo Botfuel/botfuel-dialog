@@ -18,5 +18,8 @@ module.exports = {
   adapter: {
     name: 'test',
   },
+  nlu: {
+    spellchecking: true,
+  },
   path: __dirname,
 };

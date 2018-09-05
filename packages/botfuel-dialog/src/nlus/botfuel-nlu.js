@@ -152,6 +152,16 @@ class BotfuelNlu extends Nlu {
    * @returns the spellchecked sentence
    */
   async spellcheck(sentence) {
+    if (!this.config.nlu.spellchecking) {
+      return sentence;
+    }
+
+    if (typeof this.config.nlu.spellchecking === 'string') {
+      logger.warn(
+        'Using dictionary key as spellchecking configuration is deprecated. Set nlu.spellchecking to true to enable spellchecking or false to disable it.',
+      );
+    }
+
     try {
       logger.debug('spellcheck', sentence);
       const options = {

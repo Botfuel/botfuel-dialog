@@ -30,6 +30,11 @@ describe('Config', () => {
     expect(config.nlu.qna.when).toEqual('before');
   });
 
+  test('should return a valid configuration when spellchecking provided', () => {
+    const config = getConfiguration({ nlu: { spellchecking: true } });
+    expect(config.nlu.spellchecking).toEqual(true);
+  });
+
   test('should return empty object when no config filename provided', () => {
     const resolved = resolveConfigFile();
     expect(resolved).toEqual({});

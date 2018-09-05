@@ -71,8 +71,19 @@ describe('Botfuel Nlu', () => {
   });
 
   describe('spellchecking', () => {
+    test('should return the original sentence when no spellchecking key', async () => {
+      const nlu = new BotfuelNlu({ nlu: {} });
+      const sentence = 'helllo';
+      const result = await nlu.spellcheck(sentence);
+      expect(result).toEqual('helllo');
+    });
+
     test('should correct the spelling in a sentence', async () => {
-      const nlu = new BotfuelNlu();
+      const nlu = new BotfuelNlu({
+        nlu: {
+          spellchecking: true,
+        },
+      });
       const sentence = 'helllo';
       const result = await nlu.spellcheck(sentence);
       expect(result).toEqual('hello');
