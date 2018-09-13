@@ -160,13 +160,8 @@ describe('TravelDialog', () => {
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);
-    const lastConversation = await bot.brain.fetchLastConversation(userId);
     expect(user._conversations.length).toBe(1);
-    expect(dialogs.stack).toHaveLength(1);
-    expect(dialogs.previous).toHaveLength(1);
-    expect(lastConversation).toHaveProperty('travel');
-    expect(lastConversation.travel._entities).toHaveProperty('city');
-    expect(lastConversation.travel._entities.city).toHaveProperty('body');
-    expect(lastConversation.travel._entities.city.values[0].value).toBe('Paris');
+    expect(dialogs.stack).toHaveLength(0);
+    expect(dialogs.previous).toHaveLength(2);
   });
 });

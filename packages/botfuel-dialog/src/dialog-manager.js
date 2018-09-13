@@ -108,12 +108,29 @@ class DialogManager extends Resolver<Dialog> {
         data: { classificationResults, messageEntities },
       };
     } else if (classificationResults.length === 1) {
-      newDialog = {
-        name: classificationResults[0].name,
-        data: classificationResults[0].isQnA()
-          ? { answers: classificationResults[0].answers } // TODO refactor (law of Demeter)
-          : { messageEntities },
-      };
+      const newDialogName = classificationResults[0].name;
+      const lastDialog: ?DialogData = dialogs.stack.length > 0
+        ? dialogs.stack[dialogs.stack.length - 1]
+        : null;
+
+      if (lastDialog && lastDialog.name === newDialogName && messageEntities.length === 0) {
+        dialogs.stack = dialogs.stack.filter(d => d.name !== lastDialog.name);
+        dialogs.previous = [...dialogs.previous, { ...lastDialog, date: Date.now() }];
+        newDialog = {
+          name: 'default',
+          characteristics: {
+            reentrant: false,
+          },
+          data: {},
+        };
+      } else {
+        newDialog = {
+          name: classificationResults[0].name,
+          data: classificationResults[0].isQnA()
+            ? { answers: classificationResults[0].answers } // TODO refactor (law of Demeter)
+            : { messageEntities },
+        };
+      }
     }
 
     if (newDialog) {
@@ -164,6 +181,7 @@ class DialogManager extends Resolver<Dialog> {
       dialogs.stack.push(newDialog);
     }
     logger.debug('updateWithDialog: updated', dialogs);
+    logger.info('updateWithDialog: updated', dialogs);
   }
 
   /**
