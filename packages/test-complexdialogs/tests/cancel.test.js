@@ -48,7 +48,7 @@ describe('Canceling', () => {
       expect(user._conversations.length).toBe(1);
       expect(dialogs.stack).toHaveLength(0);
       expect(dialogs.previous.length).toBe(1);
-      expect(dialogs.previous[0].name).toBe('cancel');
+      expect(dialogs.previous[0].name).toBe('cancellation');
     },
     15000,
   );
@@ -85,7 +85,7 @@ describe('Canceling', () => {
       expect(user._conversations.length).toBe(1);
       expect(dialogs.stack).toHaveLength(1);
       expect(dialogs.previous.length).toBe(1);
-      expect(dialogs.previous[0].name).toBe('cancel');
+      expect(dialogs.previous[0].name).toBe('cancellation');
     },
     15000,
   );
@@ -130,8 +130,8 @@ describe('Canceling', () => {
       expect(user._conversations.length).toBe(1);
       expect(dialogs.stack).toHaveLength(0);
       expect(dialogs.previous.length).toBe(2);
-      expect(dialogs.previous[0].name).toBe('cancel');
-      expect(dialogs.previous[1].name).toBe('cancel');
+      expect(dialogs.previous[0].name).toBe('cancellation');
+      expect(dialogs.previous[1].name).toBe('cancellation');
     },
     15000,
   );

@@ -29,7 +29,7 @@ class CancelView extends PromptView {
       return [new BotTextMessage('Reprise du dialogue...')];
     }
 
-    return [new BotTextMessage('Êtes-vous sure de vouloir annuler le dialogue?')];
+    return [new BotTextMessage('Êtes-vous sûr de vouloir annuler le dialogue?')];
   }
 }
 
