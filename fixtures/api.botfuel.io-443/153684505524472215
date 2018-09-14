@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=delivery&userId=test
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Thu, 13 Sep 2018 13:25:31 GMT
+content-type: application/json
+content-length: 3
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"answers":[[{"payload":{"value":"Your purchase can be shipped worldwide. However, delivery charges may vary."},"type":"text"}]],"id":"5a78789fad2c3a2f509cd5ea","label":"Do you ship worldwide?","probability":1.0,"resolvePrompt":"Do you ship worldwide?","type":"Qna"}]

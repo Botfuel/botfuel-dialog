@@ -122,6 +122,7 @@ class BotfuelNlu extends Nlu {
         uri: `${trainerUrl}classify`,
         qs: {
           sentence,
+          userId: context.user,
         },
         headers: {
           'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,

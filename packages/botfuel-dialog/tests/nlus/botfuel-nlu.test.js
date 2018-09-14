@@ -19,6 +19,8 @@ const ClassificationResult = require('../../src/nlus/classification-result');
 const BotfuelNlu = require('../../src/nlus/botfuel-nlu');
 const SdkError = require('../../src/errors/sdk-error');
 
+const TEST_USER_ID = 'test';
+
 describe('Botfuel Nlu', () => {
   describe('check credentials', () => {
     const sandbox = sinon.sandbox.create();
@@ -52,7 +54,7 @@ describe('Botfuel Nlu', () => {
         extractors: [],
       });
       const sentence = 'hello';
-      const { classificationResults } = await nlu.compute(sentence);
+      const { classificationResults } = await nlu.compute(sentence, { user: TEST_USER_ID });
       expect(classificationResults.length).toEqual(1);
       expect(classificationResults[0].type).toEqual(ClassificationResult.TYPE_INTENT);
     });
@@ -64,7 +66,8 @@ describe('Botfuel Nlu', () => {
         extractors: [],
       });
       const sentence = 'delivery';
-      const { classificationResults } = await nlu.compute(sentence);
+      const { classificationResults } = await nlu.compute(sentence, { user: TEST_USER_ID });
+
       expect(classificationResults.length).toEqual(1);
       expect(classificationResults[0].type).toEqual(ClassificationResult.TYPE_QNA);
     });
