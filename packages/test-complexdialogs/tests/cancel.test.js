@@ -40,7 +40,6 @@ describe('Canceling', () => {
           new BotTextMessage('Are you sure you want to cancel?'),
           new UserTextMessage('Yes.'),
           new BotTextMessage('Dialog canceled!'),
-          new BotTextMessage('Hello human!'),
         ].map(msg => msg.toJson(userId)),
       );
       const user = await bot.brain.getUser(userId);
@@ -48,9 +47,8 @@ describe('Canceling', () => {
       expect(user._userId).toBe(userId);
       expect(user._conversations.length).toBe(1);
       expect(dialogs.stack).toHaveLength(0);
-      expect(dialogs.previous.length).toBe(2);
+      expect(dialogs.previous.length).toBe(1);
       expect(dialogs.previous[0].name).toBe('cancel');
-      expect(dialogs.previous[1].name).toBe('greetings');
     },
     15000,
   );
@@ -116,7 +114,6 @@ describe('Canceling', () => {
           new BotTextMessage('Are you sure you want to cancel?'),
           new UserTextMessage('Yes.'),
           new BotTextMessage('Dialog canceled!'),
-          new BotTextMessage('Hello human!'),
           new UserTextMessage('I want to buy a blue car.'),
           new BotTextMessage('Entities defined: color'),
           new BotTextMessage('Entities needed: transmission'),
@@ -125,7 +122,6 @@ describe('Canceling', () => {
           new BotTextMessage('Are you sure you want to cancel?'),
           new UserTextMessage('Yes.'),
           new BotTextMessage('Dialog canceled!'),
-          new BotTextMessage('Hello again human!'),
         ].map(msg => msg.toJson(userId)),
       );
       const user = await bot.brain.getUser(userId);
@@ -133,11 +129,9 @@ describe('Canceling', () => {
       expect(user._userId).toBe(userId);
       expect(user._conversations.length).toBe(1);
       expect(dialogs.stack).toHaveLength(0);
-      expect(dialogs.previous.length).toBe(4);
+      expect(dialogs.previous.length).toBe(2);
       expect(dialogs.previous[0].name).toBe('cancel');
-      expect(dialogs.previous[1].name).toBe('greetings');
-      expect(dialogs.previous[2].name).toBe('cancel');
-      expect(dialogs.previous[3].name).toBe('greetings');
+      expect(dialogs.previous[1].name).toBe('cancel');
     },
     15000,
   );
