@@ -24,7 +24,7 @@ const BotTableMessage = require('./messages/bot-table-message');
 const BotfuelAdapter = require('./adapters/botfuel-adapter');
 const BotfuelNlu = require('./nlus/botfuel-nlu');
 const Brain = require('./brains/brain');
-const CancelDialog = require('./dialogs/cancel-dialog');
+const CancellationDialog = require('./dialogs/cancellation-dialog');
 const Card = require('./messages/card');
 const CardsMessage = require('./messages/cards-message');
 const ClassificationResult = require('./nlus/classification-result');
@@ -71,7 +71,7 @@ module.exports = {
   BotfuelAdapter,
   BotfuelNlu,
   Brain,
-  CancelDialog,
+  CancellationDialog,
   Card,
   CardsMessage,
   ClassificationResult,

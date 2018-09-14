@@ -16,7 +16,7 @@
 
 const PromptDialog = require('./prompt-dialog');
 
-class CancelDialog extends PromptDialog {
+class CancellationDialog extends PromptDialog {
   async dialogWillComplete(userMessage, data) {
     if (data.missingEntities.size === 0) {
       // Clean entities for this dialog so it can be reused later
@@ -28,8 +28,8 @@ class CancelDialog extends PromptDialog {
   }
 }
 
-CancelDialog.params = {
-  namespace: 'cancel',
+CancellationDialog.params = {
+  namespace: 'cancellation',
   entities: {
     answer: {
       dim: 'system:boolean',
@@ -37,4 +37,4 @@ CancelDialog.params = {
   },
 };
 
-module.exports = CancelDialog;
+module.exports = CancellationDialog;
