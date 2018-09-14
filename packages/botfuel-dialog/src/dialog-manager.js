@@ -75,6 +75,10 @@ class DialogManager extends Resolver<Dialog> {
     );
   }
 
+  getLastDialog(dialogs: DialogsData): ?DialogData {
+    return dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
+  }
+
   /**
    * Returns the dialogs data (stack and previous dialogs).
    */
@@ -108,12 +112,10 @@ class DialogManager extends Resolver<Dialog> {
         data: { classificationResults, messageEntities },
       };
     } else if (classificationResults.length === 1) {
-      const newDialogName = classificationResults[0].name;
-      const lastDialog: ?DialogData = dialogs.stack.length > 0
-        ? dialogs.stack[dialogs.stack.length - 1]
-        : null;
-
-      if (lastDialog && lastDialog.name === newDialogName && messageEntities.length === 0) {
+      const lastDialog: ?DialogData = this.getLastDialog(dialogs);
+      // check if last dialog is the same as the classification result and if there is no message entities
+      if (lastDialog && lastDialog.name === classificationResults[0].name && messageEntities.length === 0) {
+        // update the stack without re-assign a new object to keep the reference
         dialogs.stack = dialogs.stack.filter(d => d.name !== lastDialog.name);
         dialogs.previous = [...dialogs.previous, { ...lastDialog, date: Date.now() }];
         newDialog = {
@@ -181,7 +183,6 @@ class DialogManager extends Resolver<Dialog> {
       dialogs.stack.push(newDialog);
     }
     logger.debug('updateWithDialog: updated', dialogs);
-    logger.info('updateWithDialog: updated', dialogs);
   }
 
   /**
