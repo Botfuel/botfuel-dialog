@@ -33,6 +33,14 @@ type DialogManagerExecuteOutput = {|
   botMessages: BotMessageJson[],
 |};
 
+const DEFAULT_DIALOG: DialogData = {
+  name: 'default',
+  characteristics: {
+    reentrant: false,
+  },
+  data: {},
+};
+
 /**
  * The dialog manager turns NLU output into a dialog stack. It executes the stack and returns the
  * bot messages
@@ -118,16 +126,8 @@ class DialogManager extends Resolver<Dialog> {
         lastDialog.name === classificationResults[0].name &&
         messageEntities.length === 0
       ) {
-        // update the stack without re-assign a new object to keep the reference
-        dialogs.stack = dialogs.stack.filter(d => d.name !== lastDialog.name);
-        dialogs.previous = [...dialogs.previous, { ...lastDialog, date: Date.now() }];
-        newDialog = {
-          name: 'default',
-          characteristics: {
-            reentrant: false,
-          },
-          data: {},
-        };
+        // if new intent is the same as previous with no new entity then trigger default dialog
+        newDialog = DEFAULT_DIALOG;
       } else {
         newDialog = {
           name: classificationResults[0].name,
@@ -141,31 +141,19 @@ class DialogManager extends Resolver<Dialog> {
     if (newDialog) {
       this.updateWithDialog(dialogs, newDialog);
     } else {
-      let lastDialog: ?DialogData =
-        dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
+      let lastDialog: ?DialogData = this.getLastDialog(dialogs);
       if (lastDialog) {
         lastDialog.data.messageEntities = messageEntities;
       }
       if (messageEntities.length === 0) {
-        lastDialog = {
-          name: 'default',
-          characteristics: {
-            reentrant: false,
-          },
-          data: {},
-        };
+        lastDialog = DEFAULT_DIALOG;
         dialogs.stack.push(lastDialog);
       }
     }
 
     if (dialogs.stack.length === 0) {
       // no intent detected
-      const lastDialog = this.getLastReentrantDialog(dialogs.previous) || {
-        name: 'default',
-        characteristics: {
-          reentrant: false,
-        },
-      };
+      const lastDialog = this.getLastReentrantDialog(dialogs.previous) || DEFAULT_DIALOG;
       dialogs.stack.push({
         ...lastDialog,
         data: { messageEntities } || {},
@@ -179,7 +167,7 @@ class DialogManager extends Resolver<Dialog> {
    */
   updateWithDialog(dialogs: DialogsData, newDialog: DialogData): void {
     logger.debug('updateWithDialog', dialogs, newDialog);
-    const lastDialog = dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
+    const lastDialog = this.getLastDialog(dialogs);
     if (lastDialog && lastDialog.name === newDialog.name) {
       lastDialog.data = newDialog.data;
     } else {
