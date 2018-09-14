@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-const { PromptDialog } = require('botfuel-dialog');
+const PromptDialog = require('./prompt-dialog');
 
 class CancelDialog extends PromptDialog {
   async dialogWillComplete(userMessage, data) {
     if (data.missingEntities.size === 0) {
       // Clean entities for this dialog so it can be reused later
       await this.brain.conversationSet(userMessage.user, this.parameters.namespace, {});
-      if (data.matchedEntities.answer.values[0].value === false) {
-        return this.complete();
-      }
-      return this.cancelPrevious('greetings');
+      const answer = data.matchedEntities.answer.values[0].value;
+      return answer === false ? this.complete() : this.cancelPrevious();
     }
     return this.wait();
   }
