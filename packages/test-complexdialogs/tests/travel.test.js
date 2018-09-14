@@ -164,4 +164,32 @@ describe('TravelDialog', () => {
     expect(dialogs.stack).toHaveLength(0);
     expect(dialogs.previous).toHaveLength(2);
   });
+
+  test('should trigger default dialog when same dialog is triggered twice without entities', async () => {
+    const bot = new Bot(config);
+    const { adapter } = bot;
+    const { userId } = adapter;
+    await bot.play([
+      new UserTextMessage('I leave from Paris'),
+      new UserTextMessage('I am leaving'),
+      new UserTextMessage('I leave from Berlin, tomorrow'),
+    ]);
+    expect(bot.adapter.log).toEqual(
+      [
+        new UserTextMessage('I leave from Paris'),
+        new BotTextMessage('Entities defined: city'),
+        new BotTextMessage('Entities needed: time'),
+        new BotTextMessage('Which time?'),
+        new UserTextMessage('I am leaving'),
+        new BotTextMessage('Not understood.'),
+        new UserTextMessage('I leave from Berlin, tomorrow'),
+        new BotTextMessage('Entities defined: city, time'),
+      ].map(msg => msg.toJson(userId)),
+    );
+    const user = await bot.brain.getUser(userId);
+    const dialogs = await bot.brain.getDialogs(userId);
+    expect(user._conversations.length).toBe(1);
+    expect(dialogs.stack).toHaveLength(0);
+    expect(dialogs.previous).toHaveLength(3);
+  });
 });
