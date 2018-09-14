@@ -87,7 +87,7 @@ class WsExtractor extends Extractor {
   }
 
   /**
-   *
+   * Performs request with retries if the service is not available
    * @param requestOptions - Entity extraction request options
    * @param retries - Number of retries
    * @returns {Promise<*>}
@@ -106,7 +106,7 @@ class WsExtractor extends Extractor {
       if (error.statusCode === 403) {
         throw new AuthenticationError();
       }
-      // If heroku service is not available then retry the request
+      // If service is not available then retry the request
       if (error.statusCode === 503 && retries > 0) {
         return this.retryComputeRequest(requestOptions, retries - 1);
       }
