@@ -113,8 +113,11 @@ class DialogManager extends Resolver<Dialog> {
       };
     } else if (classificationResults.length === 1) {
       const lastDialog: ?DialogData = this.getLastDialog(dialogs);
-      // check if last dialog is the same as the classification result and if there is no message entities
-      if (lastDialog && lastDialog.name === classificationResults[0].name && messageEntities.length === 0) {
+      if (
+        lastDialog &&
+        lastDialog.name === classificationResults[0].name &&
+        messageEntities.length === 0
+      ) {
         // update the stack without re-assign a new object to keep the reference
         dialogs.stack = dialogs.stack.filter(d => d.name !== lastDialog.name);
         dialogs.previous = [...dialogs.previous, { ...lastDialog, date: Date.now() }];
