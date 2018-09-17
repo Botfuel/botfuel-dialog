@@ -106,6 +106,7 @@ class DialogManager extends Resolver<Dialog> {
       newDialog = {
         name: 'classification-disambiguation',
         data: { classificationResults, messageEntities },
+        triggeredBy: 'nlu',
       };
     } else if (classificationResults.length === 1) {
       newDialog = {
@@ -113,6 +114,7 @@ class DialogManager extends Resolver<Dialog> {
         data: classificationResults[0].isQnA()
           ? { answers: classificationResults[0].answers } // TODO refactor (law of Demeter)
           : { messageEntities },
+        triggeredBy: 'nlu',
       };
     }
 
@@ -131,6 +133,7 @@ class DialogManager extends Resolver<Dialog> {
             reentrant: false,
           },
           data: {},
+          triggeredBy: 'dialog-manager',
         };
         dialogs.stack.push(lastDialog);
       }
@@ -143,6 +146,7 @@ class DialogManager extends Resolver<Dialog> {
         characteristics: {
           reentrant: false,
         },
+        triggeredBy: 'dialog-manager',
       };
       dialogs.stack.push({
         ...lastDialog,
@@ -253,6 +257,7 @@ class DialogManager extends Resolver<Dialog> {
           reentrant: false,
         },
         data: {},
+        triggeredBy: 'dialog-manager',
       });
     } else {
       const dialogInstance: Dialog = this.resolve(dialog.name);

@@ -180,6 +180,7 @@ class Bot {
       const complexInputDialog: DialogData = {
         name: 'complex-input',
         data: {},
+        triggeredBy: 'dialog-manager',
       };
 
       return this.dm.executeDialog(userMessage, complexInputDialog);
@@ -211,6 +212,7 @@ class Bot {
       data: {
         messageEntities: userMessage.payload.value.data.messageEntities,
       },
+      triggeredBy: 'postback',
     };
     return this.dm.executeDialog(userMessage, dialog);
   }
@@ -226,6 +228,7 @@ class Bot {
       data: {
         url: userMessage.payload.value,
       },
+      triggeredBy: 'dialog-manager',
     };
     return this.dm.executeDialog(userMessage, dialog);
   }
@@ -235,12 +238,13 @@ class Bot {
    * @private
    */
   async respondWhenFile(userMessage: FileMessage): Promise<BotMessageJson[]> {
-    logger.debug('respondWhenFile', userMessage);
+    logger.debug('respondWhenFile', userMessage) ;
     const dialog: DialogData = {
       name: 'file',
       data: {
         url: userMessage.payload.value,
       },
+      triggeredBy: 'dialog-manager',
     };
     return this.dm.executeDialog(userMessage, dialog);
   }
@@ -276,6 +280,7 @@ class Bot {
       data: {
         error: errorObject,
       },
+      triggeredBy: 'dialog-manager',
     };
 
     return this.dm.executeDialog(userMessage, catchDialog);

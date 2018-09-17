@@ -25,6 +25,7 @@ export type DialogDataData = {
 export type DialogData = {
   name: string,
   data: DialogDataData,
+  triggeredBy?: string,
   characteristics?: {
     reentrant: boolean,
   },
