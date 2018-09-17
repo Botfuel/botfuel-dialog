@@ -33,6 +33,14 @@ type DialogManagerExecuteOutput = {|
   botMessages: BotMessageJson[],
 |};
 
+const DEFAULT_DIALOG: DialogData = {
+  name: 'default',
+  characteristics: {
+    reentrant: false,
+  },
+  data: {},
+};
+
 /**
  * The dialog manager turns NLU output into a dialog stack. It executes the stack and returns the
  * bot messages
@@ -75,6 +83,10 @@ class DialogManager extends Resolver<Dialog> {
     );
   }
 
+  getLastDialog(dialogs: DialogsData): ?DialogData {
+    return dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
+  }
+
   /**
    * Returns the dialogs data (stack and previous dialogs).
    */
@@ -108,42 +120,40 @@ class DialogManager extends Resolver<Dialog> {
         data: { classificationResults, messageEntities },
       };
     } else if (classificationResults.length === 1) {
-      newDialog = {
-        name: classificationResults[0].name,
-        data: classificationResults[0].isQnA()
-          ? { answers: classificationResults[0].answers } // TODO refactor (law of Demeter)
-          : { messageEntities },
-      };
+      const lastDialog: ?DialogData = this.getLastDialog(dialogs);
+      if (
+        lastDialog &&
+        lastDialog.name === classificationResults[0].name &&
+        messageEntities.length === 0
+      ) {
+        // if new intent is the same as previous with no new entity then trigger default dialog
+        newDialog = DEFAULT_DIALOG;
+      } else {
+        newDialog = {
+          name: classificationResults[0].name,
+          data: classificationResults[0].isQnA()
+            ? { answers: classificationResults[0].answers } // TODO refactor (law of Demeter)
+            : { messageEntities },
+        };
+      }
     }
 
     if (newDialog) {
       this.updateWithDialog(dialogs, newDialog);
     } else {
-      let lastDialog: ?DialogData =
-        dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
+      let lastDialog: ?DialogData = this.getLastDialog(dialogs);
       if (lastDialog) {
         lastDialog.data.messageEntities = messageEntities;
       }
       if (messageEntities.length === 0) {
-        lastDialog = {
-          name: 'default',
-          characteristics: {
-            reentrant: false,
-          },
-          data: {},
-        };
+        lastDialog = DEFAULT_DIALOG;
         dialogs.stack.push(lastDialog);
       }
     }
 
     if (dialogs.stack.length === 0) {
       // no intent detected
-      const lastDialog = this.getLastReentrantDialog(dialogs.previous) || {
-        name: 'default',
-        characteristics: {
-          reentrant: false,
-        },
-      };
+      const lastDialog = this.getLastReentrantDialog(dialogs.previous) || DEFAULT_DIALOG;
       dialogs.stack.push({
         ...lastDialog,
         data: { messageEntities } || {},
@@ -157,7 +167,7 @@ class DialogManager extends Resolver<Dialog> {
    */
   updateWithDialog(dialogs: DialogsData, newDialog: DialogData): void {
     logger.debug('updateWithDialog', dialogs, newDialog);
-    const lastDialog = dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
+    const lastDialog = this.getLastDialog(dialogs);
     if (lastDialog && lastDialog.name === newDialog.name) {
       lastDialog.data = newDialog.data;
     } else {
