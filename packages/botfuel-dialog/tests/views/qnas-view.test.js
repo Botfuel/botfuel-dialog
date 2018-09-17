@@ -81,6 +81,8 @@ describe('QnasView', () => {
         [new PostbackMessage({ name: 'qnas', data: { messageEntities: answers } }), new BotTextMessage('answer')].map(msg =>
           msg.toJson('USER_TEST')),
       );
+      const dialogs = await bot.brain.getDialogs(bot.adapter.userId);
+      expect(dialogs.previous[0].triggeredBy).toBe('postback');
     });
   });
 });

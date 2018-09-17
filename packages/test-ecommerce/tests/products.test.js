@@ -85,5 +85,6 @@ describe('Products', () => {
     expect(dialogs.stack).toHaveLength(0);
     expect(dialogs.previous.length).toBe(1);
     expect(dialogs.previous[0].name).toBe('products');
+    expect(dialogs.previous[0].triggeredBy).toBe('nlu');
   });
 });
