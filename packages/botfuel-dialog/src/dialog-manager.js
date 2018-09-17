@@ -106,7 +106,7 @@ class DialogManager extends Resolver<Dialog> {
       newDialog = {
         name: 'classification-disambiguation',
         data: { classificationResults, messageEntities },
-        triggeredBy: 'nlu',
+        triggeredBy: 'dialog-manager',
       };
     } else if (classificationResults.length === 1) {
       newDialog = {
