@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=Can%20you%20help%20me%3F&userId=USER_TEST
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Mon, 17 Sep 2018 16:23:16 GMT
+content-type: application/json
+content-length: 331
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"answers":[[{"payload":{"value":"Hello! I can provide you with information about our payment and shipping policies."},"type":"text","value":"Hello! I can provide you with information about our payment and shipping policies."}]],"id":"5b048b5bfb647c001113a60d","label":"Policy","probability":1.0,"resolvePrompt":"","type":"Qna"}]
