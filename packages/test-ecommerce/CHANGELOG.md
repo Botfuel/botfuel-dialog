@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.4.0"></a>
+# [11.4.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.3.0...v11.4.0) (2018-09-17)
+
+
+### Bug Fixes
+
+* Allow spellchecking to be disabled ([e4070af](https://github.com/Botfuel/botfuel-dialog/commit/e4070af))
+* Remove the need to specify a spellchecking key ([639332c](https://github.com/Botfuel/botfuel-dialog/commit/639332c))
+
+
+
+
+
 <a name="11.1.1"></a>
 ## [11.1.1](https://github.com/Botfuel/botfuel-dialog/compare/v11.1.0...v11.1.1) (2018-08-22)
 
