@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=I%20want%20to%20buy%20a%20blue%20automatic%20car.&userId=USER_TEST
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Mon, 17 Sep 2018 16:24:58 GMT
+content-type: application/json
+content-length: 122
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b0485abfb647c001113a5b8","label":"car","probability":0.6560525717065474,"resolvePrompt":"car?","type":"Intent"}]
