@@ -238,7 +238,7 @@ class Bot {
    * @private
    */
   async respondWhenFile(userMessage: FileMessage): Promise<BotMessageJson[]> {
-    logger.debug('respondWhenFile', userMessage) ;
+    logger.debug('respondWhenFile', userMessage);
     const dialog: DialogData = {
       name: 'file',
       data: {
