@@ -39,5 +39,6 @@ describe('Chaining', () => {
     expect(dialogs.previous.length).toBe(2);
     expect(dialogs.previous[0].name).toBe('car');
     expect(dialogs.previous[1].name).toBe('thanks');
+    expect(dialogs.previous[1].triggeredBy).toBe('car-dialog');
   });
 });

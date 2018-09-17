@@ -35,6 +35,7 @@ describe('Blank', () => {
     expect(dialogs.stack).toHaveLength(0);
     expect(dialogs.previous.length).toBe(1);
     expect(dialogs.previous[0].name).toBe('default');
+    expect(dialogs.previous[0].triggeredBy).toBe('dialog-manager');
   });
 
   test('should handle blank input when previous dialog is not understood', async () => {
