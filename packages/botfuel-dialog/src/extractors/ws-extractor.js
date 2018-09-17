@@ -58,36 +58,44 @@ class WsExtractor extends Extractor {
 
   /** @inheritDoc */
   async compute(sentence) {
-    try {
-      logger.debug('compute', sentence);
-      const query = clone(this.parameters);
-      extend(query, { sentence });
-      const options = {
-        method: 'GET',
-        uri: ENTITY_EXTRACTION_API,
-        // Needed so that arrays are serialized to foo=bar&foo=baz
-        // Instead of foo[0]=bar&foo[1]=baz
-        // (dimensions for example)
-        useQuerystring: true,
-        qs: {
-          sentence: query.sentence,
-          dimensions: query.dimensions,
-          antidimensions: query.antidimensions,
-          timezone: query.timezone,
-          case_sensitive: query.case_sensitive,
-          keep_quotes: query.keep_quotes,
-          keep_accents: query.keep_accents,
-        },
-        headers: {
-          'App-Id': process.env.BOTFUEL_APP_ID,
-          'App-Key': process.env.BOTFUEL_APP_KEY,
-        },
-        rejectUnauthorized: false,
-        json: true,
-      };
-      const entities = await rp({ ...options,
-        ...(options.qs && { qs: this.cleanParameters(options.qs) }) });
+    logger.debug('compute', sentence);
+    const query = clone(this.parameters);
+    extend(query, { sentence });
+    return this.retryComputeRequest({
+      method: 'GET',
+      uri: ENTITY_EXTRACTION_API,
+      // Needed so that arrays are serialized to foo=bar&foo=baz
+      // Instead of foo[0]=bar&foo[1]=baz
+      // (dimensions for example)
+      useQuerystring: true,
+      qs: this.cleanParameters({
+        sentence: query.sentence,
+        dimensions: query.dimensions,
+        antidimensions: query.antidimensions,
+        timezone: query.timezone,
+        case_sensitive: query.case_sensitive,
+        keep_quotes: query.keep_quotes,
+        keep_accents: query.keep_accents,
+      }),
+      headers: {
+        'App-Id': process.env.BOTFUEL_APP_ID,
+        'App-Key': process.env.BOTFUEL_APP_KEY,
+      },
+      rejectUnauthorized: false,
+      json: true,
+    });
+  }
 
+  /**
+   * Performs request with retries if the service is not available
+   * @param requestOptions - Entity extraction request options
+   * @param retries - Number of retries
+   * @returns {Promise<*>}
+   */
+  async retryComputeRequest(requestOptions, retries = 3) {
+    logger.debug('retryComputeRequest', requestOptions, retries);
+    try {
+      const entities = await rp(requestOptions);
       return entities.map(entity => ({
         ...entity,
         start: entity.start,
@@ -97,6 +105,10 @@ class WsExtractor extends Extractor {
       logger.error('Could not extract the entities!');
       if (error.statusCode === 403) {
         throw new AuthenticationError();
+      }
+      // If service is not available then retry the request
+      if (error.statusCode === 503 && retries > 0) {
+        return this.retryComputeRequest(requestOptions, retries - 1);
       }
       throw error;
     }
