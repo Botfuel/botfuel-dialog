@@ -1,0 +1,16 @@
+GET /nlp/spellchecking/v1?sentence=Show%20me%20the%20top%20hat.
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Mon, 17 Sep 2018 16:26:34 GMT
+content-type: application/json
+content-length: 95
+connection: close
+via: 1.1 vegur
+
+{
+  "correctSentence": "Show me the top hat.", 
+  "originalSentence": "Show me the top hat."
+}
