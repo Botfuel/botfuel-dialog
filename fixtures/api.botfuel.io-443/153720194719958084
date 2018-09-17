@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=see%20you%20later&userId=USER_TEST
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Mon, 17 Sep 2018 16:32:27 GMT
+content-type: application/json
+content-length: 115
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b0485b1fb647c001113a5ee","label":"goodbye","probability":1.0,"resolvePrompt":"goodbye?","type":"Intent"}]
