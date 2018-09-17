@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-const { PromptView, BotTextMessage } = require('botfuel-dialog');
+const PromptView = require('./prompt-view');
+const BotTextMessage = require('../messages/bot-text-message');
 
 class CancelView extends PromptView {
   render(userMessage, { matchedEntities }) {
