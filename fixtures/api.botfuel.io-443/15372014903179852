@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=the%20day%20after%20tomorrow&userId=USER_TEST
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Mon, 17 Sep 2018 16:24:50 GMT
+content-type: application/json
+content-length: 128
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b0485abfb647c001113a5ca","label":"travel","probability":0.3924997399761466,"resolvePrompt":"travel?","type":"Intent"}]

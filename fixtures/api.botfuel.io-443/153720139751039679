@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=A%20have%20a%20problem%20on%20the%20website.&userId=USER_TEST
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Mon, 17 Sep 2018 16:23:17 GMT
+content-type: application/json
+content-length: 314
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"answers":[[{"payload":{"value":"Please reach us at contact@my-sample-compagny.com for further assistance."},"type":"text","value":"Please reach us at contact@my-sample-compagny.com for further assistance."}]],"id":"5b048b23fb647c001113a607","label":"Support","probability":1.0,"resolvePrompt":"","type":"Qna"}]

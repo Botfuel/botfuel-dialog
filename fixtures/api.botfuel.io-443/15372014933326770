@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=Ask%20me%20a%20question.&userId=USER_TEST
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Mon, 17 Sep 2018 16:24:53 GMT
+content-type: application/json
+content-length: 117
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b0485abfb647c001113a5c1","label":"question","probability":1.0,"resolvePrompt":"question?","type":"Intent"}]

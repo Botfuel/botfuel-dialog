@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=How%20are%20you%3F&userId=USER_TEST
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Mon, 17 Sep 2018 16:32:26 GMT
+content-type: application/json
+content-length: 111
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b0485b1fb647c001113a5f1","label":"hello","probability":1.0,"resolvePrompt":"hello?","type":"Intent"}]
