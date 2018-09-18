@@ -54,7 +54,9 @@ describe('Botfuel Nlu', () => {
         extractors: [],
       });
       const sentence = 'hello';
-      const { classificationResults } = await nlu.compute(sentence, { user: TEST_USER_ID });
+      const { classificationResults } = await nlu.compute(sentence, {
+        userMessage: { user: TEST_USER_ID },
+      });
       expect(classificationResults.length).toEqual(1);
       expect(classificationResults[0].type).toEqual(ClassificationResult.TYPE_INTENT);
     });
@@ -66,7 +68,9 @@ describe('Botfuel Nlu', () => {
         extractors: [],
       });
       const sentence = 'delivery';
-      const { classificationResults } = await nlu.compute(sentence, { user: TEST_USER_ID });
+      const { classificationResults } = await nlu.compute(sentence, {
+        userMessage: { user: TEST_USER_ID },
+      });
 
       expect(classificationResults.length).toEqual(1);
       expect(classificationResults[0].type).toEqual(ClassificationResult.TYPE_QNA);
