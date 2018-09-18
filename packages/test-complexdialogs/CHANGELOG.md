@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.5.0"></a>
+# [11.5.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.4.0...v11.5.0) (2018-09-18)
+
+
+### Bug Fixes
+
+* trigger the default dialog when the user trigger the same intent without new entity ([57d4e7a](https://github.com/Botfuel/botfuel-dialog/commit/57d4e7a))
+
+
+### Features
+
+* add a cancel-dialog with the associated en/fr views ([50a196a](https://github.com/Botfuel/botfuel-dialog/commit/50a196a))
+
+
+
+
+
 <a name="11.1.0"></a>
 # [11.1.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.0.0...v11.1.0) (2018-08-10)
 

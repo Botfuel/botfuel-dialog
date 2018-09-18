@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.5.0"></a>
+# [11.5.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.4.0...v11.5.0) (2018-09-18)
+
+
+### Bug Fixes
+
+* Fix userId not being passed from context ([#255](https://github.com/Botfuel/botfuel-dialog/issues/255)) ([3c46817](https://github.com/Botfuel/botfuel-dialog/commit/3c46817))
+* refactoring and trigger default dialog when same dialog without new entity ([52a1d4b](https://github.com/Botfuel/botfuel-dialog/commit/52a1d4b))
+* retry entity extraction request 3 times when 503 error ([b03190e](https://github.com/Botfuel/botfuel-dialog/commit/b03190e))
+* trigger the default dialog when the user trigger the same intent without new entity ([57d4e7a](https://github.com/Botfuel/botfuel-dialog/commit/57d4e7a))
+
+
+### Features
+
+* add a cancel-dialog with the associated en/fr views ([50a196a](https://github.com/Botfuel/botfuel-dialog/commit/50a196a))
+
+
+
+
+
 <a name="11.4.0"></a>
 # [11.4.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.3.0...v11.4.0) (2018-09-17)
 
