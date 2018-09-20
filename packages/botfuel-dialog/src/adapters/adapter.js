@@ -99,8 +99,13 @@ class Adapter {
    */
   extendMessage<T: UserMessage | BotMessageJson>(message: T): T {
     logger.debug('extendMessage', message);
-    //Extend message by copy
-    return {...message, id:this.getMessageUUID(), timestamp:this.getMessageTimestamp()};
+
+    // $FlowFixMe
+    return {
+      ...message,
+      id: this.getMessageUUID(),
+      timestamp: this.getMessageTimestamp(),
+    };
   }
   /**
    * Generates an uuid
