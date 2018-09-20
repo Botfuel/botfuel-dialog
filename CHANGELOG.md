@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.5.1"></a>
+## [11.5.1](https://github.com/Botfuel/botfuel-dialog/compare/v11.5.0...v11.5.1) (2018-09-20)
+
+
+### Bug Fixes
+
+* Fix bug that prevents extending bot table message object  ([5f98e0b](https://github.com/Botfuel/botfuel-dialog/commit/5f98e0b))
+
+
+
+
+
 <a name="11.5.0"></a>
 # [11.5.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.4.0...v11.5.0) (2018-09-18)
 
