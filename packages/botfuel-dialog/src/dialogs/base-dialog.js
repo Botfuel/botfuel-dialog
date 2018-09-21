@@ -24,7 +24,7 @@ const Dialog = require('./dialog');
 class BaseDialog extends Dialog {
   /** @inheritDoc */
   async execute(userMessage, data) {
-    logger.debug('execute', userMessage, data);
+    logger.debug('execute', { userMessage, data });
     const extraData = await this.dialogWillDisplay(userMessage, data);
     data = this.mergeData(extraData, data);
     const botMessages = await this.display(userMessage, data);

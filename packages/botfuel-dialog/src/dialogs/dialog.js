@@ -109,7 +109,7 @@ class Dialog {
     characteristics: DialogCharacteristics = { reentrant: false },
     parameters: DialogParameters = {},
   ) {
-    logger.debug('constructor', parameters);
+    logger.debug('constructor', { parameters });
     const { config, brain } = bot;
     this.brain = brain;
     this.characteristics = characteristics;
@@ -132,7 +132,7 @@ class Dialog {
    * @returns {Promise.<void>}
    */
   async display(userMessage: UserMessage, data: DisplayData): Promise<BotMessageJson[]> {
-    logger.debug('display', userMessage, data);
+    logger.debug('display', { userMessage, data });
     const botMessages = this.viewResolver.resolve(this.name).renderAsJson(userMessage, data);
     return botMessages;
   }
@@ -245,7 +245,7 @@ class Dialog {
    * @returns - the extra data which will be added to the data passed to the view
    */
   async dialogWillDisplay(userMessage: UserMessage, data: {}): Promise<any> {
-    logger.debug('dialogWillDisplay', userMessage, data);
+    logger.debug('dialogWillDisplay', { userMessage, data });
     return null;
   }
 
@@ -283,7 +283,7 @@ class Dialog {
    * @param data - the data passed to the view
    */
   async dialogWillComplete(userMessage: UserMessage, data: {}): Promise<any> {
-    logger.debug('dialogWillComplete', userMessage, data);
+    logger.debug('dialogWillComplete', { userMessage, data });
     return this.complete();
   }
 }

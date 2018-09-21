@@ -68,6 +68,7 @@ class PromptDialog extends Dialog {
    * newValue (value we matched with the parameter)
    */
   matchEntityWithCandidates(entity, candidates = [], initialValue) {
+    logger.debug('matchEntityWithCandidates', { entity, candidates, initialValue });
     const sameDimCandidates = candidates.filter(candidate => candidate.dim === entity.dim);
     // Check if the parameter is already fulfilled with its initial value
     // If so, we replace the fulfilled parameter’s entity
@@ -115,6 +116,7 @@ class PromptDialog extends Dialog {
    * @returns {Object} updated map of entities
    */
   updateEntityWithDefaultValues(entities) {
+    logger.debug('updateEntityWithDefaultValues', { entities });
     return Object.keys(entities).reduce((allEntities, name) => {
       const entity = entities[name];
       return {
@@ -152,6 +154,7 @@ class PromptDialog extends Dialog {
    * @returns {String[]} array of entity names
    */
   getSortedEntities(matchedEntities, expectedEntities, previousQuestionEntity) {
+    logger.debug('getSortedEntities', { matchedEntities, expectedEntities, previousQuestionEntity });
     return Object.keys(expectedEntities).sort((nameA, nameB) => {
       const entityA = expectedEntities[nameA];
       const entityB = expectedEntities[nameB];
@@ -275,6 +278,7 @@ class PromptDialog extends Dialog {
    * @returns {Object} map of missing entities with key sorted
    */
   sortMissingEntities(missingEntities) {
+    logger.debug('sortMissingEntities', { missingEntities });
     if (Object.keys(missingEntities).length === 0) {
       return new Map();
     }
@@ -292,14 +296,14 @@ class PromptDialog extends Dialog {
    * @returns {Promise.<Object>} an action
    */
   async execute(userMessage, data) {
-    logger.debug('execute', userMessage, data);
+    logger.debug('execute', { userMessage, data });
     // get message entities extracted from the message
     const { messageEntities } = data;
     const userId = userMessage.user;
     const dialogCache = await this.brain.conversationGet(userId, this.parameters.namespace);
     const previouslyMatchedEntities = (dialogCache && dialogCache._entities) || {};
     const previousQuestionEntity = (dialogCache && dialogCache._question) || undefined;
-    logger.debug('execute: previouslyMatchedEntities', previouslyMatchedEntities);
+    logger.debug('execute', { previouslyMatchedEntities });
     // Get missing entities and matched entities
     const { missingEntities, matchedEntities } = await this.computeEntities(
       messageEntities,
@@ -326,7 +330,7 @@ class PromptDialog extends Dialog {
 
   /** @inheritDoc */
   async dialogWillComplete(userMessage, data) {
-    logger.debug('dialogWillComplete', userMessage, data);
+    logger.debug('dialogWillComplete', { userMessage, data });
     if (data.missingEntities.size === 0) {
       return this.complete();
     }
