@@ -75,6 +75,7 @@ class DialogManager extends Resolver<Dialog> {
    * stack of previous dialogs.
    */
   getLastReentrantDialog(previousDialogs: DialogData[]): ?DialogData {
+    logger.debug('getLastReentrantDialog', { previousDialogs });
     return (
       previousDialogs
         .slice(0)
@@ -91,7 +92,7 @@ class DialogManager extends Resolver<Dialog> {
    * Returns the dialogs data (stack and previous dialogs).
    */
   async getDialogs(userId: string): Promise<DialogsData> {
-    logger.debug('getDialogs', userId);
+    logger.debug('getDialogs', { userId });
     return this.brain.getDialogs(userId);
   }
 
@@ -99,7 +100,7 @@ class DialogManager extends Resolver<Dialog> {
    * Sets the dialogs data (stack and previous dialogs).
    */
   async setDialogs(userId: string, dialogs: DialogsData): Promise<void> {
-    logger.debug('setDialogs', userId, dialogs);
+    logger.debug('setDialogs', { userId, dialogs });
     await this.brain.setDialogs(userId, dialogs);
   }
 
@@ -112,7 +113,7 @@ class DialogManager extends Resolver<Dialog> {
     classificationResults: ClassificationResult[],
     messageEntities: MessageEntities,
   ): void {
-    logger.debug('updateWithClassificationResults', userId, dialogs, classificationResults);
+    logger.debug('updateWithClassificationResults', { userId, dialogs, classificationResults, messageEntities });
     let newDialog: ?DialogData = null;
     if (classificationResults.length > 1) {
       newDialog = {
@@ -166,14 +167,14 @@ class DialogManager extends Resolver<Dialog> {
    * @param newDialog - new dialog to be added to the dialog stack
    */
   updateWithDialog(dialogs: DialogsData, newDialog: DialogData): void {
-    logger.debug('updateWithDialog', dialogs, newDialog);
+    logger.debug('updateWithDialog', { dialogs, newDialog });
     const lastDialog = this.getLastDialog(dialogs);
     if (lastDialog && lastDialog.name === newDialog.name) {
       lastDialog.data = newDialog.data;
     } else {
       dialogs.stack.push(newDialog);
     }
-    logger.debug('updateWithDialog: updated', dialogs);
+    logger.debug('updateWithDialog: updated', { dialogs });
   }
 
   /**
@@ -185,7 +186,7 @@ class DialogManager extends Resolver<Dialog> {
     dialogs: DialogsData,
     action: Action,
   ): DialogsData {
-    logger.debug('applyAction', dialogs, action);
+    logger.debug('applyAction', { dialogs, action });
     let updatedDialogs: DialogsData = dialogs;
     const currentDialog: DialogData = dialogs.stack[dialogs.stack.length - 1];
     const date = Date.now();
@@ -243,7 +244,7 @@ class DialogManager extends Resolver<Dialog> {
     dialogs: DialogsData,
     botMessagesAccumulator: BotMessageJson[] = [],
   ): Promise<DialogManagerExecuteOutput> {
-    logger.debug('execute', userMessage, dialogs, botMessagesAccumulator);
+    logger.debug('execute', { userMessage, dialogs, botMessagesAccumulator });
     let botMessages = botMessagesAccumulator;
     if (dialogs.stack.length === 0) {
       return {
@@ -274,7 +275,7 @@ class DialogManager extends Resolver<Dialog> {
       );
       const { action, botMessages: newBotMessages } = executeResult;
       botMessages = botMessages.concat(newBotMessages);
-      logger.debug('execute: action', action);
+      logger.debug('execute', { action });
       if (action.name === Dialog.ACTION_WAIT) {
         return {
           dialogs,
@@ -294,7 +295,7 @@ class DialogManager extends Resolver<Dialog> {
     classificationResults: ClassificationResult[],
     messageEntities: MessageEntities,
   ): Promise<BotMessageJson[]> {
-    logger.debug('executeClassificationResults', userMessage, classificationResults, messageEntities);
+    logger.debug('executeClassificationResults', { userMessage, classificationResults, messageEntities });
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithClassificationResults(userId, dialogs, classificationResults, messageEntities);
@@ -310,7 +311,7 @@ class DialogManager extends Resolver<Dialog> {
     userMessage: UserMessage,
     newDialog: DialogData,
   ): Promise<BotMessageJson[]> {
-    logger.debug('executeDialog', userMessage, newDialog);
+    logger.debug('executeDialog', { userMessage, newDialog });
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
     this.updateWithDialog(dialogs, newDialog);

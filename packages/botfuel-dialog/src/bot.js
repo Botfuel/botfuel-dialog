@@ -65,9 +65,9 @@ class Bot {
   nlu: Nlu;
 
   constructor(config: RawConfig) {
-    logger.debug('constructor', config);
+    logger.debug('constructor', { config });
     this.config = getConfiguration(config);
-    logger.debug('constructor', this.config);
+    logger.debug('constructor', { config: this.config });
     checkCredentials(this.config);
     this.brain = new BrainResolver(this).resolve(this.config.brain.name);
     this.nlu = new NluResolver(this).resolve(this.config.nlu.name);
@@ -99,7 +99,7 @@ class Bot {
    * Plays user messages (only available with the TestAdapter).
    */
   async play(userMessages: UserMessage[]): Promise<void> {
-    logger.debug('play', userMessages);
+    logger.debug('play', { userMessages });
     await this.init();
     await this.adapter.play(userMessages);
   }
@@ -117,7 +117,7 @@ class Bot {
    * Handles a user message.
    */
   async handleMessage(userMessage: UserMessage): Promise<BotMessageJson[]> {
-    logger.debug('handleMessage', userMessage);
+    logger.debug('handleMessage', { userMessage });
     try {
       const contextIn = {
         user: userMessage.user,
@@ -140,7 +140,7 @@ class Bot {
       await this.middlewareManager.out(contextOut, async () => {});
       return botMessages;
     } catch (error) {
-      logger.debug('handleMessage: catching error', error);
+      logger.debug('handleMessage: catching', { error });
       return this.respondWhenError(userMessage, error);
     }
   }
@@ -149,20 +149,16 @@ class Bot {
    * Responds to the user.
    */
   async respond(userMessage: UserMessage): Promise<BotMessageJson[]> {
-    logger.debug('respond', userMessage);
+    logger.debug('respond', { userMessage });
     switch (userMessage.type) {
       case 'postback':
-        logger.debug('respond: postback', userMessage);
         return this.respondWhenPostback(userMessage);
       case 'image':
-        logger.debug('respond: image', userMessage);
         return this.respondWhenImage(userMessage);
       case 'file':
-        logger.debug('respond: file', userMessage);
         return this.respondWhenFile(userMessage);
       case 'text':
       default:
-        logger.debug('respond: text', userMessage);
         return this.respondWhenText(userMessage);
     }
   }
@@ -172,8 +168,7 @@ class Bot {
    * @private
    */
   async respondWhenText(userMessage: TextMessage): Promise<BotMessageJson[]> {
-    logger.debug('respondWhenText', userMessage);
-
+    logger.debug('respondWhenText', { userMessage });
     // If text input is too long then trigger the complex-input dialog
     if (userMessage.payload.value.length > 256) {
       logger.error('respondWhenText: input is too long.');
@@ -181,10 +176,8 @@ class Bot {
         name: 'complex-input',
         data: {},
       };
-
       return this.dm.executeDialog(userMessage, complexInputDialog);
     }
-
     const { classificationResults, messageEntities } = await this.nlu.compute(
       userMessage.payload.value,
       {
@@ -205,7 +198,7 @@ class Bot {
    * @private
    */
   async respondWhenPostback(userMessage: PostbackMessage): Promise<BotMessageJson[]> {
-    logger.debug('respondWhenPostback', userMessage);
+    logger.debug('respondWhenPostback', { userMessage });
     const dialog = {
       name: userMessage.payload.value.name,
       data: {
@@ -220,7 +213,7 @@ class Bot {
    * @private
    */
   async respondWhenImage(userMessage: ImageMessage): Promise<BotMessageJson[]> {
-    logger.debug('respondWhenImage', userMessage);
+    logger.debug('respondWhenImage', { userMessage });
     const dialog: DialogData = {
       name: 'image',
       data: {
@@ -235,7 +228,7 @@ class Bot {
    * @private
    */
   async respondWhenFile(userMessage: FileMessage): Promise<BotMessageJson[]> {
-    logger.debug('respondWhenFile', userMessage);
+    logger.debug('respondWhenFile', { userMessage });
     const dialog: DialogData = {
       name: 'file',
       data: {
@@ -247,8 +240,7 @@ class Bot {
 
 
   async respondWhenError(userMessage: UserMessage, error: ErrorObject): Promise<BotMessageJson[]> {
-    logger.debug('respondWhenError', userMessage, error);
-
+    logger.debug('respondWhenError', { userMessage, error });
     if (error instanceof AuthenticationError) {
       logger.error('Botfuel API authentication failed!');
       logger.error(
@@ -259,7 +251,6 @@ class Bot {
     } else if (error instanceof DialogError) {
       logger.error(`Could not execute dialog '${error.name}'`);
     }
-
     const keys = Object.getOwnPropertyNames(error);
     // error is not a standard JS Object so we have to copy each property
     // one by one
@@ -270,14 +261,12 @@ class Bot {
       }),
       {},
     );
-
     const catchDialog = {
       name: 'catch',
       data: {
         error: errorObject,
       },
     };
-
     return this.dm.executeDialog(userMessage, catchDialog);
   }
 }
