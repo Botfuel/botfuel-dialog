@@ -19,11 +19,6 @@ const logger = require('logtown')('PromptDialog');
 const { filterIntersectingEntities } = require('../utils/entities');
 const Dialog = require('./dialog');
 
-export type PromptDialogParameters = {
-  namespace: string,
-  entities?: Object,
-};
-
 /**
  * The prompt dialog prompts the user for a number of entities.
  * The dialog parameters is an Object containing:
@@ -49,7 +44,7 @@ class PromptDialog extends Dialog {
    * @param {Object} parameters - the dialog parameters,
    * parameters.entities is a map mapping entities to optional parameters
    */
-  constructor(bot, parameters: PromptDialogParameters) {
+  constructor(bot, parameters) {
     super(bot, { reentrant: true }, parameters);
   }
 
