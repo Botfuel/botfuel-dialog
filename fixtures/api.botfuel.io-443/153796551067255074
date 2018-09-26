@@ -2,13 +2,13 @@ GET /trainer/api/v0/classify?sentence=message&userId=USER
 host: api.botfuel.io
 accept: application/json
 
-HTTP/1.1 400 BAD REQUEST
+HTTP/1.1 200 OK
 server: openresty/1.11.2.5
-date: Wed, 26 Sep 2018 11:43:59 GMT
+date: Wed, 26 Sep 2018 12:38:30 GMT
 content-type: application/json
-content-length: 87
+content-length: 3
 connection: close
 access-control-allow-origin: *
 via: 1.1 vegur
 
-{"error":"No Model is present, you must train before classify.","name":"MissingModel"}
+[]
