@@ -28,7 +28,7 @@ const TEST_CONFIG = Config.getConfiguration({
 });
 
 class ResetPromptDialog extends PromptDialog {
-  async dialogWillComplete(userMessage, data) {
+  async dialogWillComplete(userMessage) {
     await this.resetEntities(userMessage.user);
     return this.complete();
   }
@@ -940,7 +940,7 @@ describe('PromptDialog', () => {
       entities: {
         n: {
           dim: 'number',
-        }
+        },
       },
     });
 
