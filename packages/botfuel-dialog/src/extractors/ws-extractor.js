@@ -83,6 +83,7 @@ class WsExtractor extends Extractor {
       },
       rejectUnauthorized: false,
       json: true,
+      family: 4,
     });
   }
 
