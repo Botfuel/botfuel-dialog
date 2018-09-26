@@ -30,7 +30,7 @@ class ConfirmationDialog extends PromptDialog {
     logger.debug('dialogWillComplete', userMessage, { matchedEntities });
     if (matchedEntities.answer) {
       // Clean entities for this dialog so it can be reused later
-      await this.brain.conversationSet(userMessage.user, this.parameters.namespace, {});
+      await this.resetEntities(userMessage.user);
       if (matchedEntities.answer.values[0].value === true) {
         return this.complete();
       }

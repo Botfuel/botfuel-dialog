@@ -19,6 +19,11 @@ const logger = require('logtown')('PromptDialog');
 const { filterIntersectingEntities } = require('../utils/entities');
 const Dialog = require('./dialog');
 
+export type PromptDialogParameters = {
+  namespace: string,
+  entities?: Object,
+};
+
 /**
  * The prompt dialog prompts the user for a number of entities.
  * The dialog parameters is an Object containing:
@@ -44,7 +49,7 @@ class PromptDialog extends Dialog {
    * @param {Object} parameters - the dialog parameters,
    * parameters.entities is a map mapping entities to optional parameters
    */
-  constructor(bot, parameters) {
+  constructor(bot, parameters: PromptDialogParameters) {
     super(bot, { reentrant: true }, parameters);
   }
 
@@ -335,6 +340,16 @@ class PromptDialog extends Dialog {
       return this.complete();
     }
     return this.wait();
+  }
+
+  /**
+   * Reset entities of the dialog that are stored in the brain
+   * @async
+   * @param userId - user id
+   * @returns {Promise<UserData>}
+   */
+  async resetEntities(userId) {
+    return this.brain.conversationSet(userId, this.parameters.namespace, {});
   }
 }
 
