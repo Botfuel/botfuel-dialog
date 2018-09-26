@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=delivery&userId=test
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 400 BAD REQUEST
+server: openresty/1.11.2.5
+date: Wed, 26 Sep 2018 11:43:59 GMT
+content-type: application/json
+content-length: 87
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+{"error":"No Model is present, you must train before classify.","name":"MissingModel"}

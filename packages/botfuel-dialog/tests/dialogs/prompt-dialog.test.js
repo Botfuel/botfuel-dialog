@@ -27,6 +27,13 @@ const TEST_CONFIG = Config.getConfiguration({
   },
 });
 
+class ResetPromptDialog extends PromptDialog {
+  async dialogWillComplete(userMessage, data) {
+    await this.resetEntities(userMessage.user);
+    return this.complete();
+  }
+}
+
 const bot = new Bot(TEST_CONFIG);
 
 describe('PromptDialog', () => {
@@ -921,6 +928,38 @@ describe('PromptDialog', () => {
       expect(conversation).toHaveProperty('testdialog');
       expect(conversation.testdialog).toHaveProperty('_entities');
       expect(conversation.testdialog).toHaveProperty('_question');
+    });
+  });
+
+  describe('Reset entities stored in the brain', () => {
+    const { adapter } = bot;
+    const { userId } = adapter;
+
+    const prompt = new ResetPromptDialog(bot, {
+      namespace: 'resetPrompt',
+      entities: {
+        n: {
+          dim: 'number',
+        }
+      },
+    });
+
+    test('should reset entities of dialog namespace in the brain', async () => {
+      const messageEntities = [
+        {
+          dim: 'number',
+          start: 0,
+          end: 2,
+          values: [{ value: 42, type: 'integer' }],
+          body: '42',
+        },
+      ];
+
+      await prompt.brain.addUser(userId);
+      await prompt.execute({ user: userId }, messageEntities);
+      const conversation = await prompt.brain.fetchLastConversation(userId);
+      expect(conversation).toHaveProperty('resetPrompt');
+      expect(conversation.resetPrompt).toBe({});
     });
   });
 });
