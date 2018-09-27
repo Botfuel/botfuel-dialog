@@ -130,6 +130,7 @@ class BotfuelNlu extends Nlu {
           'App-Key': process.env.BOTFUEL_APP_KEY,
         },
         json: true,
+        family: 4,
       };
       const res = await rp(options);
       let classificationResults = res.map(data => new ClassificationResult(data));
@@ -178,8 +179,9 @@ class BotfuelNlu extends Nlu {
           'App-Key': process.env.BOTFUEL_APP_KEY,
           'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
         },
+        family: 4,
       };
-      const result = await rp({ ...options });
+      const result = await rp(options);
       logger.debug('spellcheck: result', result);
       return result.correctSentence;
     } catch (error) {
