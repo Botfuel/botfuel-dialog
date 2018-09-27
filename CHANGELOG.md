@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.6.0"></a>
+# [11.6.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.5.3...v11.6.0) (2018-09-27)
+
+
+### Bug Fixes
+
+* force request-promise to look for an ipv4 to prevent errors getaddrinfo ENOTFOUND ([62ecf05](https://github.com/Botfuel/botfuel-dialog/commit/62ecf05))
+
+
+### Features
+
+* added triggeredBy property to dialogs ([fe4e4b6](https://github.com/Botfuel/botfuel-dialog/commit/fe4e4b6))
+* implement a resetEntities method for the prompt dialog that clean entities stored in bot brain for this dialog ([0aa51b1](https://github.com/Botfuel/botfuel-dialog/commit/0aa51b1))
+
+
+
+
+
 <a name="11.5.3"></a>
 ## [11.5.3](https://github.com/Botfuel/botfuel-dialog/compare/v11.5.2...v11.5.3) (2018-09-21)
 
