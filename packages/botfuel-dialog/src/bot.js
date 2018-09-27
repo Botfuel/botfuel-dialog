@@ -42,8 +42,10 @@ const DialogError = require('./errors/dialog-error');
 const ResolutionError = require('./errors/resolution-error');
 const { checkCredentials } = require('./utils/environment');
 const MiddlewareManager = require('./middleware-manager');
+const measureTime = require('./utils/measure');
 
 const logger = Logger.getLogger('Bot');
+const measure = measureTime(logger);
 
 /**
  * This is the bot main class that ties all the components together.
@@ -113,10 +115,14 @@ class Bot {
     await this.brain.clean();
   }
 
+  async handleMessage(userMessage: UserMessage): Promise<BotMessageJson[]> {
+    return measure('handleMessage')(() => this._handleMessage(userMessage));
+  }
+
   /**
    * Handles a user message.
    */
-  async handleMessage(userMessage: UserMessage): Promise<BotMessageJson[]> {
+  async _handleMessage(userMessage: UserMessage): Promise<BotMessageJson[]> {
     logger.debug('handleMessage', { userMessage });
     try {
       const contextIn = {
@@ -179,13 +185,11 @@ class Bot {
       };
       return this.dm.executeDialog(userMessage, complexInputDialog);
     }
-    const { classificationResults, messageEntities } = await this.nlu.compute(
-      userMessage.payload.value,
-      {
+    const { classificationResults, messageEntities } = await measure('nlu compute')(() =>
+      this.nlu.compute(userMessage.payload.value, {
         brain: this.brain,
         userMessage,
-      },
-    );
+      }));
     logger.debug('respondWhenText: classificationResults', classificationResults, messageEntities);
     return this.dm.executeClassificationResults(
       userMessage,
@@ -241,7 +245,6 @@ class Bot {
     };
     return this.dm.executeDialog(userMessage, dialog);
   }
-
 
   async respondWhenError(userMessage: UserMessage, error: ErrorObject): Promise<BotMessageJson[]> {
     logger.debug('respondWhenError', { userMessage, error });
