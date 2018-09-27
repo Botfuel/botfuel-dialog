@@ -68,7 +68,10 @@ export type Action =
 export type DialogCharacteristics = {
   reentrant: boolean,
 };
-export type DialogParameters = {};
+export type DialogParameters = {
+  namespace?: string,
+  entities?: Object,
+};
 export type DisplayData = {};
 
 export type ExecuteResult = {

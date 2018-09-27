@@ -21,6 +21,7 @@ class AlcoholDialog extends PromptDialog {
   async dialogWillComplete(userMessage, data) {
     if (data.missingEntities.size === 0) {
       await this.brain.userSet(userMessage.user, 'isAlcoholDialogCompleted', true);
+      await this.resetEntities(userMessage.user);
       return this.complete();
     }
     return this.wait();

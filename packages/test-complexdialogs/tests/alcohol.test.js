@@ -51,5 +51,6 @@ describe('Alcohol', () => {
     expect(dialogs.previous[0].name).toBe('alcohol');
     expect(dialogs.previous[0].triggeredBy).toBe('nlu');
     expect(await bot.brain.userGet(userId, 'isAlcoholDialogCompleted')).toBe(true);
+    expect(await bot.brain.conversationGet(userId, 'alcohol')).toEqual({});
   });
 });

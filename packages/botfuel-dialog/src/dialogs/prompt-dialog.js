@@ -336,6 +336,16 @@ class PromptDialog extends Dialog {
     }
     return this.wait();
   }
+
+  /**
+   * Reset entities of the dialog that are stored in the brain
+   * @async
+   * @param userId - user id
+   * @returns {Promise<UserData>}
+   */
+  async resetEntities(userId) {
+    return this.brain.conversationSet(userId, this.parameters.namespace, {});
+  }
 }
 
 module.exports = PromptDialog;
