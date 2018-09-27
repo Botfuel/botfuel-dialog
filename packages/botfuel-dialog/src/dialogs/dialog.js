@@ -168,6 +168,7 @@ class Dialog {
       newDialog: {
         name,
         data,
+        triggeredBy: `${this.getName()}-dialog`,
       },
       name: Dialog.ACTION_NEXT,
     };
@@ -186,6 +187,7 @@ class Dialog {
         newDialog: {
           name,
           data: {},
+          triggeredBy: `${this.getName()}-dialog`,
         },
       };
     }
@@ -209,6 +211,7 @@ class Dialog {
         newDialog: {
           name,
           data,
+          triggeredBy: `${this.getName()}-dialog`,
         },
       };
     }

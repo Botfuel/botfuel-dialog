@@ -26,10 +26,12 @@ const TEST_CONFIG = require('../../src/config').getConfiguration({
   },
 });
 
+class CustomTestDialog extends Dialog {}
+
 describe('Dialog', () => {
   const bot = new Bot(TEST_CONFIG);
-  const dialog = new Dialog(bot, {
-    namespace: 'testdialog',
+  const dialog = new CustomTestDialog(bot, {
+    namespace: 'custom-test',
     entities: {},
   });
 
@@ -51,6 +53,7 @@ describe('Dialog', () => {
       newDialog: {
         name: 'greetings',
         data: {},
+        triggeredBy: 'custom-test-dialog',
       },
       name: Dialog.ACTION_NEXT,
     });
@@ -67,6 +70,7 @@ describe('Dialog', () => {
       newDialog: {
         name: 'greetings',
         data: {},
+        triggeredBy: 'custom-test-dialog',
       },
       name: Dialog.ACTION_CANCEL,
     });
@@ -83,6 +87,7 @@ describe('Dialog', () => {
       newDialog: {
         name: 'greetings',
         data: {},
+        triggeredBy: 'custom-test-dialog',
       },
       name: Dialog.ACTION_NEW_CONVERSATION,
     });

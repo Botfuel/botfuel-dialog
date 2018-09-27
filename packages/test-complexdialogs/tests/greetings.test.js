@@ -41,7 +41,9 @@ describe('GreetingsDialog', () => {
     expect(dialogs.stack).toHaveLength(0);
     expect(dialogs.previous.length).toBe(2);
     expect(dialogs.previous[0].name).toBe('greetings');
+    expect(dialogs.previous[0].triggeredBy).toBe('nlu');
     expect(dialogs.previous[1].name).toBe('default');
+    expect(dialogs.previous[1].triggeredBy).toBe('dialog-manager');
   });
 
   test('should say something different when greeting for the second time', async () => {

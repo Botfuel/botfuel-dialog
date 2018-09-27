@@ -39,6 +39,7 @@ const DEFAULT_DIALOG: DialogData = {
     reentrant: false,
   },
   data: {},
+  triggeredBy: 'dialog-manager',
 };
 
 /**
@@ -84,6 +85,11 @@ class DialogManager extends Resolver<Dialog> {
     );
   }
 
+  /**
+   * Get the last dialog from dialogs stack
+   * @param dialogs
+   * @returns {*}
+   */
   getLastDialog(dialogs: DialogsData): ?DialogData {
     return dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
   }
@@ -119,6 +125,7 @@ class DialogManager extends Resolver<Dialog> {
       newDialog = {
         name: 'classification-disambiguation',
         data: { classificationResults, messageEntities },
+        triggeredBy: 'dialog-manager',
       };
     } else if (classificationResults.length === 1) {
       const lastDialog: ?DialogData = this.getLastDialog(dialogs);
@@ -135,6 +142,7 @@ class DialogManager extends Resolver<Dialog> {
           data: classificationResults[0].isQnA()
             ? { answers: classificationResults[0].answers } // TODO refactor (law of Demeter)
             : { messageEntities },
+          triggeredBy: 'nlu',
         };
       }
     }
@@ -264,6 +272,7 @@ class DialogManager extends Resolver<Dialog> {
           reentrant: false,
         },
         data: {},
+        triggeredBy: 'dialog-manager',
       });
     } else {
       const dialogInstance: Dialog = this.resolve(dialog.name);
