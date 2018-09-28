@@ -27,7 +27,9 @@ const SdkError = require('../errors/sdk-error');
 const ClassificationResult = require('./classification-result');
 const Nlu = require('./nlu');
 const urlJoin = require('url-join');
+const measureTime = require('../utils/measure');
 
+const measure = measureTime(logger);
 const PROXY_HOST = process.env.BOTFUEL_PROXY_HOST || 'https://api.botfuel.io';
 const SPELLCHECKING_ROUTE = '/nlp/spellchecking';
 const SPELLCHECKING_VERSION = 'v1';
@@ -108,10 +110,13 @@ class BotfuelNlu extends Nlu {
     // spellchecking
     // this is done outside the try/catch block to prevent catch-dialog to be triggered
     // if the error is not related to authentication
-    sentence = await this.spellcheck(sentence);
+    // sentence = await this.spellcheck(sentence);
+    sentence = await measure('spellcheck')(() => this.spellcheck(sentence));
+
     try {
       // computing entities
-      const messageEntities = await this.extractor.compute(sentence);
+      const messageEntities = await measure('entity extraction')(() =>
+        this.extractor.compute(sentence));
       // computing intents
       let trainerUrl =
         process.env.BOTFUEL_TRAINER_API_URL || 'https://api.botfuel.io/trainer/api/v0';
@@ -132,7 +137,7 @@ class BotfuelNlu extends Nlu {
         json: true,
         family: 4,
       };
-      const res = await rp(options);
+      const res = await measure('classify')(() => rp(options));
       let classificationResults = res.map(data => new ClassificationResult(data));
       if (this.classificationFilter) {
         classificationResults = await this.classificationFilter(classificationResults, context);
