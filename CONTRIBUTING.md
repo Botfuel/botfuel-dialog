@@ -80,6 +80,11 @@ yarn run unit-test
 BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/<PACKAGE_NAME>
 ```
 
+If you are using Windows Powershell, use this command instead:
+```shell
+$Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test packages/<PACKAGE_NAME>
+ ```
+
 Example:
 
 ```shell
@@ -93,6 +98,11 @@ To register new fixtures, add `REPLAY=record` to the test command:
 REPLAY=record BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
 
+If you are using Windows Powershell, use this command instead:
+```shell
+$Env:REPLAY=record; $Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test
+ ```
+
 This will make real API calls and create new fixtures.
 
 ### Running all the tests
@@ -100,6 +110,11 @@ This will make real API calls and create new fixtures.
 ```shell
 BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
+
+If you are using Windows Powershell, use this command instead:
+  ```shell
+$Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test
+ ```
 
 ### Procedure to create a new test project
 
@@ -112,11 +127,21 @@ Suppose you want to create a new test project (like test-complexdialogs), here a
 BOTFUEL_APP_TOKEN=<new app token> BOTFUEL_APP_ID=<new app id> BOTFUEL_APP_KEY=<new app key> REPLAY=record jest ../../<new test project name>
 ```
 
+If you are using Windows Powershell, use this command instead:
+```shell
+$Env:BOTFUEL_APP_TOKEN=<new app token>; $Env:BOTFUEL_APP_ID=<new app id>; $Env:BOTFUEL_APP_KEY=<new app key>; $Env:REPLAY=record; jest ../../<new test project name>
+ ```
+
 * Make sure new files are added in the `fixtures` folder, and then run the following command to check if everything works correctly. Note that we change the `REPLAY` environment parameter to `replay`.
 
 ```shell
 BOTFUEL_APP_TOKEN=<new app token> BOTFUEL_APP_ID=<new app id> BOTFUEL_APP_KEY=<new app key> REPLAY=replay jest ../../<new test project name>
 ```
+
+If you are using Windows Powershell, use this command instead:
+```shell
+$Env:BOTFUEL_APP_TOKEN=<new app token>; $Env:BOTFUEL_APP_ID=<new app id>; $Env:BOTFUEL_APP_KEY=<new app key>; $Env:REPLAY=replay; jest ../../<new test project name>
+ ```
 
 * Run the whole test again as described in the previous section.
 
@@ -131,6 +156,11 @@ See our internal documentation to configure login with yarn.
 ```
 BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn release
 ```
+
+If you are using Windows Powershell, use this command instead:
+```shell
+$Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn release
+ ```
 
 To review the new version number before publishing:
 

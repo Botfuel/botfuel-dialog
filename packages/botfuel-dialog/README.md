@@ -21,6 +21,11 @@ Run botfuel-dialog and each test packages (integration) tests:
 BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
 
+If you are using Windows Powershell, use this command instead:
+```shell
+$Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test
+```
+
 ### Unit tests
 
 Run only the botfuel-dialog tests:
@@ -33,6 +38,11 @@ yarn unit-test
 
 ```shell
 BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/<PACKAGE_NAME>
+```
+
+If you are using Windows Powershell, use this command instead:
+```shell
+$Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test packages/<PACKAGE_NAME>
 ```
 
 Example:
@@ -48,12 +58,22 @@ To register new fixtures, add `REPLAY=record` to the test command:
 REPLAY=record BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 ```
 
+If you are using Windows Powershell, use this command instead:
+```shell
+$Env:REPLAY=record; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test
+```
+
 This will make real API calls and create new fixtures.
 
 ### Publish on NPM
 
 ```shell
 BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn release
+```
+
+If you are using Windows Powershell, use this command instead:
+```shell
+$Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn release
 ```
 
 Publishing requires credentials because it runs integration tests beforehand.
