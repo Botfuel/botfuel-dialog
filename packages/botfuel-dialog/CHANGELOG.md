@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.6.1"></a>
+# [11.6.1](https://github.com/Botfuel/botfuel-dialog/compare/v11.6.0...v11.6.1) (2018-10-12)
+
+
+### Bug Fixes
+
+* allow custom data in postback messages ([04949b9](https://github.com/Botfuel/botfuel-dialog/commit/04949b9))
+
+
+
+
 <a name="11.6.0"></a>
 # [11.6.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.5.3...v11.6.0) (2018-09-27)
 
@@ -180,7 +191,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### BREAKING CHANGES
 
 * dialog and entities to dialogEntities
-dialog and entities became dialogData in postback-message and postback 
+dialog and entities became dialogData in postback-message and postback
 the dialogData structure is : dialogData : { name: dialog, data: { messageEntities: entities}}
 
 
