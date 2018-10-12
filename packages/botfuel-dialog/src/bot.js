@@ -206,9 +206,7 @@ class Bot {
     logger.debug('respondWhenPostback', { userMessage });
     const dialog = {
       name: userMessage.payload.value.name,
-      data: {
-        messageEntities: userMessage.payload.value.data.messageEntities,
-      },
+      data: userMessage.payload.value.data,
       triggeredBy: 'postback',
     };
     return this.dm.executeDialog(userMessage, dialog);

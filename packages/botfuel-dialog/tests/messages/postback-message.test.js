@@ -43,4 +43,41 @@ describe('PostbackMessage', () => {
       },
     });
   });
+
+  test('should generate the proper json with a custom data key', async () => {
+    const message = new PostbackMessage({ name: 'greetings', data: { messageEntities: [], foo: 'bar' } });
+    expect(message.toJson('USER')).toEqual({
+      type: 'postback',
+      sender: 'user',
+      user: 'USER',
+      payload: {
+        value: {
+          name: 'greetings',
+          data: {
+            messageEntities: [],
+            foo: 'bar',
+          },
+        },
+      },
+    });
+  });
+
+  test('should generate the proper json with many custom data keys', async () => {
+    const message = new PostbackMessage({ name: 'greetings', data: { messageEntities: [], foo: 'bar', custom: 'key' } });
+    expect(message.toJson('USER')).toEqual({
+      type: 'postback',
+      sender: 'user',
+      user: 'USER',
+      payload: {
+        value: {
+          name: 'greetings',
+          data: {
+            messageEntities: [],
+            foo: 'bar',
+            custom: 'key',
+          },
+        },
+      },
+    });
+  });
 });
