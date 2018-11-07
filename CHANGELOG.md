@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.6.2"></a>
+## [11.6.2](https://github.com/Botfuel/botfuel-dialog/compare/v11.6.1...v11.6.2) (2018-10-31)
+
+**Note:** Version bump only for package botfuel-dialog
+
+
+
+
+
 <a name="11.6.0"></a>
 # [11.6.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.5.3...v11.6.0) (2018-09-27)
 
