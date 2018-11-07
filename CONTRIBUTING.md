@@ -145,6 +145,41 @@ $Env:BOTFUEL_APP_TOKEN=<new app token>; $Env:BOTFUEL_APP_ID=<new app id>; $Env:B
 
 * Run the whole test again as described in the previous section.
 
+## Working with botfuel-dialog locally
+
+If you want to use a local version of botfuel-dialog with your bot for tests and developments purposes,
+you can link your version of botfuel-dialog to your bot using **yarn link**
+
+In the root directory of botfuel-dialog run:
+```shell
+cd packages/botfuel-dialog
+yarn link
+```
+
+This will create a symbolic link of local version botfuel-dialog.
+
+In the root directory of you bot (where the package.json is) run:
+```shell
+yarn link botfuel-dialog
+```
+
+This will use the symbolic link of your local botfuel-dialog in your bot project.
+
+If you want to unlink the local version of botfuel-dialog from your bot run:
+```shell
+yarn unlink botfuel-dialog
+```
+
+You will need to re-install your dependencies to be able to use the
+previous published version of botfuel-dialog you were using.
+
+If you want to delete the symbolic link of botfuel-dialog,
+run the following command at the root project of the package:
+```
+// Tte path should be /botfuel-dialog/packages/botfuel-dialog
+yarn unlink
+```
+
 ## Changelog
 
 We use [conventional commits](https://conventionalcommits.org/), with the [angular conventions](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular). More details [here](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#-commit-message-guidelines).
