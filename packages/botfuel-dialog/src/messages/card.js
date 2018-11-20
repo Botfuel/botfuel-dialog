@@ -29,7 +29,7 @@ class Card extends Part {
    * @param {Object[]} actions - an array of actions
    * @param {Object} [subtitle] - the subtitle (optional)
    */
-  constructor(title, imageUrl, actions, subtitle) {
+  constructor(title, imageUrl, actions, subtitle = '') {
     super();
     this.title = title;
     this.imageUrl = imageUrl;
@@ -40,12 +40,15 @@ class Card extends Part {
   /** @inheritDoc */
   toJson() {
     // TODO : this is very Messenger specific, let's generalize it!
-    return {
+    const cardJson = {
       title: this.title,
       image_url: this.imageUrl,
-      subtitle: this.subtitle,
       buttons: this.actions.map(action => action.toJson())
     };
+    if (this.subtitle !== '') {
+      cardJson.subtitle = this.subtitle
+    }
+    return cardJson
   }
 
   /** @inheritDoc */
@@ -53,6 +56,7 @@ class Card extends Part {
     this.validateString('card', this.title);
     this.validateUrl('card', this.imageUrl);
     this.validateActions('card', this.actions);
+    this.validateString('card', this.subtitle)
   }
 
   /**
