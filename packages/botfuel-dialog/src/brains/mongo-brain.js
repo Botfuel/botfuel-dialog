@@ -68,7 +68,7 @@ class MongoBrain extends Brain {
   /** @inheritdoc */
   async hasUser(userId) {
     logger.debug('hasUser', userId);
-    const user = await this.users.findOne({ _userId: userId });
+    const user = await this.users.findOne({ _userId: userId }, { _userId: 1 });
     return user !== null;
   }
 
@@ -89,9 +89,9 @@ class MongoBrain extends Brain {
   }
 
   /** @inheritdoc */
-  async getUser(userId, ...params) {
+  async getUser(userId, params) {
     logger.debug('getUser', userId);
-    const user = await this.users.findOne({ _userId: userId }, ...params);
+    const user = await this.users.findOne({ _userId: userId }, params);
     if (!user) {
       throw new Error('User does not exist');
     }
@@ -119,15 +119,29 @@ class MongoBrain extends Brain {
     return user;
   }
 
-  /** @inheritdoc */
+  /**
+   * Sets a value for a key within the scope of the user
+   * @abstract
+   * @returns a JSON which contains the user id and the key that has just been set
+   */
   async userSet(userId, key, value) {
     logger.debug('userSet', userId, key, value);
     const result = await this.findUserAndUpdate(
       { _userId: userId },
       { $set: { [key]: value } },
-      { returnOriginal: false },
+      { 
+        returnOriginal: false,
+        projection: { _userId: 1, [key]: 1 },
+      },
     );
     return result.value;
+  }
+
+  /** @inheritdoc */
+  async userGet(userId, key) {
+    logger.debug('userGet', userId, key);
+    const user = await this.getUser(userId, { [key]: 1 });
+    return user[key];
   }
 
   /** @inheritdoc */
@@ -145,7 +159,10 @@ class MongoBrain extends Brain {
     const result = await this.findUserAndUpdate(
       { _userId: userId },
       { $push: { _conversations: { $each: [conversation], $position: 0 } } },
-      { returnOriginal: false },
+      { 
+        returnOriginal: false,
+        projection: { _conversations: { $slice: 1 } },
+      },
     );
     return result.value._conversations[0];
   }
@@ -156,7 +173,11 @@ class MongoBrain extends Brain {
     const result = await this.findUserAndUpdate(
       { _userId: userId },
       { $set: { [`_conversations.0.${key}`]: value } },
-      { returnOriginal: false, sort: { '_conversations._createdAt': -1 } },
+      { 
+        returnOriginal: false,
+        sort: { '_conversations._createdAt': -1 },
+        projection: { _conversations: { $slice: 1 } },
+      },
     );
     return result.value._conversations[0];
   }
@@ -173,7 +194,7 @@ class MongoBrain extends Brain {
 
   /** @inheritdoc */
   async botGet(key) {
-    const global = await this.global.findOne({});
+    const global = await this.global.findOne({}, { [key]: 1 });
     return global[key];
   }
 
@@ -186,6 +207,7 @@ class MongoBrain extends Brain {
       },
       {
         upsert: true,
+        projection: { [key]: 1 },
       },
     );
     return global[key];
