@@ -129,7 +129,7 @@ class MongoBrain extends Brain {
     const result = await this.findUserAndUpdate(
       { _userId: userId },
       { $set: { [key]: value } },
-      { 
+      {
         returnOriginal: false,
         projection: { _userId: 1, [key]: 1 },
       },
@@ -159,7 +159,7 @@ class MongoBrain extends Brain {
     const result = await this.findUserAndUpdate(
       { _userId: userId },
       { $push: { _conversations: { $each: [conversation], $position: 0 } } },
-      { 
+      {
         returnOriginal: false,
         projection: { _conversations: { $slice: 1 } },
       },
@@ -173,7 +173,7 @@ class MongoBrain extends Brain {
     const result = await this.findUserAndUpdate(
       { _userId: userId },
       { $set: { [`_conversations.0.${key}`]: value } },
-      { 
+      {
         returnOriginal: false,
         sort: { '_conversations._createdAt': -1 },
         projection: { _conversations: { $slice: 1 } },

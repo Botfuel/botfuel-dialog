@@ -43,12 +43,12 @@ class Card extends Part {
     const cardJson = {
       title: this.title,
       image_url: this.imageUrl,
-      buttons: this.actions.map(action => action.toJson())
+      buttons: this.actions.map(action => action.toJson()),
     };
     if (this.subtitle !== '') {
-      cardJson.subtitle = this.subtitle
+      cardJson.subtitle = this.subtitle;
     }
-    return cardJson
+    return cardJson;
   }
 
   /** @inheritDoc */
@@ -56,7 +56,7 @@ class Card extends Part {
     this.validateString('card', this.title);
     this.validateUrl('card', this.imageUrl);
     this.validateActions('card', this.actions);
-    this.validateString('card', this.subtitle)
+    this.validateString('card', this.subtitle);
   }
 
   /**
