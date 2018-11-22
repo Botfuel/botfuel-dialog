@@ -141,7 +141,7 @@ class Brain {
   /**
    * Sets a value for a key within the scope of the user.
    * @abstract
-   * @returns the updated user
+   * @returns {{ _userId: String, [key]: any }} an object containing the _userId and the key/value pair
    */
   async userSet(
     userId: string,
