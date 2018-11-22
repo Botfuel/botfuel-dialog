@@ -74,7 +74,7 @@ class MemoryBrain extends Brain {
     logger.debug('userSet', userId, key, value);
     const user = await this.getUser(userId);
     user[key] = value;
-    return user;
+    return { userId: user._userId, [key]: value };
   }
 
   /** @inheritdoc */
