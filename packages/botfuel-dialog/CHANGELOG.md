@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="12.0.1"></a>
+## [12.0.1](https://github.com/Botfuel/botfuel-dialog/compare/v12.0.0...v12.0.1) (2018-11-22)
+
+
+### Bug Fixes
+
+* code styles ([1bc082c](https://github.com/Botfuel/botfuel-dialog/commit/1bc082c))
+
+
+
+
+
 <a name="11.7.0"></a>
 # [11.7.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.6.2...v11.7.0) (2018-11-22)
 
