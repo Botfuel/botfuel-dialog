@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="11.7.0"></a>
+# [11.7.0](https://github.com/Botfuel/botfuel-dialog/compare/v11.6.2...v11.7.0) (2018-11-22)
+
+
+### Bug Fixes
+
+* add a default value to subtitle and add validation for subtitle type ([fefdcb2](https://github.com/Botfuel/botfuel-dialog/commit/fefdcb2))
+
+
+### Features
+
+* Add optional subtitle to Card constructor ([1d7103b](https://github.com/Botfuel/botfuel-dialog/commit/1d7103b))
+
+
+
+
+
 <a name="11.6.2"></a>
 ## [11.6.2](https://github.com/Botfuel/botfuel-dialog/compare/v11.6.1...v11.6.2) (2018-10-31)
 
