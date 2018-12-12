@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=I%20weigh%2077kg&raw_sentence=I%20weigh%2077kg&userId=USER_TEST
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Wed, 12 Dec 2018 15:24:27 GMT
+content-type: application/json
+content-length: 128
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b0485adfb647c001113a5d6","label":"weight","probability":0.6291005252405041,"resolvePrompt":"weight?","type":"Intent"}]
