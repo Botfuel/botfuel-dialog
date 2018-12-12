@@ -110,7 +110,8 @@ class BotfuelNlu extends Nlu {
     // spellchecking
     // this is done outside the try/catch block to prevent catch-dialog to be triggered
     // if the error is not related to authentication
-    // Note: correctSentence will be the raw sentence if spellchecking is disabled or if the spellchecking request fails
+    // Note: correctSentence will be the raw sentence
+    // if spellchecking is disabled or if the spellchecking request fails
     // sentence = await this.spellcheck(sentence);
     const correctSentence = await measure('spellcheck')(() => this.spellcheck(sentence));
 
