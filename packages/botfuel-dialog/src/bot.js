@@ -127,7 +127,8 @@ class Bot {
     logger.debug('handleMessage', { userMessage });
     // get raw sentence before the message is sent to middlewares
     // if message is a user text message
-    const rawSentence: ?string = (userMessage instanceof UserTextMessage) ? userMessage.payload.value : null;
+    const rawSentence: ?string = userMessage.type === 'text' ? userMessage.payload.value : null;
+    logger.debug('handleMessage: rawSentence', rawSentence);
     // Apply middlewares and respond to user
     try {
       const contextIn = {
