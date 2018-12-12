@@ -43,7 +43,6 @@ const ResolutionError = require('./errors/resolution-error');
 const { checkCredentials } = require('./utils/environment');
 const MiddlewareManager = require('./middleware-manager');
 const measureTime = require('./utils/measure');
-const UserTextMessage = require('./messages/user-text-message');
 
 const logger = Logger.getLogger('Bot');
 const measure = measureTime(logger);
