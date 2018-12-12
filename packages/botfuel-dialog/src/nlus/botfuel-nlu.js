@@ -110,15 +110,13 @@ class BotfuelNlu extends Nlu {
     // spellchecking
     // this is done outside the try/catch block to prevent catch-dialog to be triggered
     // if the error is not related to authentication
-    // Note: correctSentence will be the raw sentence
-    // if spellchecking is disabled or if the spellchecking request fails
     // sentence = await this.spellcheck(sentence);
-    const correctSentence = await measure('spellcheck')(() => this.spellcheck(sentence));
+    sentence = await measure('spellcheck')(() => this.spellcheck(sentence));
 
     try {
       // computing entities
       const messageEntities = await measure('entity extraction')(() =>
-        this.extractor.compute(correctSentence));
+        this.extractor.compute(sentence));
       // computing intents
       let trainerUrl =
         process.env.BOTFUEL_TRAINER_API_URL || 'https://api.botfuel.io/trainer/api/v0';
@@ -128,8 +126,8 @@ class BotfuelNlu extends Nlu {
       const options = {
         uri: `${trainerUrl}classify`,
         qs: {
-          sentence: correctSentence,
-          raw_sentence: sentence,
+          sentence,
+          raw_sentence: context.rawSentence,
           userId: context.userMessage.user,
         },
         headers: {

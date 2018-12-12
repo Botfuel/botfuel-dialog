@@ -43,6 +43,7 @@ const ResolutionError = require('./errors/resolution-error');
 const { checkCredentials } = require('./utils/environment');
 const MiddlewareManager = require('./middleware-manager');
 const measureTime = require('./utils/measure');
+const UserTextMessage = require('./messages/user-text-message');
 
 const logger = Logger.getLogger('Bot');
 const measure = measureTime(logger);
@@ -124,6 +125,10 @@ class Bot {
    */
   async _handleMessage(userMessage: UserMessage): Promise<BotMessageJson[]> {
     logger.debug('handleMessage', { userMessage });
+    // get raw sentence before the message is sent to middlewares
+    // if message is a user text message
+    const rawSentence: ?string = (userMessage instanceof UserTextMessage) ? userMessage.payload.value : null;
+    // Apply middlewares and respond to user
     try {
       const contextIn = {
         user: userMessage.user,
@@ -134,7 +139,7 @@ class Bot {
       let botMessages: BotMessageJson[] = [];
       await this.middlewareManager.in(contextIn, async () => {
         logger.debug('handleMessage: responding');
-        botMessages = await this.respond(userMessage);
+        botMessages = await this.respond(userMessage, rawSentence);
       });
       const contextOut = {
         user: userMessage.user,
@@ -154,7 +159,7 @@ class Bot {
   /**
    * Responds to the user.
    */
-  async respond(userMessage: UserMessage): Promise<BotMessageJson[]> {
+  async respond(userMessage: UserMessage, rawSentence: ?string): Promise<BotMessageJson[]> {
     logger.debug('respond', { userMessage });
     switch (userMessage.type) {
       case 'postback':
@@ -165,7 +170,7 @@ class Bot {
         return this.respondWhenFile(userMessage);
       case 'text':
       default:
-        return this.respondWhenText(userMessage);
+        return this.respondWhenText(userMessage, rawSentence);
     }
   }
 
@@ -173,7 +178,7 @@ class Bot {
    * Computes the responses for a user message of type text.
    * @private
    */
-  async respondWhenText(userMessage: TextMessage): Promise<BotMessageJson[]> {
+  async respondWhenText(userMessage: TextMessage, rawSentence: ?string): Promise<BotMessageJson[]> {
     logger.debug('respondWhenText', { userMessage });
     // If text input is too long then trigger the complex-input dialog
     if (userMessage.payload.value.length > 256) {
@@ -189,6 +194,7 @@ class Bot {
       this.nlu.compute(userMessage.payload.value, {
         brain: this.brain,
         userMessage,
+        rawSentence,
       }));
     logger.debug('respondWhenText: classificationResults', classificationResults, messageEntities);
     return this.dm.executeClassificationResults(

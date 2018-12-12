@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=error&raw_sentence=&userId=USER_TEST
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Wed, 12 Dec 2018 15:01:53 GMT
+content-type: application/json
+content-length: 111
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"id":"5b4e00b3e4f4c8001203ac3a","label":"error","probability":1.0,"resolvePrompt":"error?","type":"Intent"}]

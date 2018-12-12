@@ -21,10 +21,10 @@ import type { UserMessage, MessageEntities } from '../types';
 import type Brain from '../brains/brain';
 import type ClassificationResult from '../nlus/classification-result';
 
-
 export type ComputeContext = {
   brain: Brain,
   userMessage: UserMessage,
+  rawSentence: ?string,
 };
 
 export type ComputeOutput = {

@@ -1,0 +1,14 @@
+GET /trainer/api/v0/classify?sentence=delivery&userId=test
+host: api.botfuel.io
+accept: application/json
+
+HTTP/1.1 200 OK
+server: openresty/1.11.2.5
+date: Wed, 12 Dec 2018 15:00:43 GMT
+content-type: application/json
+content-length: 235
+connection: close
+access-control-allow-origin: *
+via: 1.1 vegur
+
+[{"answers":[[{"payload":{"value":"Here is your delivery information"},"type":"text","value":"Here is your delivery information"}]],"id":"5b048848fb647c001113a5f9","label":"delivery","probability":1.0,"resolvePrompt":"","type":"Qna"}]
