@@ -34,7 +34,7 @@ class BotfuelAdapter extends WebAdapter {
       userMessage = this.buildUserMessage(req.body);
       logger.debug('handleRequest: userMessage', userMessage);
       res.sendStatus(200);
-      return this.handleMessage(req.body);
+      return this.handleMessage(userMessage);
     } catch (error) {
       return res.status(400).send({ message: error.message, error });
     }
@@ -65,7 +65,7 @@ class BotfuelAdapter extends WebAdapter {
   buildUserMessage(message) {
     // Define message origin property
     const origin = {
-      platform: 'Botfuel Webchat',
+      adapter: 'Botfuel',
       referrer: message.referrer,
     };
     // Build message
