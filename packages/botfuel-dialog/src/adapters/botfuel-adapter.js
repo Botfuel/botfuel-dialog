@@ -29,9 +29,8 @@ class BotfuelAdapter extends WebAdapter {
   /** @inheritDoc */
   async handleRequest(req, res) {
     logger.debug('handleRequest', req.body);
-    let userMessage = null;
     try {
-      userMessage = this.buildUserMessage(req.body);
+      const userMessage = this.buildUserMessage(req.body);
       logger.debug('handleRequest: userMessage', userMessage);
       res.sendStatus(200);
       return this.handleMessage(userMessage);
