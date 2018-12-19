@@ -68,8 +68,9 @@ class BotfuelAdapter extends WebAdapter {
       platform: 'Botfuel Webchat',
       referrer: message.referrer,
     };
+    // Build message
     let userMessage = null;
-    switch(message.type) {
+    switch (message.type) {
       case 'postback':
         userMessage = new PostbackMessage(message.payload.value, { origin });
         break;
@@ -79,6 +80,7 @@ class BotfuelAdapter extends WebAdapter {
       default:
         userMessage = new UserTextMessage(`Message of type ${message.type} are not supported.`);
     }
+    // Add user ID and timestamp to message then return it
     return userMessage.toJson(message.user);
   }
 }
