@@ -64,7 +64,7 @@ class BotfuelAdapter extends WebAdapter {
   buildUserMessage(message) {
     // Define message origin property
     const origin = {
-      adapter: 'Botfuel',
+      adapter: 'botfuel',
       referrer: message.referrer,
     };
     // Build message
