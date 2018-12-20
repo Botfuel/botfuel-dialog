@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="12.1.0"></a>
+# [12.1.0](https://github.com/Botfuel/botfuel-dialog/compare/v12.0.1...v12.1.0) (2018-12-20)
+
+
+### Features
+
+* handle UserMessage with origin option in botfuel-adapter ([96b7e33](https://github.com/Botfuel/botfuel-dialog/commit/96b7e33))
+
+
+
+
+
 <a name="12.0.1"></a>
 ## [12.0.1](https://github.com/Botfuel/botfuel-dialog/compare/v12.0.0...v12.0.1) (2018-11-22)
 
