@@ -130,13 +130,15 @@ class BotfuelNlu extends Nlu {
           userId: context.userMessage.user,
         },
         headers: {
-          'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
           'App-Id': process.env.BOTFUEL_APP_ID,
           'App-Key': process.env.BOTFUEL_APP_KEY,
+          'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
+          'Botfuel-Bot-Locale': this.config.locale,
         },
         json: true,
         family: 4,
       };
+      logger.info('classify: request options', options);
       const res = await measure('classify')(() => rp(options));
       let classificationResults = res.map(data => new ClassificationResult(data));
       if (this.classificationFilter) {
@@ -183,11 +185,13 @@ class BotfuelNlu extends Nlu {
           'App-Id': process.env.BOTFUEL_APP_ID,
           'App-Key': process.env.BOTFUEL_APP_KEY,
           'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
+          'Botfuel-Bot-Locale': this.config.locale,
         },
         family: 4,
       };
       const result = await rp(options);
       logger.debug('spellcheck: result', result);
+      logger.info('spellcheck: request options', options);
       return result.correctSentence;
     } catch (error) {
       logger.error('spellchecking: error', error);

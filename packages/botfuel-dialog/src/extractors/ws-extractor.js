@@ -80,6 +80,7 @@ class WsExtractor extends Extractor {
       headers: {
         'App-Id': process.env.BOTFUEL_APP_ID,
         'App-Key': process.env.BOTFUEL_APP_KEY,
+        'Botfuel-Bot-Id': process.env.BOTFUEL_APP_TOKEN,
       },
       rejectUnauthorized: false,
       json: true,
