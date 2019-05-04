@@ -36,6 +36,7 @@ const Dialog = require('./dialogs/dialog');
 const DialogManager = require('./dialog-manager');
 const Extractor = require('./extractors/extractor');
 const FileCorpus = require('./corpora/file-corpus');
+const Hook = require('./messages/hook');
 const Link = require('./messages/link');
 const Logger = require('logtown'); // eslint-disable-line
 const MemoryBrain = require('./brains/memory-brain');
@@ -83,6 +84,7 @@ module.exports = {
   DialogManager,
   Extractor,
   FileCorpus,
+  Hook,
   Link,
   Logger: Logger.getLogger,
   MemoryBrain,
