@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="12.2.0"></a>
+# [12.2.0](https://github.com/Botfuel/botfuel-dialog/compare/v12.1.1...v12.2.0) (2019-05-06)
+
+
+### Features
+
+* add hook message type ([7ae2e52](https://github.com/Botfuel/botfuel-dialog/commit/7ae2e52))
+
+
+
+
+
 <a name="12.1.1"></a>
 ## [12.1.1](https://github.com/Botfuel/botfuel-dialog/compare/v12.1.0...v12.1.1) (2019-04-25)
 
