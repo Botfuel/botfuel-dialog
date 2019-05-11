@@ -24,13 +24,22 @@ class CompositeExtractor extends Extractor {
   // eslint-disable-next-line require-jsdoc
   async compute(sentence) {
     logger.debug('compute', sentence);
-    let entities = [];
-    for (const extractor of this.parameters.extractors) {
-      // TODO: in parallel
-      // eslint-disable-next-line no-await-in-loop
-      const extractorEntities = await extractor.compute(sentence);
-      entities = entities.concat(extractorEntities);
+
+    // Prepare all async compute functions
+    const promises = [];
+    for (let i = 0; i < this.parameters.extractors.length; i += 1) {
+      promises.push(this.parameters.extractors[i].compute(sentence));
     }
+
+    // Execute in parallel async compute functions
+    const promisesResults = await Promise.all(promises);
+
+    // Build entities array
+    let entities = [];
+    for (let i = 0; i < promisesResults.length; i += 1) {
+      entities = entities.concat(promisesResults[i]);
+    }
+
     return entities;
   }
 }
