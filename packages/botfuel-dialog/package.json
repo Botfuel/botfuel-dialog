@@ -20,7 +20,7 @@
     "prebuild": "node ./scripts/prebuild.js ",
     "build": "babel src --out-dir build",
     "postbuild": "node ./scripts/postbuild.js",
-    "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest --runInBand",
+    "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest",
     "style": "eslint src && eslint tests",
     "docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
   },

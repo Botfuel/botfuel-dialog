@@ -9,7 +9,7 @@
     "pretest": "yarn run bootstrap",
     "release": "yarn test && lerna run build --scope botfuel-dialog && lerna publish --conventional-commits --changelog-preset=angular",
     "unit-test": "BOTFUEL_APP_TOKEN=TEST_BOT BOTFUEL_APP_ID=TEST_BOT BOTFUEL_APP_KEY=TEST_BOT jest packages/botfuel-dialog",
-    "test": "jest --runInBand --forceExit"
+    "test": "jest --forceExit"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
