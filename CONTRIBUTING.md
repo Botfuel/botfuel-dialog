@@ -1,6 +1,6 @@
 # Contributing guidelines
 
-In the following, we will use `yarn` as a package manager.
+In the following, we will use `npm` as a package manager.
 
 ## Clone the repository
 
@@ -11,22 +11,22 @@ git clone git@github.com:Botfuel/botfuel-dialog.git
 ## Install
 
 ```shell
-yarn install
-yarn bootstrap
+npm install
+npm bootstrap
 ```
 
 ### Issue with node-gyp and Python v3.x
 
-Make sure that yarn uses python2.7.
+Make sure that npm uses python2.7.
 
 First, make sure that you have python2.7 installed. If not, install [Python v2.7](https://www.python.org/downloads/release/python-2714/).
 
 If python2.7 is not the default python version, you can use a virtualenv (`pew`) or:
 
 ```shell
-yarn config set python /path/to/your/python2.7 -g
-yarn install
-yarn bootstrap
+npm config set python /path/to/your/python2.7 -g
+npm install
+npm bootstrap
 ```
 
 ## Workflow
@@ -71,36 +71,36 @@ mongod
 ### Run the unit tests only
 
 ```shell
-yarn run unit-test
+npm run unit-test
 ```
 
 ### Run integration tests
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/<PACKAGE_NAME>
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test packages/<PACKAGE_NAME>
 ```
 
 If you are using Windows Powershell, use this command instead:
 ```shell
-$Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test packages/<PACKAGE_NAME>
+$Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; npm test packages/<PACKAGE_NAME>
  ```
 
 Example:
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/test-qna
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test packages/test-qna
 ```
 
 By default, integration tests are run using fixtures.
 To register new fixtures, add `REPLAY=record` to the test command:
 
 ```shell
-REPLAY=record BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
+REPLAY=record BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test
 ```
 
 If you are using Windows Powershell, use this command instead:
 ```shell
-$Env:REPLAY=record; $Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test
+$Env:REPLAY=record; $Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; npm test
  ```
 
 This will make real API calls and create new fixtures.
@@ -108,12 +108,12 @@ This will make real API calls and create new fixtures.
 ### Running all the tests
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test
 ```
 
 If you are using Windows Powershell, use this command instead:
   ```shell
-$Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test
+$Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; npm test
  ```
 
 ### Procedure to create a new test project
@@ -148,26 +148,26 @@ $Env:BOTFUEL_APP_TOKEN=<new app token>; $Env:BOTFUEL_APP_ID=<new app id>; $Env:B
 ## Working with botfuel-dialog locally
 
 If you want to use a local version of botfuel-dialog with your bot for tests and developments purposes,
-you can link your version of botfuel-dialog to your bot using `yarn link`
+you can link your version of botfuel-dialog to your bot using `npm link`
 
 In the root directory of botfuel-dialog run:
 ```shell
 cd packages/botfuel-dialog // the path should be /botfuel-dialog/packages/botfuel-dialog
-yarn link
+npm link
 ```
 
 This will create a symbolic link of your local version of botfuel-dialog.
 
 In the root directory of you bot (where the package.json is) run:
 ```shell
-yarn link botfuel-dialog
+npm link botfuel-dialog
 ```
 
 This will use the symbolic link of your local botfuel-dialog in your bot project.
 
 If you want to unlink the local version of botfuel-dialog from your bot run:
 ```shell
-yarn unlink botfuel-dialog
+npm unlink botfuel-dialog
 ```
 
 You will need to re-install your dependencies to be able to use the
@@ -177,7 +177,7 @@ If you want to delete the symbolic link of botfuel-dialog,
 run the following command at the root directory of the botfuel-dialog:
 ```
 cd packages/botfuel-dialog // the path should be /botfuel-dialog/packages/botfuel-dialog
-yarn unlink
+npm unlink
 ```
 
 ## Changelog
@@ -186,15 +186,15 @@ We use [conventional commits](https://conventionalcommits.org/), with the [angul
 
 ## Publishing
 
-See our internal documentation to configure login with yarn.
+See our internal documentation to configure login with npm.
 
 ```
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn release
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm release
 ```
 
 If you are using Windows Powershell, use this command instead:
 ```shell
-$Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn release
+$Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; npm release
  ```
 
 To review the new version number before publishing:
@@ -208,7 +208,7 @@ If the new version number is incorrect (for example, a breaking change tag was a
 * Remove the git tag that was potentially created during the failed attempt to publish
 * Add a new section in the changelog
 * Update the version number in `packages/botfuel-dialog/package.json`
-* Test and compile as `yarn publish` would do
+* Test and compile as `npm publish` would do
 * Use `lerna publish`.
 
 ## Type checking

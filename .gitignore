@@ -69,8 +69,8 @@ samples
 docs
 _tmp_tests
 
-# NPM specific
-package-lock.json
+# Yarn specific
+yarn.lock
 
 #MacOS
 .DS_Store

@@ -7,7 +7,7 @@
     "repo": "botfuel-dialog/botfuel-dialog",
     "cacheDir": ".changelog"
   },
-  "npmClient": "yarn",
+  "npmClient": "npm",
   "useWorkspaces": true,
   "version": "12.2.0"
 }

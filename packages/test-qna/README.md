@@ -17,13 +17,13 @@ To be able to use Botfuel Webchat with your bot you need to configure your Botfu
 Then run the sample in your terminal:
 
 ```shell
-BOTFUEL_APP_TOKEN=<YOUR_BOTFUEL_APP_TOKEN> BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> yarn start botfuel-config
+BOTFUEL_APP_TOKEN=<YOUR_BOTFUEL_APP_TOKEN> BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm start botfuel-config
 ```
 
 ## Run the tests
 
 ```shell
-BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> yarn test
+BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> npm test
 ```
 
 ## Clean the brain
@@ -31,7 +31,7 @@ BOTFUEL_APP_ID=<YOUR_BOTFUEL_APP_ID> BOTFUEL_APP_KEY=<YOUR_BOTFUEL_APP_KEY> yarn
 To empty the brain of your bot:
 
 ```shell
-BOTFUEL_APP_TOKEN=<YOUR_BOTFUEL_APP_TOKEN> yarn run clean
+BOTFUEL_APP_TOKEN=<YOUR_BOTFUEL_APP_TOKEN> npm run clean
 ```
 
 ## Need help ?

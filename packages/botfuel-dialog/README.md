@@ -18,12 +18,12 @@ If you have any issue or question, feel free to [open a ticket](https://github.c
 Run botfuel-dialog and each test packages (integration) tests:
 
 ```shell
-BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
+BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test
 ```
 
 If you are using Windows Powershell, use this command instead:
 ```shell
-$Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test
+$Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; npm test
 ```
 
 ### Unit tests
@@ -31,36 +31,36 @@ $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test
 Run only the botfuel-dialog tests:
 
 ```shell
-yarn unit-test
+npm unit-test
 ```
 
 ### Integration tests
 
 ```shell
-BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/<PACKAGE_NAME>
+BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test packages/<PACKAGE_NAME>
 ```
 
 If you are using Windows Powershell, use this command instead:
 ```shell
-$Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test packages/<PACKAGE_NAME>
+$Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; npm test packages/<PACKAGE_NAME>
 ```
 
 Example:
 
 ```shell
-BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test packages/test-qna
+BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test packages/test-qna
 ```
 
 By default, integration tests are run using fixtures.
 To register new fixtures, add `REPLAY=record` to the test command:
 
 ```shell
-REPLAY=record BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
+REPLAY=record BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test
 ```
 
 If you are using Windows Powershell, use this command instead:
 ```shell
-$Env:REPLAY=record; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn test
+$Env:REPLAY=record; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; npm test
 ```
 
 This will make real API calls and create new fixtures.
@@ -68,12 +68,12 @@ This will make real API calls and create new fixtures.
 ### Publish on NPM
 
 ```shell
-BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn release
+BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm release
 ```
 
 If you are using Windows Powershell, use this command instead:
 ```shell
-$Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; yarn release
+$Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; npm release
 ```
 
 Publishing requires credentials because it runs integration tests beforehand.

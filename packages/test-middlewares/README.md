@@ -15,13 +15,13 @@ See the [Getting Started tutorial](https://docs.botfuel.io/platform/tutorials/ge
 To run this sample in your terminal:
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn start
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm start
 ```
 
 ## Run the tests
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test
 ```
 
 ## Clean the brain
@@ -29,7 +29,7 @@ BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 To empty the brain of your bot:
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> yarn run clean
+BOTFUEL_APP_TOKEN=<...> npm run clean
 ```
 
 ## Need help ?

@@ -23,13 +23,13 @@ Before running your bot, there are a few steps to connect it to Facebook Messeng
 Then run the bot with the following environment variables:
 
 ```shell
-FB_VERIFY_TOKEN=<...> FB_PAGE_ACCESS_TOKEN=<...> BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn start messenger-config
+FB_VERIFY_TOKEN=<...> FB_PAGE_ACCESS_TOKEN=<...> BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm start messenger-config
 ```
 
 ## Run the tests
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm test
 ```
 
 ## Clean the brain
@@ -37,7 +37,7 @@ BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> yarn test
 To empty the brain of your bot:
 
 ```shell
-BOTFUEL_APP_TOKEN=<...> yarn run clean
+BOTFUEL_APP_TOKEN=<...> npm run clean
 ```
 
 ## Need help ?
