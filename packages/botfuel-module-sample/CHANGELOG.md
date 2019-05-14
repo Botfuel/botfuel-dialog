@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.2.2](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.0...v12.2.2) (2019-05-14)
+
+
+### Bug Fixes
+
+* set node engine >=8 ([1761e1c](https://github.com/Botfuel/botfuel-dialog/commit/1761e1c))
+
+
+
+
+
 ## [12.2.1](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.0...v12.2.1) (2019-05-14)
 
 

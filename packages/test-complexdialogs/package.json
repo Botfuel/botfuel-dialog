@@ -1,6 +1,6 @@
 {
   "name": "test-complexdialogs",
-  "version": "12.2.1",
+  "version": "12.2.2",
   "private": true,
   "author": "sysadmin@botfuel.io",
   "description": "Sample bot using botfuel-dialog and illustrating complex dialogs",

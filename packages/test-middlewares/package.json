@@ -1,6 +1,6 @@
 {
   "name": "test-middlewares",
-  "version": "12.2.1",
+  "version": "12.2.2",
   "private": true,
   "author": "sysadmin@botfuel.io",
   "description": "Bot testing and illustrating middlewares",
