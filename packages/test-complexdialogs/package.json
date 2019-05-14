@@ -1,5 +1,5 @@
 {
-  "name": "sample-botfuel-dialog-complexdialogs",
+  "name": "test-complexdialogs",
   "version": "11.6.0",
   "private": true,
   "author": "sysadmin@botfuel.io",
@@ -16,6 +16,6 @@
     "lodash": "^4.17.10"
   },
   "engines": {
-    "node": "8.x"
+    "node": ">=8"
   }
 }

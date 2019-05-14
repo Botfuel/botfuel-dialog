@@ -15,7 +15,7 @@
     "botfuel-dialog": "latest"
   },
   "engines": {
-    "node": "8.x"
+    "node": ">=8"
   },
   "gitHead": "3a1007084d99a219280c317da90b666561b11984"
 }

@@ -16,6 +16,6 @@
     "botfuel-module-sample": "latest"
   },
   "engines": {
-    "node": "8.x"
+    "node": ">=8"
   }
 }

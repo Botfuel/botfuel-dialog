@@ -15,6 +15,6 @@
     "botfuel-dialog": "latest"
   },
   "engines": {
-    "node": "8.x"
+    "node": ">=8"
   }
 }

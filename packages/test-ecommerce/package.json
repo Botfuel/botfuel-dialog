@@ -30,6 +30,6 @@
     "react-flow-types": "^0.2.0-beta.6"
   },
   "engines": {
-    "node": "8.x"
+    "node": ">=8"
   }
 }

@@ -51,7 +51,7 @@
     "sinon": "^5.0.7"
   },
   "engines": {
-    "node": "8.x"
+    "node": ">=8"
   },
   "gitHead": "a70c94790c8482d3fbae4ed7a349e4be036fe10a"
 }
