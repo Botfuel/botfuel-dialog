@@ -12,7 +12,7 @@ git clone git@github.com:Botfuel/botfuel-dialog.git
 
 ```shell
 npm install
-npm bootstrap
+npm run bootstrap
 ```
 
 ### Issue with node-gyp and Python v3.x
@@ -26,7 +26,7 @@ If python2.7 is not the default python version, you can use a virtualenv (`pew`)
 ```shell
 npm config set python /path/to/your/python2.7 -g
 npm install
-npm bootstrap
+npm run bootstrap
 ```
 
 ## Workflow
