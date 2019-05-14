@@ -189,12 +189,12 @@ We use [conventional commits](https://conventionalcommits.org/), with the [angul
 See our internal documentation to configure login with npm.
 
 ```
-BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm release
+BOTFUEL_APP_TOKEN=<...> BOTFUEL_APP_ID=<...> BOTFUEL_APP_KEY=<...> npm run release
 ```
 
 If you are using Windows Powershell, use this command instead:
 ```shell
-$Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; npm release
+$Env:BOTFUEL_APP_TOKEN=<...>; $Env:BOTFUEL_APP_ID=<...>; $Env:BOTFUEL_APP_KEY=<...>; npm run release
  ```
 
 To review the new version number before publishing:
