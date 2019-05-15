@@ -8,8 +8,8 @@
     "commitmsg": "node check-commit-msg.js",
     "pretest": "npm run bootstrap",
     "release": "npm test && lerna run build --scope botfuel-dialog && lerna publish --conventional-commits --changelog-preset=angular",
-    "unit-test": "BOTFUEL_APP_TOKEN=TEST_BOT BOTFUEL_APP_ID=TEST_BOT BOTFUEL_APP_KEY=TEST_BOT jest packages/botfuel-dialog --maxWorkers=2",
-    "test": "jest --forceExit --maxWorkers=2"
+    "unit-test": "BOTFUEL_APP_TOKEN=TEST_BOT BOTFUEL_APP_ID=TEST_BOT BOTFUEL_APP_KEY=TEST_BOT jest packages/botfuel-dialog",
+    "test": "jest --forceExit"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
