@@ -18,8 +18,6 @@ const validUrl = require('valid-url');
 const MessageError = require('../errors/message-error');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 
-// @flow
-
 /**
  * An object that can be validated.
  */
@@ -27,7 +25,7 @@ class ValidObject {
   /**
    * Validate the object.
    */
-  validate(): void {
+  validate() {
     throw new MissingImplementationError();
   }
 
@@ -36,7 +34,7 @@ class ValidObject {
    * @param name - the type of the object being validated
    * @param value - the value being validated
    */
-  validateString(name: string, value: any): void {
+  validateString(name, value) {
     if (!(typeof value === 'string')) {
       throw new MessageError({
         name,
@@ -50,7 +48,7 @@ class ValidObject {
    * @param name - the type of the object being validated
    * @param value - the value being validated
    */
-  validateUrl(name: string, value: any): void {
+  validateUrl(name, value) {
     if (!validUrl.isUri(value)) {
       throw new MessageError({
         name,
@@ -64,7 +62,7 @@ class ValidObject {
    * @param name - the type of the object being validated
    * @param value - the value being validated
    */
-  validateArray(name: string, value: any): void {
+  validateArray(name, value) {
     if (!Array.isArray(value)) {
       throw new MessageError({
         name,

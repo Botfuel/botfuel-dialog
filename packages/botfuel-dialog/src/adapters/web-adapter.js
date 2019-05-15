@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type { BotMessageJson } from '../messages/message';
-
 const url = require('url');
 const querystring = require('querystring');
 const express = require('express');
@@ -64,10 +60,10 @@ class WebAdapter extends Adapter {
    * @param {Object} app - the express app
    * @returns {void}
    */
-  createRoutes(app: express$Application) {
+  createRoutes(app) {
     logger.debug('createRoutes');
-    app.post('/webhook', (req: express$Request, res: express$Response) => this.handleRequest(req, res));
-    app.get('/templates/:id', (req: express$Request, res: express$Response) => this.handleTemplate(req, res));
+    app.post('/webhook', this.handleRequest);
+    app.get('/templates/:id', this.handleTemplate);
   }
 
   /**
@@ -75,10 +71,7 @@ class WebAdapter extends Adapter {
    * @param req - the request object
    * @param res - the response object
    */
-  async handleRequest(
-    req: express$Request,
-    res: express$Response, // eslint-disable-line no-unused-vars
-  ): Promise<void> {
+  async handleRequest(req, res) {
     throw new MissingImplementationError();
   }
 
@@ -87,13 +80,9 @@ class WebAdapter extends Adapter {
    * @param req - the request object
    * @param res - the response object
    */
-  async handleTemplate(
-    req: express$Request,
-    res: express$Response,
-  ): Promise<void> {
+  async handleTemplate(req, res) {
     logger.debug('handleTemplate', { id: req.params.id, query: req.query });
-    const templateParameters = (req.query: { [name: string]: any });
-    res.render(req.params.id, templateParameters, (err, html) => {
+    res.render(req.params.id, req.query, (err, html) => {
       if (err) {
         logger.error(`Could not render the handlebars template: ${req.params.id}`);
         res.status(400).send(err);
@@ -104,7 +93,7 @@ class WebAdapter extends Adapter {
   }
 
   /** @inheritDoc */
-  async sendMessage(botMessage: BotMessageJson) {
+  async sendMessage(botMessage) {
     logger.debug('sendMessage', { botMessage });
     const requestOptions = {
       uri: this.getUrl(botMessage),
@@ -130,7 +119,7 @@ class WebAdapter extends Adapter {
    * Get the URL of the API used to send a bot message.
    * @param botMessage - the bot response
    */
-  getUrl(botMessage: BotMessageJson): string { // eslint-disable-line no-unused-vars
+  getUrl(botMessage) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
@@ -138,7 +127,7 @@ class WebAdapter extends Adapter {
    * Get the query parameters to send along with a bot message.
    * @param botMessage - the bot response
    */
-  getQueryParameters(botMessage: BotMessageJson): {} { // eslint-disable-line no-unused-vars
+  getQueryParameters(botMessage) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
@@ -146,7 +135,7 @@ class WebAdapter extends Adapter {
    * Get the body of the request when sending a bot message.
    * @param botMessage - the bot response
    */
-  getBody(botMessage: BotMessageJson): {} { // eslint-disable-line no-unused-vars
+  getBody(botMessage) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
@@ -155,7 +144,7 @@ class WebAdapter extends Adapter {
    * @param {String} resourcePath - resource path relative to static, ex: images/logo.png
    * @returns {null}
    */
-  static getStaticUrl(resourcePath: string): string {
+  static getStaticUrl(resourcePath) {
     logger.debug('getStaticUrl', { resourcePath });
     return url.resolve(STATIC_BASE_URL, resourcePath);
   }
@@ -165,7 +154,7 @@ class WebAdapter extends Adapter {
    * @param templateName - handlebars template name
    * @param params - parameters to be passed to the template
    */
-  static getTemplateUrl(templateName: string, params: {}): string {
+  static getTemplateUrl(templateName, params) {
     const templateRoot = url.resolve(TEMPLATE_BASE_URL, templateName);
     const templateUrl = `${templateRoot}?${querystring.stringify(params)}`;
     logger.debug('getTemplateUrl', { templateUrl });
@@ -181,13 +170,7 @@ class WebAdapter extends Adapter {
    * @param {Number} height - image height
    * @param {Number} quality - image quality
    */
-  static getImageUrl(
-    templateName: string,
-    params: {},
-    width: number = 800,
-    height: number = 600,
-    quality: number = 80,
-  ): string {
+  static getImageUrl(templateName, params, width = 800, height = 600, quality = 80) {
     const templateUrl = this.getTemplateUrl(templateName, params);
     const screenshotParams = {
       url: templateUrl,

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import rp from 'request-promise-native';
-
+const rp = require('request-promise-native');
 const { clone, extend } = require('lodash');
 const logger = require('logtown')('WsExtractor');
 const AuthenticationError = require('../errors/authentication-error');

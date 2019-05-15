@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type { UserMessage } from '../types';
-import type { BotMessageJson } from '../messages/message';
-import type Bot from '../bot';
-
 const uuidv4 = require('uuid/v4');
 const logger = require('logtown')('Adapter');
 const MissingImplementationError = require('../errors/missing-implementation-error');
@@ -28,9 +22,7 @@ const MissingImplementationError = require('../errors/missing-implementation-err
  * An adapter adapts the messages to the messaging platform.
  */
 class Adapter {
-  bot: Bot;
-
-  constructor(bot: Bot) {
+  constructor(bot) {
     logger.debug('constructor');
     this.bot = bot;
   }
@@ -41,7 +33,7 @@ class Adapter {
    * This method is called by the {@link Bot}'s play method.
    * @abstract
    */
-  async play(userMessages: UserMessage[]): Promise<void> {
+  async play(userMessages) {
     logger.debug('play', userMessages);
     throw new MissingImplementationError();
   }
@@ -51,7 +43,7 @@ class Adapter {
    * This method is called by the {@link Bot}'s run method.
    * @abstract
    */
-  async run(): Promise<void> {
+  async run() {
     logger.debug('run');
     throw new MissingImplementationError();
   }
@@ -59,17 +51,14 @@ class Adapter {
   /**
    * Handles a user message.
    */
-  async handleMessage(userMessage: UserMessage): Promise<void> {
+  async handleMessage(userMessage) {
     logger.debug('handleMessage', userMessage);
     await this.addUserIfNecessary(userMessage.user);
     const botMessages = await this.bot.handleMessage(this.extendMessage(userMessage));
 
     for (const botMessage of botMessages) {
-      // TODO: Remove this ugly line
-      const extendedBotMessage = this.extendMessage(botMessage);
-
       // eslint-disable-next-line no-await-in-loop
-      await this.sendMessage(extendedBotMessage);
+      await this.sendMessage(this.extendMessage(botMessage));
     }
   }
 
@@ -78,7 +67,7 @@ class Adapter {
    * Calls the corresponding method of the brain.
    * Adapters can add specific behaviour.
    */
-  async addUserIfNecessary(userId: string): Promise<void> {
+  async addUserIfNecessary(userId) {
     logger.debug('addUserIfNecessary', userId);
     await this.bot.brain.addUserIfNecessary(userId);
   }
@@ -87,7 +76,7 @@ class Adapter {
    * Sends a single bot message to the messaging platform.
    * @abstract
    */
-  async sendMessage(botMessage: BotMessageJson): Promise<void> {
+  async sendMessage(botMessage) {
     logger.debug('sendMessage', botMessage);
     throw new MissingImplementationError();
   }
@@ -97,20 +86,19 @@ class Adapter {
    * @param {Object} message - bot or user message
    * @returns {Object} the message extended with properties
    */
-  extendMessage<T: UserMessage | BotMessageJson>(message: T): T {
+  extendMessage(message) {
     logger.debug('extendMessage', message);
-
-    // $FlowFixMe
     return {
       ...message,
       id: this.getMessageUUID(),
       timestamp: this.getMessageTimestamp(),
     };
   }
+
   /**
    * Generates an uuid
    */
-  getMessageUUID(): string {
+  getMessageUUID() {
     logger.debug('getMessageUUID');
     return uuidv4();
   }
@@ -118,7 +106,7 @@ class Adapter {
   /**
    * Generates a timestamp.
    */
-  getMessageTimestamp(): number {
+  getMessageTimestamp() {
     logger.debug('getMessageTimestamp');
     return Date.now();
   }

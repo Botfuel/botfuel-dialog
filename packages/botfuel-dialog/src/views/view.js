@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type { UserMessage } from '../types';
-import type { BotMessageJson, BotMessageObject } from '../messages/message';
-
-import type { DisplayData } from '../dialogs/dialog';
-
 const logger = require('logtown')('View');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 
@@ -34,10 +27,9 @@ class View {
    * @param data - data used at display time
    * @returns the messages as an array json objects
    */
-  renderAsJson(userMessage: UserMessage, data: DisplayData): BotMessageJson[] {
+  renderAsJson(userMessage, data) {
     logger.debug('renderAsJson', userMessage, data);
-    const userId = userMessage.user;
-    return this.render(userMessage, data).map(msg => msg.toJson(userId));
+    return this.render(userMessage, data).map(msg => msg.toJson(userMessage.user));
   }
 
   /**
@@ -46,10 +38,7 @@ class View {
    * @param data - data used at display time
    * @returns an array of bot messages
    */
-  render(
-    userMessage: UserMessage,
-    data: DisplayData, // eslint-disable-line no-unused-vars
-  ): BotMessageObject[] {
+  render(userMessage, data) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 }

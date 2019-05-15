@@ -14,32 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-export type RawConfig = {
-  [string]: {},
-};
-
-export type Config = {|
-  adapter: {
-    name: string,
-  },
-  brain: {
-    name: string,
-    conversationDuration: number,
-  },
-  componentRoots: string[],
-  locale: string,
-  logger: string,
-  modules: string[],
-  multiintent: boolean,
-  nlu: {
-    name: string,
-    spellchecking: boolean,
-  },
-  path: string,
-  custom: Object,
-|};
-
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
@@ -71,7 +45,7 @@ const defaultConfig = {
  * @param configFileName - the bot config file name/path
  * @returns the contents of the bot config file
  */
-const resolveConfigFile = (configFileName: string): RawConfig => {
+const resolveConfigFile = (configFileName) => {
   // configure the logger with default configuration first the be able to log errors
   LoggerManager.configure(defaultConfig);
   if (!configFileName) {
@@ -89,7 +63,7 @@ const resolveConfigFile = (configFileName: string): RawConfig => {
   }
 };
 
-const getComponentRoots = function (config): string[] {
+const getComponentRoots = (config) => {
   const botRoot = `${config.path}/src`;
   const sdkRoot = __dirname;
   const moduleRoots = config.modules.map((packageName) => {
@@ -121,9 +95,9 @@ const getComponentRoots = function (config): string[] {
  * @param botConfig - the bot config
  * @returns the configuration
  */
-const getConfiguration = (botConfig: RawConfig = {}): Config => {
+const getConfiguration = (botConfig = {}) => {
   // get the config by extending defaultConfig with botConfig
-  const config = _.merge(defaultConfig, botConfig);
+  const config = _.cloneDeep(_.merge(defaultConfig, botConfig));
   config.componentRoots = getComponentRoots(config);
   // reconfigure the logger with the final config
   LoggerManager.configure(config);
@@ -135,4 +109,5 @@ module.exports = {
   defaultConfig,
   resolveConfigFile,
   getConfiguration,
+  getComponentRoots,
 };

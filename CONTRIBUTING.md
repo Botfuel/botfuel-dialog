@@ -211,23 +211,10 @@ If the new version number is incorrect (for example, a breaking change tag was a
 * Test and compile as `npm publish` would do
 * Use `lerna publish`.
 
-## Type checking
-
-We use Facebook Flow as our type-checking solution. We prefer Flow over TypeScript because Flow works with lightweight changes to the code. Integration with Babel is also better for Flow.
-
-To avoid duplications, JSdoc comments should not contain type annotations.
-
-### Caveats
-
-* Flow has still a lot of open issues with exact types. They should be used only when necessary.
-* The spread operator is not handled very well.
-
 ### Integration with VSCode
 
-First, disable the buildtin JavaScript validation. In the workspace settings: `"javascript.validate.enable": false`. Indeed, Flow annotations are not valid JavaScript.
+First, disable the buildtin JavaScript validation. In the workspace settings: `"javascript.validate.enable": false`.
 
 This combination of plugins work together:
 
-* dbaeumer.vscode-eslint: ESLint integration in VSCode. Not specific to Flow.
-* joshpeng.sublime-babel-vscode: Syntax highlighter that handles Flow annotations. The default syntax highlighter breaks on some cases (Flow annotation inside a string template for example).
-* flowtype.flow-for-vscode: Flow integration to VSCode.
+* dbaeumer.vscode-eslint: ESLint integration in VSCode.

@@ -14,23 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type { Config, RawConfig } from './config';
-import type {
-  UserMessage,
-  PostbackMessage,
-  ImageMessage,
-  TextMessage,
-  FileMessage,
-  DialogData,
-  ErrorObject,
-} from './types';
-import type { BotMessageJson } from './messages/message';
-import type Adapter from './adapters/adapter';
-import type Brain from './brains/brain';
-import type Nlu from './nlus/nlu';
-
 const Logger = require('logtown');
 const AdapterResolver = require('./adapter-resolver');
 const BrainResolver = require('./brain-resolver');
@@ -59,14 +42,7 @@ const measure = measureTime(logger);
  * - a {@link Nlu} (Natural Language Understanding) module.
  */
 class Bot {
-  adapter: Adapter;
-  brain: Brain;
-  config: Config;
-  dm: DialogManager;
-  middlewareManager: MiddlewareManager;
-  nlu: Nlu;
-
-  constructor(config: RawConfig) {
+  constructor(config) {
     logger.debug('constructor', { config });
     this.config = getConfiguration(config);
     logger.debug('constructor', { config: this.config });
@@ -82,7 +58,7 @@ class Bot {
    * Initializes the bot.
    * @private
    */
-  async init(): Promise<void> {
+  async init() {
     logger.debug('init');
     await this.brain.init();
     await this.nlu.init();
@@ -91,7 +67,7 @@ class Bot {
   /**
    * Runs the bot.
    */
-  async run(): Promise<void> {
+  async run() {
     logger.debug('run');
     await this.init();
     await this.adapter.run();
@@ -100,7 +76,7 @@ class Bot {
   /**
    * Plays user messages (only available with the TestAdapter).
    */
-  async play(userMessages: UserMessage[]): Promise<void> {
+  async play(userMessages) {
     logger.debug('play', { userMessages });
     await this.init();
     await this.adapter.play(userMessages);
@@ -109,20 +85,20 @@ class Bot {
   /**
    * Cleans the bot brain.
    */
-  async clean(): Promise<void> {
+  async clean() {
     logger.debug('clean');
     await this.brain.init();
     await this.brain.clean();
   }
 
-  async handleMessage(userMessage: UserMessage): Promise<BotMessageJson[]> {
+  async handleMessage(userMessage) {
     return measure('handleMessage')(() => this._handleMessage(userMessage));
   }
 
   /**
    * Handles a user message.
    */
-  async _handleMessage(userMessage: UserMessage): Promise<BotMessageJson[]> {
+  async _handleMessage(userMessage) {
     logger.debug('handleMessage', { userMessage });
     try {
       const contextIn = {
@@ -131,7 +107,7 @@ class Bot {
         userMessage,
         config: this.config,
       };
-      let botMessages: BotMessageJson[] = [];
+      let botMessages = [];
       await this.middlewareManager.in(contextIn, async () => {
         logger.debug('handleMessage: responding');
         botMessages = await this.respond(userMessage);
@@ -154,7 +130,7 @@ class Bot {
   /**
    * Responds to the user.
    */
-  async respond(userMessage: UserMessage): Promise<BotMessageJson[]> {
+  async respond(userMessage) {
     logger.debug('respond', { userMessage });
     switch (userMessage.type) {
       case 'postback':
@@ -173,12 +149,12 @@ class Bot {
    * Computes the responses for a user message of type text.
    * @private
    */
-  async respondWhenText(userMessage: TextMessage): Promise<BotMessageJson[]> {
+  async respondWhenText(userMessage) {
     logger.debug('respondWhenText', { userMessage });
     // If text input is too long then trigger the complex-input dialog
     if (userMessage.payload.value.length > 256) {
       logger.error('respondWhenText: input is too long.');
-      const complexInputDialog: DialogData = {
+      const complexInputDialog = {
         name: 'complex-input',
         data: {},
         triggeredBy: 'dialog-manager',
@@ -202,7 +178,7 @@ class Bot {
    * Computes the responses for a user message of type postback.
    * @private
    */
-  async respondWhenPostback(userMessage: PostbackMessage): Promise<BotMessageJson[]> {
+  async respondWhenPostback(userMessage) {
     logger.debug('respondWhenPostback', { userMessage });
     const dialog = {
       name: userMessage.payload.value.name,
@@ -216,9 +192,9 @@ class Bot {
    * Computes the responses for a user message of type image.
    * @private
    */
-  async respondWhenImage(userMessage: ImageMessage): Promise<BotMessageJson[]> {
+  async respondWhenImage(userMessage) {
     logger.debug('respondWhenImage', { userMessage });
-    const dialog: DialogData = {
+    const dialog = {
       name: 'image',
       data: {
         url: userMessage.payload.value,
@@ -232,9 +208,9 @@ class Bot {
    * Computes the responses for a user message of type file.
    * @private
    */
-  async respondWhenFile(userMessage: FileMessage): Promise<BotMessageJson[]> {
+  async respondWhenFile(userMessage) {
     logger.debug('respondWhenFile', { userMessage });
-    const dialog: DialogData = {
+    const dialog = {
       name: 'file',
       data: {
         url: userMessage.payload.value,
@@ -244,7 +220,7 @@ class Bot {
     return this.dm.executeDialog(userMessage, dialog);
   }
 
-  async respondWhenError(userMessage: UserMessage, error: ErrorObject): Promise<BotMessageJson[]> {
+  async respondWhenError(userMessage, error) {
     logger.debug('respondWhenError', { userMessage, error });
     if (error instanceof AuthenticationError) {
       logger.error('Botfuel API authentication failed!');

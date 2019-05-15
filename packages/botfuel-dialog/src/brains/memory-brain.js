@@ -90,7 +90,7 @@ class MemoryBrain extends Brain {
     logger.debug('addConversation', userId);
     const user = await this.getUser(userId);
     const conversation = this.getConversationInitValue();
-    user._conversations.push(conversation);
+    user._conversations = [...user._conversations, conversation];
     return conversation;
   }
 

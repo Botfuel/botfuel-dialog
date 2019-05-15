@@ -14,29 +14,22 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type Bot from './bot';
-import type Adapter from './adapters/adapter';
-
 const Resolver = require('./resolver');
 
 /**
  * The adapter resolver resolves the adapter at startup.
  */
-class AdapterResolver extends Resolver<Adapter> {
-  bot: Bot;
-
+class AdapterResolver extends Resolver {
   /**
    * @constructor
    * @param bot - the bot
    */
-  constructor(bot: Bot) {
+  constructor(bot) {
     super(bot.config, 'adapter');
     this.bot = bot;
   }
 
-  resolutionSucceeded(Resolved: Class<Adapter>): Adapter {
+  resolutionSucceeded(Resolved) {
     return new Resolved(this.bot);
   }
 }

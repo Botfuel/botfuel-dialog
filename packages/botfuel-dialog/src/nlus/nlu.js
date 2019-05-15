@@ -14,24 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type { Config } from '../config';
-import type { UserMessage, MessageEntities } from '../types';
-import type Brain from '../brains/brain';
-import type ClassificationResult from '../nlus/classification-result';
-
-
-export type ComputeContext = {
-  brain: Brain,
-  userMessage: UserMessage,
-};
-
-export type ComputeOutput = {
-  classificationResults: ClassificationResult[],
-  messageEntities: MessageEntities,
-};
-
 const logger = require('logtown')('Nlu');
 const MissingImplementationError = require('../errors/missing-implementation-error');
 
@@ -39,13 +21,11 @@ const MissingImplementationError = require('../errors/missing-implementation-err
  * Abstract class for a Natural Language Understanding (NLU) module.
  */
 class Nlu {
-  config: Config;
-
   /**
    * @constructor
    * @param config - the bot configuration
    */
-  constructor(config: Config) {
+  constructor(config) {
     logger.debug('constructor', config);
     this.config = config;
   }
@@ -53,7 +33,7 @@ class Nlu {
   /**
    * Initializes the Nlu module.
    */
-  async init(): Promise<void> {
+  async init() {
     logger.debug('init');
   }
 
@@ -62,10 +42,7 @@ class Nlu {
    * @param sentence - the sentence
    * @param context - { brain, userMessage }
    */
-  async compute(
-    sentence: string,
-    context: ComputeContext, // eslint-disable-line no-unused-vars
-  ): Promise<ComputeOutput> {
+  async compute(sentence, context) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 }

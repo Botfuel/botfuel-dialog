@@ -15,20 +15,6 @@
     "botfuel-dialog": "latest",
     "botfuel-module-adapter-messenger": "^1.6.1"
   },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^8.2.3",
-    "babel-jest": "^21.2.0",
-    "babel-plugin-transform-builtin-extend": "^1.1.2",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-flow": "^6.23.0",
-    "babel-preset-stage-2": "^6.24.1",
-    "flow-bin": "^0.69.0",
-    "flow-typed": "^2.4.0",
-    "react-flow-types": "^0.2.0-beta.6"
-  },
   "engines": {
     "node": ">=8"
   }

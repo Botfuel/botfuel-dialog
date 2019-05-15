@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type { Config } from './config';
-
 const fs = require('fs');
 const path = require('path');
 const logger = require('logtown')('Resolver');
@@ -27,16 +23,13 @@ const MissingImplementationError = require('./errors/missing-implementation-erro
 /**
  * The adapter resolver resolves the adapter at startup.
  */
-class Resolver<Component> {
-  kind: string;
-  directories: string[];
-
+class Resolver {
   /**
    * @constructor
    * @param config - the bot config
    * @param {String} kind - the kind of objects we want to resolve
    */
-  constructor(config: Config, kind: string) {
+  constructor(config, kind) {
     this.kind = kind;
     this.directories = config.componentRoots
       .map(componentRoot => path.join(componentRoot, `${kind}s`))
@@ -48,7 +41,7 @@ class Resolver<Component> {
    * @param name - the component name
    * @returns the possible paths
    */
-  getFilenames(name: string): string[] {
+  getFilenames(name) {
     return [`${name}-${this.kind}.js`];
   }
 
@@ -57,7 +50,7 @@ class Resolver<Component> {
    * @param name - the component name
    * @returns the possible paths
    */
-  getPaths(name: string): string[] {
+  getPaths(name) {
     logger.debug('getPaths', name);
 
     const possibleFilenames = this.getFilenames(name);
@@ -72,7 +65,7 @@ class Resolver<Component> {
    * @param name - the component name
    * @returns the path if exists or null
    */
-  getPath(name: string): ?string {
+  getPath(name) {
     logger.debug('getPath');
     for (const componentPath of this.getPaths(name)) {
       logger.debug('getPath: test path', componentPath);
@@ -89,11 +82,11 @@ class Resolver<Component> {
    * @param name - the component name
    * @returns the component instance or null
    */
-  resolve(name: string): Component {
+  resolve(name) {
     logger.debug('resolve', name);
     const componentPath = this.getPath(name);
     if (componentPath) {
-      const Resolved: Class<Component> = require(componentPath);
+      const Resolved = require(componentPath);
       return this.resolutionSucceeded(Resolved);
     }
     throw new ResolutionError({
@@ -108,9 +101,7 @@ class Resolver<Component> {
    * @param Resolved - the component class
    * @returns the instance
    */
-  resolutionSucceeded(
-    componentClass: Class<Component>, // eslint-disable-line no-unused-vars
-  ): Component {
+  resolutionSucceeded(Resolved) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 }

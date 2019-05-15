@@ -14,33 +14,26 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type { Config } from './config';
-import type View from './views/view';
-
 const Resolver = require('./resolver');
 
 /**
  * The view resolver resolves the view for a given dialog.
  */
-class ViewResolver extends Resolver<View> {
-  locale: string;
-
+class ViewResolver extends Resolver {
   /**
    * @constructor
    * @param config - the bot config
    */
-  constructor(config: Config) {
+  constructor(config) {
     super(config, 'view');
     this.locale = config.locale;
   }
 
-  getFilenames(name: string): string[] {
+  getFilenames(name) {
     return [`${name}-${this.kind}.${this.locale}.js`, `${name}-${this.kind}.js`];
   }
 
-  resolutionSucceeded(Resolved: Class<View>): View {
+  resolutionSucceeded(Resolved) {
     return new Resolved();
   }
 }

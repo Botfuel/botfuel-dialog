@@ -41,7 +41,7 @@ class LoggerManager {
 
     if (loggerConfig.wrapper) {
       // clean wrappers
-      Logger.clean();
+      Logger.cleanWrappers();
       Logger.addWrapper(loggerConfig.wrapper);
     }
 
