@@ -1,11 +1,12 @@
 {
   "presets": [
-    "env",
-    "stage-2",
-    "flow"
+    "@babel/preset-env",
+    "@babel/preset-flow"
   ],
   "plugins": [
-    "transform-class-properties",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-export-default-from",
+    "@babel/plugin-transform-flow-strip-types",
     [
       "babel-plugin-transform-builtin-extend",
       {

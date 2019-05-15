@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-require('babel-polyfill');
+require('@babel/polyfill');
 
 const logger = require('logtown')('Run');
 const Bot = require('./bot');
