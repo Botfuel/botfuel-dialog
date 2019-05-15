@@ -3,7 +3,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap && lerna run build --scope botfuel-dialog && lerna link --force-local",
     "clean": "lerna clean && node clean.js",
-    "type-check": "npm run flow",
+    "type-check": "flow",
     "style": "lerna run style",
     "commitmsg": "node check-commit-msg.js",
     "pretest": "npm run bootstrap",
