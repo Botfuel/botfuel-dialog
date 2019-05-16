@@ -22,7 +22,7 @@ const MissingCredentialsError = require('../../src/errors/missing-credentials-er
 const buildConfig = configPart => Object.assign({}, defaultConfig, configPart);
 
 describe('Environment utils', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
 
   afterAll(() => {
     sandbox.restore();
