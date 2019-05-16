@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:chakracore-8.10.0
+      - image: circleci/node:10
       - image: circleci/mongo:3.6.9
     steps:
       - checkout
