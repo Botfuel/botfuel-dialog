@@ -2,8 +2,8 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:10-jessie
-      - image: circleci/mongo:3.6-jessie
+      - image: circleci/node:9
+      - image: circleci/mongo:3.6
     steps:
       - checkout
       - restore_cache:
@@ -25,7 +25,7 @@ jobs:
           command: npm run style
       - run:
           name: Run tests
-          command: jest --runInBand
+          command: jest --maxWorkers=2
       - run:
           name: Generate Codecov report
           command: bash <(curl -s https://codecov.io/bash)
