@@ -16,9 +16,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
+          key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm run style
       - run: npm test
       - run: bash <(curl -s https://codecov.io/bash)
