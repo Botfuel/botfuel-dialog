@@ -176,7 +176,7 @@ class Brain {
    * Gets dialogs data from the last conversation.
    */
   async getDialogs(userId) {
-    return this.conversationGet(userId, '_dialogs')
+    return this.conversationGet(userId, '_dialogs');
   }
 
   /**

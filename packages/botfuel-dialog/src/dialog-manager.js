@@ -62,7 +62,7 @@ class DialogManager extends Resolver {
     return previousDialogs
       .slice(0)
       .reverse()
-      .find(dialog => this.resolve(dialog.name).characteristics.reentrant) || null
+      .find(dialog => this.resolve(dialog.name).characteristics.reentrant) || null;
   }
 
   /**

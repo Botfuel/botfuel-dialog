@@ -17,10 +17,10 @@
 const rp = require('request-promise-native');
 const { clone, extend } = require('lodash');
 const logger = require('logtown')('WsExtractor');
+const urlJoin = require('url-join');
 const AuthenticationError = require('../errors/authentication-error');
 const MissingCredentialsError = require('../errors/missing-credentials-error');
 const Extractor = require('./extractor');
-const urlJoin = require('url-join');
 
 
 const PROXY_HOST = process.env.BOTFUEL_PROXY_HOST || 'https://api.botfuel.io';

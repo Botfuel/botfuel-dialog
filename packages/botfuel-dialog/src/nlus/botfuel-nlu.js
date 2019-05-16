@@ -19,15 +19,15 @@ const fsExtra = require('fs-extra');
 const rp = require('request-promise-native');
 const dir = require('node-dir');
 const logger = require('logtown')('BotfuelNlu');
+const urlJoin = require('url-join');
 const BooleanExtractor = require('../extractors/boolean-extractor');
 const LocationExtractor = require('../extractors/location-extractor');
 const CompositeExtractor = require('../extractors/composite-extractor');
 const AuthenticationError = require('../errors/authentication-error');
 const SdkError = require('../errors/sdk-error');
+const measureTime = require('../utils/measure');
 const ClassificationResult = require('./classification-result');
 const Nlu = require('./nlu');
-const urlJoin = require('url-join');
-const measureTime = require('../utils/measure');
 
 const measure = measureTime(logger);
 const PROXY_HOST = process.env.BOTFUEL_PROXY_HOST || 'https://api.botfuel.io';

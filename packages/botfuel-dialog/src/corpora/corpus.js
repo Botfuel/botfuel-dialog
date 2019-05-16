@@ -16,8 +16,8 @@
 
 /* eslint-disable valid-jsdoc */
 const Diacritics = require('diacritics');
-const ExtractorError = require('../errors/extractor-error');
 const logger = require('logtown')('Corpus');
+const ExtractorError = require('../errors/extractor-error');
 
 /**
  * Class for handling corpora.

@@ -71,7 +71,7 @@ class WebAdapter extends Adapter {
    * @param req - the request object
    * @param res - the response object
    */
-  async handleRequest(req, res) {
+  async handleRequest(req, res) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 

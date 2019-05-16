@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-const PromptView = require('./prompt-view');
 const BotTextMessage = require('../messages/bot-text-message');
+const PromptView = require('./prompt-view');
 
 class CancelView extends PromptView {
   render(userMessage, { matchedEntities }) {
