@@ -6,17 +6,27 @@ jobs:
       - image: circleci/mongo:3.6.9
     steps:
       - checkout
-      # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
-      - run: npm install
-      - run: npm run bootstrap
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Bootstrap botfuel-dialog
+          command: npm run bootstrap
       - save_cache:
           paths:
             - node_modules
+            - packages/*/node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm run style
-      - run: npm test
-      - run: bash <(curl -s https://codecov.io/bash)
+      - run:
+          name: Check code style
+          command: npm run style
+      - run:
+          name: Run tests
+          command: npm test
+      - run:
+          name: Generate Codecov report
+          command: bash <(curl -s https://codecov.io/bash)
