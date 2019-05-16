@@ -25,7 +25,7 @@ jobs:
           command: npm run style
       - run:
           name: Run tests
-          command: npm test --maxWorkers=2
+          command: jest --runInBand
       - run:
           name: Generate Codecov report
           command: bash <(curl -s https://codecov.io/bash)
