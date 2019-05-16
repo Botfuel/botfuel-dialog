@@ -17,13 +17,14 @@
 const isEqual = require('lodash/isEqual');
 const intersection = require('lodash/intersection');
 
-const makePositionsArray = entity =>
-  Array(entity.end - entity.start)
-    .fill()
-    .map((_, i) => i + entity.start);
+const makePositionsArray = entity => Array(entity.end - entity.start)
+  .fill()
+  .map((_, i) => i + entity.start);
 
-const doEntitiesIntersect = (entityA, entityB) =>
-  !!intersection(makePositionsArray(entityA), makePositionsArray(entityB)).length;
+const doEntitiesIntersect = (entityA, entityB) => !!intersection(
+  makePositionsArray(entityA),
+  makePositionsArray(entityB),
+).length;
 
 const filterIntersectingEntities = (entities, entity) => {
   if (entity.start == null || entity.end == null) {

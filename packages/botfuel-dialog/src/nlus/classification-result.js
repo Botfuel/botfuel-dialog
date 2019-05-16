@@ -54,12 +54,11 @@ class ClassificationResult {
       throw new SdkError('Intent constructor: data must contain type');
     }
 
-    if (type.toLowerCase() === 'intent') {
-      return ClassificationResult.TYPE_INTENT;
-    } else if (type.toLowerCase() === 'qna') {
-      return ClassificationResult.TYPE_QNA;
+    switch (type.toLowerCase()) {
+      case 'intent': return ClassificationResult.TYPE_INTENT;
+      case 'qna': return ClassificationResult.TYPE_QNA;
+      default: throw new SdkError(`Intent constructor: invalid intent type: ${type}`);
     }
-    throw new SdkError(`Intent constructor: invalid intent type: ${type}`);
   }
 
   /**

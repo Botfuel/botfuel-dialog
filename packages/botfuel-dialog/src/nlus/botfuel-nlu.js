@@ -34,9 +34,8 @@ const PROXY_HOST = process.env.BOTFUEL_PROXY_HOST || 'https://api.botfuel.io';
 const SPELLCHECKING_ROUTE = '/nlp/spellchecking';
 const SPELLCHECKING_VERSION = 'v1';
 
-const SPELLCHECKING_API =
-  process.env.BOTFUEL_SPELLCHECKING_API_URL ||
-  urlJoin(PROXY_HOST, SPELLCHECKING_ROUTE, SPELLCHECKING_VERSION);
+const SPELLCHECKING_API = process.env.BOTFUEL_SPELLCHECKING_API_URL
+  || urlJoin(PROXY_HOST, SPELLCHECKING_ROUTE, SPELLCHECKING_VERSION);
 
 /**
  * NLU using Botfuel Trainer API
@@ -115,11 +114,9 @@ class BotfuelNlu extends Nlu {
 
     try {
       // computing entities
-      const messageEntities = await measure('entity extraction')(() =>
-        this.extractor.compute(sentence));
+      const messageEntities = await measure('entity extraction')(() => this.extractor.compute(sentence));
       // computing intents
-      let trainerUrl =
-        process.env.BOTFUEL_TRAINER_API_URL || 'https://api.botfuel.io/trainer/api/v0';
+      let trainerUrl = process.env.BOTFUEL_TRAINER_API_URL || 'https://api.botfuel.io/trainer/api/v0';
       if (trainerUrl.slice(-1) !== '/') {
         trainerUrl += '/';
       }
@@ -167,7 +164,8 @@ class BotfuelNlu extends Nlu {
 
     if (typeof this.config.nlu.spellchecking === 'string') {
       logger.warn(
-        'Using dictionary key as spellchecking configuration is deprecated. Set nlu.spellchecking to true to enable spellchecking or false to disable it.',
+        'Using dictionary key as spellchecking configuration is deprecated. '
+        + 'Set nlu.spellchecking to true to enable spellchecking or false to disable it.',
       );
     }
 

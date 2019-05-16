@@ -4,7 +4,6 @@
     "bootstrap": "lerna bootstrap && lerna run build --scope botfuel-dialog && lerna link --force-local",
     "clean": "lerna clean && node clean.js",
     "style": "lerna run style",
-    "commitmsg": "node check-commit-msg.js",
     "pretest": "npm run bootstrap",
     "release": "npm test && lerna run build --scope botfuel-dialog && lerna publish --conventional-commits --changelog-preset=angular",
     "unit-test": "BOTFUEL_APP_TOKEN=TEST_BOT BOTFUEL_APP_ID=TEST_BOT BOTFUEL_APP_KEY=TEST_BOT jest --maxWorkers=3 packages/botfuel-dialog",
@@ -21,24 +20,29 @@
     "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^9.0.0",
-    "babel-jest": "^23.4.2",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.8.0",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-babel": "^4.1.1",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jest": "^21.4.2",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-jest": "^22.5.1",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-node": "^9.0.1",
     "eslint-plugin-react": "^7.1.0",
-    "husky": "^0.14.3",
+    "husky": "^2.3.0",
     "jest": "^24.8.0",
-    "lerna": "^3.14.0",
+    "lerna": "^3.14.1",
     "replay": "^2.1.4",
     "shelljs": "^0.8.2"
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "commit-msg": "node check-commit-msg.js"
+    }
+  }
 }

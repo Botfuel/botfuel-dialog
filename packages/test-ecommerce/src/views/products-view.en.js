@@ -26,11 +26,10 @@ const {
 } = require('botfuel-dialog');
 const PRODUCTS = require('../../PRODUCTS.json');
 
-const productToCard = (key, product) =>
-  new Card(product.title, WebAdapter.getStaticUrl(product.imageUrl), [
-    new Link('Details', product.link),
-    new Postback('Buy', { name: 'products', data: { messageEntities: [{ dim: 'product', values: [key] }] } }),
-  ]);
+const productToCard = (key, product) => new Card(product.title, WebAdapter.getStaticUrl(product.imageUrl), [
+  new Link('Details', product.link),
+  new Postback('Buy', { name: 'products', data: { messageEntities: [{ dim: 'product', values: [key] }] } }),
+]);
 
 class ProductsView extends PromptView {
   render(userMessage, { matchedEntities, missingEntities }) {

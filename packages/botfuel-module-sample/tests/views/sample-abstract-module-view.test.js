@@ -1,7 +1,7 @@
 // See https://github.com/Botfuel/botfuel-dialog/tree/master/packages/botfuel-dialog/tests/views
 
-const SampleAbstractModuleView = require('../../src/views/sample-abstract-module-view');
 const { BotTextMessage } = require('botfuel-dialog');
+const SampleAbstractModuleView = require('../../src/views/sample-abstract-module-view');
 
 class TestView extends SampleAbstractModuleView {
   getTextsConcrete() {

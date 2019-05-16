@@ -25,8 +25,7 @@ describe('Blank', () => {
     const { userId } = adapter;
     await bot.play([new UserTextMessage('')]);
     expect(bot.adapter.log).toEqual(
-      [new UserTextMessage(''), new BotTextMessage('Not understood.')].map(msg =>
-        msg.toJson(userId)),
+      [new UserTextMessage(''), new BotTextMessage('Not understood.')].map(msg => msg.toJson(userId)),
     );
     const user = await bot.brain.getUser(userId);
     const dialogs = await bot.brain.getDialogs(userId);

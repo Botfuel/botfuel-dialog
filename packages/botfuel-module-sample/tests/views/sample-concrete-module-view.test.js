@@ -1,7 +1,7 @@
 // See https://github.com/Botfuel/botfuel-dialog/tree/master/packages/botfuel-dialog/tests/views
 
-const SampleConcreteModuleView = require('../../src/views/sample-concrete-module-view');
 const { BotTextMessage } = require('botfuel-dialog');
+const SampleConcreteModuleView = require('../../src/views/sample-concrete-module-view');
 
 describe('SampleConcreteModuleView', () => {
   test('should product correct responses', async () => {

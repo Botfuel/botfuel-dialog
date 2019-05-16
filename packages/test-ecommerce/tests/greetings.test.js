@@ -25,8 +25,7 @@ describe('Greetings', () => {
     const { userId } = adapter;
     await bot.play([new UserTextMessage('Hello')]);
     expect(bot.adapter.log).toEqual(
-      [new UserTextMessage('Hello'), new BotTextMessage('Hello human!')].map(msg =>
-        msg.toJson(userId)),
+      [new UserTextMessage('Hello'), new BotTextMessage('Hello human!')].map(msg => msg.toJson(userId)),
     );
 
     const user = await bot.brain.getUser(userId);

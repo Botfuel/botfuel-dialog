@@ -23,7 +23,10 @@ const TEST_CONFIG = require('../../src/config').getConfiguration({
   },
 });
 
-const TOO_LONG_INPUT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.';
+const TOO_LONG_INPUT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do '
+  + 'eiusmod tempor incididunt ut labore et dolore magna aliqua. '
+  + 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. '
+  + 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.';
 
 describe('ComplexInputDialog', () => {
   test('should run complex-input dialog when input is too long', async () => {

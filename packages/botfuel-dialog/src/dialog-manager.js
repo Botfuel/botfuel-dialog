@@ -105,9 +105,9 @@ class DialogManager extends Resolver {
     } else if (classificationResults.length === 1) {
       const lastDialog = this.getLastDialog(dialogs);
       if (
-        lastDialog &&
-        lastDialog.name === classificationResults[0].name &&
-        messageEntities.length === 0
+        lastDialog
+        && lastDialog.name === classificationResults[0].name
+        && messageEntities.length === 0
       ) {
         // if new intent is the same as previous with no new entity then trigger default dialog
         newDialog = DEFAULT_DIALOG;
@@ -170,49 +170,55 @@ class DialogManager extends Resolver {
     let updatedDialogs = dialogs;
     const currentDialog = dialogs.stack[dialogs.stack.length - 1];
     const date = Date.now();
-    if (action.name === Dialog.ACTION_CANCEL) {
-      const { newDialog } = action;
-      updatedDialogs = {
-        ...dialogs,
-        stack: dialogs.stack.slice(0, -2),
-        previous: [...dialogs.previous, { ...currentDialog, date }],
-      };
-      if (newDialog) {
+    switch (action.name) {
+      case Dialog.ACTION_COMPLETE: {
+        return {
+          ...dialogs,
+          stack: dialogs.stack.slice(0, -1),
+          previous: [...dialogs.previous, { ...currentDialog, date }],
+        };
+      }
+      case Dialog.ACTION_NEXT: {
+        const { newDialog } = action;
+        updatedDialogs = {
+          ...dialogs,
+          stack: dialogs.stack.slice(0, -1),
+          previous: [...dialogs.previous, { ...currentDialog, date }],
+        };
         this.updateWithDialog(updatedDialogs, newDialog);
+        return updatedDialogs;
       }
-      return updatedDialogs;
-    } else if (action.name === Dialog.ACTION_COMPLETE) {
-      return {
-        ...dialogs,
-        stack: dialogs.stack.slice(0, -1),
-        previous: [...dialogs.previous, { ...currentDialog, date }],
-      };
-    } else if (action.name === Dialog.ACTION_NEXT) {
-      const { newDialog } = action;
-      updatedDialogs = {
-        ...dialogs,
-        stack: dialogs.stack.slice(0, -1),
-        previous: [...dialogs.previous, { ...currentDialog, date }],
-      };
-      this.updateWithDialog(updatedDialogs, newDialog);
-      return updatedDialogs;
-    } else if (action.name === Dialog.ACTION_NEW_CONVERSATION) {
-      const { newDialog } = action;
-      updatedDialogs = {
-        ...dialogs,
-        stack: [],
-        previous: [],
-        isNewConversation: true,
-      };
-      if (newDialog) {
-        updatedDialogs.stack.push(newDialog);
+      case Dialog.ACTION_NEW_CONVERSATION: {
+        const { newDialog } = action;
+        updatedDialogs = {
+          ...dialogs,
+          stack: [],
+          previous: [],
+          isNewConversation: true,
+        };
+        if (newDialog) {
+          updatedDialogs.stack.push(newDialog);
+        }
+        return updatedDialogs;
       }
-      return updatedDialogs;
+      case Dialog.ACTION_CANCEL: {
+        const { newDialog } = action;
+        updatedDialogs = {
+          ...dialogs,
+          stack: dialogs.stack.slice(0, -2),
+          previous: [...dialogs.previous, { ...currentDialog, date }],
+        };
+        if (newDialog) {
+          this.updateWithDialog(updatedDialogs, newDialog);
+        }
+        return updatedDialogs;
+      }
+      default:
+        throw new DialogError({
+          name: currentDialog,
+          message: `Unknown action '${action.name}' in '${currentDialog.name}'`,
+        });
     }
-    throw new DialogError({
-      name: currentDialog,
-      message: `Unknown action '${action.name}' in '${currentDialog.name}'`,
-    });
   }
 
   /**

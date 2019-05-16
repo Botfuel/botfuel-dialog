@@ -161,11 +161,10 @@ class Bot {
       };
       return this.dm.executeDialog(userMessage, complexInputDialog);
     }
-    const { classificationResults, messageEntities } = await measure('nlu compute')(() =>
-      this.nlu.compute(userMessage.payload.value, {
-        brain: this.brain,
-        userMessage,
-      }));
+    const { classificationResults, messageEntities } = await measure('nlu compute')(() => this.nlu.compute(
+      userMessage.payload.value,
+      { brain: this.brain, userMessage },
+    ));
     logger.debug('respondWhenText: classificationResults', classificationResults, messageEntities);
     return this.dm.executeClassificationResults(
       userMessage,

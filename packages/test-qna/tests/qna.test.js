@@ -32,7 +32,8 @@ describe('Qna', () => {
       [
         new UserTextMessage('I love Paris'),
         new BotTextMessage(
-          'I’m sorry, I did not understand your question. Please reach us at contact@my-sample-compagny.com for further assistance.',
+          'I’m sorry, I did not understand your question. '
+          + 'Please reach us at contact@my-sample-compagny.com for further assistance.',
         ),
       ].map(msg => msg.toJson(userId)),
     );
@@ -76,7 +77,8 @@ describe('Qna', () => {
       [
         new UserTextMessage('Could you send me an invoice please?'),
         new BotTextMessage(
-          'The invoice for your purchase will be sent along with your goods. You can also download an electronic version from your account.',
+          'The invoice for your purchase will be sent along with your goods. '
+          + 'You can also download an electronic version from your account.',
         ),
       ].map(msg => msg.toJson(userId)),
     );
