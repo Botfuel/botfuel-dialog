@@ -23,7 +23,7 @@ const TEST_USER_ID = 'test';
 
 describe('Botfuel Nlu', () => {
   describe('check credentials', () => {
-    const sandbox = sinon.sandbox.create();
+    const sandbox = sinon.createSandbox();
 
     afterEach(() => {
       sandbox.restore();

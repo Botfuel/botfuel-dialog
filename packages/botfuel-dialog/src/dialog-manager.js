@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type { UserMessage, DialogData, DialogsData, MessageEntities } from './types';
-import type { BotMessageJson } from './messages/message';
-import type Bot from './bot';
-import type Brain from './brains/brain';
-import type ClassificationResult from './nlus/classification-result';
-import type { Action, ExecuteResult } from './dialogs/dialog';
-
 const logger = require('logtown')('DialogManager');
 const Resolver = require('./resolver');
 const Dialog = require('./dialogs/dialog');
 const DialogError = require('./errors/dialog-error');
 
-type DialogManagerExecuteOutput = {|
-  dialogs: DialogsData,
-  botMessages: BotMessageJson[],
-|};
-
-const DEFAULT_DIALOG: DialogData = {
+const DEFAULT_DIALOG = {
   name: 'default',
   characteristics: {
     reentrant: false,
@@ -46,12 +32,8 @@ const DEFAULT_DIALOG: DialogData = {
  * The dialog manager turns NLU output into a dialog stack. It executes the stack and returns the
  * bot messages
  */
-class DialogManager extends Resolver<Dialog> {
-  bot: Bot;
-  brain: Brain;
-  adapterName: string;
-
-  constructor(bot: Bot) {
+class DialogManager extends Resolver {
+  constructor(bot) {
     const { brain, config } = bot;
 
     super(config, 'dialog');
@@ -61,12 +43,12 @@ class DialogManager extends Resolver<Dialog> {
     this.adapterName = config.adapter.name;
   }
 
-  getFilenames(name: string): string[] {
+  getFilenames(name) {
     return [`${name}-${this.kind}.${this.adapterName}.js`, `${name}-${this.kind}.js`];
   }
 
-  resolutionSucceeded(Resolved: Class<Dialog>): Dialog {
-    return new Resolved(this.bot, (Resolved: any).params);
+  resolutionSucceeded(Resolved) {
+    return new Resolved(this.bot, Resolved.params);
   }
 
   /**
@@ -75,14 +57,12 @@ class DialogManager extends Resolver<Dialog> {
    * to compute a dialog, the DialogManager recalls the first reentrant dialog from the
    * stack of previous dialogs.
    */
-  getLastReentrantDialog(previousDialogs: DialogData[]): ?DialogData {
+  getLastReentrantDialog(previousDialogs) {
     logger.debug('getLastReentrantDialog', { previousDialogs });
-    return (
-      previousDialogs
-        .slice(0)
-        .reverse()
-        .find(dialog => this.resolve(dialog.name).characteristics.reentrant) || null
-    );
+    return previousDialogs
+      .slice(0)
+      .reverse()
+      .find(dialog => this.resolve(dialog.name).characteristics.reentrant) || null;
   }
 
   /**
@@ -90,14 +70,14 @@ class DialogManager extends Resolver<Dialog> {
    * @param dialogs
    * @returns {*}
    */
-  getLastDialog(dialogs: DialogsData): ?DialogData {
+  getLastDialog(dialogs) {
     return dialogs.stack.length > 0 ? dialogs.stack[dialogs.stack.length - 1] : null;
   }
 
   /**
    * Returns the dialogs data (stack and previous dialogs).
    */
-  async getDialogs(userId: string): Promise<DialogsData> {
+  async getDialogs(userId) {
     logger.debug('getDialogs', { userId });
     return this.brain.getDialogs(userId);
   }
@@ -105,7 +85,7 @@ class DialogManager extends Resolver<Dialog> {
   /**
    * Sets the dialogs data (stack and previous dialogs).
    */
-  async setDialogs(userId: string, dialogs: DialogsData): Promise<void> {
+  async setDialogs(userId, dialogs) {
     logger.debug('setDialogs', { userId, dialogs });
     await this.brain.setDialogs(userId, dialogs);
   }
@@ -113,14 +93,9 @@ class DialogManager extends Resolver<Dialog> {
   /**
    * Updates the dialogs.
    */
-  updateWithClassificationResults(
-    userId: string,
-    dialogs: DialogsData,
-    classificationResults: ClassificationResult[],
-    messageEntities: MessageEntities,
-  ): void {
+  updateWithClassificationResults(userId, dialogs, classificationResults, messageEntities) {
     logger.debug('updateWithClassificationResults', { userId, dialogs, classificationResults, messageEntities });
-    let newDialog: ?DialogData = null;
+    let newDialog = null;
     if (classificationResults.length > 1) {
       newDialog = {
         name: 'classification-disambiguation',
@@ -128,11 +103,11 @@ class DialogManager extends Resolver<Dialog> {
         triggeredBy: 'dialog-manager',
       };
     } else if (classificationResults.length === 1) {
-      const lastDialog: ?DialogData = this.getLastDialog(dialogs);
+      const lastDialog = this.getLastDialog(dialogs);
       if (
-        lastDialog &&
-        lastDialog.name === classificationResults[0].name &&
-        messageEntities.length === 0
+        lastDialog
+        && lastDialog.name === classificationResults[0].name
+        && messageEntities.length === 0
       ) {
         // if new intent is the same as previous with no new entity then trigger default dialog
         newDialog = DEFAULT_DIALOG;
@@ -150,7 +125,7 @@ class DialogManager extends Resolver<Dialog> {
     if (newDialog) {
       this.updateWithDialog(dialogs, newDialog);
     } else {
-      let lastDialog: ?DialogData = this.getLastDialog(dialogs);
+      let lastDialog = this.getLastDialog(dialogs);
       if (lastDialog) {
         lastDialog.data.messageEntities = messageEntities;
       }
@@ -174,7 +149,7 @@ class DialogManager extends Resolver<Dialog> {
    * Updates the dialogs.
    * @param newDialog - new dialog to be added to the dialog stack
    */
-  updateWithDialog(dialogs: DialogsData, newDialog: DialogData): void {
+  updateWithDialog(dialogs, newDialog) {
     logger.debug('updateWithDialog', { dialogs, newDialog });
     const lastDialog = this.getLastDialog(dialogs);
     if (lastDialog && lastDialog.name === newDialog.name) {
@@ -190,68 +165,67 @@ class DialogManager extends Resolver<Dialog> {
    * @param dialogs - the dialogs object to be updated
    * @returns The new dialogs object with its stack and previous arrays updated
    */
-  applyAction(
-    dialogs: DialogsData,
-    action: Action,
-  ): DialogsData {
+  applyAction(dialogs, action) {
     logger.debug('applyAction', { dialogs, action });
-    let updatedDialogs: DialogsData = dialogs;
-    const currentDialog: DialogData = dialogs.stack[dialogs.stack.length - 1];
+    let updatedDialogs = dialogs;
+    const currentDialog = dialogs.stack[dialogs.stack.length - 1];
     const date = Date.now();
-    if (action.name === Dialog.ACTION_CANCEL) {
-      const { newDialog } = action;
-      updatedDialogs = {
-        ...dialogs,
-        stack: dialogs.stack.slice(0, -2),
-        previous: [...dialogs.previous, { ...currentDialog, date }],
-      };
-      if (newDialog) {
+    switch (action.name) {
+      case Dialog.ACTION_COMPLETE: {
+        return {
+          ...dialogs,
+          stack: dialogs.stack.slice(0, -1),
+          previous: [...dialogs.previous, { ...currentDialog, date }],
+        };
+      }
+      case Dialog.ACTION_NEXT: {
+        const { newDialog } = action;
+        updatedDialogs = {
+          ...dialogs,
+          stack: dialogs.stack.slice(0, -1),
+          previous: [...dialogs.previous, { ...currentDialog, date }],
+        };
         this.updateWithDialog(updatedDialogs, newDialog);
+        return updatedDialogs;
       }
-      return updatedDialogs;
-    } else if (action.name === Dialog.ACTION_COMPLETE) {
-      return {
-        ...dialogs,
-        stack: dialogs.stack.slice(0, -1),
-        previous: [...dialogs.previous, { ...currentDialog, date }],
-      };
-    } else if (action.name === Dialog.ACTION_NEXT) {
-      const { newDialog } = action;
-      updatedDialogs = {
-        ...dialogs,
-        stack: dialogs.stack.slice(0, -1),
-        previous: [...dialogs.previous, { ...currentDialog, date }],
-      };
-      this.updateWithDialog(updatedDialogs, newDialog);
-      return updatedDialogs;
-    } else if (action.name === Dialog.ACTION_NEW_CONVERSATION) {
-      const { newDialog } = action;
-      updatedDialogs = {
-        ...dialogs,
-        stack: [],
-        previous: [],
-        isNewConversation: true,
-      };
-      if (newDialog) {
-        updatedDialogs.stack.push(newDialog);
+      case Dialog.ACTION_NEW_CONVERSATION: {
+        const { newDialog } = action;
+        updatedDialogs = {
+          ...dialogs,
+          stack: [],
+          previous: [],
+          isNewConversation: true,
+        };
+        if (newDialog) {
+          updatedDialogs.stack.push(newDialog);
+        }
+        return updatedDialogs;
       }
-      return updatedDialogs;
+      case Dialog.ACTION_CANCEL: {
+        const { newDialog } = action;
+        updatedDialogs = {
+          ...dialogs,
+          stack: dialogs.stack.slice(0, -2),
+          previous: [...dialogs.previous, { ...currentDialog, date }],
+        };
+        if (newDialog) {
+          this.updateWithDialog(updatedDialogs, newDialog);
+        }
+        return updatedDialogs;
+      }
+      default:
+        throw new DialogError({
+          name: currentDialog,
+          message: `Unknown action '${action.name}' in '${currentDialog.name}'`,
+        });
     }
-    throw new DialogError({
-      name: currentDialog,
-      message: `Unknown action '${action.name}' in '${currentDialog.name}'`,
-    });
   }
 
   /**
    * Executes the dialogs.
    * @param botMessagesAccumulator - the bot messages from previous dialogs
    */
-  async execute(
-    userMessage: UserMessage,
-    dialogs: DialogsData,
-    botMessagesAccumulator: BotMessageJson[] = [],
-  ): Promise<DialogManagerExecuteOutput> {
+  async execute(userMessage, dialogs, botMessagesAccumulator = []) {
     logger.debug('execute', { userMessage, dialogs, botMessagesAccumulator });
     let botMessages = botMessagesAccumulator;
     if (dialogs.stack.length === 0) {
@@ -260,7 +234,7 @@ class DialogManager extends Resolver<Dialog> {
         botMessages,
       };
     }
-    const dialog: DialogData = dialogs.stack[dialogs.stack.length - 1];
+    const dialog = dialogs.stack[dialogs.stack.length - 1];
     if (dialog.blocked) {
       dialog.blocked = false;
       const confirmationDialogName = this.resolve(`${dialog.name}-confirmation`)
@@ -275,13 +249,8 @@ class DialogManager extends Resolver<Dialog> {
         triggeredBy: 'dialog-manager',
       });
     } else {
-      const dialogInstance: Dialog = this.resolve(dialog.name);
-      // See https://github.com/facebook/flow/issues/5294
-
-      const executeResult: ExecuteResult = await dialogInstance.execute(
-        userMessage,
-        dialog.data,
-      );
+      const dialogInstance = this.resolve(dialog.name);
+      const executeResult = await dialogInstance.execute(userMessage, dialog.data);
       const { action, botMessages: newBotMessages } = executeResult;
       botMessages = botMessages.concat(newBotMessages);
       logger.debug('execute', { action });
@@ -299,11 +268,7 @@ class DialogManager extends Resolver<Dialog> {
   /**
    * Executes when receiving the classification results and message entities.
    */
-  async executeClassificationResults(
-    userMessage: UserMessage,
-    classificationResults: ClassificationResult[],
-    messageEntities: MessageEntities,
-  ): Promise<BotMessageJson[]> {
+  async executeClassificationResults(userMessage, classificationResults, messageEntities) {
     logger.debug('executeClassificationResults', { userMessage, classificationResults, messageEntities });
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);
@@ -316,10 +281,7 @@ class DialogManager extends Resolver<Dialog> {
   /**
    * Populates and executes the stack.
    */
-  async executeDialog(
-    userMessage: UserMessage,
-    newDialog: DialogData,
-  ): Promise<BotMessageJson[]> {
+  async executeDialog(userMessage, newDialog) {
     logger.debug('executeDialog', { userMessage, newDialog });
     const userId = userMessage.user;
     const dialogs = await this.getDialogs(userId);

@@ -32,9 +32,9 @@ class MongoBrain extends Brain {
   /** @inheritdoc */
   async init() {
     logger.debug('init');
-    this.db = await MongoClient.connect(this.getMongoDbUri());
-    this.users = this.db.collection('users');
-    this.global = this.db.collection('global');
+    this.client = await MongoClient.connect(this.getMongoDbUri());
+    this.users = this.client.db().collection('users');
+    this.global = this.client.db().collection('global');
     // ensure userId uniqueness
     this.users.ensureIndex({ _userId: 1 }, { unique: true });
   }
@@ -44,7 +44,7 @@ class MongoBrain extends Brain {
    * @async
    * @private
    * @param {Object} userMessage - the user text message
-   * @returns {Promise.<void>}
+   * @returns {String}
    */
   getMongoDbUri() {
     if (process.env.MONGODB_URI) {
@@ -189,7 +189,7 @@ class MongoBrain extends Brain {
    */
   async dropDatabase() {
     logger.debug('dropDatabase');
-    await this.db.dropDatabase();
+    await this.client.dropDatabase();
   }
 
   /** @inheritdoc */

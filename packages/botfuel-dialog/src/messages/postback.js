@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type { DialogData } from './../types';
-
 const Action = require('./action');
 
 /**
@@ -28,9 +24,9 @@ class Postback extends Action {
   /**
    * @constructor
    * @param {String} text - the postback text
-   * @param {DialogData} dialogData - the postback dialog information, like name or entities
+   * @param {Object} dialogData - the postback dialog information, like name or entities
    */
-  constructor(text: string, dialogData: DialogData) {
+  constructor(text, dialogData) {
     super('postback', text, dialogData);
   }
 

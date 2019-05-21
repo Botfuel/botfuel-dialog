@@ -36,8 +36,9 @@ AlcoholDialog.params = {
     },
     wantAlcohol: {
       dim: 'system:boolean',
-      isFulfilled: (entity, { dialogEntities }) =>
-        entity && dialogEntities.age && dialogEntities.age.values[0].value >= 18,
+      isFulfilled: (entity, { dialogEntities }) => entity
+        && dialogEntities.age
+        && dialogEntities.age.values[0].value >= 18,
     },
   },
 };

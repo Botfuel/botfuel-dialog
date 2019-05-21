@@ -46,26 +46,38 @@ describe('Products', () => {
       new CardsMessage([
         new Card('Top hat', WebAdapter.getStaticUrl('images/tophat.jpg'), [
           new Link('Details', 'https://www.amazon.com/Beistle-Satin-Sleek-Top-Hat/dp/B0051BH6IM'),
-          new Postback('Buy', { name: 'products', data: { messageEntities: [{ dim: 'product', values: ['top hat'] }] } }),
+          new Postback('Buy', {
+            name: 'products',
+            data: { messageEntities: [{ dim: 'product', values: ['top hat'] }] },
+          }),
         ]),
         new Card('Cowboy hat', WebAdapter.getStaticUrl('images/cowboyhat.jpg'), [
           new Link(
             'Details',
             'https://www.amazon.co.uk/Leather-Australian-Cowboy-Aussie-brown/dp/B0094J2H0O',
           ),
-          new Postback('Buy', { name: 'products', data: { messageEntities: [{ dim: 'product', values: ['cowboy hat'] }] } }),
+          new Postback('Buy', {
+            name: 'products',
+            data: { messageEntities: [{ dim: 'product', values: ['cowboy hat'] }] },
+          }),
         ]),
         new Card('Detective hat', WebAdapter.getStaticUrl('images/detectivehat.jpg'), [
           new Link(
             'Details',
             'https://www.amazon.com/Unisex-Sherlock-Holmes-Detective-Deerstalker/dp/B016A3J3N0',
           ),
-          new Postback('Buy', { name: 'products', data: { messageEntities: [{ dim: 'product', values: ['detective hat'] }] } }),
+          new Postback('Buy', {
+            name: 'products',
+            data: { messageEntities: [{ dim: 'product', values: ['detective hat'] }] },
+          }),
         ]),
       ]).toJson(userId),
     );
     expect(bot.adapter.log[3]).toEqual(
-      new PostbackMessage({ name: 'products', data: { messageEntities: [{ dim: 'product', values: ['top hat'] }] } }).toJson(userId),
+      new PostbackMessage({
+        name: 'products',
+        data: { messageEntities: [{ dim: 'product', values: ['top hat'] }] },
+      }).toJson(userId),
     );
     expect(bot.adapter.log[4]).toEqual(
       new BotImageMessage(

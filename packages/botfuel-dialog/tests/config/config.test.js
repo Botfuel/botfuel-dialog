@@ -21,6 +21,9 @@ describe('Config', () => {
     const emptyConfig = getConfiguration({});
     const noConfig = getConfiguration();
 
+    delete emptyConfig.componentRoots;
+    delete noConfig.componentRoots;
+
     expect(emptyConfig).toEqual(defaultConfig);
     expect(noConfig).toEqual(defaultConfig);
   });

@@ -19,8 +19,7 @@ const { PromptView, BotTextMessage } = require('botfuel-dialog');
 
 class AlcoholView extends PromptView {
   render(userMessage, { matchedEntities }) {
-    const wantAlcohol =
-      !!matchedEntities.wantAlcohol && matchedEntities.wantAlcohol.values[0].value;
+    const wantAlcohol = !!matchedEntities.wantAlcohol && matchedEntities.wantAlcohol.values[0].value;
     const hasAge = !!matchedEntities.age;
     const hasMinAge = hasAge && matchedEntities.age.values[0].value >= 18;
 

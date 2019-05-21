@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-
 const Message = require('./message');
 
 /**
@@ -23,14 +21,12 @@ const Message = require('./message');
  * @extends Message
  */
 class QuickrepliesMessage extends Message {
-  value: string[];
-
   /**
    * @constructor
    * @param texts - the array of texts
    * @param options - the message options
    */
-  constructor(texts: string[], options?: {}) {
+  constructor(texts, options) {
     super('quickreplies', 'bot', texts, options);
     this.validate();
   }

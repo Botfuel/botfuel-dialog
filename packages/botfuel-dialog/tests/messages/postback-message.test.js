@@ -63,7 +63,10 @@ describe('PostbackMessage', () => {
   });
 
   test('should generate the proper json with many custom data keys', async () => {
-    const message = new PostbackMessage({ name: 'greetings', data: { messageEntities: [], foo: 'bar', custom: 'key' } });
+    const message = new PostbackMessage({
+      name: 'greetings',
+      data: { messageEntities: [], foo: 'bar', custom: 'key' },
+    });
     expect(message.toJson('USER')).toEqual({
       type: 'postback',
       sender: 'user',

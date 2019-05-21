@@ -7,7 +7,7 @@ module.exports = {
     '!packages/botfuel-dialog/src/run.js',
     '!packages/botfuel-dialog/src/clean.js',
   ],
-  setupTestFrameworkScriptFile: './setup-jest.js',
+  setupFilesAfterEnv: ['./setup-jest.js'],
   setupFiles: ['./setup-tests.js'],
   verbose: true,
 };

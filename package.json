@@ -3,43 +3,46 @@
   "scripts": {
     "bootstrap": "lerna bootstrap && lerna run build --scope botfuel-dialog && lerna link --force-local",
     "clean": "lerna clean && node clean.js",
-    "type-check": "npm flow",
     "style": "lerna run style",
-    "commitmsg": "node check-commit-msg.js",
     "pretest": "npm run bootstrap",
     "release": "npm test && lerna run build --scope botfuel-dialog && lerna publish --conventional-commits --changelog-preset=angular",
-    "unit-test": "BOTFUEL_APP_TOKEN=TEST_BOT BOTFUEL_APP_ID=TEST_BOT BOTFUEL_APP_KEY=TEST_BOT jest packages/botfuel-dialog",
-    "test": "jest --forceExit"
+    "unit-test": "BOTFUEL_APP_TOKEN=TEST_BOT BOTFUEL_APP_ID=TEST_BOT BOTFUEL_APP_KEY=TEST_BOT jest --maxWorkers=3 packages/botfuel-dialog",
+    "test": "jest --maxWorkers=3 --forceExit",
+    "test-ci": "jest --maxWorkers=2"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^8.2.3",
-    "babel-jest": "^21.2.0",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.8.0",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-flow": "^6.23.0",
-    "babel-preset-stage-2": "^6.24.1",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-babel": "^4.1.1",
-    "eslint-plugin-flowtype": "^2.46.1",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jest": "^21.4.2",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-mocha": "^4.11.0",
-    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-jest": "^22.5.1",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-node": "^9.0.1",
     "eslint-plugin-react": "^7.1.0",
-    "flow-bin": "^0.69.0",
-    "flow-typed": "^2.4.0",
-    "husky": "^0.14.3",
-    "jest": "^21.2.1",
-    "lerna": "^3.0.0-alpha.1",
+    "husky": "^2.3.0",
+    "jest": "^24.8.0",
+    "lerna": "^3.14.1",
     "replay": "^2.1.4",
     "shelljs": "^0.8.2"
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "commit-msg": "node check-commit-msg.js"
+    }
+  }
 }

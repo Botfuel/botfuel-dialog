@@ -24,6 +24,8 @@
     "no-plusplus": "off",
     "no-restricted-syntax": "off",
     "no-underscore-dangle": "off",
-    "strict": 0
+    "strict": 0,
+    "max-len": ["error", { "code": 120 }],
+    "lines-between-class-members": "off"
   }
 }

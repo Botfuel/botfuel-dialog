@@ -2,23 +2,30 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:chakracore-8.10.0
-      - image: circleci/mongo:3.6.9
+      - image: circleci/node:9
+      - image: circleci/mongo:3.6
     steps:
       - checkout
-      # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-      - run: npm install
-      - run: npm bootstrap
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Bootstrap botfuel-dialog
+          command: npm run bootstrap
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm run style
-      - run: npm run type-check
-      - run: npm test
-      - run: bash <(curl -s https://codecov.io/bash)
+      - run:
+          name: Check code style
+          command: npm run style
+      - run:
+          name: Run tests
+          command: npm run test-ci
+      - run:
+          name: Generate Codecov report
+          command: bash <(curl -s https://codecov.io/bash)

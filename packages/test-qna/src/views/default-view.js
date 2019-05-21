@@ -20,7 +20,8 @@ class DefaultView extends View {
   render() {
     return [
       new BotTextMessage(
-        'I’m sorry, I did not understand your question. Please reach us at contact@my-sample-compagny.com for further assistance.',
+        'I’m sorry, I did not understand your question. '
+        + 'Please reach us at contact@my-sample-compagny.com for further assistance.',
       ),
     ];
   }

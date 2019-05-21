@@ -14,17 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type Bot from '../bot';
-import type Brain from '../brains/brain';
-import type {
-  UserMessage,
-  DialogDataData,
-  DialogData,
-} from '../types';
-import type { BotMessageJson } from '../messages/message';
-
 const _ = require('lodash');
 const logger = require('logtown')('Dialog');
 const kebabCase = require('lodash/kebabCase');
@@ -33,51 +22,6 @@ const MissingImplementationError = require('../errors/missing-implementation-err
 const SdkError = require('../errors/sdk-error');
 const DialogError = require('../errors/dialog-error');
 
-
-// TODO: Remove duplication of magic codes
-export type ActionCancel = {
-  name: 'cancel',
-  newDialog?: DialogData,
-};
-
-export type ActionComplete = {
-  name: 'complete',
-};
-
-export type ActionWait = {
-  name: 'wait',
-};
-
-export type ActionNext = {
-  name: 'next',
-  newDialog: DialogData,
-};
-
-export type ActionNewConversation = {
-  name: 'new_conversation',
-  newDialog?: DialogData,
-};
-
-export type Action =
-  ActionCancel |
-  ActionComplete |
-  ActionWait |
-  ActionNext |
-  ActionNewConversation;
-
-export type DialogCharacteristics = {
-  reentrant: boolean,
-};
-export type DialogParameters = {
-  namespace?: string,
-  entities?: Object,
-};
-export type DisplayData = {};
-
-export type ExecuteResult = {
-  action: Action,
-  botMessages: BotMessageJson[],
-};
 
 /**
  * A dialog is responsible for calling its associated view with the right parameters.
@@ -95,23 +39,11 @@ class Dialog {
   static ACTION_NEXT = 'next';
   static ACTION_NEW_CONVERSATION = 'new_conversation';
 
-  bot: Bot;
-  brain: Brain;
-  characteristics: DialogCharacteristics;
-  parameters: DialogParameters;
-  viewResolver: ViewResolver;
-  name: string;
-  config: Object;
-
   /*
    * @param {Object} characteristics - the characteristics of the dialog
    * @param {Object} [parameters={}] - the optional dialog parameters
    */
-  constructor(
-    bot: Bot,
-    characteristics: DialogCharacteristics = { reentrant: false },
-    parameters: DialogParameters = {},
-  ) {
+  constructor(bot, characteristics = { reentrant: false }, parameters = {}) {
     logger.debug('constructor', { parameters });
     const { config, brain } = bot;
     this.brain = brain;
@@ -125,19 +57,19 @@ class Dialog {
   /**
    * Gets the dialog name.
    */
-  getName(): string {
-    return kebabCase(this.constructor.name).replace(/(dialog|-dialog)/g, ''); // TODO: is this correct?
+  getName() {
+    return kebabCase(this.constructor.name).replace(/(dialog|-dialog)/g, '');
   }
 
-  /*
+  /**
    * Display messages by resolving the view associated to the dialog.
-   * @param {Object} [data] - data used at display time
-   * @returns {Promise.<void>}
+   * @param userMessage
+   * @param data
+   * @returns {Promise}
    */
-  async display(userMessage: UserMessage, data: DisplayData): Promise<BotMessageJson[]> {
+  async display(userMessage, data) {
     logger.debug('display', { userMessage, data });
-    const botMessages = this.viewResolver.resolve(this.name).renderAsJson(userMessage, data);
-    return botMessages;
+    return this.viewResolver.resolve(this.name).renderAsJson(userMessage, data);
   }
 
   /**
@@ -147,10 +79,7 @@ class Dialog {
    * @param data - the data
    * @returns {Promise.<Object>}
    */
-  async execute(
-    userMessage: UserMessage,
-    data: DialogDataData, // eslint-disable-line no-unused-vars
-  ): Promise<ExecuteResult> {
+  async execute(userMessage, data) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
@@ -161,7 +90,7 @@ class Dialog {
    * @param name - the name of the next dialog to execute
    * @param data - the data for the next dialog
    */
-  triggerNext(name: string, data: DialogDataData = {}): ActionNext {
+  triggerNext(name, data = {}) {
     if (!name) {
       throw new DialogError({
         message: 'You must provide a dialogName as a parameter to the nextDialog method.',
@@ -183,7 +112,7 @@ class Dialog {
    * optionally providing the name of the next dialog.
    * @param name - the name of the next dialog (optional)
    */
-  cancelPrevious(name: ?string): ActionCancel {
+  cancelPrevious(name) {
     if (name) {
       return {
         name: Dialog.ACTION_CANCEL,
@@ -207,7 +136,7 @@ class Dialog {
    * @param {Object} [data] - the data for the next dialog
    * @returns {Object} the action object
    */
-  startNewConversation(name: ?string, data: DialogDataData = {}): ActionNewConversation {
+  startNewConversation(name, data = {}) {
     if (name) {
       return {
         name: Dialog.ACTION_NEW_CONVERSATION,
@@ -227,7 +156,7 @@ class Dialog {
    * Build an action
    * indicating that the current dialog is completed.
    */
-  complete(): ActionComplete {
+  complete() {
     return {
       name: Dialog.ACTION_COMPLETE,
     };
@@ -237,7 +166,7 @@ class Dialog {
    * Builds an action.
    * indicating that current dialog should wait.
    */
-  wait(): ActionWait {
+  wait() {
     return {
       name: Dialog.ACTION_WAIT,
     };
@@ -250,7 +179,7 @@ class Dialog {
    * @param {Object} data - the data
    * @returns - the extra data which will be added to the data passed to the view
    */
-  async dialogWillDisplay(userMessage: UserMessage, data: {}): Promise<any> {
+  async dialogWillDisplay(userMessage, data) {
     logger.debug('dialogWillDisplay', { userMessage, data });
     return null;
   }
@@ -262,7 +191,7 @@ class Dialog {
    * @param data - the data
    * @returns - the data with extraData combined
    */
-  mergeData(extraData: any, data: { [string]: any }): { [string]: any } {
+  mergeData(extraData, data) {
     // if extraData is null
     if (!extraData) {
       return data;
@@ -288,7 +217,7 @@ class Dialog {
    * @param userMessage - the user message
    * @param data - the data passed to the view
    */
-  async dialogWillComplete(userMessage: UserMessage, data: {}): Promise<any> {
+  async dialogWillComplete(userMessage, data) {
     logger.debug('dialogWillComplete', { userMessage, data });
     return this.complete();
   }

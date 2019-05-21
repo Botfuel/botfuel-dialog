@@ -21,8 +21,7 @@ const members = {
   fatherWeight: 'your male genitor weighs',
   motherWeight: 'your female genitor weighs',
 };
-const weightMessage = (key, entityValue) =>
-  new BotTextMessage(`Cool, so ${members[key]} ${entityValue.value}`);
+const weightMessage = (key, entityValue) => new BotTextMessage(`Cool, so ${members[key]} ${entityValue.value}`);
 
 class WeightView extends PromptView {
   render(userMessage, { matchedEntities, missingEntities }) {

@@ -14,31 +14,12 @@
  * limitations under the License.
  */
 
-// @flow
-
-export type BotMessageJson = {
-  type: string,
-  sender: string,
-  user: string,
-  payload: {
-    value: any,
-    options?: {},
-  },
-  id?: string,
-  timestamp?: number,
-};
-
 const ValidObject = require('./valid-object');
 
 /**
  * An abstract message.
  */
 class Message extends ValidObject {
-  type: string;
-  sender: string;
-  value: any;
-  options: ?{};
-
   /**
    * @constructor
    * @param type - the message type
@@ -46,7 +27,7 @@ class Message extends ValidObject {
    * @param value - the message value
    * @param options - the message options
    */
-  constructor(type: string, sender: string, value: any, options?: {}) {
+  constructor(type, sender, value, options) {
     super();
     this.type = type;
     this.sender = sender;
@@ -59,28 +40,23 @@ class Message extends ValidObject {
    * @param userId - the user id
    * @returns the json message
    */
-  toJson(userId: string): BotMessageJson {
-    const jsonOutput: BotMessageJson = {
+  toJson(userId) {
+    return {
       type: this.type,
       sender: this.sender,
       user: userId,
       payload: {
         value: this.valueAsJson(),
+        options: this.options,
       },
     };
-
-    if (this.options) {
-      jsonOutput.payload.options = this.options;
-    }
-
-    return jsonOutput;
   }
 
   /**
    * Returns the value as json.
    * @returns the json value
    */
-  valueAsJson(): any {
+  valueAsJson() {
     return this.value;
   }
 
@@ -91,5 +67,3 @@ class Message extends ValidObject {
 }
 
 module.exports = Message;
-
-export type BotMessageObject = Message;

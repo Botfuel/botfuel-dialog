@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const COMMIT_RULE = /^(build|ci|chore|docs|feat|fix|perf|refactor|style|test)(\\([a-z\\-]+\\))?: .*/;
 
-const commitMessageFilename = process.env.GIT_PARAMS; // HUSKY_GIT_PARAMS for husky@next
+const commitMessageFilename = process.env.GIT_PARAMS || process.env.HUSKY_GIT_PARAMS;
 const commitMessage = fs.readFileSync(commitMessageFilename, 'utf8');
 
 const compliance = commitMessage.match(COMMIT_RULE);

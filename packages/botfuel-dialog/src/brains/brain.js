@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-
-import type { Config } from '../config';
-import type { DialogsData, UserData, ConversationData } from '../types';
-
 const uuidv4 = require('uuid/v4');
 const logger = require('logtown')('Brain');
 const MissingImplementationError = require('../errors/missing-implementation-error');
@@ -28,10 +23,7 @@ const MissingImplementationError = require('../errors/missing-implementation-err
  * Some of the brain methods use a scope which is either 'user' or 'last conversation'.
  */
 class Brain {
-  config: Config;
-  conversationDuration: number;
-
-  constructor(config: Config) {
+  constructor(config) {
     this.conversationDuration = config.brain.conversationDuration;
   }
 
@@ -39,7 +31,7 @@ class Brain {
    * Initializes the brain.
    * @private
    */
-  async init(): Promise<void> {
+  async init() {
     logger.debug('init');
   }
 
@@ -47,14 +39,14 @@ class Brain {
    * Empties the brain.
    * @abstract
    */
-  async clean(): Promise<void> {
+  async clean() {
     throw new MissingImplementationError();
   }
 
   /**
    * Gets the init value for creating a new user.
    */
-  getUserInitValue(userId: string): UserData {
+  getUserInitValue(userId) {
     return {
       _userId: userId,
       _conversations: [this.getConversationInitValue()],
@@ -65,7 +57,7 @@ class Brain {
   /**
    * Adds a user if necessary (if he does not exist).
    */
-  async addUserIfNecessary(userId: string): Promise<void> {
+  async addUserIfNecessary(userId) {
     logger.debug('addUserIfNecessary', userId);
     const userExists = await this.hasUser(userId);
     if (!userExists) {
@@ -77,21 +69,21 @@ class Brain {
    * Checks if there is a user for a given id.
    * @abstract
    */
-  async hasUser(userId: string): Promise<boolean> { // eslint-disable-line no-unused-vars
+  async hasUser(userId) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
   /**
    * Adds a user.
    */
-  async addUser(userId: string): Promise<UserData> { // eslint-disable-line no-unused-vars
+  async addUser(userId) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
   /**
    * Gets a user.
    */
-  async getUser(userId: string): Promise<UserData> { // eslint-disable-line no-unused-vars
+  async getUser(userId) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
@@ -99,14 +91,14 @@ class Brain {
    * Gets all users.
    * @returns the users
    */
-  async getAllUsers(): Promise<UserData[]> {
+  async getAllUsers() {
     throw new MissingImplementationError();
   }
 
   /**
    * Gets the init value for creating a new conversation.
    */
-  getConversationInitValue(): ConversationData {
+  getConversationInitValue() {
     return {
       _dialogs: {
         stack: [],
@@ -121,9 +113,7 @@ class Brain {
    * Adds a conversation to a user.
    * @returns the last conversation added
    */
-  async addConversation(
-    userId: string, // eslint-disable-line no-unused-vars
-  ): Promise<ConversationData> {
+  async addConversation(userId) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
@@ -132,9 +122,7 @@ class Brain {
    * If the last conversation found isn't valid anymore, adds a new one and returns it.
    * @returns the last conversation of the user
    */
-  async fetchLastConversation(
-    userId: string, // eslint-disable-line no-unused-vars
-  ): Promise<ConversationData> {
+  async fetchLastConversation(userId) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
@@ -144,18 +132,14 @@ class Brain {
    * @returns {{ _userId: String, [key]: any }}
    * an object containing the _userId and the key/value pair
    */
-  async userSet(
-    userId: string,
-    key: string,
-    value: mixed, // eslint-disable-line no-unused-vars
-  ): Promise<UserData> {
+  async userSet(userId, key, value) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
   /**
    * Gets a value for a key within the scope of the user.
    */
-  async userGet(userId: string, key: string): Promise<mixed> {
+  async userGet(userId, key) {
     logger.debug('userGet', userId, key);
     const user = await this.getUser(userId);
     return user[key];
@@ -165,11 +149,7 @@ class Brain {
    * Sets a value for a key within the scope of the last conversation of a user.
    * @returns the updated conversation
    */
-  async conversationSet(
-    userId: string,
-    key: string,
-    value: mixed, // eslint-disable-line no-unused-vars
-  ): Promise<ConversationData> {
+  async conversationSet(userId, key, value) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
@@ -177,7 +157,7 @@ class Brain {
    * Gets the value for a given key within the scope of the last conversation of a user.
    * @returns the value
    */
-  async conversationGet(userId: string, key: string): Promise<mixed> {
+  async conversationGet(userId, key) {
     logger.debug('conversationGet', userId, key);
     const conversation = await this.fetchLastConversation(userId);
     return conversation[key];
@@ -186,7 +166,7 @@ class Brain {
   /**
    * Validates the last conversation of an user.
    */
-  isConversationValid(conversation: ConversationData): boolean {
+  isConversationValid(conversation) {
     return (
       conversation !== undefined && Date.now() - conversation._createdAt < this.conversationDuration
     );
@@ -195,15 +175,14 @@ class Brain {
   /**
    * Gets dialogs data from the last conversation.
    */
-  async getDialogs(userId: string): Promise<DialogsData> {
-    const dialogs = await this.conversationGet(userId, '_dialogs');
-    return ((dialogs: any): DialogsData); // Flow is not clever enough
+  async getDialogs(userId) {
+    return this.conversationGet(userId, '_dialogs');
   }
 
   /**
    * Sets dialogs data in the last conversation.
    */
-  async setDialogs(userId: string, dialogs: DialogsData): Promise<void> {
+  async setDialogs(userId, dialogs) {
     if (dialogs.isNewConversation) {
       await this.addConversation(userId);
       delete dialogs.isNewConversation;
@@ -215,7 +194,7 @@ class Brain {
    * Gets a value for a key within the global scope.
    * @abstract
    */
-  async botGet(key: string): Promise<mixed> { // eslint-disable-line no-unused-vars
+  async botGet(key) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 
@@ -223,7 +202,7 @@ class Brain {
    * Sets a value for a key within the global scope.
    * @abstract
    */
-  async botSet<T>(key: string, value: T): Promise<T> { // eslint-disable-line no-unused-vars
+  async botSet(key, value) { // eslint-disable-line no-unused-vars
     throw new MissingImplementationError();
   }
 }

@@ -17,17 +17,24 @@
 const isEqual = require('lodash/isEqual');
 const intersection = require('lodash/intersection');
 
-export const makePositionsArray = entity =>
-  Array(entity.end - entity.start)
-    .fill()
-    .map((_, i) => i + entity.start);
+const makePositionsArray = entity => Array(entity.end - entity.start)
+  .fill()
+  .map((_, i) => i + entity.start);
 
-export const doEntitiesIntersect = (entityA, entityB) =>
-  !!intersection(makePositionsArray(entityA), makePositionsArray(entityB)).length;
+const doEntitiesIntersect = (entityA, entityB) => !!intersection(
+  makePositionsArray(entityA),
+  makePositionsArray(entityB),
+).length;
 
-export const filterIntersectingEntities = (entities, entity) => {
+const filterIntersectingEntities = (entities, entity) => {
   if (entity.start == null || entity.end == null) {
     return entities.filter(e => !isEqual(e, entity));
   }
   return entities.filter(e => !doEntitiesIntersect(e, entity));
+};
+
+module.exports = {
+  makePositionsArray,
+  doEntitiesIntersect,
+  filterIntersectingEntities,
 };

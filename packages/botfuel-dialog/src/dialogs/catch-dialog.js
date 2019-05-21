@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-const BaseDialog = require('./base-dialog');
 const logger = require('logtown')('CatchDialog');
+const BaseDialog = require('./base-dialog');
 
 /**
  * @extends BaseDialog

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-// @flow
-
 const Message = require('./message');
 
 /**
@@ -23,14 +21,12 @@ const Message = require('./message');
  * @extends Message
  */
 class BotTextMessage extends Message {
-  value: string;
-
   /**
    * @constructor
    * @param text - the text
    * @param options - the message options
    */
-  constructor(text: string, options?: {}) {
+  constructor(text, options) {
     super('text', 'bot', text, options);
     this.validate();
   }

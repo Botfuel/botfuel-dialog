@@ -1,19 +1,9 @@
 {
   "presets": [
-    "env",
-    "stage-2",
-    "flow"
+    "@babel/preset-env"
   ],
   "plugins": [
-    "transform-class-properties",
-    [
-      "babel-plugin-transform-builtin-extend",
-      {
-        "globals": [
-          "Error",
-          "Array"
-        ]
-      }
-    ]
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-syntax-dynamic-import"
   ]
 }

@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-import rp from 'request-promise-native';
-
+const rp = require('request-promise-native');
 const { clone, extend } = require('lodash');
 const logger = require('logtown')('WsExtractor');
+const urlJoin = require('url-join');
 const AuthenticationError = require('../errors/authentication-error');
 const MissingCredentialsError = require('../errors/missing-credentials-error');
 const Extractor = require('./extractor');
-const urlJoin = require('url-join');
 
 
 const PROXY_HOST = process.env.BOTFUEL_PROXY_HOST || 'https://api.botfuel.io';
 const ENTITY_EXTRACTION_ROUTE = '/nlp/entity-extraction';
 const ENTITY_EXTRACTION_VERSION = 'v0';
 
-const ENTITY_EXTRACTION_API = process.env.BOTFUEL_ENTITY_EXTRACTION_API_URL ||
-                           urlJoin(PROXY_HOST, ENTITY_EXTRACTION_ROUTE, ENTITY_EXTRACTION_VERSION);
+const ENTITY_EXTRACTION_API = process.env.BOTFUEL_ENTITY_EXTRACTION_API_URL
+  || urlJoin(PROXY_HOST, ENTITY_EXTRACTION_ROUTE, ENTITY_EXTRACTION_VERSION);
 
 /**
  * Entity extraction web service based extractor.
@@ -48,13 +47,12 @@ class WsExtractor extends Extractor {
     }
   }
 
-  cleanParameters = params =>
-    Object.keys(params).reduce((returns, element) => {
-      if (params[element] !== undefined) {
-        return { ...returns, [element]: params[element] };
-      }
-      return returns;
-    }, {});
+  cleanParameters = params => Object.keys(params).reduce((returns, element) => {
+    if (params[element] !== undefined) {
+      return { ...returns, [element]: params[element] };
+    }
+    return returns;
+  }, {});
 
   /** @inheritDoc */
   async compute(sentence) {

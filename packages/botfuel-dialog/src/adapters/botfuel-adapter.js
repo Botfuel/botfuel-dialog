@@ -15,9 +15,9 @@
  */
 
 const logger = require('logtown')('BotfuelAdapter');
-const WebAdapter = require('./web-adapter');
 const UserTextMessage = require('../messages/user-text-message');
 const PostbackMessage = require('../messages/postback-message');
+const WebAdapter = require('./web-adapter');
 
 const CHAT_SERVER_URL = process.env.CHAT_SERVER || 'https://webchat.botfuel.io';
 

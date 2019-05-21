@@ -40,7 +40,7 @@ const brainTest = (brainLabel) => {
 
   beforeAll(() => {
     if (brainLabel === MONGO_BRAIN_LABEL) {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
     }
   });
 

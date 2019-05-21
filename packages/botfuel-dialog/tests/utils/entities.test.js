@@ -22,7 +22,7 @@ const {
 
 describe('Entities utils', () => {
   describe('makePositionsArray', () => {
-    test('should return an array of numbers indicating characters positions occupied by en entity within a string', async () => {
+    test('should indicate chars positions occupied by an entity within a string', async () => {
       expect(
         makePositionsArray({
           start: 5,
@@ -126,7 +126,7 @@ describe('Entities utils', () => {
       ]);
     });
 
-    test('should return entities that are different from the entity parameter if it doesn’t have start or end', async () => {
+    test('should return different entities from the entity parameter if it doesn’t have start or end', async () => {
       expect(
         filterIntersectingEntities(
           [

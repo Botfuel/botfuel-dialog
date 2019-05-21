@@ -19,7 +19,7 @@ const WsExtractor = require('../../src/extractors/ws-extractor');
 const MissingCredentialsError = require('../../src/errors/missing-credentials-error');
 
 describe('WsExtractor', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
 
   afterEach(() => {
     sandbox.restore();

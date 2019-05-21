@@ -14,34 +14,11 @@
  * limitations under the License.
  */
 
-// @flow
-
-export type ClassificationType = 'QnA' | 'Intent';
-
-export type QnaAnswers = {
-  value: string,
-}[][];
-
-export type ClassificationData = {
-  name?: string,
-  label?: string;
-  type: string,
-  answers?: QnaAnswers,
-  resolvePrompt?: string,
-};
-
-
 const logger = require('logtown')('Intent');
 const SdkError = require('../errors/sdk-error');
 
 /** ClassificationResult class */
 class ClassificationResult {
-  type: ClassificationType;
-  name: string;
-  label: ?string;
-  resolvePrompt: ?string;
-  answers: QnaAnswers | void;
-
   static TYPE_QNA = 'QnA';
   static TYPE_INTENT = 'Intent';
 
@@ -49,7 +26,7 @@ class ClassificationResult {
    * @constructor
    * @param data data receive from trainer api request
    */
-  constructor(data: ClassificationData) {
+  constructor(data) {
     logger.debug('constructor');
 
     this.type = this.getType(data.type);
@@ -72,23 +49,22 @@ class ClassificationResult {
    * @param type - type
    * @returns static TYPE
    */
-  getType(type: string): ClassificationType {
+  getType(type) {
     if (!type) {
       throw new SdkError('Intent constructor: data must contain type');
     }
 
-    if (type.toLowerCase() === 'intent') {
-      return ClassificationResult.TYPE_INTENT;
-    } else if (type.toLowerCase() === 'qna') {
-      return ClassificationResult.TYPE_QNA;
+    switch (type.toLowerCase()) {
+      case 'intent': return ClassificationResult.TYPE_INTENT;
+      case 'qna': return ClassificationResult.TYPE_QNA;
+      default: throw new SdkError(`Intent constructor: invalid intent type: ${type}`);
     }
-    throw new SdkError(`Intent constructor: invalid intent type: ${type}`);
   }
 
   /**
    * Returns true if intent is QnA.
    */
-  isQnA(): boolean {
+  isQnA() {
     return this.type === ClassificationResult.TYPE_QNA;
   }
 }

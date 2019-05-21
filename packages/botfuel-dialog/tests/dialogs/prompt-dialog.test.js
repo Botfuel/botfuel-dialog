@@ -317,8 +317,7 @@ describe('PromptDialog', () => {
           },
           age: {
             dim: 'number',
-            isFulfilled: entity =>
-              entity && entity.values && entity.values[0] && entity.values[0].value >= 20,
+            isFulfilled: entity => entity && entity.values && entity.values[0] && entity.values[0].value >= 20,
           },
         };
 
@@ -459,8 +458,10 @@ describe('PromptDialog', () => {
         const expectedEntities = {
           myNumber: {
             dim: 'number',
-            isFulfilled: newValue =>
-              newValue && newValue.values && newValue.values[0] && newValue.values[0].value > 60,
+            isFulfilled: newValue => newValue
+              && newValue.values
+              && newValue.values[0]
+              && newValue.values[0].value > 60,
           },
         };
 
@@ -488,8 +489,10 @@ describe('PromptDialog', () => {
         const expectedEntities = {
           myNumber: {
             dim: 'number',
-            isFulfilled: newValue =>
-              newValue && newValue.values && newValue.values[0] && newValue.values[0].value > 60,
+            isFulfilled: newValue => newValue
+              && newValue.values
+              && newValue.values[0]
+              && newValue.values[0].value > 60,
           },
         };
 
@@ -802,8 +805,9 @@ describe('PromptDialog', () => {
           },
           wantAlcohol: {
             dim: 'number',
-            isFulfilled: (entity, { dialogEntities }) =>
-              entity && dialogEntities.age && dialogEntities.age.values[0].value >= 18,
+            isFulfilled: (entity, { dialogEntities }) => entity
+              && dialogEntities.age
+              && dialogEntities.age.values[0].value >= 18,
           },
         };
 

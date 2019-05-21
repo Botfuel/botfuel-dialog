@@ -33,14 +33,13 @@ class CorpusExtractor extends Extractor {
     const entities = [];
     for (const row of this.parameters.corpus.matrix) {
       for (const word of row) {
-        this.findOccurrences(normalizedSentence, word).map(index =>
-          this.addEntity(entities, {
-            dim: this.parameters.dimension,
-            body: word,
-            values: [this.buildValue(row[0])],
-            start: index.start,
-            end: index.end,
-          }));
+        this.findOccurrences(normalizedSentence, word).map(index => this.addEntity(entities, {
+          dim: this.parameters.dimension,
+          body: word,
+          values: [this.buildValue(row[0])],
+          start: index.start,
+          end: index.end,
+        }));
       }
     }
     return entities;
@@ -78,9 +77,9 @@ class CorpusExtractor extends Extractor {
       start = sentence.indexOf(normalizedWord, end);
       end = start + normalizedWord.length;
       if (
-        start < 0 ||
-        (start > 0 && LETTER_DIGIT_REGEX.test(sentence[start - 1])) ||
-        (end < sentence.length && LETTER_DIGIT_REGEX.test(sentence[end]))
+        start < 0
+        || (start > 0 && LETTER_DIGIT_REGEX.test(sentence[start - 1]))
+        || (end < sentence.length && LETTER_DIGIT_REGEX.test(sentence[end]))
       ) {
         break;
       }
