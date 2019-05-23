@@ -77,3 +77,7 @@ yarn.lock
 
 #VSCode
 .vscode
+
+# Packages lock files
+packages/*/package-lock.json
+!packages/botfuel-dialog/package-lock.json
