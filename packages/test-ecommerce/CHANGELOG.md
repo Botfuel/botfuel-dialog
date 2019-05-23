@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.2.4](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.0...v12.2.4) (2019-05-23)
+
+
+### Bug Fixes
+
+* set node engine >=8 ([1761e1c](https://github.com/Botfuel/botfuel-dialog/commit/1761e1c))
+* switch to npm, allow node engine >=8 ([e4a57f2](https://github.com/Botfuel/botfuel-dialog/commit/e4a57f2))
+* tests wip ([1456d9e](https://github.com/Botfuel/botfuel-dialog/commit/1456d9e))
+* upgrade root depenencies ([7b6c83d](https://github.com/Botfuel/botfuel-dialog/commit/7b6c83d))
+* yarn install works with node v8.10 ([f02fda5](https://github.com/Botfuel/botfuel-dialog/commit/f02fda5))
+
+
+
+
+
 ## [12.2.3](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.0...v12.2.3) (2019-05-23)
 
 

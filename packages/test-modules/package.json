@@ -1,6 +1,6 @@
 {
   "name": "test-modules",
-  "version": "12.2.3",
+  "version": "12.2.4",
   "private": true,
   "author": "sysadmin@botfuel.io",
   "description": "Provide minimal examples for botfuel modules",
