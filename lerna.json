@@ -9,8 +9,10 @@
   },
   "command": {
     "bootstrap": {
-      "npmClientArgs": ["--no-package-lock"]
+      "npmClientArgs": [
+        "--no-package-lock"
+      ]
     }
   },
-  "version": "12.2.5"
+  "version": "12.2.6"
 }

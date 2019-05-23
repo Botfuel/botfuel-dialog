@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.2.6](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.5...v12.2.6) (2019-05-23)
+
+
+### Bug Fixes
+
+* added bootstrap command option for lerna ([3dafde2](https://github.com/Botfuel/botfuel-dialog/commit/3dafde2))
+
+
+
+
+
 ## [12.2.5](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.0...v12.2.5) (2019-05-23)
 
 
