@@ -1,11 +1,12 @@
 const fs = require('fs');
 
 const COMMIT_RULE = /^(build|ci|chore|docs|feat|fix|perf|refactor|style|test)(\\([a-z\\-]+\\))?: .*/;
+const VERSION_COMMIT_RULE = /^v(\d+)\.(\d+)\.(\d+)$/;
 
 const commitMessageFilename = process.env.HUSKY_GIT_PARAMS;
 const commitMessage = fs.readFileSync(commitMessageFilename, 'utf8');
 
-const compliance = commitMessage.match(COMMIT_RULE);
+const compliance = commitMessage.match(COMMIT_RULE) || commitMessage.match(VERSION_COMMIT_RULE);
 
 if (!compliance) {
   console.log('You just tried to commit a change with a commit message that does not comply');
