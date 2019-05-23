@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.2.3](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.0...v12.2.3) (2019-05-23)
+
+
+### Bug Fixes
+
+* circle ci config ([375eb48](https://github.com/Botfuel/botfuel-dialog/commit/375eb48))
+* circleci ([4795438](https://github.com/Botfuel/botfuel-dialog/commit/4795438))
+* circleci ([20b26b3](https://github.com/Botfuel/botfuel-dialog/commit/20b26b3))
+* circleci ([2f62c63](https://github.com/Botfuel/botfuel-dialog/commit/2f62c63))
+* circleci ([1ad9cca](https://github.com/Botfuel/botfuel-dialog/commit/1ad9cca))
+* circleci ([da44dff](https://github.com/Botfuel/botfuel-dialog/commit/da44dff))
+* code style ([5b425a3](https://github.com/Botfuel/botfuel-dialog/commit/5b425a3))
+* documentation, circle-ci config ([ac181f8](https://github.com/Botfuel/botfuel-dialog/commit/ac181f8))
+* husky commit check ([53663bf](https://github.com/Botfuel/botfuel-dialog/commit/53663bf))
+* lerna configuration ([c7c9557](https://github.com/Botfuel/botfuel-dialog/commit/c7c9557))
+* removed jest max workers options ([824ea50](https://github.com/Botfuel/botfuel-dialog/commit/824ea50))
+* set node engine >=8 ([1761e1c](https://github.com/Botfuel/botfuel-dialog/commit/1761e1c))
+* switch to npm, allow node engine >=8 ([e4a57f2](https://github.com/Botfuel/botfuel-dialog/commit/e4a57f2))
+* tests wip ([1456d9e](https://github.com/Botfuel/botfuel-dialog/commit/1456d9e))
+* type-check command ([1d022e0](https://github.com/Botfuel/botfuel-dialog/commit/1d022e0))
+* upgrade dependencies, fix tests ([faac874](https://github.com/Botfuel/botfuel-dialog/commit/faac874))
+* upgrade root depenencies ([7b6c83d](https://github.com/Botfuel/botfuel-dialog/commit/7b6c83d))
+* use only two workers when running tests with jest ([7cb8fbc](https://github.com/Botfuel/botfuel-dialog/commit/7cb8fbc))
+* using npm instead of yarn ([0f77b1f](https://github.com/Botfuel/botfuel-dialog/commit/0f77b1f))
+* various fixes, upgrade babel to v7 ([ad6af60](https://github.com/Botfuel/botfuel-dialog/commit/ad6af60))
+* yarn install works with node v8.10 ([f02fda5](https://github.com/Botfuel/botfuel-dialog/commit/f02fda5))
+
+
+### Features
+
+* using npm instead of yarn ([b695a64](https://github.com/Botfuel/botfuel-dialog/commit/b695a64))
+
+
+### Performance Improvements
+
+* run compute functions in parallel into CompositeExtractor ([1d2e033](https://github.com/Botfuel/botfuel-dialog/commit/1d2e033))
+
+
+
+
+
 ## [12.2.2](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.0...v12.2.2) (2019-05-14)
 
 

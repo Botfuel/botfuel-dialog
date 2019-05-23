@@ -1,9 +1,11 @@
 {
   "lerna": "2.7.1",
-  "packages": ["packages/*"],
+  "packages": [
+    "packages/*"
+  ],
   "changelog": {
     "repo": "botfuel-dialog/botfuel-dialog",
     "cacheDir": ".changelog"
   },
-  "version": "12.2.2"
+  "version": "12.2.3"
 }

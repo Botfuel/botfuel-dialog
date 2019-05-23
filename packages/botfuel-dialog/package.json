@@ -1,6 +1,6 @@
 {
   "name": "botfuel-dialog",
-  "version": "12.2.2",
+  "version": "12.2.3",
   "author": "sysadmin@botfuel.io",
   "main": "index.js",
   "description": "Botfuel Dialog",
