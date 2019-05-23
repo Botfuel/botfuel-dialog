@@ -7,5 +7,10 @@
     "repo": "botfuel-dialog/botfuel-dialog",
     "cacheDir": ".changelog"
   },
+  "command": {
+    "bootstrap": {
+      "npmClientArgs": ["--no-package-lock"]
+    }
+  },
   "version": "12.2.5"
 }
