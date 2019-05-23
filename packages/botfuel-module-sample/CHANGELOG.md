@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.2.5](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.0...v12.2.5) (2019-05-23)
+
+
+### Bug Fixes
+
+* add option to fix package release ([680a1ec](https://github.com/Botfuel/botfuel-dialog/commit/680a1ec))
+* set node engine >=8 ([1761e1c](https://github.com/Botfuel/botfuel-dialog/commit/1761e1c))
+* upgrade root depenencies ([7b6c83d](https://github.com/Botfuel/botfuel-dialog/commit/7b6c83d))
+
+
+
+
+
 ## [12.2.4](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.0...v12.2.4) (2019-05-23)
 
 
