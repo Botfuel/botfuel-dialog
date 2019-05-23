@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const COMMIT_RULE = /^(build|ci|chore|docs|feat|fix|perf|refactor|style|test)(\\([a-z\\-]+\\))?: .*/;
-const VERSION_COMMIT_RULE = /^v(\d+)\.(\d+)\.(\d+)$/;
+const VERSION_COMMIT_RULE = /(v(\d+)\.(\d+)\.(\d+))/; // match semver versioning commits (ex: v0.0.0)
 
 const commitMessageFilename = process.env.HUSKY_GIT_PARAMS;
 const commitMessage = fs.readFileSync(commitMessageFilename, 'utf8');
