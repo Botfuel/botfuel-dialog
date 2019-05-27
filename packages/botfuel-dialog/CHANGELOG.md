@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.3.0](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.6...v12.3.0) (2019-05-27)
+
+
+### Features
+
+* Add QnAs label into ClassificationResults to be able to retreived it into the bot ([d5ded96](https://github.com/Botfuel/botfuel-dialog/commit/d5ded96))
+
+
+
+
+
 ## [12.2.6](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.5...v12.2.6) (2019-05-23)
 
 
