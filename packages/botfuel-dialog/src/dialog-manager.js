@@ -115,7 +115,7 @@ class DialogManager extends Resolver {
         newDialog = {
           name: classificationResults[0].name,
           data: classificationResults[0].isQnA()
-            ? { answers: classificationResults[0].answers } // TODO refactor (law of Demeter)
+            ? { answers: classificationResults[0].answers, label: classificationResults[0].label } // TODO refactor (law of Demeter)
             : { messageEntities },
           triggeredBy: 'nlu',
         };
