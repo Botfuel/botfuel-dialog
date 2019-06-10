@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.3.1](https://github.com/Botfuel/botfuel-dialog/compare/v12.3.0...v12.3.1) (2019-06-10)
+
+
+### Bug Fixes
+
+* undefined context issue ([72927c6](https://github.com/Botfuel/botfuel-dialog/commit/72927c6))
+
+
+
+
+
 # [12.3.0](https://github.com/Botfuel/botfuel-dialog/compare/v12.2.6...v12.3.0) (2019-05-27)
 
 
