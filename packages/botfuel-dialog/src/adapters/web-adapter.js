@@ -62,8 +62,8 @@ class WebAdapter extends Adapter {
    */
   createRoutes(app) {
     logger.debug('createRoutes');
-    app.post('/webhook', this.handleRequest);
-    app.get('/templates/:id', this.handleTemplate);
+    app.post('/webhook', (req, res) => this.handleRequest(req, res));
+    app.get('/templates/:id', (req, res) => this.handleTemplate(req, res));
   }
 
   /**

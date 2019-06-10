@@ -35,6 +35,7 @@ class BotfuelAdapter extends WebAdapter {
       res.sendStatus(200);
       return this.handleMessage(userMessage);
     } catch (error) {
+      logger.error('handleRequest: error', error);
       return res.status(400).send({ message: error.message, error });
     }
   }
