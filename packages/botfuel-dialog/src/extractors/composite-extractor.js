@@ -25,10 +25,21 @@ class CompositeExtractor extends Extractor {
   async compute(sentence) {
     logger.debug('compute', sentence);
 
+
     // Prepare all async compute functions
     const promises = [];
     for (let i = 0; i < this.parameters.extractors.length; i += 1) {
-      promises.push(this.parameters.extractors[i].compute(sentence));
+      if (this.parameters.extractors[i].parameters.options
+        && this.parameters.extractors[i].parameters.options.useRawSentence) {
+        if (typeof sentence !== 'object') {
+          throw new Error('CompositeExtractor: spellchecking have to be enabled into bot\'s configuration');
+        }
+        logger.debug('CompositeExtractor compute: using raw sentence');
+        promises.push(this.parameters.extractors[i].compute(sentence.raw || sentence));
+      } else {
+        logger.debug('CompositeExtractor compute: using spell-checked sentence');
+        promises.push(this.parameters.extractors[i].compute(sentence.spellchecked || sentence));
+      }
     }
 
     // Execute in parallel async compute functions
