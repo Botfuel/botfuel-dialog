@@ -40,4 +40,25 @@ describe('ActionsMessage', () => {
       },
     });
   });
+
+  test('should generate the proper json with action options', async () => {
+    const message = new ActionsMessage([new Link('Botfuel', 'https://www.botfuel.io/en', { className: 'my-class' })]);
+    expect(message.toJson('USER')).toEqual({
+      type: 'actions',
+      sender: 'bot',
+      user: 'USER',
+      payload: {
+        value: [
+          {
+            type: 'link',
+            text: 'Botfuel',
+            value: 'https://www.botfuel.io/en',
+            options: {
+              className: 'my-class',
+            },
+          },
+        ],
+      },
+    });
+  });
 });

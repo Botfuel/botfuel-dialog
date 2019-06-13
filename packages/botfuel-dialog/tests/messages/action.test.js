@@ -34,4 +34,15 @@ describe('Action', () => {
       value: 'value',
     });
   });
+
+  test('should generate the proper json with options', async () => {
+    expect(new Action('type', 'text', 'value', { className: 'my-class' }).toJson()).toEqual({
+      type: 'type',
+      text: 'text',
+      value: 'value',
+      options: {
+        className: 'my-class',
+      },
+    });
+  });
 });
