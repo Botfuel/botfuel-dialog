@@ -25,9 +25,9 @@ class Message extends ValidObject {
    * @param type - the message type
    * @param sender - the message sender, the bot or the user
    * @param value - the message value
-   * @param options - the message options
+   * @param {Object} [options] - the message options
    */
-  constructor(type, sender, value, options) {
+  constructor(type, sender, value, options = {}) {
     super();
     this.type = type;
     this.sender = sender;
@@ -38,23 +38,28 @@ class Message extends ValidObject {
   /**
    * Converts a message to json and adds to it the bot and user ids.
    * @param userId - the user id
-   * @returns the json message
+   * @returns {Object} - the json message
    */
   toJson(userId) {
-    return {
+    const messageJson = {
       type: this.type,
       sender: this.sender,
       user: userId,
       payload: {
         value: this.valueAsJson(),
-        options: this.options,
       },
     };
+
+    if (Object.keys(this.options).length > 0) {
+      messageJson.payload.options = this.options;
+    }
+
+    return messageJson;
   }
 
   /**
    * Returns the value as json.
-   * @returns the json value
+   * @returns {*} - the json value
    */
   valueAsJson() {
     return this.value;

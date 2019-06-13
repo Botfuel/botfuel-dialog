@@ -52,7 +52,7 @@ class Card extends Part {
       cardJson.subtitle = this.subtitle;
     }
 
-    if (this.options) {
+    if (Object.keys(this.options).length > 0) {
       cardJson.options = this.options;
     }
 

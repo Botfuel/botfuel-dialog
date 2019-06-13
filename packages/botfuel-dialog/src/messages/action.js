@@ -37,12 +37,17 @@ class Action extends Part {
 
   /** @inheritDoc */
   toJson() {
-    return {
+    const actionJson = {
       type: this.type,
       text: this.text,
       value: this.value,
-      options: this.options,
     };
+
+    if (Object.keys(this.options).length > 0) {
+      actionJson.options = this.options;
+    }
+
+    return actionJson;
   }
 
   /** @inheritDoc */
