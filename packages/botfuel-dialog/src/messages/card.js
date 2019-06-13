@@ -28,13 +28,15 @@ class Card extends Part {
    * @param {String} imageUrl - the image url
    * @param {Object[]} actions - an array of actions
    * @param {Object} [subtitle] - the subtitle (optional)
+   * @param {Object} [options] - the action options
    */
-  constructor(title, imageUrl, actions, subtitle = '') {
+  constructor(title, imageUrl, actions, subtitle = '', options = {}) {
     super();
     this.title = title;
     this.imageUrl = imageUrl;
-    this.subtitle = subtitle;
     this.actions = actions;
+    this.subtitle = subtitle;
+    this.options = options;
   }
 
   /** @inheritDoc */
@@ -45,9 +47,15 @@ class Card extends Part {
       image_url: this.imageUrl,
       buttons: this.actions.map(action => action.toJson()),
     };
+
     if (this.subtitle !== '') {
       cardJson.subtitle = this.subtitle;
     }
+
+    if (this.options) {
+      cardJson.options = this.options;
+    }
+
     return cardJson;
   }
 

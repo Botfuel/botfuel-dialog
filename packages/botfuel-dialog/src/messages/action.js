@@ -25,12 +25,14 @@ class Action extends Part {
    * @param {String} type - the action type
    * @param {String} text - the text
    * @param {Object|*} value - the value
+   * @param {Object} [options] - the action options
    */
-  constructor(type, text, value) {
+  constructor(type, text, value, options = {}) {
     super();
     this.type = type;
     this.text = text;
     this.value = value;
+    this.options = options;
   }
 
   /** @inheritDoc */
@@ -39,6 +41,7 @@ class Action extends Part {
       type: this.type,
       text: this.text,
       value: this.value,
+      options: this.options,
     };
   }
 

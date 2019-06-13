@@ -25,9 +25,10 @@ class Postback extends Action {
    * @constructor
    * @param {String} text - the postback text
    * @param {Object} dialogData - the postback dialog information, like name or entities
+   * @param {Object} [options] - the action options
    */
-  constructor(text, dialogData) {
-    super('postback', text, dialogData);
+  constructor(text, dialogData, options = {}) {
+    super('postback', text, dialogData, options);
   }
 
   /** @inheritDoc */
