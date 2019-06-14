@@ -25,9 +25,10 @@ class Link extends Action {
    * @constructor
    * @param {String} title - the link title
    * @param {String} url - the link url
+   * @param {Object} [options] - the action options
    */
-  constructor(title, url) {
-    super('link', title, url);
+  constructor(title, url, options = {}) {
+    super('link', title, url, options);
   }
 
   /** @inheritDoc */

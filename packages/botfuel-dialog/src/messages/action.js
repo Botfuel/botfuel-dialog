@@ -25,21 +25,29 @@ class Action extends Part {
    * @param {String} type - the action type
    * @param {String} text - the text
    * @param {Object|*} value - the value
+   * @param {Object} [options] - the action options
    */
-  constructor(type, text, value) {
+  constructor(type, text, value, options = {}) {
     super();
     this.type = type;
     this.text = text;
     this.value = value;
+    this.options = options;
   }
 
   /** @inheritDoc */
   toJson() {
-    return {
+    const actionJson = {
       type: this.type,
       text: this.text,
       value: this.value,
     };
+
+    if (Object.keys(this.options).length > 0) {
+      actionJson.options = this.options;
+    }
+
+    return actionJson;
   }
 
   /** @inheritDoc */

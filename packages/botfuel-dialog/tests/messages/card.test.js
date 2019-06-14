@@ -15,6 +15,7 @@
  */
 
 const Card = require('../../src/messages/card');
+const Link = require('../../src/messages/link');
 const MessageError = require('../../src/errors/message-error');
 
 describe('Card', () => {
@@ -27,5 +28,32 @@ describe('Card', () => {
     expect(() => new Card('title', 'http://domain.com', ['not an action']).validate()).toThrow(
       MessageError,
     );
+  });
+
+  test('should generate the proper json', async () => {
+    const card = new Card(
+      'title',
+      'http://domain.com',
+      [new Link('Botfuel', 'https://www.botfuel.io/en', { className: 'link-class' })],
+      '',
+      { className: 'card-class' },
+    );
+    expect(card.toJson('USER')).toEqual({
+      title: 'title',
+      image_url: 'http://domain.com',
+      buttons: [
+        {
+          type: 'link',
+          text: 'Botfuel',
+          value: 'https://www.botfuel.io/en',
+          options: {
+            className: 'link-class',
+          },
+        },
+      ],
+      options: {
+        className: 'card-class',
+      },
+    });
   });
 });
