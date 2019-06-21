@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.4.1](https://github.com/Botfuel/botfuel-dialog/compare/v12.4.0...v12.4.1) (2019-06-21)
+
+
+### Bug Fixes
+
+* handle default or named export for Resolved ([afb7154](https://github.com/Botfuel/botfuel-dialog/commit/afb7154))
+
+
+
+
+
 # [12.4.0](https://github.com/Botfuel/botfuel-dialog/compare/v12.3.1...v12.4.0) (2019-06-14)
 
 
