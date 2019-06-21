@@ -87,7 +87,7 @@ class Resolver {
     const componentPath = this.getPath(name);
     if (componentPath) {
       const Resolved = require(componentPath);
-      return this.resolutionSucceeded(Resolved);
+      return this.resolutionSucceeded(Resolved.default ? Resolved.default : Resolved);
     }
     throw new ResolutionError({
       kind: this.kind,
