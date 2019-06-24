@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.4.2](https://github.com/Botfuel/botfuel-dialog/compare/v12.4.1...v12.4.2) (2019-06-24)
+
+
+### Bug Fixes
+
+* use cjs module option to babel configuration ([e11203a](https://github.com/Botfuel/botfuel-dialog/commit/e11203a))
+
+
+
+
+
 ## [12.4.1](https://github.com/Botfuel/botfuel-dialog/compare/v12.4.0...v12.4.1) (2019-06-21)
 
 
