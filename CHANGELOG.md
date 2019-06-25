@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.4.3](https://github.com/Botfuel/botfuel-dialog/compare/v12.4.2...v12.4.3) (2019-06-25)
+
+
+### Bug Fixes
+
+* disable the use of required layout for template generation ([bced2f9](https://github.com/Botfuel/botfuel-dialog/commit/bced2f9))
+
+
+
+
+
 ## [12.4.2](https://github.com/Botfuel/botfuel-dialog/compare/v12.4.1...v12.4.2) (2019-06-24)
 
 
