@@ -82,7 +82,9 @@ class WebAdapter extends Adapter {
    */
   async handleTemplate(req, res) {
     logger.debug('handleTemplate', { id: req.params.id, query: req.query });
-    res.render(req.params.id, req.query, (err, html) => {
+    // by default disable the use of the main layout required for express versions >=4.0.0
+    const templateParams = Object.assign({ layout: false }, req.query);
+    res.render(req.params.id, templateParams, (err, html) => {
       if (err) {
         logger.error(`Could not render the handlebars template: ${req.params.id}`);
         res.status(400).send(err);
