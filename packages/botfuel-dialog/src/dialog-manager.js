@@ -252,6 +252,9 @@ class DialogManager extends Resolver {
         triggeredBy: 'dialog-manager',
       });
     } else {
+      if (this.bot.config.dialogAliases && this.bot.config.dialogAliases[dialog.name]) {
+        dialog.name = this.bot.config.dialogAliases[dialog.name];
+      }
       const dialogInstance = this.resolve(dialog.name);
       const executeResult = await dialogInstance.execute(userMessage, dialog.data);
       const { action, botMessages: newBotMessages } = executeResult;
